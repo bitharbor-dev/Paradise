@@ -188,7 +188,7 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
             Throw(ServiceUnavailable, MessageTemplateMissingPlaceholder, e.Message);
         }
 
-        return new(body, from, subject, model)
+        return new(subject, body, from, model)
         {
             IsBodyHtml = template.IsBodyHtml,
             Sent = DateTime.UtcNow
