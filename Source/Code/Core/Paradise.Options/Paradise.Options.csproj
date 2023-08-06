@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<DebugType>embedded</DebugType>
+		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="options.Development.json" />
+		<None Remove="options.Docker.Development.json" />
+		<None Remove="options.Docker.Production.json" />
+		<None Remove="options.Docker.Staging.json" />
+		<None Remove="options.json" />
+		<None Remove="options.Production.json" />
+		<None Remove="options.Staging.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="options.Development.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+		<Content Include="options.Docker.Development.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+		<Content Include="options.Docker.Production.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+		<Content Include="options.Docker.Staging.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+		<Content Include="options.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="options.Production.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+		<Content Include="options.Staging.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\Paradise.Common\Paradise.Common.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<DebugType>embedded</DebugType>
+		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="xunit.abstractions" Version="2.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Code\Core\Paradise.ApplicationLogic\Paradise.ApplicationLogic.csproj" />
+	</ItemGroup>
+
+</Project>

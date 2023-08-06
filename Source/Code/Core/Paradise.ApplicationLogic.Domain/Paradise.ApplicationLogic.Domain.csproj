@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<DebugType>embedded</DebugType>
+		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\Paradise.Common\Paradise.Common.csproj" />
+		<ProjectReference Include="..\Paradise.Domain.Base\Paradise.Domain.Base.csproj" />
+	</ItemGroup>
+
+</Project>

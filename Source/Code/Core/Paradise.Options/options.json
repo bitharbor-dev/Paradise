@@ -1,0 +1,87 @@
+{
+  "ApplicationOptions": {
+    "Authentication": {
+      "JsonWebTokenLifetime": "00.00:05:00",
+      "RefreshTokenLifetime": "90.00:00:00",
+      "TwoFactorTokenLifetime": "00.01:00:00",
+      "TwoFactorVerificationCodeLength": 6
+    },
+    "Secret": "Ug5xCXJaNaxfx78KdQxQZDAmniAbZw6V",
+    "Tokens": {
+      "EmailConfirmationTokenLifetime": "01.00:00:00",
+      "ResetEmailAddressTokenLifetime": "01.00:00:00",
+      "ResetPasswordTokenLifetime": "01.00:00:00",
+      "UserDeletionRequestLifetime": "0.12:00:00"
+    }
+  },
+  "EmailTemplateOptions": {
+    "EmailAddressConfirmationTemplateName": "EmailAddressConfirmation",
+    "EmailAddressResetCompletedTemplateName": "EmailAddressResetCompleted",
+    "EmailAddressResetNotificationTemplateName": "EmailAddressResetNotification",
+    "EmailAddressResetTemplateName": "EmailAddressReset",
+    "PasswordResetCompletedTemplateName": "PasswordResetCompleted",
+    "PasswordResetTemplateName": "PasswordReset",
+    "TwoFactorVerificationTemplateName": "TwoFactorVerification"
+  },
+  "IdentityOptions": {
+    "ClaimsIdentity": {
+      "RoleClaimType": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+      "UserNameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+      "UserIdClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+      "EmailClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+      "SecurityStampClaimType": "AspNet.Identity.SecurityStamp"
+    },
+    "Lockout": {
+      "DefaultLockoutTimeSpan": "0.00:05:00",
+      "MaxFailedAccessAttempts": 3
+    },
+    "Password": {
+      "RequireDigit": true,
+      "RequiredLength": 8,
+      "RequiredUniqueChars": 5,
+      "RequireLowercase": true,
+      "RequireNonAlphanumeric": false,
+      "RequireUppercase": true
+    },
+    "SignIn": {
+      "RequireConfirmedEmail": true,
+      "RequireConfirmedPhoneNumber": false
+    },
+    "User": {
+      "AllowedUserNameCharacters": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.",
+      "RequireUniqueEmail": true
+    }
+  },
+  "JsonSerializerOptions": {
+    "AllowTrailingCommas": true,
+    "DefaultIgnoreCondition": 0,
+    "IgnoreNullValues": true,
+    "IgnoreReadOnlyFields": false,
+    "IgnoreReadOnlyProperties": false,
+    "IncludeFields": false,
+    "MaxDepth": 64,
+    "NumberHandling": 4,
+    "PropertyNameCaseInsensitive": false,
+    "ReadCommentHandling": 0,
+    "UnknownTypeHandling": 0,
+    "WriteIndented": true
+  },
+  "JwtBearerOptions": {
+    "IncludeErrorDetails": true,
+    "RequireHttpsMetadata": true,
+    "TokenValidationParameters": {
+      "AuthenticationType": "Bearer",
+      "ClockSkew": "0.00:00:00",
+      "NameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+      "RequireAudience": true,
+      "RequireExpirationTime": true,
+      "RoleClaimType": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+      "ValidateAudience": true,
+      "ValidateIssuer": true,
+      "ValidateIssuerSigningKey": true,
+      "ValidateLifetime": true,
+      "ValidAudience": "Paradise.WebApi",
+      "ValidIssuer": "Paradise.WebApi"
+    }
+  }
+}

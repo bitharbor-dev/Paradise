@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Docker.Development",
+        "ConnectionStrings__ApplicationConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise-application;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
+        "ConnectionStrings__DomainConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise-domain;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
+      }
+    },
+    "Maintenance": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "ConnectionStrings__ApplicationConnectionString": "Data Source=localhost;Initial Catalog=paradise-application;Integrated Security=true;Trust Server Certificate=true",
+        "ConnectionStrings__DomainConnectionString": "Data Source=localhost;Initial Catalog=paradise-domain;Integrated Security=true;Trust Server Certificate=true",
+      }
+    }
+  }
+}

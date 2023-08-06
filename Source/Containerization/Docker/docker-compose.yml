@@ -1,0 +1,93 @@
+version: '3.4'
+
+services:
+
+  domain.base.tests:
+    container_name: Domain.Base.Tests
+    image: ${DOCKER_REGISTRY-}domainbasetests
+    build:
+      context: ../../..
+      dockerfile: Source/Tests/Core/Paradise.Domain.Base.Tests/Dockerfile
+
+  domain.tests:
+    container_name: Domain.Tests
+    image: ${DOCKER_REGISTRY-}domaintests
+    build:
+      context: ../../..
+      dockerfile: Source/Tests/Core/Paradise.Domain.Tests/Dockerfile
+    depends_on:
+      domain.base.tests:
+        condition: service_completed_successfully
+
+  applicationlogic.domain.tests:
+    container_name: ApplicationLogic.Domain.Tests
+    image: ${DOCKER_REGISTRY-}applicationlogicdomaintests
+    build:
+      context: ../../..
+      dockerfile: Source/Tests/Core/Paradise.ApplicationLogic.Domain.Tests/Dockerfile
+    depends_on:
+      domain.tests:
+        condition: service_completed_successfully
+
+  dataaccess.seed.tests:
+    container_name: DataAccess.Seed.Tests
+    image: ${DOCKER_REGISTRY-}dataaccessseedtests
+    build:
+      context: ../../..
+      dockerfile: Source/Tests/Core/Paradise.DataAccess.Seed.Tests/Dockerfile
+    depends_on:
+      applicationlogic.domain.tests:
+        condition: service_completed_successfully
+
+  dataaccess.tests:
+    container_name: DataAccess.Tests
+    image: ${DOCKER_REGISTRY-}dataaccesstests
+    build:
+      context: ../../..
+      dockerfile: Source/Tests/Core/Paradise.DataAccess.Tests/Dockerfile
+    depends_on:
+      dataaccess.seed.tests:
+        condition: service_completed_successfully
+
+  applicationlogic.tests:
+    container_name: ApplicationLogic.Tests
+    image: ${DOCKER_REGISTRY-}applicationlogictests
+    build:
+      context: ../../..
+      dockerfile: Source/Tests/Core/Paradise.ApplicationLogic.Tests/Dockerfile
+    depends_on:
+      dataaccess.tests:
+        condition: service_completed_successfully
+
+  mssql:
+    container_name: MsSql
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    healthcheck:
+      test: ["CMD", "/Scripts/Shell/Healthcheck.sh"]
+    depends_on:
+      applicationlogic.tests:
+        condition: service_completed_successfully
+
+  webapi:
+    container_name: WebApi
+    image: ${DOCKER_REGISTRY-}webapi
+    healthcheck:
+      test: ["CMD", "/Scripts/Shell/Healthcheck.sh"]
+    build:
+      context: ../../..
+      dockerfile: Source/Code/Web/Paradise.WebApi/Dockerfile
+    depends_on:
+      mssql:
+        condition: service_healthy
+
+  maintenance:
+    container_name: Maintenance
+    image: ${DOCKER_REGISTRY-}maintenance
+    build:
+      context: ../../..
+      dockerfile: Source/Code/Web/Paradise.Maintenance/Dockerfile
+    depends_on:
+      mssql:
+        condition: service_healthy
+      webapi:
+        condition: service_healthy

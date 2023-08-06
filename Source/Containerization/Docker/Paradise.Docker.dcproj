@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
+
+	<PropertyGroup Label="Globals">
+		<ProjectVersion>2.1</ProjectVersion>
+		<DockerTargetOS>Linux</DockerTargetOS>
+		<ProjectGuid>6a6fac84-b8aa-449b-81bd-7b315dd3c099</ProjectGuid>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include=".env" />
+		<None Include="docker-compose.override.yml">
+			<DependentUpon>docker-compose.yml</DependentUpon>
+		</None>
+		<None Include="docker-compose.yml" />
+		<None Include=".dockerignore" />
+		<None Include="Scripts\MS SQL Server\SQL\CheckLogin.sql" />
+		<None Include="Scripts\MS SQL Server\SQL\CreateLogin.sql" />
+		<None Include="Scripts\MS SQL Server\Shell\CheckLogin.sh" />
+		<None Include="Scripts\MS SQL Server\Shell\CreateLogin.sh" />
+		<None Include="Scripts\MS SQL Server\Shell\Entrypoint.sh" />
+		<None Include="Scripts\MS SQL Server\Shell\Healthcheck.sh" />
+		<None Include="Scripts\WebApi\Shell\CheckStatusCode.sh" />
+		<None Include="Scripts\WebApi\Shell\Healthcheck.sh" />
+	</ItemGroup>
+
+</Project>

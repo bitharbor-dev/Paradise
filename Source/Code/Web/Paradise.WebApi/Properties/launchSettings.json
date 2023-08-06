@@ -1,0 +1,22 @@
+{
+  "profiles": {
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Docker.Development",
+        "ConnectionStrings__ApplicationConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise-application;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
+        "ConnectionStrings__DomainConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise-domain;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
+      }
+    },
+    "WebApi": {
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__ApplicationConnectionString": "Data Source=localhost;Initial Catalog=paradise-application;Integrated Security=true;Trust Server Certificate=true",
+        "ConnectionStrings__DomainConnectionString": "Data Source=localhost;Initial Catalog=paradise-domain;Integrated Security=true;Trust Server Certificate=true",
+      }
+    }
+  }
+}

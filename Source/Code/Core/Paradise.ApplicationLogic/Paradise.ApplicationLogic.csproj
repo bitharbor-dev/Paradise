@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<DebugType>embedded</DebugType>
+		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Communication.Email" Version="1.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Paradise.DataAccess\Paradise.DataAccess.csproj" />
+		<ProjectReference Include="..\Paradise.DataAccess.Seed\Paradise.DataAccess.Seed.csproj" />
+		<ProjectReference Include="..\Paradise.Options\Paradise.Options.csproj" />
+		<ProjectReference Include="..\..\Shared\Paradise.Models\Paradise.Models.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,1276 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Paradise.ApplicationLogic.DataConverters.Domain;
+using Paradise.ApplicationLogic.Exceptions;
+using Paradise.ApplicationLogic.Extensions;
+using Paradise.ApplicationLogic.Identity;
+using Paradise.ApplicationLogic.InternalModels;
+using Paradise.ApplicationLogic.Services.Application;
+using Paradise.Common.Extensions;
+using Paradise.Common.Web;
+using Paradise.DataAccess.Repositories.Domain;
+using Paradise.Domain.Users;
+using Paradise.Localization.DataValidation;
+using Paradise.Models;
+using Paradise.Models.Application.CommunicationModels;
+using Paradise.Models.Domain.UserModels;
+using Paradise.Options.Models;
+using Paradise.Options.Models.Communication;
+using System.Globalization;
+using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Web;
+using static Paradise.ApplicationLogic.Exceptions.ResultException;
+using static Paradise.Common.Web.ParameterNames;
+using static Paradise.Models.ErrorCode;
+using static System.Net.HttpStatusCode;
+
+namespace Paradise.ApplicationLogic.Services.Domain.Implementation;
+
+/// <summary>
+/// Provides users management functionalities.
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserService"/> class.
+/// </remarks>
+/// <param name="logger">
+/// Logger.
+/// </param>
+/// <param name="applicationOptions">
+/// The accessor used to access the <see cref="ApplicationOptions"/>.
+/// </param>
+/// <param name="jwtBearerOptions">
+/// The accessor used to access the <see cref="JwtBearerOptions"/>.
+/// </param>
+/// <param name="emailTemplateOptions">
+/// The accessor used to access the <see cref="EmailTemplateOptions"/>.
+/// </param>
+/// <param name="identityOptions">
+/// The accessor used to access the <see cref="IdentityOptions"/>.
+/// </param>
+/// <param name="userManager">
+/// User manager.
+/// </param>
+/// <param name="userRefreshTokensRepository">
+/// User refresh tokens repository.
+/// </param>
+/// <param name="roleService">
+/// Role service.
+/// </param>
+/// <param name="communicationService">
+/// Communication service.
+/// </param>
+/// <param name="jsonWebTokenService">
+/// JWT service.
+/// </param>
+/// <param name="dataProtectionService">
+/// Data protection service.
+/// </param>
+public sealed class UserService(ILogger<UserService> logger,
+                                IOptions<ApplicationOptions> applicationOptions,
+                                IOptions<JwtBearerOptions> jwtBearerOptions,
+                                IOptions<EmailTemplateOptions> emailTemplateOptions,
+                                IOptions<IdentityOptions> identityOptions,
+                                UserManager userManager,
+                                IUserRefreshTokensRepository userRefreshTokensRepository,
+                                IRoleService roleService,
+                                ICommunicationService communicationService,
+                                IJsonWebTokenService jsonWebTokenService,
+                                IDataProtectionService dataProtectionService)
+    : IUserService
+{
+    #region Fields
+    private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
+    private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
+    private readonly EmailTemplateOptions _emailTemplateOptions = emailTemplateOptions.Value;
+    private readonly IdentityOptions _identityOptions = identityOptions.Value;
+    private readonly UserManager _userManager = userManager;
+    private readonly IUserRefreshTokensRepository _userRefreshTokensRepository = userRefreshTokensRepository;
+    private readonly IRoleService _roleService = roleService;
+    private readonly ICommunicationService _communicationService = communicationService;
+    private readonly IJsonWebTokenService _jsonWebTokenService = jsonWebTokenService;
+    private readonly IDataProtectionService _dataProtectionService = dataProtectionService;
+    #endregion
+
+    #region Public methods
+    /// <inheritdoc/>
+    public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var users = await _userManager.Users.ToListAsync(cancellationToken);
+
+        return new(users.Select(user => user.ToModel()), OK);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserModel>> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var user = await FindUserByIdAsync(userId, cancellationToken);
+
+        return new(user.ToModel(), OK);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserModel>> RegisterAsync(UserRegistrationModel model, CancellationToken cancellationToken = default)
+    {
+        await ValidateRegistrationModelAsync(model, cancellationToken);
+
+        var user = model.ToEntity();
+
+        var creationResult = await _userManager.CreateAsync(user, model.Password!);
+
+        creationResult.ThrowIfUnsuccessfulIdentityResult();
+
+        try
+        {
+            await SendEmailAddressConfirmationEmailAsync(user, cancellationToken);
+        }
+        catch
+        {
+            var deletionResult = await _userManager.DeleteAsync(user);
+
+            if (!deletionResult.Succeeded)
+                logger.LogUnsuccessfulUserDeletionAfterFailedInvitation(user.Email, deletionResult);
+
+            throw;
+        }
+
+        return new(user.ToModel(), Created);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserModel>> ConfirmEmailAsync(string identityToken, CancellationToken cancellationToken = default)
+    {
+        _dataProtectionService
+            .TryUnprotectJson<IdentityToken>(identityToken, out var identityTokenModel)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
+
+        var email = identityTokenModel.Email;
+        var emailConfirmationToken = identityTokenModel.InnerToken;
+
+        var user = await FindUserByEmailAsync(email, cancellationToken);
+
+        user.EmailConfirmed.ThrowIfTrue(UnprocessableEntity, UserEmailAlreadyConfirmed, user.Email);
+
+        var emailConfirmationResult = await _userManager.ConfirmEmailAsync(user, emailConfirmationToken);
+
+        emailConfirmationResult.ThrowIfUnsuccessfulIdentityResult();
+
+        await AssignDefaultUserRolesAsync(user, cancellationToken);
+
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        updateResult.ThrowIfUnsuccessfulIdentityResult();
+
+        return new(user.ToModel(), OK);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
+    {
+        var user = await GetValidUserFromLoginModelAsync(model, cancellationToken);
+
+        if (user.TwoFactorEnabled)
+        {
+            var tokenModel = GenerateTwoFactorToken(user, out var verificationCode);
+
+            var emailResult = await SendTwoFactorAuthenticationEmailAsync(user, verificationCode, cancellationToken);
+            if (!emailResult.IsSuccess)
+            {
+                logger.LogResultErrors(emailResult);
+                logger.LogResultCriticalErrors(emailResult);
+
+                return new(null, InternalServerError);
+            }
+
+            // It is important to set the status code different
+            // from the status code on the default login process
+            // to be able to determine whether the two-factor authentication
+            // is being used during the current login.
+            // The 'HttpStatusCode.Accepted' looks preferable here.
+            return new(tokenModel, Accepted);
+        }
+        else
+        {
+            // 'refreshTokenId: null' means that we are generating
+            // access token which would be bound to a newly created refresh token.
+            return await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken);
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserAuthorizationTokenModel>> ConfirmLoginAsync(UserTwoFactorAuthenticationModel model, CancellationToken cancellationToken = default)
+    {
+        _dataProtectionService
+            .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
+
+        var verificationCode = identityTokenModel.InnerToken;
+        var twoFactorCode = model.TwoFactorCode;
+        var email = identityTokenModel.Email;
+
+        twoFactorCode.ThrowIfNullOrWhiteSpace(BadRequest, InvalidModel);
+
+        var codeIsCorrect = verificationCode.Trim() == twoFactorCode.Trim();
+
+        codeIsCorrect.ThrowIfFalse(Unauthorized, UnauthorizedUser);
+
+        var user = await FindUserByEmailAsync(email, cancellationToken);
+
+        return await GenerateAccessTokenAsync(user, null, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserAuthorizationTokenModel>> RenewTokenAsync(string accessToken, CancellationToken cancellationToken = default)
+    {
+        _jsonWebTokenService
+            .TryParseToken(accessToken, out var securityToken, out var principal, false)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        Guid.TryParse(securityToken.Id, out var refreshTokenId)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
+
+        var user = await FindUserByIdAsync(userId, cancellationToken);
+
+        return await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> LogoutAsync(string accessToken, CancellationToken cancellationToken = default)
+    {
+        _jsonWebTokenService
+            .TryParseToken(accessToken, out var securityToken, out _)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        Guid.TryParse(securityToken.Id, out var refreshTokenId)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        _userRefreshTokensRepository.RemoveById(refreshTokenId);
+
+        await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+
+        return OK;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> LogoutEverywhereAsync(string accessToken, CancellationToken cancellationToken = default)
+    {
+        _jsonWebTokenService
+            .TryParseToken(accessToken, out _, out var principal)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
+
+        _userRefreshTokensRepository.RemoveWhere(refreshToken => refreshToken.OwnerId == userId);
+
+        await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+
+        return OK;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> CreatePasswordResetRequestAsync(UserResetPasswordRequestModel model, CancellationToken cancellationToken = default)
+    {
+        model.Email.ThrowIfEmptyOrWhiteSpace(BadRequest, InvalidEmail, model.Email);
+
+        model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+
+        var user = await FindUserByEmailAsync(model.Email, cancellationToken);
+
+        var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken);
+        if (!emailResult.IsSuccess)
+        {
+            logger.LogResultErrors(emailResult);
+            logger.LogResultCriticalErrors(emailResult);
+
+            return InternalServerError;
+        }
+
+        return OK;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> ResetPasswordAsync(UserResetPasswordModel model, CancellationToken cancellationToken = default)
+    {
+        _dataProtectionService
+            .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
+
+        model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, InvalidModel);
+
+        var exception = new ResultException();
+
+        await ValidatePasswordAsync(model.Password, model.PasswordConfirmation, exception);
+
+        if (exception.HaveErrors)
+            throw exception;
+
+        var email = identityTokenModel.Email;
+        var passwordResetToken = identityTokenModel.InnerToken;
+
+        var user = await FindUserByEmailAsync(email, cancellationToken);
+
+        var passwordResetResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, model.Password);
+
+        passwordResetResult.ThrowIfUnsuccessfulIdentityResult();
+
+        try
+        {
+            await SendPasswordResetCompletedEmailAsync(user, cancellationToken);
+        }
+        catch (InvalidOperationException ex)
+        {
+            logger.LogUnhandledException(ex);
+        }
+        catch (ResultException ex)
+        {
+            logger.LogResultException(ex);
+        }
+
+        return OK;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> CreateEmailResetRequestAsync(Guid userId, UserResetEmailRequestModel model, CancellationToken cancellationToken = default)
+    {
+        model.Email.ThrowIfEmptyOrWhiteSpace(BadRequest, InvalidEmail, model.Email);
+
+        model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+
+        var emailAddressIsInUse = await CheckIfEmailAddressIsInUseAsync(model.Email, cancellationToken);
+
+        emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, model.Email);
+
+        var user = await FindUserByIdAsync(userId, cancellationToken);
+
+        try
+        {
+            await SendEmailAddressResetNotificationEmailAsync(user, model.Email, cancellationToken);
+        }
+        catch (InvalidOperationException ex)
+        {
+            logger.LogUnhandledException(ex);
+        }
+        catch (ResultException ex)
+        {
+            logger.LogResultException(ex);
+        }
+
+        var emailResult = await SendEmailAddressResetEmailAsync(user, model.Email, cancellationToken);
+        if (!emailResult.IsSuccess)
+        {
+            logger.LogResultErrors(emailResult);
+            logger.LogResultCriticalErrors(emailResult);
+
+            return InternalServerError;
+        }
+
+        return OK;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> ResetEmailAsync(string identityToken, CancellationToken cancellationToken = default)
+    {
+        _dataProtectionService
+            .TryUnprotectJson<IdentityToken>(identityToken, out var identityTokenModel)
+            .ThrowIfFalse(BadRequest, InvalidToken);
+
+        identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
+
+        var email = identityTokenModel.Email;
+        var newEmail = identityTokenModel.Value;
+        var changeEmailToken = identityTokenModel.InnerToken;
+
+        newEmail.ThrowIfNullOrWhiteSpace(BadRequest, InvalidToken, newEmail);
+
+        var emailAddressIsInUse = await CheckIfEmailAddressIsInUseAsync(newEmail, cancellationToken);
+
+        emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, newEmail);
+
+        var user = await FindUserByEmailAsync(email, cancellationToken);
+
+        var changeEmailResult = await _userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
+
+        changeEmailResult.ThrowIfUnsuccessfulIdentityResult();
+
+        try
+        {
+            await SendEmailAddressResetCompletedEmailAsync(user.UserName, email, newEmail, cancellationToken);
+        }
+        catch (InvalidOperationException ex)
+        {
+            logger.LogUnhandledException(ex);
+        }
+        catch (ResultException ex)
+        {
+            logger.LogResultException(ex);
+        }
+
+        return OK;
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result<UserModel>> UpdateAsync(Guid userId, UserUpdateModel model, CancellationToken cancellationToken = default)
+    {
+        var user = await FindUserByIdAsync(userId, cancellationToken);
+
+        if (model.IsPendingDeletion.HasValue)
+        {
+            user.DeletionRequestSubmitted = model.IsPendingDeletion.Value
+                ? DateTime.UtcNow
+                : null;
+        }
+
+        if (model.TwoFactorEnabled.HasValue)
+            user.TwoFactorEnabled = model.TwoFactorEnabled.Value;
+
+        if (model.UserName is not null)
+        {
+            var userNameIsValid = model.UserName.IsValidUserName(_identityOptions);
+
+            userNameIsValid.ThrowIfFalse(UnprocessableEntity, InvalidUserName, model.UserName);
+
+            var userNameInUse = await CheckIfUserNameIsInUseAsync(model.UserName, cancellationToken);
+
+            userNameInUse.ThrowIfTrue(UnprocessableEntity, DuplicateUserName, model.UserName);
+
+            user.UserName = model.UserName;
+        }
+
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        updateResult.ThrowIfUnsuccessfulIdentityResult();
+
+        return new(user.ToModel(), OK);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Result> DeleteAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var requestLifetime = _applicationOptions.Tokens.UserDeletionRequestLifetime;
+
+        user.DeletionRequestSubmitted.HasValue.ThrowIfFalse(BadRequest, UserNotPendingDeletion, user.Email);
+
+        if (user.IsDeletionRequestOutdated(requestLifetime))
+        {
+            user.CancelDeletionRequest();
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            updateResult.ThrowIfUnsuccessfulIdentityResult();
+
+            Throw(BadRequest, UserDeletionRequestExpired, requestLifetime);
+        }
+
+        var deletionResult = await _userManager.DeleteAsync(user);
+
+        deletionResult.ThrowIfUnsuccessfulIdentityResult();
+
+        return OK;
+    }
+    #endregion
+
+    #region Private methods
+    /// <summary>
+    /// Generates the access token for the given <paramref name="user"/>.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> for whom to generate an access token.
+    /// </param>
+    /// <param name="refreshTokenId">
+    /// The Id of the refresh token to be used
+    /// to bound with the newly generated JWT.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="UserAuthorizationTokenModel"/> instance containing the JWT.
+    /// </returns>
+    private async Task<Result<UserAuthorizationTokenModel>> GenerateAccessTokenAsync(User user, Guid? refreshTokenId = null,
+                                                                                     CancellationToken cancellationToken = default)
+    {
+        if (refreshTokenId.HasValue)
+        {
+            var refreshToken = await _userRefreshTokensRepository.GetByIdAsync(refreshTokenId.Value, cancellationToken);
+
+            refreshToken.ThrowIfNull(Unauthorized, OutdatedToken);
+
+            refreshToken
+                .IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime)
+                .ThrowIfTrue(Unauthorized, OutdatedToken);
+        }
+        else
+        {
+            var refreshToken = new UserRefreshToken(user.Id);
+
+            _userRefreshTokensRepository.Add(refreshToken);
+
+            await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+
+            refreshTokenId = refreshToken.Id;
+        }
+
+        // The minimum claims for the authentication process to be working properly
+        // is the user Id claim. In order to pass the authorization process as well -
+        // role claims are required.
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        var rolesAsClaims = await GetUserRolesAsClaimsAsync(user);
+
+        var tokenClaims = userClaims.Concat(rolesAsClaims);
+
+        var accessToken = _jsonWebTokenService.GenerateToken(tokenClaims, refreshTokenId.Value, out var expiryDate);
+
+        return new(new(user.Email, expiryDate, accessToken), OK);
+    }
+
+    /// <summary>
+    /// Gets the list of claims which contains
+    /// the given <paramref name="user"/> roles data.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> whose roles to be listed as claims.
+    /// </param>
+    /// <returns>
+    /// An <see cref="IEnumerable{T}"/> of <see cref="Claim"/>, containing
+    /// the given <paramref name="user"/> roles data.
+    /// </returns>
+    private async Task<IEnumerable<Claim>> GetUserRolesAsClaimsAsync(User user)
+    {
+        var roleClaimType = _jwtBearerOptions.TokenValidationParameters.RoleClaimType;
+
+        var roleNames = await _userManager.GetRolesAsync(user);
+        var roleClaims = roleNames.Select(name => new Claim(roleClaimType, name));
+
+        return roleClaims;
+    }
+
+    /// <summary>
+    /// Generates the access token for the given <paramref name="user"/>.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> for whom to generate an access token.
+    /// </param>
+    /// <param name="verificationCode">
+    /// Verification code to pass the current token validation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="UserAuthorizationTokenModel"/> instance containing the JWT.
+    /// </returns>
+    private UserAuthorizationTokenModel GenerateTwoFactorToken(User user, out string verificationCode)
+    {
+        verificationCode = _dataProtectionService.GenerateRandomDigitCode(
+            _applicationOptions.Authentication.TwoFactorVerificationCodeLength);
+
+        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Authentication.TwoFactorTokenLifetime);
+        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
+
+        return new(user.Email, expiryDate, identityToken);
+    }
+
+    /// <summary>
+    /// Assigns the default application roles
+    /// to the given <paramref name="user"/>.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> to whom roles to be assigned.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task AssignDefaultUserRolesAsync(User user, CancellationToken cancellationToken = default)
+    {
+        var defaultRolesResult = await _roleService.GetAllAsync(true, cancellationToken);
+
+        if (defaultRolesResult.Value is not null)
+        {
+            foreach (var role in defaultRolesResult.Value)
+                await _roleService.AssignAsync(role.Id, user.Id, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Creates a link with an identity token.
+    /// </summary>
+    /// <param name="baseUrl">
+    /// Base <see cref="Uri"/>.
+    /// </param>
+    /// <param name="path">
+    /// API action path.
+    /// </param>
+    /// <param name="user">
+    /// Token owner.
+    /// </param>
+    /// <param name="innerToken">
+    /// Token.
+    /// </param>
+    /// <param name="expiryDate">
+    /// Token expiry date.
+    /// </param>
+    /// <param name="value">
+    /// Target property's new value.
+    /// </param>
+    /// <returns>
+    /// <see cref="Uri"/>, which leads to the specified API action
+    /// and contains an identity token.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="baseUrl"/> is <see langword="null"/>
+    /// </exception>
+    private Uri CreateIdentityTokenLink(Uri? baseUrl, string path, User user, string innerToken,
+                                        DateTime? expiryDate = null, string? value = null)
+    {
+        ArgumentNullException.ThrowIfNull(baseUrl);
+
+        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, innerToken, value, expiryDate));
+
+        // Since the scope of the current method is very concrete,
+        // we can assume that the 'path' parameter has the '{identityToken}' placeholder string inside.
+        // Here we are replacing it with the actual identity token.
+        path = path.Replace($"{{{IdentityTokenParameter}}}", HttpUtility.UrlEncode(identityToken), StringComparison.Ordinal);
+
+        return new($"{baseUrl}{path}");
+    }
+
+    /// <summary>
+    /// Checks if any user satisfies
+    /// the given <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="predicate">
+    /// A function to test each <see cref="User"/> for a condition.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if any user satisfies
+    /// the given <paramref name="predicate"/>, otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> AnyUserAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _userManager.Users.AnyAsync(predicate, cancellationToken);
+
+    /// <summary>
+    /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
+    /// </summary>
+    /// <param name="id">
+    /// The Id of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="id"/>.
+    /// </returns>
+    private async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
+        ?? throw new ResultException(NotFound, UserIdNotFound, id);
+
+    /// <summary>
+    /// Gets the <see cref="User"/> with the given <paramref name="email"/> address.
+    /// </summary>
+    /// <param name="email">
+    /// The email address of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="email"/> address.
+    /// </returns>
+    private async Task<User> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Email == email, cancellationToken))
+        ?? throw new ResultException(NotFound, UserEmailNotFound, email);
+
+    /// <summary>
+    /// Gets the <see cref="User"/> with the given <paramref name="userName"/>.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="userName"/>.
+    /// </returns>
+    private async Task<User> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+        => (await _userManager.Users.SingleOrDefaultAsync(user => user.UserName == userName, cancellationToken))
+        ?? throw new ResultException(NotFound, UserNameNotFound, userName);
+
+    /// <summary>
+    /// Gets the <see cref="User"/> with the given <paramref name="phone"/>.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="phone"/>.
+    /// </returns>
+    private async Task<User> FindUserByPhoneAsync(string phone, CancellationToken cancellationToken = default)
+        => (await _userManager.Users.SingleOrDefaultAsync(user => user.PhoneNumber == phone, cancellationToken))
+        ?? throw new ResultException(NotFound, UserPhoneNumberNotFound, phone);
+
+    /// <summary>
+    /// Creates a "required at least one" error message.
+    /// </summary>
+    /// <param name="propertyNames">
+    /// Properties to be included in the message.
+    /// </param>
+    /// <returns>
+    /// A <see cref="string"/> value containing the error message.
+    /// </returns>
+    private static string CreateRequiredAtLeastOneErrorMessage(params string[] propertyNames)
+    {
+        const string Separator = ", ";
+
+        var message = ValidationMessages.RequiredAtLeastOne;
+
+        var properties = string.Join(Separator, propertyNames);
+
+        return string.Format(CultureInfo.CurrentCulture, message, properties);
+    }
+
+    #region Validation methods
+    /// <summary>
+    /// Gets a <see cref="User"/> from the login data.
+    /// </summary>
+    /// <param name="model">
+    /// The <see cref="UserLoginModel"/>
+    /// which data to be used to log in a user.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> object if the login data is valid. Otherwise - <see langword="null"/>.
+    /// <para>
+    /// Acceptance criteria:
+    /// </para>
+    /// <list type="bullet">
+    /// <item>
+    /// User with such user-name or phone number or email address exists.
+    /// </item>
+    /// <item>
+    /// User's email is confirmed.
+    /// </item>
+    /// <item>
+    /// The password is correct.
+    /// </item>
+    /// </list>
+    /// </returns>
+    private async Task<User> GetValidUserFromLoginModelAsync(UserLoginModel model,
+                                                             CancellationToken cancellationToken = default)
+    {
+        User? user = null;
+
+        if (model.Email.IsNotNullOrWhiteSpace())
+        {
+            model.Email
+                .IsValidEmailAddress()
+                .ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+
+            user = await FindUserByEmailAsync(model.Email, cancellationToken);
+        }
+        else if (model.UserName.IsNotNullOrWhiteSpace())
+        {
+            model.UserName
+                .IsValidUserName(_identityOptions)
+                .ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
+
+            user = await FindUserByUserNameAsync(model.UserName, cancellationToken);
+        }
+        else if (model.Phone.IsNotNullOrWhiteSpace())
+        {
+            model.Phone
+                .IsValidPhoneNumber()
+                .ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
+
+            user = await FindUserByPhoneAsync(model.Phone, cancellationToken);
+        }
+        else
+        {
+            var propertyNames = new[]
+            {
+                nameof(UserLoginModel.UserName),
+                nameof(UserLoginModel.Email),
+                nameof(UserLoginModel.Phone)
+            };
+
+            var error = CreateRequiredAtLeastOneErrorMessage(propertyNames);
+
+            Throw(BadRequest, InvalidModel, error);
+        }
+
+        model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
+
+        var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, model.Password);
+
+        passwordIsCorrect.ThrowIfFalse(Unauthorized, PasswordMismatch);
+
+        user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
+
+        return user;
+    }
+
+    /// <summary>
+    /// Validates the given <paramref name="model"/> in order to
+    /// determine whether the registration can proceed.
+    /// </summary>
+    /// <param name="model">
+    /// The <see cref="UserRegistrationModel"/>
+    /// which data to be used to register a new user.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidateRegistrationModelAsync(UserRegistrationModel model, CancellationToken cancellationToken = default)
+    {
+        var exception = new ResultException();
+
+        await ValidateEmailAddressAsync(model.Email, exception, cancellationToken);
+
+        await ValidatePasswordAsync(model.Password, model.PasswordConfirmation, exception);
+
+        if (model.Phone is not null)
+            await ValidatePhoneNumberAsync(model.Phone, exception, cancellationToken);
+
+        await ValidateUserNameAsync(model.UserName, exception, cancellationToken);
+
+        if (exception.HaveErrors)
+            throw exception;
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="email"/> address is already in use.
+    /// </summary>
+    /// <param name="email">
+    /// The email address to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="email"/> address is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.Email == email, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="phone"/> number is already in use.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="phone"/> number is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.PhoneNumber == phone, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="userName"/> is already in use.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="userName"/> is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfUserNameIsInUseAsync(string userName, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.UserName == userName, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="phone"/> meets the requirements.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidatePhoneNumberAsync(string phone, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!phone.IsValidPhoneNumber())
+            exception.AddError(BadRequest, InvalidPhoneNumber, phone);
+        else if (await CheckIfPhoneNumberIsInUseAsync(phone, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="userName"/> meets the requirements.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidateUserNameAsync(string userName, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!userName.IsValidUserName(_identityOptions))
+            exception.AddError(BadRequest, InvalidUserName, userName);
+        else if (await CheckIfUserNameIsInUseAsync(userName, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="email"/> meets the requirements.
+    /// </summary>
+    /// <param name="email">
+    /// The email address to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidateEmailAddressAsync(string email, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!email.IsValidEmailAddress())
+            exception.AddError(BadRequest, InvalidEmail, email);
+        else if (await CheckIfEmailAddressIsInUseAsync(email, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicateEmail, email);
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="password"/> meets the requirements.
+    /// </summary>
+    /// <param name="password">
+    /// The password to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="passwordConfirmation">
+    /// Password confirmation value.
+    /// </param>
+    private async Task ValidatePasswordAsync(string password, string passwordConfirmation, ResultException exception)
+    {
+        if (password != passwordConfirmation)
+            exception.AddError(BadRequest, PasswordNotMatchConfirmation);
+
+        await ValidatePasswordAsync(password, exception);
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="password"/> meets the requirements.
+    /// </summary>
+    /// <param name="password">
+    /// The password to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    private async Task ValidatePasswordAsync(string password, ResultException exception)
+    {
+        foreach (var validator in _userManager.PasswordValidators)
+        {
+            var validationResult = await validator.ValidateAsync(_userManager, null!, password);
+            if (!validationResult.Succeeded)
+                exception.AddError(validationResult, UnprocessableEntity);
+        }
+    }
+    #endregion
+
+    #region Notification methods
+    /// <summary>
+    /// Sends an email with a link to confirm the email address.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> whose email address to be confirmed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendEmailAddressConfirmationEmailAsync(User user, CancellationToken cancellationToken = default)
+    {
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        var template = _emailTemplateOptions.EmailAddressConfirmationTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var url = _applicationOptions.ApiUrl;
+        var route = UserRoutes.ConfirmEmail;
+        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Tokens.EmailConfirmationTokenLifetime);
+
+        var link = CreateIdentityTokenLink(url, route, user, token, expiryDate);
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { user.Email }),
+            templateName: template,
+            culture: culture,
+            bodyArgs: new[] { link });
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends the two-factor authentication message
+    /// to the given <paramref name="user"/>.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> to be authenticated via two-factor method.
+    /// </param>
+    /// <param name="verificationCode">
+    /// The two-factor authentication code to be sent.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendTwoFactorAuthenticationEmailAsync(User user, string verificationCode, CancellationToken cancellationToken = default)
+    {
+        var template = _emailTemplateOptions.TwoFactorVerificationTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { user.Email }),
+            templateName: template,
+            culture: culture,
+            bodyArgs: new[] { verificationCode });
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends an email with a link to reset the password.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> whose password to reset.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendPasswordResetEmailAsync(User user, CancellationToken cancellationToken = default)
+    {
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var template = _emailTemplateOptions.PasswordResetTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
+
+        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { user.Email }),
+            templateName: template,
+            culture: culture,
+            bodyArgs: new[] { identityToken });
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends an email notification about the completed password reset.
+    /// </summary>
+    /// <param name="user">
+    /// The recipient <see cref="User"/>.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendPasswordResetCompletedEmailAsync(User user, CancellationToken cancellationToken = default)
+    {
+        user.Email.ThrowIfNullOrWhiteSpace(BadRequest, InvalidEmail, user.Email);
+
+        var template = _emailTemplateOptions.PasswordResetCompletedTemplateName;
+        if (template.IsNullOrWhiteSpace())
+            throw new InvalidOperationException(nameof(EmailTemplateOptions.PasswordResetCompletedTemplateName));
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { user.Email }),
+            templateName: template,
+            culture: culture);
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends an email notification that the email address is going to be changed.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> whose email address to be changed.
+    /// </param>
+    /// <param name="newEmail">
+    /// New email address.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendEmailAddressResetNotificationEmailAsync(User user, string newEmail, CancellationToken cancellationToken = default)
+    {
+        var template = _emailTemplateOptions.EmailAddressResetNotificationTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { user.Email }),
+            templateName: template,
+            culture: culture,
+            bodyArgs: new[] { user.UserName, newEmail });
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends an email with a link to reset the email address.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> whose email address to reset.
+    /// </param>
+    /// <param name="newEmail">
+    /// New email address.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendEmailAddressResetEmailAsync(User user, string newEmail, CancellationToken cancellationToken = default)
+    {
+        var template = _emailTemplateOptions.EmailAddressResetTemplateName;
+        if (template.IsNullOrWhiteSpace())
+            throw new InvalidOperationException(nameof(EmailTemplateOptions.EmailAddressResetTemplateName));
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+
+        var url = _applicationOptions.ApiUrl;
+        var route = UserRoutes.ResetEmail;
+        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetEmailAddressTokenLifetime);
+
+        var link = CreateIdentityTokenLink(url, route, user, token, expiryDate, newEmail);
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { newEmail }),
+            templateName: template,
+            culture: culture,
+            bodyArgs: new object?[] { user.UserName, link });
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sends an email notification that the email address reset has been completed.
+    /// </summary>
+    /// <param name="userName">
+    /// Recipient's user-name.
+    /// </param>
+    /// <param name="oldEmail">
+    /// Old email address.
+    /// </param>
+    /// <param name="newEmail">
+    /// New email address.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Result{TValue}"/> where the
+    /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
+    /// containing information about the message sent.
+    /// </returns>
+    private async Task<Result<EmailModel>> SendEmailAddressResetCompletedEmailAsync(string? userName, string oldEmail, string newEmail, CancellationToken cancellationToken = default)
+    {
+        var template = _emailTemplateOptions.EmailAddressResetCompletedTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
+        var request = new EmailSendRequestModel(
+            basicData: new(to: new[] { oldEmail, newEmail }),
+            templateName: template,
+            culture: culture,
+            bodyArgs: new object?[] { userName, newEmail });
+
+        return await _communicationService.SendEmailAsync(request, cancellationToken);
+    }
+    #endregion
+
+    #endregion
+}

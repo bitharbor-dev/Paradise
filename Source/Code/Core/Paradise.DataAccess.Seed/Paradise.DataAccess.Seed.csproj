@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<DebugType>embedded</DebugType>
+		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="SeedData\Html\EmailAddressConfirmation.html" />
+		<None Remove="SeedData\Html\EmailAddressReset.html" />
+		<None Remove="SeedData\Html\EmailAddressResetCompleted.html" />
+		<None Remove="SeedData\Html\EmailAddressResetNotification.html" />
+		<None Remove="SeedData\Html\PasswordReset.html" />
+		<None Remove="SeedData\Html\PasswordResetCompleted.html" />
+		<None Remove="SeedData\Html\TwoFactorVerification.html" />
+		<None Remove="SeedData\Json\ApplicationData.json" />
+		<None Remove="SeedData\Json\DomainData.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="SeedData\Html\EmailAddressConfirmation.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Html\EmailAddressReset.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Html\EmailAddressResetCompleted.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Html\EmailAddressResetNotification.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Html\PasswordReset.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Html\PasswordResetCompleted.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Html\TwoFactorVerification.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Json\ApplicationData.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="SeedData\Json\DomainData.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\Paradise.Localization\Paradise.Localization.csproj" />
+	</ItemGroup>
+
+</Project>
