@@ -9,7 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include=".env" />
 		<None Include="docker-compose.override.yml">
 			<DependentUpon>docker-compose.yml</DependentUpon>
 		</None>
@@ -23,6 +22,9 @@
 		<None Include="Scripts\MS SQL Server\Shell\Healthcheck.sh" />
 		<None Include="Scripts\WebApi\Shell\CheckStatusCode.sh" />
 		<None Include="Scripts\WebApi\Shell\Healthcheck.sh" />
+		<None Include="Settings\development.env" />
+		<None Include="Settings\production.env" />
+		<None Include="Settings\staging.env" />
 	</ItemGroup>
 
 </Project>
