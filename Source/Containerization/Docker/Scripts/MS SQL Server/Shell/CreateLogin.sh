@@ -2,7 +2,7 @@
 
 echo "Checking MS SQL Login."
 
-for i in {1..50};
+for i in {1..10};
 	do
 
 	/opt/mssql-tools/bin/sqlcmd -U sa -P $SA_PASSWORD -S localhost -b -i /Scripts/SQL/CheckLogin.sql
@@ -23,7 +23,7 @@ for i in {1..50};
 			break
 		else
 			echo "..."
-			sleep 2
+			sleep 1
 		fi
 
 	echo "Failed to create MS SQL Login. Performing new attempt."
