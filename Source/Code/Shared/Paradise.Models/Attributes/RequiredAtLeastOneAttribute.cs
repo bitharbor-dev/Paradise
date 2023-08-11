@@ -1,7 +1,6 @@
 ﻿using Paradise.Common.Extensions;
 using Paradise.Localization.DataValidation;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Paradise.Models.Attributes;
@@ -26,14 +25,12 @@ public sealed class RequiredAtLeastOneAttribute(bool includeEmptyStringOrWhitesp
     /// <summary>
     /// Indicates whether the empty string or whitespace would be treated as an invalid value.
     /// </summary>
-    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "False positive after migration to primary constructors.")]
     public bool IncludeEmptyStringOrWhitespace
         => includeEmptyStringOrWhitespace;
 
     /// <summary>
     /// The names of the properties that are required.
     /// </summary>
-    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "False positive after migration to primary constructors.")]
     public string[] PropertyNames
         => propertyNames;
     #endregion
