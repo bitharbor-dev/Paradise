@@ -98,7 +98,7 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
     }
 
     /// <summary>
-    /// Asynchronously finds the <see cref="EmailTemplate"/>
+    /// Asynchronously finds an <see cref="EmailTemplate"/>
     /// with the given <paramref name="name"/> and <paramref name="culture"/>.
     /// <para>
     /// If such <see cref="EmailTemplate"/> does not exist and
