@@ -17,6 +17,10 @@ public sealed class CommunicationServiceTests
     private const string InvalidEmailAddress = "Invalid email address.";
     #endregion
 
+    #region Fields
+    private static readonly string[] _defaultArgs = new[] { "Test parameter" };
+    #endregion
+
     #region Constructors
     /// <summary>
     /// Initializes a new instance of the <see cref="CommunicationServiceTests"/> class.
@@ -79,8 +83,8 @@ public sealed class CommunicationServiceTests
         var request = new EmailSendRequestModel(baseEmailModel,
                                                 templateName,
                                                 culture,
-                                                new[] { "Test parameter" },
-                                                new[] { "Test parameter" });
+                                                _defaultArgs,
+                                                _defaultArgs);
 
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture,
@@ -127,7 +131,7 @@ public sealed class CommunicationServiceTests
         var request = new EmailSendRequestModel(new(Array.Empty<string>()),
                                                 templateName,
                                                 culture,
-                                                new[] { "Test parameter" });
+                                                _defaultArgs);
 
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture);
@@ -196,7 +200,7 @@ public sealed class CommunicationServiceTests
         var request = new EmailSendRequestModel(new(new[] { TestEmail }),
                                                 templateName,
                                                 culture,
-                                                new[] { "Redundant parameter" });
+                                                _defaultArgs);
 
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture);
@@ -297,7 +301,7 @@ public sealed class CommunicationServiceTests
                                                 templateName,
                                                 culture,
                                                 null,
-                                                new[] { "Test parameter" });
+                                                _defaultArgs);
 
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture);
@@ -331,7 +335,7 @@ public sealed class CommunicationServiceTests
         var request = new EmailSendRequestModel(new(new[] { TestEmail }),
                                                 templateName,
                                                 culture,
-                                                new[] { "Test parameter" });
+                                                _defaultArgs);
 
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture,
@@ -368,7 +372,7 @@ public sealed class CommunicationServiceTests
                                                 templateName,
                                                 culture,
                                                 null,
-                                                new[] { "Test parameter" });
+                                                _defaultArgs);
 
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture,
@@ -400,7 +404,7 @@ public sealed class CommunicationServiceTests
         var request = new EmailSendRequestModel(new(new[] { TestEmail }),
                                                 string.Empty,
                                                 null,
-                                                new[] { "Test parameter" });
+                                                _defaultArgs);
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()

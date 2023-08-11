@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using static Paradise.Localization.ExceptionsHandling.ExceptionMessages;
 
@@ -62,7 +63,7 @@ public sealed class InvalidEntityStateException : Exception
     #region Private methods
     private static string CreateExceptionMessage(Type entityType, object? value, string? additionalInformation, string? propertyName)
     {
-        var message = string.Format(InvalidEntityState, entityType.Name, propertyName, value);
+        var message = string.Format(CultureInfo.CurrentCulture, InvalidEntityState, entityType.Name, propertyName, value);
 
         if (!string.IsNullOrWhiteSpace(additionalInformation))
             message = string.Concat(message, ExceptionMessageSeparator, additionalInformation);
