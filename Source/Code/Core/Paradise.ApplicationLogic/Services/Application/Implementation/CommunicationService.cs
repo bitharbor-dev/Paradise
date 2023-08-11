@@ -45,6 +45,8 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
     /// <inheritdoc/>
     public async Task<Result<EmailModel>> SendEmailAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default)
     {
+        _smtpOptions.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
+
         _smtpOptions.Credentials.UserName.ThrowIfNullOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration, SenderEmailIsMissing);
 
         var basicData = request.BasicData;

@@ -11,11 +11,17 @@ namespace Paradise.Options.Models.Communication;
 /// </summary>
 public sealed class SmtpOptions
 {
+    #region Constants
+    /// <summary>
+    /// Directory name for the email messages to be stored in.
+    /// </summary>
+    public const string EmailStorageDirectoryName = "EmailMessages";
+    #endregion
+
     #region Properties
     /// <summary>
     /// Gets or sets the credentials used to authenticate the sender.
     /// </summary>
-    [Required, NotNull]
     public NetworkCredential? Credentials { get; set; }
 
     /// <summary>

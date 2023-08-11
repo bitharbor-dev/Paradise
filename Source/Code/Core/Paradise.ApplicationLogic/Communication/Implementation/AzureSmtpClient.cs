@@ -33,6 +33,16 @@ public sealed class AzureSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpCl
     /// <inheritdoc/>
     public async Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
+        if (Options.StoreEmailsInsteadOfSending)
+        {
+            var localClient = new LocalSmtpClient(smtpOptions);
+            await localClient.SendAsync(model, cancellationToken);
+
+            return;
+        }
+
+        Options.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
+
         model.From.ThrowIfEmptyOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration);
 
         model.From.IsValidEmailAddress().ThrowIfFalse(ServiceUnavailable, InvalidSmtpConfiguration);
