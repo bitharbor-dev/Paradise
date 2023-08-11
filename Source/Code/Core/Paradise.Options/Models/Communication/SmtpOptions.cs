@@ -11,11 +11,17 @@ namespace Paradise.Options.Models.Communication;
 /// </summary>
 public sealed class SmtpOptions
 {
+    #region Constants
+    /// <summary>
+    /// Directory name for the email messages to be stored in.
+    /// </summary>
+    public const string EmailStorageDirectoryName = "EmailMessages";
+    #endregion
+
     #region Properties
     /// <summary>
     /// Gets or sets the credentials used to authenticate the sender.
     /// </summary>
-    [Required, NotNull]
     public NetworkCredential? Credentials { get; set; }
 
     /// <summary>
@@ -36,6 +42,17 @@ public sealed class SmtpOptions
     /// </summary>
     [AllowedValues<int>(25, 465, 587, 2525)]
     public int Port { get; set; }
+
+    /// <summary>
+    /// Indicates whether the emails being send
+    /// should be stored locally instead of sending.
+    /// </summary>
+    /// <remarks>
+    /// This setting is very handy when you need to
+    /// debug the application without Internet connection
+    /// or if you don't have SMTP credentials to use.
+    /// </remarks>
+    public bool StoreEmailsInsteadOfSending { get; set; }
 
     /// <summary>
     /// Gets or sets a value that specifies the amount of time after which a synchronous

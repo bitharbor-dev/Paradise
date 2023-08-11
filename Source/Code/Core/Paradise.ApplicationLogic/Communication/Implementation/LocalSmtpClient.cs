@@ -12,7 +12,7 @@ namespace Paradise.ApplicationLogic.Communication.Implementation;
 /// Provides emailing functionalities.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="DefaultSmtpClient"/> class.
+/// Initializes a new instance of the <see cref="LocalSmtpClient"/> class.
 /// <para>
 /// There is no <see cref="SmtpOptions"/> validation inside,
 /// due to options validation being used on startup.
@@ -21,7 +21,7 @@ namespace Paradise.ApplicationLogic.Communication.Implementation;
 /// <param name="smtpOptions">
 /// The accessor used to access the <see cref="SmtpOptions"/>.
 /// </param>
-public sealed class DefaultSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpClient
+internal class LocalSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpClient
 {
     #region Properties
     /// <inheritdoc/>
@@ -32,25 +32,21 @@ public sealed class DefaultSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtp
     /// <inheritdoc/>
     public async Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
-        if (Options.StoreEmailsInsteadOfSending)
-        {
-            var localClient = new LocalSmtpClient(smtpOptions);
-            await localClient.SendAsync(model, cancellationToken);
-
-            return;
-        }
-
-        Options.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
-
         model.From.ThrowIfEmptyOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration);
 
         model.From.IsValidEmailAddress().ThrowIfFalse(ServiceUnavailable, InvalidSmtpConfiguration);
 
         model.To.ThrowIfEmpty(BadRequest, EmptyRecipientsList);
 
-        using var client = new SmtpClient(Options.Host, Options.Port);
-        client.EnableSsl = Options.EnableSsl;
-        client.Credentials = Options.Credentials;
+        var directoryPath = Path.Combine(AppContext.BaseDirectory, SmtpOptions.EmailStorageDirectoryName);
+
+        Directory.CreateDirectory(directoryPath);
+
+        using var client = new SmtpClient()
+        {
+            DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
+            PickupDirectoryLocation = directoryPath
+        };
 
         using var message = new MailMessage
         {
