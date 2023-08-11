@@ -38,6 +38,17 @@ public sealed class SmtpOptions
     public int Port { get; set; }
 
     /// <summary>
+    /// Indicates whether the emails being send
+    /// should be stored locally instead of sending.
+    /// </summary>
+    /// <remarks>
+    /// This setting is very handy when you need to
+    /// debug the application without Internet connection
+    /// or if you don't have SMTP credentials to use.
+    /// </remarks>
+    public bool StoreEmailsInsteadOfSending { get; set; }
+
+    /// <summary>
     /// Gets or sets a value that specifies the amount of time after which a synchronous
     /// Overload:System.Net.Mail.SmtpClient.Send call times out.
     /// </summary>
