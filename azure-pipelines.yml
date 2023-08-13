@@ -20,6 +20,12 @@ steps:
   displayName: 'Run tests'
   inputs:
     command: 'test'
+    arguments: --collect:"XPlat Code Coverage"
+
+- task: PublishCodeCoverageResults@2
+  displayName: 'Publish code coverage report'
+  inputs:
+    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Web API project'
