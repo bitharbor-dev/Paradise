@@ -25,7 +25,7 @@ public sealed class DefaultSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtp
 {
     #region Properties
     /// <inheritdoc/>
-    public SmtpOptions Options { get; } = smtpOptions.Value;
+    public SmtpOptions Options { get; } = smtpOptions!.Value;
     #endregion
 
     #region Public methods

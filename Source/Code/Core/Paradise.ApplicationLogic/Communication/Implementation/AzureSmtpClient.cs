@@ -26,7 +26,7 @@ public sealed class AzureSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpCl
 {
     #region Properties
     /// <inheritdoc/>
-    public SmtpOptions Options { get; } = smtpOptions.Value;
+    public SmtpOptions Options { get; } = smtpOptions!.Value;
     #endregion
 
     #region Public methods
