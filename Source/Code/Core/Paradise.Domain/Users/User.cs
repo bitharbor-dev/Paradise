@@ -19,8 +19,14 @@ public sealed class User : IdentityUser<Guid>, IDatabaseRecord, IEquatable<User>
     /// <param name="userName">
     /// User-name.
     /// </param>
+    /// <remarks>
+    /// User lock out is enabled by default.
+    /// </remarks>
     public User(string email, string userName) : base(userName)
-        => Email = email;
+    {
+        Email = email;
+        LockoutEnabled = true;
+    }
     #endregion
 
     #region Properties

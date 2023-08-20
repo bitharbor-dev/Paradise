@@ -172,7 +172,17 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
     {
-        var user = await GetValidUserFromLoginModelAsync(model, cancellationToken);
+        var user = await FindUserByLoginModelAsync(model, cancellationToken);
+
+        model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
+
+        await ValidateUserLockoutAsync(user);
+
+        await ValidateUserPasswordAsync(user, model.Password);
+
+        await ResetUserLockoutStateAsync(user);
+
+        user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
 
         if (user.TwoFactorEnabled)
         {
@@ -604,6 +614,27 @@ public sealed class UserService(ILogger<UserService> logger,
     }
 
     /// <summary>
+    /// Resets the user's lockout state.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> which lockout state to be reset.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    private async Task ResetUserLockoutStateAsync(User user)
+    {
+        if (user.AccessFailedCount is not 0 || user.LockoutEnd is not null)
+        {
+            user.AccessFailedCount = 0;
+            user.LockoutEnd = null;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            updateResult.ThrowIfUnsuccessfulIdentityResult();
+        }
+    }
+
+    /// <summary>
     /// Creates a link with an identity token.
     /// </summary>
     /// <param name="baseUrl">
@@ -648,39 +679,78 @@ public sealed class UserService(ILogger<UserService> logger,
     }
 
     /// <summary>
-    /// Checks if any user satisfies
-    /// the given <paramref name="predicate"/>.
+    /// Creates a "required at least one" error message.
     /// </summary>
-    /// <param name="predicate">
-    /// A function to test each <see cref="User"/> for a condition.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
+    /// <param name="propertyNames">
+    /// Properties to be included in the message.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if any user satisfies
-    /// the given <paramref name="predicate"/>, otherwise - <see langword="false"/>.
+    /// A <see cref="string"/> value containing the error message.
     /// </returns>
-    private async Task<bool> AnyUserAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
-        => await _userManager.Users.AnyAsync(predicate, cancellationToken);
+    private static string CreateRequiredAtLeastOneErrorMessage(params string[] propertyNames)
+    {
+        const string Separator = ", ";
 
+        var message = ValidationMessages.RequiredAtLeastOne;
+
+        var properties = string.Join(Separator, propertyNames);
+
+        return string.Format(CultureInfo.CurrentCulture, message, properties);
+    }
+
+    #region Lookup methods
     /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
+    /// Gets the <see cref="User"/> with the data from the given <paramref name="model"/>.
     /// </summary>
-    /// <param name="id">
-    /// The Id of the <see cref="User"/> to be found.
+    /// <param name="model">
+    /// The <see cref="UserLoginModel"/>
+    /// which data to be used to find a <see cref="User"/>.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="id"/>.
+    /// The <see cref="User"/> with the data from the given <paramref name="model"/>.
     /// </returns>
-    private async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
-        ?? throw new ResultException(NotFound, UserIdNotFound, id);
+    private async Task<User> FindUserByLoginModelAsync(UserLoginModel model, CancellationToken cancellationToken = default)
+    {
+        User? user = null;
+
+        if (model.Email.IsNotNullOrWhiteSpace())
+        {
+            model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+
+            user = await FindUserByEmailAsync(model.Email, cancellationToken);
+        }
+        else if (model.UserName.IsNotNullOrWhiteSpace())
+        {
+            model.UserName.IsValidUserName(_identityOptions).ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
+
+            user = await FindUserByUserNameAsync(model.UserName, cancellationToken);
+        }
+        else if (model.Phone.IsNotNullOrWhiteSpace())
+        {
+            model.Phone.IsValidPhoneNumber().ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
+
+            user = await FindUserByPhoneAsync(model.Phone, cancellationToken);
+        }
+        else
+        {
+            var propertyNames = new[]
+            {
+                nameof(UserLoginModel.UserName),
+                nameof(UserLoginModel.Email),
+                nameof(UserLoginModel.Phone)
+            };
+
+            var error = CreateRequiredAtLeastOneErrorMessage(propertyNames);
+
+            Throw(BadRequest, InvalidModel, error);
+        }
+
+        return user;
+    }
 
     /// <summary>
     /// Gets the <see cref="User"/> with the given <paramref name="email"/> address.
@@ -734,108 +804,42 @@ public sealed class UserService(ILogger<UserService> logger,
         ?? throw new ResultException(NotFound, UserPhoneNumberNotFound, phone);
 
     /// <summary>
-    /// Creates a "required at least one" error message.
+    /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
     /// </summary>
-    /// <param name="propertyNames">
-    /// Properties to be included in the message.
-    /// </param>
-    /// <returns>
-    /// A <see cref="string"/> value containing the error message.
-    /// </returns>
-    private static string CreateRequiredAtLeastOneErrorMessage(params string[] propertyNames)
-    {
-        const string Separator = ", ";
-
-        var message = ValidationMessages.RequiredAtLeastOne;
-
-        var properties = string.Join(Separator, propertyNames);
-
-        return string.Format(CultureInfo.CurrentCulture, message, properties);
-    }
-
-    #region Validation methods
-    /// <summary>
-    /// Gets a <see cref="User"/> from the login data.
-    /// </summary>
-    /// <param name="model">
-    /// The <see cref="UserLoginModel"/>
-    /// which data to be used to log in a user.
+    /// <param name="id">
+    /// The Id of the <see cref="User"/> to be found.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/> object if the login data is valid. Otherwise - <see langword="null"/>.
-    /// <para>
-    /// Acceptance criteria:
-    /// </para>
-    /// <list type="bullet">
-    /// <item>
-    /// User with such user-name or phone number or email address exists.
-    /// </item>
-    /// <item>
-    /// User's email is confirmed.
-    /// </item>
-    /// <item>
-    /// The password is correct.
-    /// </item>
-    /// </list>
+    /// The <see cref="User"/> with the given <paramref name="id"/>.
     /// </returns>
-    private async Task<User> GetValidUserFromLoginModelAsync(UserLoginModel model,
-                                                             CancellationToken cancellationToken = default)
-    {
-        User? user = null;
+    private async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
+        ?? throw new ResultException(NotFound, UserIdNotFound, id);
 
-        if (model.Email.IsNotNullOrWhiteSpace())
-        {
-            model.Email
-                .IsValidEmailAddress()
-                .ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+    /// <summary>
+    /// Checks if any user satisfies
+    /// the given <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="predicate">
+    /// A function to test each <see cref="User"/> for a condition.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if any user satisfies
+    /// the given <paramref name="predicate"/>, otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> AnyUserAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _userManager.Users.AnyAsync(predicate, cancellationToken);
+    #endregion
 
-            user = await FindUserByEmailAsync(model.Email, cancellationToken);
-        }
-        else if (model.UserName.IsNotNullOrWhiteSpace())
-        {
-            model.UserName
-                .IsValidUserName(_identityOptions)
-                .ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
-
-            user = await FindUserByUserNameAsync(model.UserName, cancellationToken);
-        }
-        else if (model.Phone.IsNotNullOrWhiteSpace())
-        {
-            model.Phone
-                .IsValidPhoneNumber()
-                .ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
-
-            user = await FindUserByPhoneAsync(model.Phone, cancellationToken);
-        }
-        else
-        {
-            var propertyNames = new[]
-            {
-                nameof(UserLoginModel.UserName),
-                nameof(UserLoginModel.Email),
-                nameof(UserLoginModel.Phone)
-            };
-
-            var error = CreateRequiredAtLeastOneErrorMessage(propertyNames);
-
-            Throw(BadRequest, InvalidModel, error);
-        }
-
-        model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
-
-        var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, model.Password);
-
-        passwordIsCorrect.ThrowIfFalse(Unauthorized, PasswordMismatch);
-
-        user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
-
-        return user;
-    }
-
+    #region Validation methods
     /// <summary>
     /// Validates the given <paramref name="model"/> in order to
     /// determine whether the registration can proceed.
@@ -863,99 +867,6 @@ public sealed class UserService(ILogger<UserService> logger,
 
         if (exception.HaveErrors)
             throw exception;
-    }
-
-    /// <summary>
-    /// Checks if the given <paramref name="email"/> address is already in use.
-    /// </summary>
-    /// <param name="email">
-    /// The email address to be checked.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="email"/> address is already in use,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.Email == email, cancellationToken);
-
-    /// <summary>
-    /// Checks if the given <paramref name="phone"/> number is already in use.
-    /// </summary>
-    /// <param name="phone">
-    /// The phone number to be checked.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="phone"/> number is already in use,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.PhoneNumber == phone, cancellationToken);
-
-    /// <summary>
-    /// Checks if the given <paramref name="userName"/> is already in use.
-    /// </summary>
-    /// <param name="userName">
-    /// The user-name to be checked.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="userName"/> is already in use,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> CheckIfUserNameIsInUseAsync(string userName, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.UserName == userName, cancellationToken);
-
-    /// <summary>
-    /// Checks if the given <paramref name="phone"/> meets the requirements.
-    /// </summary>
-    /// <param name="phone">
-    /// The phone number to be checked.
-    /// </param>
-    /// <param name="exception">
-    /// The <see cref="ResultException"/> into which the errors to be pushed.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    private async Task ValidatePhoneNumberAsync(string phone, ResultException exception, CancellationToken cancellationToken = default)
-    {
-        if (!phone.IsValidPhoneNumber())
-            exception.AddError(BadRequest, InvalidPhoneNumber, phone);
-        else if (await CheckIfPhoneNumberIsInUseAsync(phone, cancellationToken))
-            exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
-    }
-
-    /// <summary>
-    /// Checks if the given <paramref name="userName"/> meets the requirements.
-    /// </summary>
-    /// <param name="userName">
-    /// The user-name to be checked.
-    /// </param>
-    /// <param name="exception">
-    /// The <see cref="ResultException"/> into which the errors to be pushed.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    private async Task ValidateUserNameAsync(string userName, ResultException exception, CancellationToken cancellationToken = default)
-    {
-        if (!userName.IsValidUserName(_identityOptions))
-            exception.AddError(BadRequest, InvalidUserName, userName);
-        else if (await CheckIfUserNameIsInUseAsync(userName, cancellationToken))
-            exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
     }
 
     /// <summary>
@@ -1017,6 +928,156 @@ public sealed class UserService(ILogger<UserService> logger,
                 exception.AddError(validationResult, UnprocessableEntity);
         }
     }
+
+    /// <summary>
+    /// Checks if the given <paramref name="phone"/> meets the requirements.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidatePhoneNumberAsync(string phone, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!phone.IsValidPhoneNumber())
+            exception.AddError(BadRequest, InvalidPhoneNumber, phone);
+        else if (await CheckIfPhoneNumberIsInUseAsync(phone, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="userName"/> meets the requirements.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidateUserNameAsync(string userName, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!userName.IsValidUserName(_identityOptions))
+            exception.AddError(BadRequest, InvalidUserName, userName);
+        else if (await CheckIfUserNameIsInUseAsync(userName, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
+    }
+
+    /// <summary>
+    /// Validates the <paramref name="user"/>'s lockout state.
+    /// </summary>
+    /// <remarks>
+    /// If the <paramref name="user"/> is locked out - exception is thrown.
+    /// </remarks>
+    /// <param name="user">
+    /// The <see cref="User"/> which lockout state to be validated.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    /// <exception cref="ResultException">
+    /// Thrown if the <paramref name="user"/> is locked out.
+    /// </exception>
+    private async Task ValidateUserLockoutAsync(User user)
+    {
+        var userLockedOut = await _userManager.IsLockedOutAsync(user);
+
+        (user.LockoutEnabled && userLockedOut).ThrowIfTrue(Forbidden, UserLockedOut);
+    }
+
+    /// <summary>
+    /// Validates the <paramref name="user"/>'s password.
+    /// </summary>
+    /// <remarks>
+    /// If the <paramref name="password"/> does not match
+    /// the <paramref name="user"/>'s one - exception is thrown.
+    /// </remarks>
+    /// <param name="user">
+    /// The <see cref="User"/> which password to be validated.
+    /// </param>
+    /// <param name="password">
+    /// The password to be compared to the <paramref name="user"/>'s one.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    /// <exception cref="ResultException">
+    /// Thrown if the <paramref name="password"/> is incorrect.
+    /// </exception>
+    private async Task ValidateUserPasswordAsync(User user, string password)
+    {
+        var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, password);
+
+        if (!passwordIsCorrect)
+        {
+            if (user.LockoutEnabled)
+            {
+                var incrementResult = await _userManager.AccessFailedAsync(user);
+                incrementResult.ThrowIfUnsuccessfulIdentityResult();
+            }
+
+            Throw(Unauthorized, PasswordMismatch);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="email"/> address is already in use.
+    /// </summary>
+    /// <param name="email">
+    /// The email address to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="email"/> address is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.Email == email, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="phone"/> number is already in use.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="phone"/> number is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.PhoneNumber == phone, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="userName"/> is already in use.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="userName"/> is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfUserNameIsInUseAsync(string userName, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.UserName == userName, cancellationToken);
     #endregion
 
     #region Notification methods
