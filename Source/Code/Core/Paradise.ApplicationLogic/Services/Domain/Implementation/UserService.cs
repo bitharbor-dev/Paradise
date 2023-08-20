@@ -489,8 +489,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// The <see cref="User"/> for whom to generate an access token.
     /// </param>
     /// <param name="refreshTokenId">
-    /// The Id of the refresh token to be used
-    /// to bound with the newly generated JWT.
+    /// The Id of the refresh token to be used to
+    /// bound with the newly generated JWT.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
@@ -575,7 +575,8 @@ public sealed class UserService(ILogger<UserService> logger,
             _applicationOptions.Authentication.TwoFactorVerificationCodeLength);
 
         var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Authentication.TwoFactorTokenLifetime);
-        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
+        var identityToken = _dataProtectionService.ProtectAsJson(
+            new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
 
         return new(user.Email, expiryDate, identityToken);
     }
@@ -635,7 +636,8 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
 
-        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, innerToken, value, expiryDate));
+        var identityToken = _dataProtectionService.ProtectAsJson(
+            new IdentityToken(user.Email, innerToken, value, expiryDate));
 
         // Since the scope of the current method is very concrete,
         // we can assume that the 'path' parameter has the '{identityToken}' placeholder string inside.
@@ -1115,7 +1117,8 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
 
-        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
+        var identityToken = _dataProtectionService.ProtectAsJson(
+            new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
 
         var request = new EmailSendRequestModel(
             basicData: new(to: new[] { user.Email }),

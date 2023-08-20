@@ -68,8 +68,8 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// Creates a new email template.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="EmailTemplateCreationModel"/> to be used
-    /// to create a new email template.
+    /// The <see cref="EmailTemplateCreationModel"/> to be used to
+    /// create a new email template.
     /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
@@ -92,8 +92,8 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// The Id of the email template to be updated.
     /// </param>
     /// <param name="model">
-    /// The <see cref="EmailTemplateUpdateModel"/> to be used
-    /// to update an email template.
+    /// The <see cref="EmailTemplateUpdateModel"/> to be used to
+    /// update an email template.
     /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where

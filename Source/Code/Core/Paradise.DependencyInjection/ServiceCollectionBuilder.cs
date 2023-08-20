@@ -36,7 +36,7 @@ using System.Text.Json;
 namespace Paradise.DependencyInjection;
 
 /// <summary>
-/// Provides a simple API for configuring application _services.
+/// Provides a simple API for configuring application services.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="ServiceCollectionBuilder"/> class.
@@ -165,7 +165,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     }
 
     /// <summary>
-    /// Adds the identity _services.
+    /// Adds the identity services.
     /// </summary>
     private void AddIdentity()
     {
@@ -189,7 +189,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     }
 
     /// <summary>
-    /// Adds the default _services.
+    /// Adds the default services.
     /// </summary>
     private void AddServices()
     {

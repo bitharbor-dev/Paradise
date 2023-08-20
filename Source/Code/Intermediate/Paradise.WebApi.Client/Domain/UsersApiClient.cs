@@ -87,8 +87,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Registers a new user.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserRegistrationModel"/> to be used
-    /// to register a new user.
+    /// The <see cref="UserRegistrationModel"/> to be used to
+    /// register a new user.
     /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
@@ -106,8 +106,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Confirms the user's email address.
     /// </summary>
     /// <param name="identityToken">
-    /// An encrypted string value to be used
-    /// to confirm the user's email address.
+    /// An encrypted string value to be used to
+    /// confirm the user's email address.
     /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
@@ -129,8 +129,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// two-factor authentication token in case it is enabled for the user.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserLoginModel"/> to be used
-    /// to validate login data and generate an access token.
+    /// The <see cref="UserLoginModel"/> to be used to
+    /// validate login data and generate an access token.
     /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
@@ -150,8 +150,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// for the user with two-factor authentication enabled.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserTwoFactorAuthenticationModel"/> to be used
-    /// to validate the login data and generate an access token.
+    /// The <see cref="UserTwoFactorAuthenticationModel"/> to be used to
+    /// validate the login data and generate an access token.
     /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
@@ -225,8 +225,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Creates a password reset request.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserResetPasswordRequestModel"/> to be used
-    /// to create a password reset request.
+    /// The <see cref="UserResetPasswordRequestModel"/> to be used to
+    /// create a password reset request.
     /// </param>
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
@@ -242,8 +242,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Resets the user's password.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserResetPasswordModel"/> to be used
-    /// to reset the user's password.
+    /// The <see cref="UserResetPasswordModel"/> to be used to
+    /// reset the user's password.
     /// </param>
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
@@ -259,8 +259,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Creates an email address reset request.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserResetEmailRequestModel"/> to be used
-    /// to create an email address reset request.
+    /// The <see cref="UserResetEmailRequestModel"/> to be used to
+    /// create an email address reset request.
     /// </param>
     /// <param name="accessToken">
     /// Authorization token.
@@ -279,8 +279,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Resets the user's email address.
     /// </summary>
     /// <param name="identityToken">
-    /// An encrypted string value to be used
-    /// to reset the user's email address.
+    /// An encrypted string value to be used to
+    /// reset the user's email address.
     /// </param>
     /// <param name="accessToken">
     /// Authorization token.
@@ -302,8 +302,8 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Updates the user.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserUpdateModel"/> to be used
-    /// to update the user.
+    /// The <see cref="UserUpdateModel"/> to be used to
+    /// update the user.
     /// </param>
     /// <param name="accessToken">
     /// Authorization token.

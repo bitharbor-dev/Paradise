@@ -152,8 +152,8 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
     /// and <paramref name="bodyArgs"/>.
     /// </summary>
     /// <param name="template">
-    /// The <see cref="EmailTemplate"/> to be used
-    /// to format the email body.
+    /// The <see cref="EmailTemplate"/> to be used to
+    /// format the email body.
     /// </param>
     /// <param name="from">
     /// Sender email address.

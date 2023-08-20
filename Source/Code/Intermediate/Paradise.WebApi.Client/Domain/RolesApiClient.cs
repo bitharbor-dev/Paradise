@@ -138,8 +138,8 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// Creates a new application role.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="RoleCreationModel"/> to be used
-    /// to create a new application role.
+    /// The <see cref="RoleCreationModel"/> to be used to
+    /// create a new application role.
     /// </param>
     /// <param name="accessToken">
     /// Authorization token.
@@ -163,8 +163,8 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// The Id of the role to be updated.
     /// </param>
     /// <param name="model">
-    /// The <see cref="RoleUpdateModel"/> to be used
-    /// to update an application role.
+    /// The <see cref="RoleUpdateModel"/> to be used to
+    /// update an application role.
     /// </param>
     /// <param name="accessToken">
     /// Authorization token.

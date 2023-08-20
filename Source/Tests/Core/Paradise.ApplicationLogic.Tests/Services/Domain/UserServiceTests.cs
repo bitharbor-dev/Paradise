@@ -588,8 +588,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.CreateEmailResetRequestAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -732,8 +732,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -1317,8 +1317,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.LoginAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -1650,8 +1650,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.RegisterAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
