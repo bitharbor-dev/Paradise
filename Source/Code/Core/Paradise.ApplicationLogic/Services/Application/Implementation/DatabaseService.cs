@@ -510,7 +510,6 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </returns>
     private async Task<IEnumerable<UserRefreshToken>> GetOutdatedTokensAsync(TimeSpan refreshTokenLifetime, CancellationToken cancellationToken = default)
     {
-        // TODO: Make filtering on database side.
         bool Predicate(UserRefreshToken userRefreshToken)
             => userRefreshToken.IsOutdated(refreshTokenLifetime);
 

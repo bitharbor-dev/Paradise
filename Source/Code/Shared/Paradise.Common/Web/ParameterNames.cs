@@ -27,11 +27,6 @@ public static class ParameterNames
     public const string IsDefaultParameter = "isDefault";
 
     /// <summary>
-    /// Optional user Id parameter name.
-    /// </summary>
-    public const string OptionalUserIdParameter = $"{UserIdParameter}?"; // TODO: Check if needed.
-
-    /// <summary>
     /// Identity token parameter name.
     /// </summary>
     public const string IdentityTokenParameter = "identityToken";
