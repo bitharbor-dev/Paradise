@@ -736,6 +736,15 @@ namespace Paradise.Localization.ErrorsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified user does not exist or password is incorrect..
+        /// </summary>
+        public static string UserNotFoundOrPasswordMismatch {
+            get {
+                return ResourceManager.GetString("UserNotFoundOrPasswordMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The user &apos;{0}&apos; is not pending deletion..
         /// </summary>
         public static string UserNotPendingDeletion {

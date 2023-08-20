@@ -398,5 +398,10 @@ public enum ErrorCode
     /// </summary>
     [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserPhoneNumberNotFound))]
     UserPhoneNumberNotFound,
+    /// <summary>
+    /// The specified user does not exist or password is incorrect.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserNotFoundOrPasswordMismatch))]
+    UserNotFoundOrPasswordMismatch
     #endregion
 }

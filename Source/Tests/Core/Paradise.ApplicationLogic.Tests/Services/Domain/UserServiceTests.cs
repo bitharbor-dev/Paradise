@@ -674,6 +674,33 @@ public sealed class UserServiceTests
     /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// No exception is thrown if there is no such user
+    /// with the specified email address.
+    /// Such behavior prevents user enumeration vulnerability.
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task CreatePasswordResetRequestAsync_DoesNotThrowOnNonExistingUser()
+    {
+        // Arrange
+        const string Email = "test@email.com";
+
+        await CreatePasswordResetTemplateAsync();
+
+        // Act
+        var result = await Service.CreatePasswordResetRequestAsync(new(Email));
+
+        // Assert
+        result.AssertSuccess(OK);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
     /// throws a <see cref="ResultException"/> since the input
     /// email address is not valid.
     /// </para>
@@ -753,32 +780,6 @@ public sealed class UserServiceTests
 
         // Assert
         result.AssertFail(NotFound, MessageTemplateNotFound);
-    }
-
-    /// <summary>
-    /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
-    /// <para>
-    /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="User"/>
-    /// does not exist.
-    /// </para>
-    /// </summary>
-    [Fact]
-    public async Task CreatePasswordResetRequestAsync_ThrowsOnNonExistingUser()
-    {
-        // Arrange
-        const string Email = "test@email.com";
-
-        await CreatePasswordResetTemplateAsync();
-
-        // Act
-        var exception = await Assert.ThrowsAsync<ResultException>(()
-            => Service.CreatePasswordResetRequestAsync(new(Email)));
-
-        var result = exception.GetResult();
-
-        // Assert
-        result.AssertFail(NotFound, UserEmailNotFound);
     }
 
     /// <summary>
@@ -1026,14 +1027,16 @@ public sealed class UserServiceTests
     /// <para>
     /// <strong>Expected result:</strong>
     /// throws a <see cref="ResultException"/> since there was no
-    /// login credentials provided.
+    /// email address, user-name or phone number provided.
     /// </para>
     /// </summary>
     [Fact]
     public async Task LoginAsync_ThrowsOnEmptyCredentials()
     {
         // Arrange
-        var loginModel = new UserLoginModel("");
+        const string Password = "123Qwe!@";
+
+        var loginModel = new UserLoginModel(Password);
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()
@@ -1043,6 +1046,32 @@ public sealed class UserServiceTests
 
         // Assert
         result.AssertFail(BadRequest, InvalidModel);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.LoginAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// throws a <see cref="ResultException"/> since there was no
+    /// password provided.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task LoginAsync_ThrowsOnEmptyPassword()
+    {
+        // Arrange
+        const string Password = "";
+
+        var loginModel = new UserLoginModel(Password);
+
+        // Act
+        var exception = await Assert.ThrowsAsync<ResultException>(()
+            => Service.LoginAsync(loginModel));
+
+        var result = exception.GetResult();
+
+        // Assert
+        result.AssertFail(BadRequest, PasswordMissing);
     }
 
     /// <summary>
@@ -1072,7 +1101,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(Unauthorized, PasswordMismatch);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1179,7 +1208,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(NotFound, UserEmailNotFound);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1206,7 +1235,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(NotFound, UserPhoneNumberNotFound);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1233,7 +1262,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(NotFound, UserNameNotFound);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>

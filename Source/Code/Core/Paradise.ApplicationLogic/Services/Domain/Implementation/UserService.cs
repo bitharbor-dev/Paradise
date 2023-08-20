@@ -107,7 +107,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         return new(user.ToModel(), OK);
     }
@@ -153,6 +153,7 @@ public sealed class UserService(ILogger<UserService> logger,
         var emailConfirmationToken = identityTokenModel.InnerToken;
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         user.EmailConfirmed.ThrowIfTrue(UnprocessableEntity, UserEmailAlreadyConfirmed, user.Email);
 
@@ -172,9 +173,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByLoginModelAsync(model, cancellationToken);
-
         model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
+
+        var user = await FindUserByLoginModelAsync(model, cancellationToken);
 
         await ValidateUserLockoutAsync(user);
 
@@ -232,6 +233,7 @@ public sealed class UserService(ILogger<UserService> logger,
         codeIsCorrect.ThrowIfFalse(Unauthorized, UnauthorizedUser);
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         return await GenerateAccessTokenAsync(user, null, cancellationToken);
     }
@@ -248,7 +250,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
 
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         return await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken);
     }
@@ -295,13 +297,16 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var user = await FindUserByEmailAsync(model.Email, cancellationToken);
 
-        var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken);
-        if (!emailResult.IsSuccess)
+        if (user is not null)
         {
-            logger.LogResultErrors(emailResult);
-            logger.LogResultCriticalErrors(emailResult);
+            var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken);
+            if (!emailResult.IsSuccess)
+            {
+                logger.LogResultErrors(emailResult);
+                logger.LogResultCriticalErrors(emailResult);
 
-            return InternalServerError;
+                return InternalServerError;
+            }
         }
 
         return OK;
@@ -329,6 +334,7 @@ public sealed class UserService(ILogger<UserService> logger,
         var passwordResetToken = identityTokenModel.InnerToken;
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         var passwordResetResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, model.Password);
 
@@ -361,7 +367,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, model.Email);
 
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         try
         {
@@ -408,6 +414,7 @@ public sealed class UserService(ILogger<UserService> logger,
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, newEmail);
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         var changeEmailResult = await _userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
 
@@ -432,7 +439,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> UpdateAsync(Guid userId, UserUpdateModel model, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         if (model.IsPendingDeletion.HasValue)
         {
@@ -467,7 +474,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> DeleteAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
         var requestLifetime = _applicationOptions.Tokens.UserDeletionRequestLifetime;
 
         user.DeletionRequestSubmitted.HasValue.ThrowIfFalse(BadRequest, UserNotPendingDeletion, user.Email);
@@ -749,11 +756,13 @@ public sealed class UserService(ILogger<UserService> logger,
             Throw(BadRequest, InvalidModel, error);
         }
 
+        user.ThrowIfNull(Unauthorized, UserNotFoundOrPasswordMismatch);
+
         return user;
     }
 
     /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="email"/> address.
+    /// Finds the <see cref="User"/> with the given <paramref name="email"/> address.
     /// </summary>
     /// <param name="email">
     /// The email address of the <see cref="User"/> to be found.
@@ -763,14 +772,13 @@ public sealed class UserService(ILogger<UserService> logger,
     /// while waiting for the task to complete.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="email"/> address.
+    /// The <see cref="User"/> with the given <paramref name="email"/> address or <see langword="null"/>.
     /// </returns>
-    private async Task<User> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Email == email, cancellationToken))
-        ?? throw new ResultException(NotFound, UserEmailNotFound, email);
+    private Task<User?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+        => _userManager.Users.SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
 
     /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="userName"/>.
+    /// Finds the <see cref="User"/> with the given <paramref name="userName"/>.
     /// </summary>
     /// <param name="userName">
     /// The user-name of the <see cref="User"/> to be found.
@@ -780,14 +788,13 @@ public sealed class UserService(ILogger<UserService> logger,
     /// while waiting for the task to complete.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="userName"/>.
+    /// The <see cref="User"/> with the given <paramref name="userName"/> or <see langword="null"/>.
     /// </returns>
-    private async Task<User> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.UserName == userName, cancellationToken))
-        ?? throw new ResultException(NotFound, UserNameNotFound, userName);
+    private Task<User?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+        => _userManager.Users.SingleOrDefaultAsync(user => user.UserName == userName, cancellationToken);
 
     /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="phone"/>.
+    /// Finds the <see cref="User"/> with the given <paramref name="phone"/>.
     /// </summary>
     /// <param name="phone">
     /// The phone number of the <see cref="User"/> to be found.
@@ -797,11 +804,10 @@ public sealed class UserService(ILogger<UserService> logger,
     /// while waiting for the task to complete.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="phone"/>.
+    /// The <see cref="User"/> with the given <paramref name="phone"/> or <see langword="null"/>.
     /// </returns>
-    private async Task<User> FindUserByPhoneAsync(string phone, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.PhoneNumber == phone, cancellationToken))
-        ?? throw new ResultException(NotFound, UserPhoneNumberNotFound, phone);
+    private Task<User?> FindUserByPhoneAsync(string phone, CancellationToken cancellationToken = default)
+        => _userManager.Users.SingleOrDefaultAsync(user => user.PhoneNumber == phone, cancellationToken);
 
     /// <summary>
     /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
@@ -816,7 +822,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <returns>
     /// The <see cref="User"/> with the given <paramref name="id"/>.
     /// </returns>
-    private async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    private async Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
         ?? throw new ResultException(NotFound, UserIdNotFound, id);
 
@@ -1024,7 +1030,7 @@ public sealed class UserService(ILogger<UserService> logger,
                 incrementResult.ThrowIfUnsuccessfulIdentityResult();
             }
 
-            Throw(Unauthorized, PasswordMismatch);
+            Throw(Unauthorized, UserNotFoundOrPasswordMismatch);
         }
     }
 
