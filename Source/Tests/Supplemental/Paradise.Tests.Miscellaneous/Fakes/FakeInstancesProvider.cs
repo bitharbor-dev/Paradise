@@ -144,7 +144,7 @@ public static class FakeInstancesProvider
         {
             AllowedForNewUsers = true,
             MaxFailedAccessAttempts = 5,
-            DefaultLockoutTimeSpan = TimeSpan.FromHours(1)
+            DefaultLockoutTimeSpan = TimeSpan.FromSeconds(0.5)
         },
         Password = new()
         {

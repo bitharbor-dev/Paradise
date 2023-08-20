@@ -88,6 +88,24 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to cast an object of type &apos;{0}&apos; into an object of type &apos;{1}&apos;..
+        /// </summary>
+        public static string FailedToCast {
+            get {
+                return ResourceManager.GetString("FailedToCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create instance of type &apos;{0}&apos;..
+        /// </summary>
+        public static string FailedToCreateInstanceOfType {
+            get {
+                return ResourceManager.GetString("FailedToCreateInstanceOfType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to deserialize into the instance of type &apos;{0}&apos;..
         /// </summary>
         public static string FailedToDeserialize {
@@ -133,6 +151,24 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An instance of type &apos;{0}&apos; does not provide public parameterless constructor..
+        /// </summary>
+        public static string InvalidEqualityComparerConstructor {
+            get {
+                return ResourceManager.GetString("InvalidEqualityComparerConstructor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An instance of type &apos;{0}&apos; is not assignable to &apos;IEqualityComparer&lt;T&gt;&apos;..
+        /// </summary>
+        public static string InvalidEqualityComparerType {
+            get {
+                return ResourceManager.GetString("InvalidEqualityComparerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid parameters number..
         /// </summary>
         public static string InvalidParametersNumber {
@@ -142,7 +178,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Swagger configuration is not valid..
         /// </summary>
         public static string InvalidSwaggerConfiguration {
             get {

@@ -24,8 +24,8 @@ public interface IJsonWebTokenService
     /// </para>
     /// </param>
     /// <param name="refreshTokenId">
-    /// The Id of the refresh token to be used
-    /// to bound with the newly generated JWT.
+    /// The Id of the refresh token to be used to
+    /// bound with the newly generated JWT.
     /// </param>
     /// <param name="expiryDate">
     /// Token expiry date.

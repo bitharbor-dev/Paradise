@@ -64,8 +64,6 @@ public sealed class RoleService(UserManager userManager,
 
         user.ThrowIfNull(NotFound, UserIdNotFound, userId);
 
-        // TODO: Change the query in a such way, so it would call the 'UserRoles' table
-        // and retrieve all data with a single database call.
         var userRoles = await GetUserRolesInternalAsync(user, cancellationToken);
 
         return new(userRoles.Select(role => role.ToModel()), OK);

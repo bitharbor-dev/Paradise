@@ -107,7 +107,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         return new(user.ToModel(), OK);
     }
@@ -153,6 +153,7 @@ public sealed class UserService(ILogger<UserService> logger,
         var emailConfirmationToken = identityTokenModel.InnerToken;
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         user.EmailConfirmed.ThrowIfTrue(UnprocessableEntity, UserEmailAlreadyConfirmed, user.Email);
 
@@ -172,7 +173,17 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
     {
-        var user = await GetValidUserFromLoginModelAsync(model, cancellationToken);
+        model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
+
+        var user = await FindUserByLoginModelAsync(model, cancellationToken);
+
+        await ValidateUserLockoutAsync(user);
+
+        await ValidateUserPasswordAsync(user, model.Password);
+
+        await ResetUserLockoutStateAsync(user);
+
+        user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
 
         if (user.TwoFactorEnabled)
         {
@@ -222,6 +233,7 @@ public sealed class UserService(ILogger<UserService> logger,
         codeIsCorrect.ThrowIfFalse(Unauthorized, UnauthorizedUser);
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         return await GenerateAccessTokenAsync(user, null, cancellationToken);
     }
@@ -238,7 +250,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
 
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         return await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken);
     }
@@ -285,13 +297,16 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var user = await FindUserByEmailAsync(model.Email, cancellationToken);
 
-        var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken);
-        if (!emailResult.IsSuccess)
+        if (user is not null)
         {
-            logger.LogResultErrors(emailResult);
-            logger.LogResultCriticalErrors(emailResult);
+            var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken);
+            if (!emailResult.IsSuccess)
+            {
+                logger.LogResultErrors(emailResult);
+                logger.LogResultCriticalErrors(emailResult);
 
-            return InternalServerError;
+                return InternalServerError;
+            }
         }
 
         return OK;
@@ -319,6 +334,7 @@ public sealed class UserService(ILogger<UserService> logger,
         var passwordResetToken = identityTokenModel.InnerToken;
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         var passwordResetResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, model.Password);
 
@@ -351,7 +367,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, model.Email);
 
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         try
         {
@@ -398,6 +414,7 @@ public sealed class UserService(ILogger<UserService> logger,
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, newEmail);
 
         var user = await FindUserByEmailAsync(email, cancellationToken);
+        user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         var changeEmailResult = await _userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
 
@@ -422,7 +439,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> UpdateAsync(Guid userId, UserUpdateModel model, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
 
         if (model.IsPendingDeletion.HasValue)
         {
@@ -457,7 +474,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> DeleteAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken);
         var requestLifetime = _applicationOptions.Tokens.UserDeletionRequestLifetime;
 
         user.DeletionRequestSubmitted.HasValue.ThrowIfFalse(BadRequest, UserNotPendingDeletion, user.Email);
@@ -489,8 +506,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// The <see cref="User"/> for whom to generate an access token.
     /// </param>
     /// <param name="refreshTokenId">
-    /// The Id of the refresh token to be used
-    /// to bound with the newly generated JWT.
+    /// The Id of the refresh token to be used to
+    /// bound with the newly generated JWT.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
@@ -575,7 +592,8 @@ public sealed class UserService(ILogger<UserService> logger,
             _applicationOptions.Authentication.TwoFactorVerificationCodeLength);
 
         var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Authentication.TwoFactorTokenLifetime);
-        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
+        var identityToken = _dataProtectionService.ProtectAsJson(
+            new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
 
         return new(user.Email, expiryDate, identityToken);
     }
@@ -599,6 +617,27 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             foreach (var role in defaultRolesResult.Value)
                 await _roleService.AssignAsync(role.Id, user.Id, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Resets the user's lockout state.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> which lockout state to be reset.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    private async Task ResetUserLockoutStateAsync(User user)
+    {
+        if (user.AccessFailedCount is not 0 || user.LockoutEnd is not null)
+        {
+            user.AccessFailedCount = 0;
+            user.LockoutEnd = null;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            updateResult.ThrowIfUnsuccessfulIdentityResult();
         }
     }
 
@@ -635,7 +674,8 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
 
-        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, innerToken, value, expiryDate));
+        var identityToken = _dataProtectionService.ProtectAsJson(
+            new IdentityToken(user.Email, innerToken, value, expiryDate));
 
         // Since the scope of the current method is very concrete,
         // we can assume that the 'path' parameter has the '{identityToken}' placeholder string inside.
@@ -644,92 +684,6 @@ public sealed class UserService(ILogger<UserService> logger,
 
         return new($"{baseUrl}{path}");
     }
-
-    /// <summary>
-    /// Checks if any user satisfies
-    /// the given <paramref name="predicate"/>.
-    /// </summary>
-    /// <param name="predicate">
-    /// A function to test each <see cref="User"/> for a condition.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if any user satisfies
-    /// the given <paramref name="predicate"/>, otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> AnyUserAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
-        => await _userManager.Users.AnyAsync(predicate, cancellationToken);
-
-    /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
-    /// </summary>
-    /// <param name="id">
-    /// The Id of the <see cref="User"/> to be found.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="id"/>.
-    /// </returns>
-    private async Task<User> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
-        ?? throw new ResultException(NotFound, UserIdNotFound, id);
-
-    /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="email"/> address.
-    /// </summary>
-    /// <param name="email">
-    /// The email address of the <see cref="User"/> to be found.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="email"/> address.
-    /// </returns>
-    private async Task<User> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Email == email, cancellationToken))
-        ?? throw new ResultException(NotFound, UserEmailNotFound, email);
-
-    /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="userName"/>.
-    /// </summary>
-    /// <param name="userName">
-    /// The user-name of the <see cref="User"/> to be found.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="userName"/>.
-    /// </returns>
-    private async Task<User> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.UserName == userName, cancellationToken))
-        ?? throw new ResultException(NotFound, UserNameNotFound, userName);
-
-    /// <summary>
-    /// Gets the <see cref="User"/> with the given <paramref name="phone"/>.
-    /// </summary>
-    /// <param name="phone">
-    /// The phone number of the <see cref="User"/> to be found.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// The <see cref="User"/> with the given <paramref name="phone"/>.
-    /// </returns>
-    private async Task<User> FindUserByPhoneAsync(string phone, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.PhoneNumber == phone, cancellationToken))
-        ?? throw new ResultException(NotFound, UserPhoneNumberNotFound, phone);
 
     /// <summary>
     /// Creates a "required at least one" error message.
@@ -751,61 +705,40 @@ public sealed class UserService(ILogger<UserService> logger,
         return string.Format(CultureInfo.CurrentCulture, message, properties);
     }
 
-    #region Validation methods
+    #region Lookup methods
     /// <summary>
-    /// Gets a <see cref="User"/> from the login data.
+    /// Gets the <see cref="User"/> with the data from the given <paramref name="model"/>.
     /// </summary>
     /// <param name="model">
     /// The <see cref="UserLoginModel"/>
-    /// which data to be used to log in a user.
+    /// which data to be used to find a <see cref="User"/>.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/> object if the login data is valid. Otherwise - <see langword="null"/>.
-    /// <para>
-    /// Acceptance criteria:
-    /// </para>
-    /// <list type="bullet">
-    /// <item>
-    /// User with such user-name or phone number or email address exists.
-    /// </item>
-    /// <item>
-    /// User's email is confirmed.
-    /// </item>
-    /// <item>
-    /// The password is correct.
-    /// </item>
-    /// </list>
+    /// The <see cref="User"/> with the data from the given <paramref name="model"/>.
     /// </returns>
-    private async Task<User> GetValidUserFromLoginModelAsync(UserLoginModel model,
-                                                             CancellationToken cancellationToken = default)
+    private async Task<User> FindUserByLoginModelAsync(UserLoginModel model, CancellationToken cancellationToken = default)
     {
         User? user = null;
 
         if (model.Email.IsNotNullOrWhiteSpace())
         {
-            model.Email
-                .IsValidEmailAddress()
-                .ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+            model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
             user = await FindUserByEmailAsync(model.Email, cancellationToken);
         }
         else if (model.UserName.IsNotNullOrWhiteSpace())
         {
-            model.UserName
-                .IsValidUserName(_identityOptions)
-                .ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
+            model.UserName.IsValidUserName(_identityOptions).ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
 
             user = await FindUserByUserNameAsync(model.UserName, cancellationToken);
         }
         else if (model.Phone.IsNotNullOrWhiteSpace())
         {
-            model.Phone
-                .IsValidPhoneNumber()
-                .ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
+            model.Phone.IsValidPhoneNumber().ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
 
             user = await FindUserByPhoneAsync(model.Phone, cancellationToken);
         }
@@ -823,17 +756,96 @@ public sealed class UserService(ILogger<UserService> logger,
             Throw(BadRequest, InvalidModel, error);
         }
 
-        model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
-
-        var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, model.Password);
-
-        passwordIsCorrect.ThrowIfFalse(Unauthorized, PasswordMismatch);
-
-        user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
+        user.ThrowIfNull(Unauthorized, UserNotFoundOrPasswordMismatch);
 
         return user;
     }
 
+    /// <summary>
+    /// Finds the <see cref="User"/> with the given <paramref name="email"/> address.
+    /// </summary>
+    /// <param name="email">
+    /// The email address of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="email"/> address or <see langword="null"/>.
+    /// </returns>
+    private Task<User?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+        => _userManager.Users.SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
+
+    /// <summary>
+    /// Finds the <see cref="User"/> with the given <paramref name="userName"/>.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="userName"/> or <see langword="null"/>.
+    /// </returns>
+    private Task<User?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+        => _userManager.Users.SingleOrDefaultAsync(user => user.UserName == userName, cancellationToken);
+
+    /// <summary>
+    /// Finds the <see cref="User"/> with the given <paramref name="phone"/>.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="phone"/> or <see langword="null"/>.
+    /// </returns>
+    private Task<User?> FindUserByPhoneAsync(string phone, CancellationToken cancellationToken = default)
+        => _userManager.Users.SingleOrDefaultAsync(user => user.PhoneNumber == phone, cancellationToken);
+
+    /// <summary>
+    /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
+    /// </summary>
+    /// <param name="id">
+    /// The Id of the <see cref="User"/> to be found.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> with the given <paramref name="id"/>.
+    /// </returns>
+    private async Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
+        ?? throw new ResultException(NotFound, UserIdNotFound, id);
+
+    /// <summary>
+    /// Checks if any user satisfies
+    /// the given <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="predicate">
+    /// A function to test each <see cref="User"/> for a condition.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if any user satisfies
+    /// the given <paramref name="predicate"/>, otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> AnyUserAsync(Expression<Func<User, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _userManager.Users.AnyAsync(predicate, cancellationToken);
+    #endregion
+
+    #region Validation methods
     /// <summary>
     /// Validates the given <paramref name="model"/> in order to
     /// determine whether the registration can proceed.
@@ -861,99 +873,6 @@ public sealed class UserService(ILogger<UserService> logger,
 
         if (exception.HaveErrors)
             throw exception;
-    }
-
-    /// <summary>
-    /// Checks if the given <paramref name="email"/> address is already in use.
-    /// </summary>
-    /// <param name="email">
-    /// The email address to be checked.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="email"/> address is already in use,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.Email == email, cancellationToken);
-
-    /// <summary>
-    /// Checks if the given <paramref name="phone"/> number is already in use.
-    /// </summary>
-    /// <param name="phone">
-    /// The phone number to be checked.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="phone"/> number is already in use,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.PhoneNumber == phone, cancellationToken);
-
-    /// <summary>
-    /// Checks if the given <paramref name="userName"/> is already in use.
-    /// </summary>
-    /// <param name="userName">
-    /// The user-name to be checked.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="userName"/> is already in use,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    private async Task<bool> CheckIfUserNameIsInUseAsync(string userName, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.UserName == userName, cancellationToken);
-
-    /// <summary>
-    /// Checks if the given <paramref name="phone"/> meets the requirements.
-    /// </summary>
-    /// <param name="phone">
-    /// The phone number to be checked.
-    /// </param>
-    /// <param name="exception">
-    /// The <see cref="ResultException"/> into which the errors to be pushed.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    private async Task ValidatePhoneNumberAsync(string phone, ResultException exception, CancellationToken cancellationToken = default)
-    {
-        if (!phone.IsValidPhoneNumber())
-            exception.AddError(BadRequest, InvalidPhoneNumber, phone);
-        else if (await CheckIfPhoneNumberIsInUseAsync(phone, cancellationToken))
-            exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
-    }
-
-    /// <summary>
-    /// Checks if the given <paramref name="userName"/> meets the requirements.
-    /// </summary>
-    /// <param name="userName">
-    /// The user-name to be checked.
-    /// </param>
-    /// <param name="exception">
-    /// The <see cref="ResultException"/> into which the errors to be pushed.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    private async Task ValidateUserNameAsync(string userName, ResultException exception, CancellationToken cancellationToken = default)
-    {
-        if (!userName.IsValidUserName(_identityOptions))
-            exception.AddError(BadRequest, InvalidUserName, userName);
-        else if (await CheckIfUserNameIsInUseAsync(userName, cancellationToken))
-            exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
     }
 
     /// <summary>
@@ -1015,6 +934,156 @@ public sealed class UserService(ILogger<UserService> logger,
                 exception.AddError(validationResult, UnprocessableEntity);
         }
     }
+
+    /// <summary>
+    /// Checks if the given <paramref name="phone"/> meets the requirements.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidatePhoneNumberAsync(string phone, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!phone.IsValidPhoneNumber())
+            exception.AddError(BadRequest, InvalidPhoneNumber, phone);
+        else if (await CheckIfPhoneNumberIsInUseAsync(phone, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="userName"/> meets the requirements.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name to be checked.
+    /// </param>
+    /// <param name="exception">
+    /// The <see cref="ResultException"/> into which the errors to be pushed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    private async Task ValidateUserNameAsync(string userName, ResultException exception, CancellationToken cancellationToken = default)
+    {
+        if (!userName.IsValidUserName(_identityOptions))
+            exception.AddError(BadRequest, InvalidUserName, userName);
+        else if (await CheckIfUserNameIsInUseAsync(userName, cancellationToken))
+            exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
+    }
+
+    /// <summary>
+    /// Validates the <paramref name="user"/>'s lockout state.
+    /// </summary>
+    /// <remarks>
+    /// If the <paramref name="user"/> is locked out - exception is thrown.
+    /// </remarks>
+    /// <param name="user">
+    /// The <see cref="User"/> which lockout state to be validated.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    /// <exception cref="ResultException">
+    /// Thrown if the <paramref name="user"/> is locked out.
+    /// </exception>
+    private async Task ValidateUserLockoutAsync(User user)
+    {
+        var userLockedOut = await _userManager.IsLockedOutAsync(user);
+
+        (user.LockoutEnabled && userLockedOut).ThrowIfTrue(Forbidden, UserLockedOut);
+    }
+
+    /// <summary>
+    /// Validates the <paramref name="user"/>'s password.
+    /// </summary>
+    /// <remarks>
+    /// If the <paramref name="password"/> does not match
+    /// the <paramref name="user"/>'s one - exception is thrown.
+    /// </remarks>
+    /// <param name="user">
+    /// The <see cref="User"/> which password to be validated.
+    /// </param>
+    /// <param name="password">
+    /// The password to be compared to the <paramref name="user"/>'s one.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    /// <exception cref="ResultException">
+    /// Thrown if the <paramref name="password"/> is incorrect.
+    /// </exception>
+    private async Task ValidateUserPasswordAsync(User user, string password)
+    {
+        var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, password);
+
+        if (!passwordIsCorrect)
+        {
+            if (user.LockoutEnabled)
+            {
+                var incrementResult = await _userManager.AccessFailedAsync(user);
+                incrementResult.ThrowIfUnsuccessfulIdentityResult();
+            }
+
+            Throw(Unauthorized, UserNotFoundOrPasswordMismatch);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given <paramref name="email"/> address is already in use.
+    /// </summary>
+    /// <param name="email">
+    /// The email address to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="email"/> address is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.Email == email, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="phone"/> number is already in use.
+    /// </summary>
+    /// <param name="phone">
+    /// The phone number to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="phone"/> number is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.PhoneNumber == phone, cancellationToken);
+
+    /// <summary>
+    /// Checks if the given <paramref name="userName"/> is already in use.
+    /// </summary>
+    /// <param name="userName">
+    /// The user-name to be checked.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="userName"/> is already in use,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    private async Task<bool> CheckIfUserNameIsInUseAsync(string userName, CancellationToken cancellationToken = default)
+        => await AnyUserAsync(u => u.UserName == userName, cancellationToken);
     #endregion
 
     #region Notification methods
@@ -1115,7 +1184,8 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
 
-        var identityToken = _dataProtectionService.ProtectAsJson(new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
+        var identityToken = _dataProtectionService.ProtectAsJson(
+            new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
 
         var request = new EmailSendRequestModel(
             basicData: new(to: new[] { user.Email }),

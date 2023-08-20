@@ -588,8 +588,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.CreateEmailResetRequestAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -674,6 +674,33 @@ public sealed class UserServiceTests
     /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// No exception is thrown if there is no such user
+    /// with the specified email address.
+    /// Such behavior prevents user enumeration vulnerability.
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task CreatePasswordResetRequestAsync_DoesNotThrowOnNonExistingUser()
+    {
+        // Arrange
+        const string Email = "test@email.com";
+
+        await CreatePasswordResetTemplateAsync();
+
+        // Act
+        var result = await Service.CreatePasswordResetRequestAsync(new(Email));
+
+        // Assert
+        result.AssertSuccess(OK);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
     /// throws a <see cref="ResultException"/> since the input
     /// email address is not valid.
     /// </para>
@@ -732,8 +759,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -753,32 +780,6 @@ public sealed class UserServiceTests
 
         // Assert
         result.AssertFail(NotFound, MessageTemplateNotFound);
-    }
-
-    /// <summary>
-    /// <see cref="UserService.CreatePasswordResetRequestAsync"/> test method.
-    /// <para>
-    /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="User"/>
-    /// does not exist.
-    /// </para>
-    /// </summary>
-    [Fact]
-    public async Task CreatePasswordResetRequestAsync_ThrowsOnNonExistingUser()
-    {
-        // Arrange
-        const string Email = "test@email.com";
-
-        await CreatePasswordResetTemplateAsync();
-
-        // Act
-        var exception = await Assert.ThrowsAsync<ResultException>(()
-            => Service.CreatePasswordResetRequestAsync(new(Email)));
-
-        var result = exception.GetResult();
-
-        // Assert
-        result.AssertFail(NotFound, UserEmailNotFound);
     }
 
     /// <summary>
@@ -957,15 +958,85 @@ public sealed class UserServiceTests
     /// <see cref="UserService.LoginAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// User is logged in, after lockout period is exceeded.
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task LoginAsync_AfterLockout()
+    {
+        // Arrange
+        const string Email = "test@email.com";
+        const string Password = "123Qwe!@";
+
+        var user = await CreateUserAsync(email: Email, password: Password);
+
+        var loginModel = new UserLoginModel(Password + Password) { Email = Email };
+
+        for (var i = 0; i < Manager.Options.Lockout.MaxFailedAccessAttempts; i++)
+            await Assert.ThrowsAsync<ResultException>(() => Service.LoginAsync(loginModel));
+
+        await Task.Delay(Manager.Options.Lockout.DefaultLockoutTimeSpan);
+
+        loginModel.Password = Password;
+
+        // Act
+        var result = await Service.LoginAsync(loginModel);
+
+        // Assert
+        result.AssertSuccess(OK);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.LoginAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// throws a <see cref="ResultException"/> since the user is
+    /// locked out after a number of unsuccessful login attempts.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task LoginAsync_IncorrectPassword_LocksOutUser()
+    {
+        // Arrange
+        const string Email = "test@email.com";
+        const string Password = "123Qwe!@";
+
+        var user = await CreateUserAsync(email: Email, password: Password);
+
+        var loginModel = new UserLoginModel(Password + Password) { Email = Email };
+
+        for (var i = 0; i < Manager.Options.Lockout.MaxFailedAccessAttempts; i++)
+            await Assert.ThrowsAsync<ResultException>(() => Service.LoginAsync(loginModel));
+
+        // Act
+        var exception = await Assert.ThrowsAsync<ResultException>(()
+            => Service.LoginAsync(loginModel));
+
+        var result = exception.GetResult();
+
+        // Assert
+        result.AssertFail(Forbidden, UserLockedOut);
+        Assert.NotNull(user.LockoutEnd);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.LoginAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
     /// throws a <see cref="ResultException"/> since there was no
-    /// login credentials provided.
+    /// email address, user-name or phone number provided.
     /// </para>
     /// </summary>
     [Fact]
     public async Task LoginAsync_ThrowsOnEmptyCredentials()
     {
         // Arrange
-        var loginModel = new UserLoginModel("");
+        const string Password = "123Qwe!@";
+
+        var loginModel = new UserLoginModel(Password);
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()
@@ -975,6 +1046,32 @@ public sealed class UserServiceTests
 
         // Assert
         result.AssertFail(BadRequest, InvalidModel);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.LoginAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// throws a <see cref="ResultException"/> since there was no
+    /// password provided.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task LoginAsync_ThrowsOnEmptyPassword()
+    {
+        // Arrange
+        const string Password = "";
+
+        var loginModel = new UserLoginModel(Password);
+
+        // Act
+        var exception = await Assert.ThrowsAsync<ResultException>(()
+            => Service.LoginAsync(loginModel));
+
+        var result = exception.GetResult();
+
+        // Assert
+        result.AssertFail(BadRequest, PasswordMissing);
     }
 
     /// <summary>
@@ -1004,7 +1101,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(Unauthorized, PasswordMismatch);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1111,7 +1208,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(NotFound, UserEmailNotFound);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1138,7 +1235,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(NotFound, UserPhoneNumberNotFound);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1165,7 +1262,7 @@ public sealed class UserServiceTests
         var result = exception.GetResult();
 
         // Assert
-        result.AssertFail(NotFound, UserNameNotFound);
+        result.AssertFail(Unauthorized, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1224,6 +1321,35 @@ public sealed class UserServiceTests
 
         // Assert
         result.AssertFail(BadRequest, PasswordMissing);
+    }
+
+    /// <summary>
+    /// <see cref="UserService.LoginAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// throws a <see cref="ResultException"/> since the user is
+    /// locked out.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task LoginAsync_ThrowsOnUserLockedOut()
+    {
+        // Arrange
+        const string Email = "test@email.com";
+        const string Password = "123Qwe!@";
+
+        await CreateUserAsync(email: Email, password: Password, lockoutEnd: DateTime.UtcNow.AddDays(1));
+
+        var loginModel = new UserLoginModel(Password) { Email = Email };
+
+        // Act
+        var exception = await Assert.ThrowsAsync<ResultException>(()
+            => Service.LoginAsync(loginModel));
+
+        var result = exception.GetResult();
+
+        // Assert
+        result.AssertFail(Forbidden, UserLockedOut);
     }
 
     /// <summary>
@@ -1317,8 +1443,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.LoginAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -1650,8 +1776,8 @@ public sealed class UserServiceTests
     /// <see cref="UserService.RegisterAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used
-    /// to send an email message does not exist.
+    /// throws a <see cref="ResultException"/> since the <see cref="EmailTemplate"/> to be used to
+    /// send an email message does not exist.
     /// </para>
     /// </summary>
     [Fact]
@@ -2466,16 +2592,20 @@ public sealed class UserServiceTests
     /// <param name="deletionRequestSubmitted">
     /// Deletion request submission date.
     /// </param>
+    /// <param name="lockoutEnd">
+    /// Lockout end date.
+    /// </param>
     /// <returns>
     /// A newly created <see cref="User"/> instance.
     /// </returns>
     private async Task<User> CreateUserAsync(string email = "test@email.com", string userName = "Test", string password = "123Qwe!@",
-                                             bool emailConfirmed = true, bool twoFactorEnabled = false,
-                                             string? phoneNumber = null, DateTime? deletionRequestSubmitted = null)
+                                             bool emailConfirmed = true, bool twoFactorEnabled = false, string? phoneNumber = null,
+                                             DateTime? deletionRequestSubmitted = null, DateTime? lockoutEnd = null)
     {
         var user = new User(email, userName)
         {
             DeletionRequestSubmitted = deletionRequestSubmitted,
+            LockoutEnd = lockoutEnd,
             EmailConfirmed = emailConfirmed,
             PhoneNumber = phoneNumber,
             TwoFactorEnabled = twoFactorEnabled

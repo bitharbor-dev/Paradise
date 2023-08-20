@@ -36,7 +36,7 @@ using System.Text.Json;
 namespace Paradise.DependencyInjection;
 
 /// <summary>
-/// Provides a simple API for configuring application _services.
+/// Provides a simple API for configuring application services.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="ServiceCollectionBuilder"/> class.
@@ -50,7 +50,6 @@ namespace Paradise.DependencyInjection;
 public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfigurationOrigin configurationOrigin)
 {
     #region Fields
-    private readonly IServiceCollection _services = services;
     private readonly IConfiguration _configuration = configurationOrigin.GetConfiguration();
     #endregion
 
@@ -83,7 +82,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     /// </remarks>
     public void AddBearerAuth()
     {
-        _services
+        services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -99,7 +98,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
                 };
             });
 
-        _services.AddAuthorization();
+        services.AddAuthorization();
     }
     #endregion
 
@@ -138,13 +137,13 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     /// Adds the <see cref="AzureSmtpClient"/>.
     /// </summary>
     private void AddSmtpClient()
-        => _services.AddScoped<ISmtpClient, AzureSmtpClient>();
+        => services.AddScoped<ISmtpClient, AzureSmtpClient>();
 
     /// <summary>
     /// Adds the <see cref="JsonSeedDataProvider"/>.
     /// </summary>
     private void AddSeedDataProvider()
-        => _services.AddScoped<ISeedDataProvider, JsonSeedDataProvider>();
+        => services.AddScoped<ISeedDataProvider, JsonSeedDataProvider>();
 
     /// <summary>
     /// Adds the database contexts.
@@ -157,22 +156,22 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
         var domainContextConnectionString = _configuration
             .GetConnectionString(DomainContext.ConnectionStringName);
 
-        _services.AddDbContext<IApplicationDataSource, ApplicationContext>(
+        services.AddDbContext<IApplicationDataSource, ApplicationContext>(
             options => options.UseSqlServer(applicationContextConnectionString));
 
-        _services.AddDbContext<IDomainDataSource, DomainContext>(
+        services.AddDbContext<IDomainDataSource, DomainContext>(
             options => options.UseSqlServer(domainContextConnectionString));
     }
 
     /// <summary>
-    /// Adds the identity _services.
+    /// Adds the identity services.
     /// </summary>
     private void AddIdentity()
     {
         void SetUpIdentity(IdentityOptions options)
             => _configuration.GetRequiredSection(nameof(IdentityOptions)).Bind(options);
 
-        _services.AddIdentity<User, Role>(SetUpIdentity)
+        services.AddIdentity<User, Role>(SetUpIdentity)
             .AddEntityFrameworkStores<DomainContext>()
             .AddRoleManager<RoleManager<Role>>()
             .AddUserManager<UserManager>()
@@ -184,30 +183,30 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     /// </summary>
     private void AddRepositories()
     {
-        _services.AddScoped<IEmailTemplatesRepository, EmailTemplatesRepository>();
-        _services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
+        services.AddScoped<IEmailTemplatesRepository, EmailTemplatesRepository>();
+        services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
     }
 
     /// <summary>
-    /// Adds the default _services.
+    /// Adds the default services.
     /// </summary>
     private void AddServices()
     {
-        _services.AddScoped<IAuthorizationService, AuthorizationService>();
-        _services.AddScoped<ICommunicationService, CommunicationService>();
-        _services.AddScoped<IDatabaseService, DatabaseService>();
-        _services.AddScoped<IEmailTemplateService, EmailTemplateService>();
-        _services.AddScoped<IJsonWebTokenService, JsonWebTokenService>();
-        _services.AddDataProtection().UseCryptographicAlgorithms(new()
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
+        services.AddScoped<ICommunicationService, CommunicationService>();
+        services.AddScoped<IDatabaseService, DatabaseService>();
+        services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+        services.AddScoped<IJsonWebTokenService, JsonWebTokenService>();
+        services.AddDataProtection().UseCryptographicAlgorithms(new()
         {
             EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
             ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
         });
 
-        _services.AddScoped<IDataProtectionService, DataProtectionService>();
+        services.AddScoped<IDataProtectionService, DataProtectionService>();
 
-        _services.AddScoped<IRoleService, RoleService>();
-        _services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IUserService, UserService>();
     }
 
     /// <summary>
@@ -232,7 +231,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     {
         var configurationSection = _configuration.GetRequiredSection(typeof(TOptions).Name);
 
-        var optionsBuilder = _services.AddOptions<TOptions>().Bind(configurationSection);
+        var optionsBuilder = services.AddOptions<TOptions>().Bind(configurationSection);
 
         if (validateDataAnnotations)
             optionsBuilder.ValidateDataAnnotations();

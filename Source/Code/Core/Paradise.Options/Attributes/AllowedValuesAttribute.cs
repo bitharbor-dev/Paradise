@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Paradise.Localization.ExceptionsHandling;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Paradise.Options.Attributes;
 
@@ -16,6 +18,10 @@ namespace Paradise.Options.Attributes;
 /// </param>
 internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationAttribute
 {
+    #region Fields
+    private Type? _equalityComparerType;
+    #endregion
+
     #region Properties
     /// <summary>
     /// Allowed values array.
@@ -25,7 +31,42 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
     /// <summary>
     /// Equality comparer type.
     /// </summary>
-    public Type? EqualityComparerType { get; set; }
+    /// <remarks>
+    /// The input value is expected to be a type
+    /// which implements the <see cref="IEqualityComparer{T}"/> interface
+    /// and have parameterless constructor.
+    /// </remarks>
+    public Type? EqualityComparerType
+    {
+        get => _equalityComparerType;
+        set
+        {
+            if (value is not null)
+            {
+                if (!value.IsAssignableTo(typeof(IEqualityComparer<T>)))
+                {
+                    var inputTypeName = value.GetType().Name;
+                    var messageFormat = ExceptionMessages.InvalidEqualityComparerType;
+
+                    var message = string.Format(CultureInfo.CurrentCulture, messageFormat, inputTypeName);
+
+                    throw new InvalidOperationException(message);
+                }
+
+                if (value.GetConstructor(Type.EmptyTypes) is null)
+                {
+                    var inputTypeName = value.GetType().Name;
+                    var messageFormat = ExceptionMessages.InvalidEqualityComparerConstructor;
+
+                    var message = string.Format(CultureInfo.CurrentCulture, messageFormat, inputTypeName);
+
+                    throw new InvalidOperationException(message);
+                }
+            }
+
+            _equalityComparerType = value;
+        }
+    }
     #endregion
 
     #region Public methods
@@ -36,14 +77,29 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
             return true;
 
         if (value is not T castedValue)
-            throw new InvalidCastException(); // TODO: Provide proper exception message.
+        {
+            var inputTypeName = value?.GetType().Name;
+            var actualTypeName = typeof(T).Name;
+            var messageFormat = ExceptionMessages.FailedToCast;
+
+            var message = string.Format(CultureInfo.CurrentCulture, messageFormat, inputTypeName, actualTypeName);
+
+            throw new InvalidCastException(message);
+        }
 
         IEqualityComparer<T>? equalityComparer = null;
 
-        if (EqualityComparerType is not null)
+        if (_equalityComparerType is not null)
         {
-            if (Activator.CreateInstance(EqualityComparerType) is not IEqualityComparer<T> comparer)
-                throw new ArgumentException(nameof(EqualityComparerType)); // TODO: Provide proper exception message.
+            if (Activator.CreateInstance(_equalityComparerType) is not IEqualityComparer<T> comparer)
+            {
+                var typeName = typeof(T).Name;
+                var messageFormat = ExceptionMessages.FailedToCreateInstanceOfType;
+
+                var message = string.Format(CultureInfo.CurrentCulture, messageFormat, typeName);
+
+                throw new InvalidOperationException(message);
+            }
 
             equalityComparer = comparer;
         }

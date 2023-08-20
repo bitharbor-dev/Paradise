@@ -15,7 +15,12 @@ namespace Paradise.Tests.Miscellaneous.Fakes.Microsoft.AspNetCore.Identity;
 /// Domain data source.
 /// </param>
 public sealed class FakeUserStore(IDomainDataSource domainDataSource)
-    : IUserRoleStore<User>, IUserClaimStore<User>, IQueryableUserStore<User>, IUserPasswordStore<User>, IUserEmailStore<User>
+    : IQueryableUserStore<User>,
+      IUserClaimStore<User>,
+      IUserEmailStore<User>,
+      IUserLockoutStore<User>,
+      IUserPasswordStore<User>,
+      IUserRoleStore<User>
 {
     #region Fields
     private readonly IDomainDataSource _domainDataSource = domainDataSource;
@@ -31,33 +36,6 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     #endregion
 
     #region Public methods
-    /// <inheritdoc/>
-    public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
-    {
-        _domainDataSource.Add(user);
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
-
-        return IdentityResult.Success;
-    }
-
-    /// <inheritdoc/>
-    public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
-    {
-        user.ConcurrencyStamp = Guid.NewGuid().ToString();
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
-
-        return IdentityResult.Success;
-    }
-
-    /// <inheritdoc/>
-    public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
-    {
-        _domainDataSource.Remove(user);
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
-
-        return IdentityResult.Success;
-    }
-
     /// <inheritdoc/>
     public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         => Task.FromResult(user.Id.ToString());
@@ -86,6 +64,33 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
         user.NormalizedUserName = normalizedName;
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+    {
+        _domainDataSource.Add(user);
+        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        return IdentityResult.Success;
+    }
+
+    /// <inheritdoc/>
+    public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+    {
+        user.ConcurrencyStamp = Guid.NewGuid().ToString();
+        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        return IdentityResult.Success;
+    }
+
+    /// <inheritdoc/>
+    public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
+    {
+        _domainDataSource.Remove(user);
+        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        return IdentityResult.Success;
     }
 
     /// <inheritdoc/>
@@ -167,6 +172,87 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     }
 
     /// <inheritdoc/>
+    public Task SetEmailAsync(User user, string? email, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(email);
+
+        user.Email = email;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<string?> GetEmailAsync(User user, CancellationToken cancellationToken)
+        => Task.FromResult((string?)user.Email);
+
+    /// <inheritdoc/>
+    public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
+        => Task.FromResult(user.EmailConfirmed);
+
+    /// <inheritdoc/>
+    public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
+    {
+        user.EmailConfirmed = confirmed;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<User?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        => Task.FromResult(_domainDataSource.Set<User>().FirstOrDefault(u => u.NormalizedEmail == normalizedEmail));
+
+    /// <inheritdoc/>
+    public Task<string?> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
+        => Task.FromResult(user.NormalizedEmail);
+
+    /// <inheritdoc/>
+    public Task SetNormalizedEmailAsync(User user, string? normalizedEmail, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(normalizedEmail);
+
+        user.NormalizedEmail = normalizedEmail;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
+        => Task.FromResult(user.LockoutEnd);
+
+    /// <inheritdoc/>
+    public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+    {
+        user.LockoutEnd = lockoutEnd;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+    {
+        user.AccessFailedCount++;
+        return Task.FromResult(user.AccessFailedCount);
+    }
+
+    /// <inheritdoc/>
+    public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+    {
+        user.AccessFailedCount = default;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        => Task.FromResult(user.AccessFailedCount);
+
+    /// <inheritdoc/>
+    public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
+        => Task.FromResult(user.LockoutEnabled);
+
+    /// <inheritdoc/>
+    public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+    {
+        user.LockoutEnabled = enabled;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
     public Task SetPasswordHashAsync(User user, string? passwordHash, CancellationToken cancellationToken)
     {
         user.PasswordHash = passwordHash;
@@ -222,47 +308,6 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         }
 
         return Task.FromResult(users as IList<User>);
-    }
-
-    /// <inheritdoc/>
-    public Task SetEmailAsync(User user, string? email, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(email);
-
-        user.Email = email;
-        return Task.CompletedTask;
-    }
-
-    /// <inheritdoc/>
-    public Task<string?> GetEmailAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult((string?)user.Email);
-
-    /// <inheritdoc/>
-    public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.EmailConfirmed);
-
-    /// <inheritdoc/>
-    public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
-    {
-        user.EmailConfirmed = confirmed;
-        return Task.CompletedTask;
-    }
-
-    /// <inheritdoc/>
-    public Task<User?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-        => Task.FromResult(_domainDataSource.Set<User>().FirstOrDefault(u => u.NormalizedEmail == normalizedEmail));
-
-    /// <inheritdoc/>
-    public Task<string?> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.NormalizedEmail);
-
-    /// <inheritdoc/>
-    public Task SetNormalizedEmailAsync(User user, string? normalizedEmail, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(normalizedEmail);
-
-        user.NormalizedEmail = normalizedEmail;
-        return Task.CompletedTask;
     }
     #endregion
 }
