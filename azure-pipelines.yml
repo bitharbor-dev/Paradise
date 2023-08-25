@@ -5,9 +5,6 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-
-  - group: 'maintenance-main'
-
   - name: 'buildConfiguration'
     value: 'Debug'
     readonly: true
@@ -38,12 +35,3 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'WebApi'
     publishLocation: 'Container'
-
-- task: Docker@2
-  displayName: 'Build and upload Maintenance project'
-  inputs:
-    containerRegistry: '$(containerRegistryConnectionName)'
-    repository: '$(repositoryName)'
-    command: 'buildAndPush'
-    Dockerfile: '**/*.Maintenance/Dockerfile'
-    buildContext: '.'
