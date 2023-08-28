@@ -47,3 +47,4 @@ steps:
     command: 'buildAndPush'
     Dockerfile: '**/*.Maintenance/Dockerfile'
     buildContext: '.'
+    tags: 
