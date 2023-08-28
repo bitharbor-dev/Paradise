@@ -197,7 +197,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IEmailTemplateService, EmailTemplateService>();
         services.AddScoped<IJsonWebTokenService, JsonWebTokenService>();
-        services.AddDataProtection();
+        services.AddDataProtection().PersistKeysToDbContext<ApplicationContext>();
 
         services.AddScoped<IDataProtectionService, DataProtectionService>();
 

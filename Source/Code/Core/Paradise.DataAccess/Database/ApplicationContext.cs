@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Paradise.DataAccess.Database.ChangeTracking;
 using Paradise.DataAccess.Database.Configuration;
 using Paradise.DataAccess.Repositories;
@@ -10,13 +11,17 @@ namespace Paradise.DataAccess.Database;
 /// <summary>
 /// Manages all entities of the application logic.
 /// </summary>
-public sealed class ApplicationContext : DbContext, IApplicationDataSource
+public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDataProtectionKeyContext
 {
     #region Constants
     /// <summary>
     /// Application database connection string name.
     /// </summary>
     public const string ConnectionStringName = "ApplicationConnectionString";
+    #endregion
+
+    #region Fields
+    private bool _disposed;
     #endregion
 
     #region Constructors
@@ -31,19 +36,40 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource
     {
         ChangeTracker.Tracked += ChangeTrackerEvents.OnTracked;
         ChangeTracker.StateChanged += ChangeTrackerEvents.OnStateChanged;
+
+        DataProtectionKeys = Set<DataProtectionKey>();
     }
     #endregion
 
-    #region Public methods
+    #region Properties
     /// <inheritdoc/>
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+    #endregion
+
+    #region Public methods
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    /// <remarks>
+    /// <inheritdoc/>
+    /// <para>
+    /// Using "disposed" flag provides temporary fix for GitHub issue
+    /// <see href="https://github.com/dotnet/runtime/issues/91179">#91179</see>
+    /// </para>
+    /// </remarks>
     public override void Dispose()
     {
+        if (_disposed)
+            return;
+
         ChangeTracker.Tracked -= ChangeTrackerEvents.OnTracked;
         ChangeTracker.StateChanged -= ChangeTrackerEvents.OnStateChanged;
 
         base.Dispose();
 
         GC.SuppressFinalize(this);
+
+        _disposed = true;
     }
 
     #region IDataSource
