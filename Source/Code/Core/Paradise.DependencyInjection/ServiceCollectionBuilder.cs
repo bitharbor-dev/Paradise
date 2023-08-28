@@ -197,11 +197,7 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IEmailTemplateService, EmailTemplateService>();
         services.AddScoped<IJsonWebTokenService, JsonWebTokenService>();
-        services.AddDataProtection().UseCryptographicAlgorithms(new()
-        {
-            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-        });
+        services.AddDataProtection();
 
         services.AddScoped<IDataProtectionService, DataProtectionService>();
 
