@@ -42,8 +42,8 @@ steps:
 - task: Docker@2
   displayName: 'Build and upload Maintenance project'
   inputs:
-    containerRegistry: '$(containerRegistryConnectionName)'
-    repository: '$(repositoryName)'
+    containerRegistry: '$(containerRegistry_ConnecitonName)'
+    repository: '$(containerRegistry_RepositoryName)'
     command: 'buildAndPush'
     Dockerfile: '**/*.Maintenance/Dockerfile'
     buildContext: '.'
