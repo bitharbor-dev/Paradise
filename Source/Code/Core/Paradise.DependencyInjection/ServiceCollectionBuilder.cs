@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

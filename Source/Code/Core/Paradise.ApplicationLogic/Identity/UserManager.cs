@@ -74,24 +74,6 @@ public sealed class UserManager(IUserStore<User> store,
 
         return IdentityResult.Success;
     }
-
-    /// <inheritdoc/>
-    public override async Task<IdentityResult> CreateAsync(User user, string password)
-    {
-        var creationResult = await base.CreateAsync(user, password);
-        if (!creationResult.Succeeded)
-            return creationResult;
-
-        var claimsAdditionResult = await AddDefaultUserClaimsAsync(user);
-        if (!claimsAdditionResult.Succeeded)
-        {
-            Logger.LogClaimsAdditionFailure();
-            await DeleteAsync(user);
-            return claimsAdditionResult;
-        }
-
-        return IdentityResult.Success;
-    }
     #endregion
 
     #region Private methods
