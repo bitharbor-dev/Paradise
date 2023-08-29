@@ -265,7 +265,7 @@ public sealed class UserServiceTests
         var identityToken = confirmationUri.Segments.Last();
 
         // Act
-        await Task.Delay(Options.Tokens.EmailConfirmationTokenLifetime + Options.Tokens.EmailConfirmationTokenLifetime);
+        await Task.Delay(Options.Tokens.EmailConfirmationTokenLifetime + TimeSpan.FromSeconds(0.5));
 
         var exception = await Assert.ThrowsAsync<ResultException>(()
             => Service.ConfirmEmailAsync(identityToken));
@@ -412,7 +412,7 @@ public sealed class UserServiceTests
         var userTwoFactorAuthenticationModel = new UserTwoFactorAuthenticationModel(twoFactorCode, twoFactorToken);
 
         // Act
-        await Task.Delay(Options.Authentication.TwoFactorTokenLifetime + Options.Authentication.TwoFactorTokenLifetime);
+        await Task.Delay(Options.Authentication.TwoFactorTokenLifetime + TimeSpan.FromSeconds(0.5));
 
         var exception = await Assert.ThrowsAsync<ResultException>(()
             => Service.ConfirmLoginAsync(userTwoFactorAuthenticationModel));
@@ -869,7 +869,7 @@ public sealed class UserServiceTests
         var user = await CreateUserAsync(deletionRequestSubmitted: DateTime.UtcNow);
 
         // Act
-        await Task.Delay(Options.Tokens.UserDeletionRequestLifetime + Options.Tokens.UserDeletionRequestLifetime);
+        await Task.Delay(Options.Tokens.UserDeletionRequestLifetime + TimeSpan.FromSeconds(0.5));
 
         var exception = await Assert.ThrowsAsync<ResultException>(()
             => Service.DeleteAsync(user.Id));
@@ -978,7 +978,7 @@ public sealed class UserServiceTests
         for (var i = 0; i < Manager.Options.Lockout.MaxFailedAccessAttempts; i++)
             await Assert.ThrowsAsync<ResultException>(() => Service.LoginAsync(loginModel));
 
-        await Task.Delay(Manager.Options.Lockout.DefaultLockoutTimeSpan);
+        await Task.Delay(Manager.Options.Lockout.DefaultLockoutTimeSpan + TimeSpan.FromSeconds(0.5));
 
         loginModel.Password = Password;
 
@@ -2037,7 +2037,7 @@ public sealed class UserServiceTests
         var accessToken = loginResult.Value!.Token!;
 
         // Act
-        await Task.Delay(Options.Authentication.RefreshTokenLifetime + Options.Authentication.RefreshTokenLifetime);
+        await Task.Delay(Options.Authentication.RefreshTokenLifetime + TimeSpan.FromSeconds(0.5));
 
         var exception = await Assert.ThrowsAsync<ResultException>(()
             => Service.RenewTokenAsync(accessToken));
@@ -2174,7 +2174,7 @@ public sealed class UserServiceTests
 
         var identityToken = identityTokenLink.Segments.Last();
 
-        await Task.Delay(Options.Tokens.ResetEmailAddressTokenLifetime + Options.Tokens.ResetEmailAddressTokenLifetime);
+        await Task.Delay(Options.Tokens.ResetEmailAddressTokenLifetime + TimeSpan.FromSeconds(0.5));
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()
@@ -2387,7 +2387,7 @@ public sealed class UserServiceTests
 
         await Service.CreatePasswordResetRequestAsync(new(Email));
 
-        await Task.Delay(Options.Tokens.ResetPasswordTokenLifetime + Options.Tokens.ResetPasswordTokenLifetime);
+        await Task.Delay(Options.Tokens.ResetPasswordTokenLifetime + TimeSpan.FromSeconds(0.5));
 
         var identityToken = GetEmailBodyParameterOfType<string>();
 
