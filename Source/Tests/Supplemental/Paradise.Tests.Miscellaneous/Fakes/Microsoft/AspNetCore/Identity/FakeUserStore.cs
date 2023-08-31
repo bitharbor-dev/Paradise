@@ -15,7 +15,8 @@ namespace Paradise.Tests.Miscellaneous.Fakes.Microsoft.AspNetCore.Identity;
 /// Domain data source.
 /// </param>
 public sealed class FakeUserStore(IDomainDataSource domainDataSource)
-    : IQueryableUserStore<User>,
+    : IProtectedUserStore<User>,
+      IQueryableUserStore<User>,
       IUserClaimStore<User>,
       IUserEmailStore<User>,
       IUserLockoutStore<User>,

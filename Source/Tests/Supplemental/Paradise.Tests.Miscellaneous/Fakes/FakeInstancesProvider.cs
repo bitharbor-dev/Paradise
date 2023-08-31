@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -177,7 +178,7 @@ public static class FakeInstancesProvider
             Stores = new()
             {
                 MaxLengthForKeys = -1,
-                ProtectPersonalData = false
+                ProtectPersonalData = true
             },
             User = new()
             {
@@ -263,10 +264,17 @@ public static class FakeInstancesProvider
         var passwordValidators = new[] { new PasswordValidator<User>(errorDescriber) };
         var lookupNormalizer = new UpperInvariantLookupNormalizer();
 
+        var services = new ServiceCollection();
+        services.AddSingleton<IPersonalDataProtector, DefaultPersonalDataProtector>();
+        services.AddSingleton<ILookupProtector, FakeLookupProtector>();
+        services.AddSingleton<ILookupProtectorKeyRing, FakeLookupProtectorKeyRing>();
+
+        var provider = services.BuildServiceProvider();
+
         var logger = GetLogger<UserManager>(output);
 
         var userManager = new UserManager(store, identityOptions, hasher, userValidators, passwordValidators,
-                                          lookupNormalizer, errorDescriber, null!, logger);
+                                          lookupNormalizer, errorDescriber, provider, logger);
 
         userManager.RegisterTokenProvider(AspNetCoreTokenOptions.DefaultProvider, new FakeUserTwoFactorTokenProvider());
 
