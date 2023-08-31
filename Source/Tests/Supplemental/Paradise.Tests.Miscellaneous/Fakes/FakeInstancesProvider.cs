@@ -16,8 +16,8 @@ using Paradise.Tests.Miscellaneous.Fakes.Microsoft.Extensions.Logging.Xunit;
 using System.Security.Claims;
 using System.Text;
 using Xunit.Abstractions;
-using OptionsBuilder = Microsoft.Extensions.Options.Options;
 using AspNetCoreTokenOptions = Microsoft.AspNetCore.Identity.TokenOptions;
+using OptionsBuilder = Microsoft.Extensions.Options.Options;
 
 namespace Paradise.Tests.Miscellaneous.Fakes;
 
@@ -78,14 +78,19 @@ public static class FakeInstancesProvider
     /// <returns>
     /// <see cref="SmtpOptions"/> instance.
     /// </returns>
-    public static IOptions<SmtpOptions> GetSmtpOptions() => OptionsBuilder.Create(new SmtpOptions
+    public static IOptions<SmtpOptions> GetSmtpOptions()
     {
-        Credentials = new("test@test.com", "Test"),
-        EnableSsl = true,
-        Host = "Test",
-        Port = 123,
-        Timeout = 0
-    });
+        var instance = new SmtpOptions
+        {
+            Credentials = new("test@test.com", "Test"),
+            EnableSsl = true,
+            Host = "Test",
+            Port = 123,
+            Timeout = 0
+        };
+
+        return OptionsBuilder.Create(instance);
+    }
 
     /// <summary>
     /// Gets a new <see cref="FakeSmtpClient"/> instance.
@@ -105,25 +110,31 @@ public static class FakeInstancesProvider
     /// <returns>
     /// <see cref="ApplicationOptions"/> instance.
     /// </returns>
-    public static IOptions<ApplicationOptions> GetApplicationOptions(string secret) => OptionsBuilder.Create(new ApplicationOptions
+    public static IOptions<ApplicationOptions> GetApplicationOptions(string secret)
     {
-        ApiUrl = new Uri("https://localhost:5001"),
-        Authentication = new()
+        var instance = new ApplicationOptions
+
         {
-            JsonWebTokenLifetime = TimeSpan.FromSeconds(0.5),
-            RefreshTokenLifetime = TimeSpan.FromSeconds(0.5),
-            TwoFactorTokenLifetime = TimeSpan.FromSeconds(0.5),
-            TwoFactorVerificationCodeLength = 6
-        },
-        Secret = secret,
-        Tokens = new()
-        {
-            EmailConfirmationTokenLifetime = TimeSpan.FromSeconds(0.5),
-            ResetEmailAddressTokenLifetime = TimeSpan.FromSeconds(0.5),
-            ResetPasswordTokenLifetime = TimeSpan.FromSeconds(0.5),
-            UserDeletionRequestLifetime = TimeSpan.FromSeconds(0.5)
-        }
-    });
+            ApiUrl = new Uri("https://localhost:5001"),
+            Authentication = new()
+            {
+                JsonWebTokenLifetime = TimeSpan.FromSeconds(0.5),
+                RefreshTokenLifetime = TimeSpan.FromSeconds(0.5),
+                TwoFactorTokenLifetime = TimeSpan.FromSeconds(0.5),
+                TwoFactorVerificationCodeLength = 6
+            },
+            Secret = secret,
+            Tokens = new()
+            {
+                EmailConfirmationTokenLifetime = TimeSpan.FromSeconds(0.5),
+                ResetEmailAddressTokenLifetime = TimeSpan.FromSeconds(0.5),
+                ResetPasswordTokenLifetime = TimeSpan.FromSeconds(0.5),
+                UserDeletionRequestLifetime = TimeSpan.FromSeconds(0.5)
+            }
+        };
+
+        return OptionsBuilder.Create(instance);
+    }
 
     /// <summary>
     /// Gets the pre-configured <see cref="IdentityOptions"/> instance.
@@ -131,47 +142,52 @@ public static class FakeInstancesProvider
     /// <returns>
     /// <see cref="IdentityOptions"/> instance.
     /// </returns>
-    public static IOptions<IdentityOptions> GetIdentityOptions() => OptionsBuilder.Create(new IdentityOptions
+    public static IOptions<IdentityOptions> GetIdentityOptions()
     {
-        ClaimsIdentity = new()
+        var instance = new IdentityOptions
         {
-            EmailClaimType = ClaimTypes.Email,
-            RoleClaimType = ClaimTypes.Role,
-            UserIdClaimType = ClaimTypes.NameIdentifier,
-            UserNameClaimType = ClaimTypes.Name
-        },
-        Lockout = new()
-        {
-            AllowedForNewUsers = true,
-            MaxFailedAccessAttempts = 5,
-            DefaultLockoutTimeSpan = TimeSpan.FromSeconds(0.5)
-        },
-        Password = new()
-        {
-            RequireDigit = true,
-            RequiredLength = 8,
-            RequireLowercase = true,
-            RequireNonAlphanumeric = true,
-            RequiredUniqueChars = 5,
-            RequireUppercase = true
-        },
-        SignIn = new()
-        {
-            RequireConfirmedAccount = true,
-            RequireConfirmedEmail = true,
-            RequireConfirmedPhoneNumber = false
-        },
-        Stores = new()
-        {
-            MaxLengthForKeys = -1,
-            ProtectPersonalData = false
-        },
-        User = new()
-        {
-            AllowedUserNameCharacters = UppercaseAlphabet + LowercaseAlphabet + Numbers + Dot + Underscore,
-            RequireUniqueEmail = true
-        }
-    });
+            ClaimsIdentity = new()
+            {
+                EmailClaimType = ClaimTypes.Email,
+                RoleClaimType = ClaimTypes.Role,
+                UserIdClaimType = ClaimTypes.NameIdentifier,
+                UserNameClaimType = ClaimTypes.Name
+            },
+            Lockout = new()
+            {
+                AllowedForNewUsers = true,
+                MaxFailedAccessAttempts = 5,
+                DefaultLockoutTimeSpan = TimeSpan.FromSeconds(0.5)
+            },
+            Password = new()
+            {
+                RequireDigit = true,
+                RequiredLength = 8,
+                RequireLowercase = true,
+                RequireNonAlphanumeric = true,
+                RequiredUniqueChars = 5,
+                RequireUppercase = true
+            },
+            SignIn = new()
+            {
+                RequireConfirmedAccount = true,
+                RequireConfirmedEmail = true,
+                RequireConfirmedPhoneNumber = false
+            },
+            Stores = new()
+            {
+                MaxLengthForKeys = -1,
+                ProtectPersonalData = false
+            },
+            User = new()
+            {
+                AllowedUserNameCharacters = UppercaseAlphabet + LowercaseAlphabet + Numbers + Dot + Underscore,
+                RequireUniqueEmail = true
+            }
+        };
+
+        return OptionsBuilder.Create(instance);
+    }
 
     /// <summary>
     /// Gets the pre-configured <see cref="JwtBearerOptions"/> instance.
@@ -182,16 +198,21 @@ public static class FakeInstancesProvider
     /// <returns>
     /// <see cref="JwtBearerOptions"/> instance.
     /// </returns>
-    public static IOptions<JwtBearerOptions> GetJwtBearerOptions(string secret) => OptionsBuilder.Create(new JwtBearerOptions
+    public static IOptions<JwtBearerOptions> GetJwtBearerOptions(string secret)
     {
-        TokenValidationParameters = new()
+        var instance = new JwtBearerOptions
         {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-            ValidAudience = "ValidAudience",
-            ValidIssuer = "ValidIssuer",
-            NameClaimType = ClaimTypes.Name
-        }
-    });
+            TokenValidationParameters = new()
+            {
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+                ValidAudience = "ValidAudience",
+                ValidIssuer = "ValidIssuer",
+                NameClaimType = ClaimTypes.Name
+            }
+        };
+
+        return OptionsBuilder.Create(instance);
+    }
 
     /// <summary>
     /// Gets the pre-configured <see cref="EmailTemplateOptions"/> instance.
@@ -199,16 +220,21 @@ public static class FakeInstancesProvider
     /// <returns>
     /// <see cref="EmailTemplateOptions"/> instance.
     /// </returns>
-    public static IOptions<EmailTemplateOptions> GetEmailTemplateOptions() => OptionsBuilder.Create(new EmailTemplateOptions
+    public static IOptions<EmailTemplateOptions> GetEmailTemplateOptions()
     {
-        EmailAddressConfirmationTemplateName = "EmailConfirmationTemplate",
-        EmailAddressResetCompletedTemplateName = "EmailAddressResetCompletedTemplate",
-        EmailAddressResetNotificationTemplateName = "EmailResetNotificationTemplate",
-        EmailAddressResetTemplateName = "EmailAddressResetTemplate",
-        PasswordResetCompletedTemplateName = "PasswordResetCompletedTemplate",
-        PasswordResetTemplateName = "PasswordResetTemplate",
-        TwoFactorVerificationTemplateName = "TwoFactorVerificationTemplate"
-    });
+        var instance = new EmailTemplateOptions
+        {
+            EmailAddressConfirmationTemplateName = "EmailConfirmationTemplate",
+            EmailAddressResetCompletedTemplateName = "EmailAddressResetCompletedTemplate",
+            EmailAddressResetNotificationTemplateName = "EmailResetNotificationTemplate",
+            EmailAddressResetTemplateName = "EmailAddressResetTemplate",
+            PasswordResetCompletedTemplateName = "PasswordResetCompletedTemplate",
+            PasswordResetTemplateName = "PasswordResetTemplate",
+            TwoFactorVerificationTemplateName = "TwoFactorVerificationTemplate"
+        };
+
+        return OptionsBuilder.Create(instance);
+    }
 
     /// <summary>
     /// Gets a new <see cref="UserManager"/> instance.
@@ -230,15 +256,17 @@ public static class FakeInstancesProvider
         domainDataSource ??= GetDomainDataSource();
         identityOptions ??= GetIdentityOptions();
 
-        var userManager = new UserManager(new FakeUserStore(domainDataSource),
-                                          identityOptions,
-                                          new PasswordHasher<User>(),
-                                          Array.Empty<IUserValidator<User>>(),
-                                          new List<IPasswordValidator<User>> { new PasswordValidator<User>() },
-                                          null!,
-                                          null!,
-                                          null!,
-                                          GetLogger<UserManager>(output));
+        var store = new FakeUserStore(domainDataSource);
+        var hasher = new PasswordHasher<User>();
+        var errorDescriber = new IdentityErrorDescriber();
+        var userValidators = new[] { new UserValidator<User>(errorDescriber) };
+        var passwordValidators = new[] { new PasswordValidator<User>(errorDescriber) };
+        var lookupNormalizer = new UpperInvariantLookupNormalizer();
+
+        var logger = GetLogger<UserManager>(output);
+
+        var userManager = new UserManager(store, identityOptions, hasher, userValidators, passwordValidators,
+                                          lookupNormalizer, errorDescriber, null!, logger);
 
         userManager.RegisterTokenProvider(AspNetCoreTokenOptions.DefaultProvider, new FakeUserTwoFactorTokenProvider());
 
@@ -261,11 +289,13 @@ public static class FakeInstancesProvider
     {
         domainDataSource ??= GetDomainDataSource();
 
-        return new(new FakeRoleStore(domainDataSource),
-                   null!,
-                   null!,
-                   null!,
-                   GetLogger<RoleManager<Role>>(output));
+        var store = new FakeRoleStore(domainDataSource);
+        var errorDescriber = new IdentityErrorDescriber();
+        var validators = new[] { new RoleValidator<Role>(errorDescriber) };
+        var lookupNormalizer = new UpperInvariantLookupNormalizer();
+        var logger = GetLogger<RoleManager<Role>>(output);
+
+        return new(store, validators, lookupNormalizer, errorDescriber, logger);
     }
 
     /// <summary>

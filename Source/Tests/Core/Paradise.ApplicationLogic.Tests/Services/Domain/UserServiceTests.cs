@@ -2198,12 +2198,15 @@ public sealed class UserServiceTests
     public async Task ResetEmailAsync_ThrowsOnTakenEmailAddress()
     {
         // Arrange
+        const string FirstUserName = "Test0";
+        const string SecondUserName = "Test1";
+
         const string Email = "test@email.com";
         const string NewEmail = "newTest@email.com";
 
         await CreateEmailAddressResetTemplateAsync();
 
-        var user = await CreateUserAsync(email: Email);
+        var user = await CreateUserAsync(email: Email, userName: FirstUserName);
 
         var userResetEmailRequestModel = new UserResetEmailRequestModel(NewEmail, NewEmail);
 
@@ -2213,7 +2216,7 @@ public sealed class UserServiceTests
 
         var identityToken = identityTokenLink.Segments.Last();
 
-        await CreateUserAsync(email: NewEmail);
+        await CreateUserAsync(email: NewEmail, userName: SecondUserName);
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()
