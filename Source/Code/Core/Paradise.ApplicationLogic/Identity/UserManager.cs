@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Paradise.ApplicationLogic.Extensions;
@@ -54,7 +56,19 @@ public sealed class UserManager(IUserStore<User> store,
                                 IServiceProvider services,
                                 ILogger<UserManager> logger)
     : UserManager<User>(store, identityOptions, passwordHasher, userValidators,
-                        passwordValidators, keyNormalizer, errors, services, logger)
+                        passwordValidators, keyNormalizer, errors,
+#pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type
+                               // and its value is also passed to the base constructor.
+                               // The value might be captured by the base class as well.
+                               // Justification: 'services' parameter is passed to
+                               // a private readonly field, which is not accessible from here.
+                        services,
+#pragma warning restore CS9107 // Parameter is captured into the state of the enclosing type
+                               // and its value is also passed to the base constructor.
+                               // The value might be captured by the base class as well.
+                               // Justification: 'services' parameter is passed to
+                               // a private readonly field, which is not accessible from here.
+                        logger)
 {
     #region Public methods
     /// <inheritdoc/>
@@ -73,6 +87,46 @@ public sealed class UserManager(IUserStore<User> store,
         }
 
         return IdentityResult.Success;
+    }
+
+    /// <summary>
+    /// Finds and returns a user, if any, who has the specified phone number.
+    /// </summary>
+    /// <param name="phoneNumber">
+    /// The phone number to search for.
+    /// </param>
+    /// <returns>
+    /// The <see cref="Task"/> that represents the asynchronous operation,
+    /// containing the user matching the specified <paramref name="phoneNumber"/> if it exists.
+    /// </returns>
+    public async Task<User?> FindByPhoneNumberAsync(string? phoneNumber)
+    {
+        ThrowIfDisposed();
+
+        ArgumentException.ThrowIfNullOrEmpty(phoneNumber);
+
+        var user = await Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber, CancellationToken).ConfigureAwait(false);
+
+        if (user is null && Options.Stores.ProtectPersonalData)
+        {
+            var keyRing = services.GetService<ILookupProtectorKeyRing>();
+            var protector = services.GetService<ILookupProtector>();
+
+            if (keyRing is not null && protector is not null)
+            {
+                foreach (var key in keyRing.GetAllKeyIds())
+                {
+                    var protectedPhoneNumber = protector.Protect(key, phoneNumber);
+
+                    user = await Users.FirstOrDefaultAsync(u => u.PhoneNumber == protectedPhoneNumber, CancellationToken).ConfigureAwait(false);
+
+                    if (user is not null)
+                        return user;
+                }
+            }
+        }
+
+        return user;
     }
     #endregion
 
