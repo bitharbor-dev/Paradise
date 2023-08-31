@@ -775,7 +775,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// The <see cref="User"/> with the given <paramref name="email"/> address or <see langword="null"/>.
     /// </returns>
     private Task<User?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
-        => _userManager.Users.SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
+    {
+        var normalizedEmail = _userManager.NormalizeEmail(email);
+
+        return _userManager.Users.SingleOrDefaultAsync(user => user.NormalizedEmail == normalizedEmail, cancellationToken);
+    }
 
     /// <summary>
     /// Finds the <see cref="User"/> with the given <paramref name="userName"/>.
@@ -791,7 +795,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// The <see cref="User"/> with the given <paramref name="userName"/> or <see langword="null"/>.
     /// </returns>
     private Task<User?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-        => _userManager.Users.SingleOrDefaultAsync(user => user.UserName == userName, cancellationToken);
+    {
+        var normalizedUserName = _userManager.NormalizeName(userName);
+
+        return _userManager.Users.SingleOrDefaultAsync(user => user.NormalizedUserName == normalizedUserName, cancellationToken);
+    }
 
     /// <summary>
     /// Finds the <see cref="User"/> with the given <paramref name="phone"/>.
@@ -1049,7 +1057,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.Email == email, cancellationToken);
+    {
+        var normalizedEmail = _userManager.NormalizeEmail(email);
+
+        return await AnyUserAsync(user => user.NormalizedEmail == normalizedEmail, cancellationToken);
+    }
 
     /// <summary>
     /// Checks if the given <paramref name="phone"/> number is already in use.
@@ -1083,7 +1095,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfUserNameIsInUseAsync(string userName, CancellationToken cancellationToken = default)
-        => await AnyUserAsync(u => u.UserName == userName, cancellationToken);
+    {
+        var normalizedUserName = _userManager.NormalizeName(userName);
+
+        return await AnyUserAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
+    }
     #endregion
 
     #region Notification methods

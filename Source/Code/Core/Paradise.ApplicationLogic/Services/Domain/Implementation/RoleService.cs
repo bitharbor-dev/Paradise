@@ -184,7 +184,11 @@ public sealed class RoleService(UserManager userManager,
     /// The <see cref="Role"/> with the given <paramref name="name"/>.
     /// </returns>
     private Task<Role?> FindRoleByNameAsync(string name, CancellationToken cancellationToken = default)
-        => _roleManager.Roles.SingleOrDefaultAsync(role => role.Name == name, cancellationToken);
+    {
+        var normalizedName = _roleManager.NormalizeKey(name);
+
+        return _roleManager.Roles.SingleOrDefaultAsync(role => role.NormalizedName == normalizedName, cancellationToken);
+    }
 
     /// <summary>
     /// Gets the <see cref="Role"/> with the given <paramref name="id"/>.
@@ -239,7 +243,9 @@ public sealed class RoleService(UserManager userManager,
 
         foreach (var name in roleNames)
         {
-            var role = await _roleManager.Roles.SingleAsync(r => r.Name == name, cancellationToken);
+            var normalizedName = _roleManager.NormalizeKey(name);
+
+            var role = await _roleManager.Roles.SingleAsync(r => r.NormalizedName == normalizedName, cancellationToken);
             userRoles.Add(role);
         }
 

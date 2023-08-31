@@ -411,8 +411,10 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </returns>
     private Task<bool> RoleExistsAsync(SeedRoleModel model, CancellationToken cancellationToken = default)
     {
+        var normalizedName = _roleManager.NormalizeKey(model.Name);
+
         Expression<Func<Role, bool>> predicate =
-            role => role.Name == model.Name;
+            role => role.NormalizedName == normalizedName;
 
         return _roleManager.Roles.AnyAsync(predicate, cancellationToken);
     }
@@ -433,8 +435,11 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </returns>
     private Task<bool> UserExistsAsync(SeedUserModel model, CancellationToken cancellationToken = default)
     {
+        var normalizedEmail = _userManager.NormalizeEmail(model.Email);
+        var normalizedUserName = _userManager.NormalizeName(model.UserName);
+
         Expression<Func<User, bool>> predicate =
-            user => user.Email == model.Email || user.UserName == model.UserName;
+            user => user.NormalizedEmail == normalizedEmail || user.NormalizedUserName == normalizedUserName;
 
         return _userManager.Users.AnyAsync(predicate, cancellationToken);
     }
