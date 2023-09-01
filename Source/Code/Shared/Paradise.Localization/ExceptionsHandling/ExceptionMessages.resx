@@ -145,7 +145,7 @@
     <value>Additional information: </value>
   </data>
   <data name="InvalidEnvironmentName" xml:space="preserve">
-    <value>Environment name is not valid. Available options are: {0}.</value>
+    <value>Environment name '{0}' is not valid. Available options are: {1}.</value>
   </data>
   <data name="InvalidEqualityComparerConstructor" xml:space="preserve">
     <value>An instance of type '{0}' does not provide public parameterless constructor.</value>

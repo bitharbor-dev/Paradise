@@ -83,7 +83,7 @@ public static class EnvironmentNames
                 {
                     var environments = string.Join(", ", _allowedEnvironments);
 
-                    var message = string.Format(CultureInfo.CurrentCulture, ExceptionMessages.InvalidEnvironmentName, environments);
+                    var message = string.Format(CultureInfo.CurrentCulture, ExceptionMessages.InvalidEnvironmentName, _current, environments);
 
                     throw new InvalidOperationException(message);
                 }

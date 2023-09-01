@@ -142,7 +142,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Environment name is not valid. Available options are: {0}..
+        ///   Looks up a localized string similar to Environment name &apos;{0}&apos; is not valid. Available options are: {1}..
         /// </summary>
         public static string InvalidEnvironmentName {
             get {
