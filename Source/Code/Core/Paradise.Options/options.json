@@ -25,11 +25,11 @@
   },
   "IdentityOptions": {
     "ClaimsIdentity": {
-      "RoleClaimType": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-      "UserNameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-      "UserIdClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
       "EmailClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-      "SecurityStampClaimType": "AspNet.Identity.SecurityStamp"
+      "RoleClaimType": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+      "SecurityStampClaimType": "AspNet.Identity.SecurityStamp",
+      "UserIdClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+      "UserNameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
     },
     "Lockout": {
       "DefaultLockoutTimeSpan": "0.00:05:00",
@@ -61,7 +61,7 @@
     "IncludeFields": false,
     "MaxDepth": 64,
     "NumberHandling": 4,
-    "PropertyNameCaseInsensitive": false,
+    "PropertyNameCaseInsensitive": true,
     "ReadCommentHandling": 0,
     "UnknownTypeHandling": 0,
     "WriteIndented": true
