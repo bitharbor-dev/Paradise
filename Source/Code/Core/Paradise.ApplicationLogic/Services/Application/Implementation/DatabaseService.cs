@@ -62,23 +62,12 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
                                     IEmailTemplateService emailTemplateService)
     : IDatabaseService
 {
-    #region Fields
-    private readonly ILogger<DatabaseService> _logger = logger;
-    private readonly RoleManager<Role> _roleManager = roleManager;
-    private readonly UserManager _userManager = userManager;
-    private readonly IApplicationDataSource _applicationDataSource = applicationDataSource;
-    private readonly IDomainDataSource _domainDataSource = domainDataSource;
-    private readonly IUserRefreshTokensRepository _userRefreshTokensRepository = userRefreshTokensRepository;
-    private readonly IEmailTemplatesRepository _emailTemplatesRepository = emailTemplatesRepository;
-    private readonly IEmailTemplateService _emailTemplateService = emailTemplateService;
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public async Task EnsureDatabasesCreatedAsync(CancellationToken cancellationToken = default)
     {
-        await _applicationDataSource.PreparePersistenceStorageAsync(cancellationToken);
-        await _domainDataSource.PreparePersistenceStorageAsync(cancellationToken);
+        await applicationDataSource.PreparePersistenceStorageAsync(cancellationToken);
+        await domainDataSource.PreparePersistenceStorageAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -98,7 +87,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             }
             catch (Exception e)
             {
-                _logger.LogDatabaseSeedFailure(e);
+                logger.LogDatabaseSeedFailure(e);
             }
         }
 
@@ -122,7 +111,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             }
             catch (Exception e)
             {
-                _logger.LogDatabaseSeedFailure(e);
+                logger.LogDatabaseSeedFailure(e);
             }
         }
 
@@ -146,7 +135,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             }
             catch (Exception e)
             {
-                _logger.LogDatabaseSeedFailure(e);
+                logger.LogDatabaseSeedFailure(e);
             }
         }
 
@@ -169,11 +158,11 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             }
             catch (Exception e)
             {
-                _logger.LogDatabaseException(e);
+                logger.LogDatabaseException(e);
             }
         }
 
-        _logger.LogUnconfirmedUsersNumber(deletedItemsNumber);
+        logger.LogUnconfirmedUsersNumber(deletedItemsNumber);
 
         return deletedItemsNumber;
     }
@@ -197,11 +186,11 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             }
             catch (Exception e)
             {
-                _logger.LogDatabaseException(e);
+                logger.LogDatabaseException(e);
             }
         }
 
-        _logger.LogPendingDeletionUsersNumber(updatedItemsNumber);
+        logger.LogPendingDeletionUsersNumber(updatedItemsNumber);
 
         return updatedItemsNumber;
     }
@@ -215,16 +204,16 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             var outdatedTokens = await GetOutdatedTokensAsync(refreshTokenLifetime, cancellationToken);
 
-            _userRefreshTokensRepository.RemoveRange(outdatedTokens);
+            userRefreshTokensRepository.RemoveRange(outdatedTokens);
 
-            removedTokensNumber = await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+            removedTokensNumber = await userRefreshTokensRepository.CommitAsync(cancellationToken);
         }
         catch (Exception e)
         {
-            _logger.LogDatabaseException(e);
+            logger.LogDatabaseException(e);
         }
 
-        _logger.LogOutdatedTokensNumber(removedTokensNumber);
+        logger.LogOutdatedTokensNumber(removedTokensNumber);
 
         return removedTokensNumber;
     }
@@ -242,10 +231,10 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     {
         var role = model.ToEntity();
 
-        var creationResult = await _roleManager.CreateAsync(role);
+        var creationResult = await roleManager.CreateAsync(role);
 
         if (creationResult.Succeeded)
-            _logger.LogAddedSeedItem<Role>(role.Name);
+            logger.LogAddedSeedItem<Role>(role.Name);
         else
             throw new IdentityException(creationResult);
     }
@@ -264,16 +253,16 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         if (model.Password.IsNullOrWhiteSpace())
             throw new InvalidOperationException(ExceptionMessages.IvalidSeedData, new ArgumentException(nameof(model.Password)));
 
-        var creationResult = await _userManager.CreateAsync(user, model.Password);
+        var creationResult = await userManager.CreateAsync(user, model.Password);
         if (!creationResult.Succeeded)
             throw new IdentityException(creationResult);
 
         var rolesToAdd = MergeUserRolesWithDefault(model);
-        var rolesResult = await _userManager.AddToRolesAsync(user, rolesToAdd);
+        var rolesResult = await userManager.AddToRolesAsync(user, rolesToAdd);
 
         if (rolesResult.Succeeded)
         {
-            _logger.LogAddedSeedItem<User>(user.UserName);
+            logger.LogAddedSeedItem<User>(user.UserName);
         }
         else
         {
@@ -295,15 +284,15 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </param>
     private async Task CreateEmailTemplateAsync(SeedEmailTemplateModel model, CancellationToken cancellationToken = default)
     {
-        var result = await _emailTemplateService.CreateAsync(model.ToCreationModel(), cancellationToken);
+        var result = await emailTemplateService.CreateAsync(model.ToCreationModel(), cancellationToken);
 
         if (result.IsSuccess)
         {
-            _logger.LogAddedSeedItem<EmailTemplate>(model.TemplateName);
+            logger.LogAddedSeedItem<EmailTemplate>(model.TemplateName);
         }
         else
         {
-            _logger.LogDatabaseEntrySeedFailure(model.TemplateName, result);
+            logger.LogDatabaseEntrySeedFailure(model.TemplateName, result);
         }
     }
 
@@ -311,12 +300,12 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     {
         var culture = model.CultureId.HasValue ? CultureInfo.GetCultureInfo(model.CultureId.Value) : null;
 
-        var template = await _emailTemplatesRepository.GetByNameAndCultureAsync(model.TemplateName, culture, cancellationToken);
+        var template = await emailTemplatesRepository.GetByNameAndCultureAsync(model.TemplateName, culture, cancellationToken);
 
         if (template is null)
             return false;
 
-        var result = await _emailTemplateService.UpdateAsync(template.Id, model.ToUpdateModel(), cancellationToken);
+        var result = await emailTemplateService.UpdateAsync(template.Id, model.ToUpdateModel(), cancellationToken);
 
         if (result.IsSuccess)
         {
@@ -325,13 +314,13 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             // If no changes were applied -
             // status code equals "Accepted".
             if (result.StatusCode is OK)
-                _logger.LogUpdatedSeedItem<EmailTemplate>(model.TemplateName);
+                logger.LogUpdatedSeedItem<EmailTemplate>(model.TemplateName);
 
             return true;
         }
         else
         {
-            _logger.LogDatabaseEntrySeedFailure(model.TemplateName, result);
+            logger.LogDatabaseEntrySeedFailure(model.TemplateName, result);
 
             return false;
         }
@@ -352,7 +341,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     private async Task UpdateUserAsync(User user, Action<User> updateAction)
     {
         updateAction(user);
-        var updateResult = await _userManager.UpdateAsync(user);
+        var updateResult = await userManager.UpdateAsync(user);
 
         if (!updateResult.Succeeded)
             throw new IdentityException(updateResult);
@@ -367,7 +356,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </param>
     private async Task DeleteUserAsync(User user)
     {
-        var deleteResult = await _userManager.DeleteAsync(user);
+        var deleteResult = await userManager.DeleteAsync(user);
 
         if (!deleteResult.Succeeded)
             throw new IdentityException(deleteResult);
@@ -386,7 +375,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </returns>
     private IEnumerable<string> MergeUserRolesWithDefault(SeedUserModel model)
     {
-        var defaultRoles = _roleManager.Roles
+        var defaultRoles = roleManager.Roles
             .Where(role => role.IsDefault)
             .Select(role => role.Name);
 
@@ -411,12 +400,12 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </returns>
     private Task<bool> RoleExistsAsync(SeedRoleModel model, CancellationToken cancellationToken = default)
     {
-        var normalizedName = _roleManager.NormalizeKey(model.Name);
+        var normalizedName = roleManager.NormalizeKey(model.Name);
 
         Expression<Func<Role, bool>> predicate =
             role => role.NormalizedName == normalizedName;
 
-        return _roleManager.Roles.AnyAsync(predicate, cancellationToken);
+        return roleManager.Roles.AnyAsync(predicate, cancellationToken);
     }
 
     /// <summary>
@@ -435,13 +424,13 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </returns>
     private Task<bool> UserExistsAsync(SeedUserModel model, CancellationToken cancellationToken = default)
     {
-        var normalizedEmail = _userManager.NormalizeEmail(model.Email);
-        var normalizedUserName = _userManager.NormalizeName(model.UserName);
+        var normalizedEmail = userManager.NormalizeEmail(model.Email);
+        var normalizedUserName = userManager.NormalizeName(model.UserName);
 
         Expression<Func<User, bool>> predicate =
             user => user.NormalizedEmail == normalizedEmail || user.NormalizedUserName == normalizedUserName;
 
-        return _userManager.Users.AnyAsync(predicate, cancellationToken);
+        return userManager.Users.AnyAsync(predicate, cancellationToken);
     }
 
     /// <summary>
@@ -466,7 +455,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         bool Predicate(User user)
             => user.IsEmailConfirmationPeriodExceeded(confirmationPeriod);
 
-        var unconfirmedUsers = await _userManager.Users
+        var unconfirmedUsers = await userManager.Users
             .Where(user => !user.EmailConfirmed).ToListAsync(cancellationToken);
 
         return unconfirmedUsers.Where(Predicate);
@@ -494,7 +483,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         bool Predicate(User user)
             => user.IsDeletionRequestOutdated(requestLifetime);
 
-        var pendingUsers = await _userManager.Users
+        var pendingUsers = await userManager.Users
             .Where(user => user.DeletionRequestSubmitted.HasValue).ToListAsync(cancellationToken);
 
         return pendingUsers.Where(Predicate);
@@ -518,7 +507,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         bool Predicate(UserRefreshToken userRefreshToken)
             => userRefreshToken.IsOutdated(refreshTokenLifetime);
 
-        var refreshTokens = await _userRefreshTokensRepository.GetAllAsync(cancellationToken);
+        var refreshTokens = await userRefreshTokensRepository.GetAllAsync(cancellationToken);
 
         return refreshTokens.Where(Predicate);
     }

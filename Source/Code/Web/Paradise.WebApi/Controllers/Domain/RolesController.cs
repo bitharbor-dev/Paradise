@@ -24,10 +24,6 @@ namespace Paradise.WebApi.Controllers.Domain;
 [Authorize(Roles = "Administrator")]
 public sealed class RolesController(IRoleService roleService) : ApiControllerBase
 {
-    #region Fields
-    private readonly IRoleService _roleService = roleService;
-    #endregion
-
     #region Public methods
     /// <summary>
     /// Gets the list of application roles.
@@ -58,7 +54,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAll([FromQuery(Name = IsDefaultParameter)] bool? isDefault = null)
-        => await _roleService.GetAllAsync(isDefault);
+        => await roleService.GetAllAsync(isDefault);
 
     /// <summary>
     /// Gets the role with the given <paramref name="roleId"/>.
@@ -77,7 +73,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetById([FromRoute(Name = RoleIdParameter)] Guid roleId)
-        => await _roleService.GetByIdAsync(roleId);
+        => await roleService.GetByIdAsync(roleId);
 
     /// <summary>
     /// Gets the list of application roles, which belongs
@@ -99,7 +95,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetUserRoles([FromRoute(Name = UserIdParameter)] Guid userId)
-        => await _roleService.GetUserRolesAsync(userId);
+        => await roleService.GetUserRolesAsync(userId);
 
     /// <summary>
     /// Creates a new application role.
@@ -119,7 +115,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Create([FromBody, Required] RoleCreationModel model)
-        => await _roleService.CreateAsync(model);
+        => await roleService.CreateAsync(model);
 
     /// <summary>
     /// Updates an application role.
@@ -142,7 +138,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Update([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromBody, Required] RoleUpdateModel model)
-        => await _roleService.UpdateAsync(roleId, model);
+        => await roleService.UpdateAsync(roleId, model);
 
     /// <summary>
     /// Deletes an application role.
@@ -162,7 +158,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Delete([FromRoute(Name = RoleIdParameter)] Guid roleId)
-        => await _roleService.DeleteAsync(roleId);
+        => await roleService.DeleteAsync(roleId);
 
     /// <summary>
     /// Assigns an application role to a user.
@@ -186,7 +182,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Assign([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromRoute(Name = UserIdParameter)] Guid userId)
-        => await _roleService.AssignAsync(roleId, userId);
+        => await roleService.AssignAsync(roleId, userId);
 
     /// <summary>
     /// Unassigns an application role from a user.
@@ -210,6 +206,6 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Unassign([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromRoute(Name = UserIdParameter)] Guid userId)
-        => await _roleService.UnassignAsync(roleId, userId);
+        => await roleService.UnassignAsync(roleId, userId);
     #endregion
 }

@@ -21,15 +21,11 @@ namespace Paradise.ApplicationLogic.Services.Application.Implementation;
 /// </param>
 public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplatesRepository) : IEmailTemplateService
 {
-    #region Fields
-    private readonly IEmailTemplatesRepository _emailTemplatesRepository = emailTemplatesRepository;
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<EmailTemplateModel>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var emailTemplates = await _emailTemplatesRepository.GetAllAsync(cancellationToken);
+        var emailTemplates = await emailTemplatesRepository.GetAllAsync(cancellationToken);
 
         var models = emailTemplates.Select(emailTemplate => emailTemplate.ToModel());
 
@@ -39,7 +35,7 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result<EmailTemplateModel>> GetByIdAsync(Guid emailTemplateId, CancellationToken cancellationToken = default)
     {
-        var emailTemplate = await _emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
+        var emailTemplate = await emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
 
         emailTemplate.ThrowIfNull(NotFound, MessageTemplateIdNotFound, emailTemplateId);
 
@@ -57,12 +53,12 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
 
         ValidateEmailTemplateFormat(emailTemplate);
 
-        var existingTemplate = await _emailTemplatesRepository.GetByNameAndCultureAsync(emailTemplate.TemplateName, emailTemplate.Culture, cancellationToken);
+        var existingTemplate = await emailTemplatesRepository.GetByNameAndCultureAsync(emailTemplate.TemplateName, emailTemplate.Culture, cancellationToken);
 
         existingTemplate.ThrowIfNotNull(UnprocessableEntity, MessageTemplateAlreadyExists, emailTemplate.TemplateName, emailTemplate.Culture?.LCID);
 
-        _emailTemplatesRepository.Add(emailTemplate);
-        await _emailTemplatesRepository.CommitAsync(cancellationToken);
+        emailTemplatesRepository.Add(emailTemplate);
+        await emailTemplatesRepository.CommitAsync(cancellationToken);
 
         return new(emailTemplate.ToModel(), Created);
     }
@@ -70,7 +66,7 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result<EmailTemplateModel>> UpdateAsync(Guid emailTemplateId, EmailTemplateUpdateModel model, CancellationToken cancellationToken = default)
     {
-        var emailTemplate = await _emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
+        var emailTemplate = await emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
 
         emailTemplate.ThrowIfNull(NotFound, MessageTemplateIdNotFound, emailTemplateId);
 
@@ -88,7 +84,7 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
         {
             ValidateEmailTemplateFormat(emailTemplate);
 
-            await _emailTemplatesRepository.CommitAsync(cancellationToken);
+            await emailTemplatesRepository.CommitAsync(cancellationToken);
         }
         else
         {
@@ -101,8 +97,8 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result> DeleteAsync(Guid emailTemplateId, CancellationToken cancellationToken = default)
     {
-        _emailTemplatesRepository.RemoveById(emailTemplateId);
-        await _emailTemplatesRepository.CommitAsync(cancellationToken);
+        emailTemplatesRepository.RemoveById(emailTemplateId);
+        await emailTemplatesRepository.CommitAsync(cancellationToken);
 
         return OK;
     }

@@ -61,9 +61,6 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
     private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
     private readonly JsonSerializerOptions? _jsonSerializerOptions = jsonSerializerOptions?.Value;
-    private readonly UserManager _userManager = userManager;
-    private readonly IUserRefreshTokensRepository _userRefreshTokensRepository = userRefreshTokensRepository;
-    private readonly IJsonWebTokenService _jsonWebTokenService = jsonWebTokenService;
     #endregion
 
     #region Public methods
@@ -109,7 +106,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var refreshToken = await _userRefreshTokensRepository.GetByIdAsync(refreshTokenId);
+            var refreshToken = await userRefreshTokensRepository.GetByIdAsync(refreshTokenId);
 
             if (refreshToken is null || refreshToken.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime))
             {
@@ -131,7 +128,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var user = await _userManager.GetUserAsync(principal);
+            var user = await userManager.GetUserAsync(principal);
 
             if (user is null)
             {
@@ -143,7 +140,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
             var rolesAreMatching = PrincipalRolesAreMatching(principal, roles);
 
             if (!rolesAreMatching)
@@ -180,7 +177,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 handleResponseDelegate();
             }
 
-            if (!_jsonWebTokenService.ValidateFormat(token))
+            if (!jsonWebTokenService.ValidateFormat(token))
             {
                 await WriteErrorResultAsync(response, Unauthorized, InvalidToken);
 

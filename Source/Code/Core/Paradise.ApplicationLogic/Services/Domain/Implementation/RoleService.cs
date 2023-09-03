@@ -28,16 +28,11 @@ public sealed class RoleService(UserManager userManager,
                                 RoleManager<Role> roleManager)
     : IRoleService
 {
-    #region Fields
-    private readonly UserManager _userManager = userManager;
-    private readonly RoleManager<Role> _roleManager = roleManager;
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<RoleModel>>> GetAllAsync(bool? isDefault = null, CancellationToken cancellationToken = default)
     {
-        var rolesQuery = _roleManager.Roles;
+        var rolesQuery = roleManager.Roles;
 
         if (isDefault.HasValue)
             rolesQuery = rolesQuery.Where(role => role.IsDefault == isDefault.Value);
@@ -80,7 +75,7 @@ public sealed class RoleService(UserManager userManager,
 
         role = model.ToEntity();
 
-        var creationResult = await _roleManager.CreateAsync(role);
+        var creationResult = await roleManager.CreateAsync(role);
 
         creationResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -96,7 +91,7 @@ public sealed class RoleService(UserManager userManager,
 
         role.IsDefault = model.IsDefault;
 
-        var updateResult = await _roleManager.UpdateAsync(role);
+        var updateResult = await roleManager.UpdateAsync(role);
 
         updateResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -110,11 +105,11 @@ public sealed class RoleService(UserManager userManager,
 
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
 
-        var deletionResult = await _roleManager.DeleteAsync(role);
+        var deletionResult = await roleManager.DeleteAsync(role);
 
         deletionResult.ThrowIfUnsuccessfulIdentityResult();
 
-        var roles = await _roleManager.Roles.ToListAsync(cancellationToken);
+        var roles = await roleManager.Roles.ToListAsync(cancellationToken);
 
         return new(roles.Select(role => role.ToModel()), OK);
     }
@@ -160,8 +155,8 @@ public sealed class RoleService(UserManager userManager,
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
         user.ThrowIfNull(NotFound, UserIdNotFound, userId);
 
-        var identityResult = assign ? await _userManager.AddToRoleAsync(user, role.Name)
-                                    : await _userManager.RemoveFromRoleAsync(user, role.Name);
+        var identityResult = assign ? await userManager.AddToRoleAsync(user, role.Name)
+                                    : await userManager.RemoveFromRoleAsync(user, role.Name);
 
         identityResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -185,9 +180,9 @@ public sealed class RoleService(UserManager userManager,
     /// </returns>
     private Task<Role?> FindRoleByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        var normalizedName = _roleManager.NormalizeKey(name);
+        var normalizedName = roleManager.NormalizeKey(name);
 
-        return _roleManager.Roles.SingleOrDefaultAsync(role => role.NormalizedName == normalizedName, cancellationToken);
+        return roleManager.Roles.SingleOrDefaultAsync(role => role.NormalizedName == normalizedName, cancellationToken);
     }
 
     /// <summary>
@@ -204,7 +199,7 @@ public sealed class RoleService(UserManager userManager,
     /// The <see cref="Role"/> with the given <paramref name="id"/>.
     /// </returns>
     private Task<Role?> FindRoleByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => _roleManager.Roles.SingleOrDefaultAsync(role => role.Id == id, cancellationToken);
+        => roleManager.Roles.SingleOrDefaultAsync(role => role.Id == id, cancellationToken);
 
     /// <summary>
     /// Gets the <see cref="User"/> with the given <paramref name="id"/>.
@@ -220,7 +215,7 @@ public sealed class RoleService(UserManager userManager,
     /// The <see cref="User"/> with the given <paramref name="id"/>.
     /// </returns>
     private Task<User?> FindUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken);
+        => userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken);
 
     /// <summary>
     /// Gets the list of the given <paramref name="user"/> roles.
@@ -238,14 +233,14 @@ public sealed class RoleService(UserManager userManager,
     /// </returns>
     private async Task<IEnumerable<Role>> GetUserRolesInternalAsync(User user, CancellationToken cancellationToken = default)
     {
-        var roleNames = await _userManager.GetRolesAsync(user);
+        var roleNames = await userManager.GetRolesAsync(user);
         var userRoles = new List<Role>();
 
         foreach (var name in roleNames)
         {
-            var normalizedName = _roleManager.NormalizeKey(name);
+            var normalizedName = roleManager.NormalizeKey(name);
 
-            var role = await _roleManager.Roles.SingleAsync(r => r.NormalizedName == normalizedName, cancellationToken);
+            var role = await roleManager.Roles.SingleAsync(r => r.NormalizedName == normalizedName, cancellationToken);
             userRoles.Add(role);
         }
 

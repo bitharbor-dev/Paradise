@@ -24,10 +24,6 @@ namespace Paradise.WebApi.Controllers.Application;
 [Authorize(Roles = "Administrator")]
 public sealed class EmailTemplatesController(IEmailTemplateService emailTemplateService) : ApiControllerBase
 {
-    #region Fields
-    private readonly IEmailTemplateService _emailTemplateService = emailTemplateService;
-    #endregion
-
     #region Public methods
     /// <summary>
     /// Gets the list of email templates.
@@ -43,7 +39,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAll()
-        => await _emailTemplateService.GetAllAsync();
+        => await emailTemplateService.GetAllAsync();
 
     /// <summary>
     /// Gets the email template with the given <paramref name="emailTemplateId"/>.
@@ -62,7 +58,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetById([FromRoute(Name = EmailTemplateIdParameter)] Guid emailTemplateId)
-        => await _emailTemplateService.GetByIdAsync(emailTemplateId);
+        => await emailTemplateService.GetByIdAsync(emailTemplateId);
 
     /// <summary>
     /// Creates a new email template.
@@ -83,7 +79,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Create([FromBody, Required] EmailTemplateCreationModel model)
-        => await _emailTemplateService.CreateAsync(model);
+        => await emailTemplateService.CreateAsync(model);
 
     /// <summary>
     /// Updates an email template.
@@ -107,7 +103,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Update([FromRoute(Name = EmailTemplateIdParameter)] Guid emailTemplateId, [FromBody, Required] EmailTemplateUpdateModel model)
-        => await _emailTemplateService.UpdateAsync(emailTemplateId, model);
+        => await emailTemplateService.UpdateAsync(emailTemplateId, model);
 
     /// <summary>
     /// Deletes an email template.
@@ -123,6 +119,6 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Delete([FromRoute(Name = EmailTemplateIdParameter)] Guid emailTemplateId)
-        => await _emailTemplateService.DeleteAsync(emailTemplateId);
+        => await emailTemplateService.DeleteAsync(emailTemplateId);
     #endregion
 }

@@ -19,10 +19,6 @@ namespace Paradise.ApplicationLogic.Services.Application.Implementation;
 /// </param>
 public sealed class DataProtectionService(IDataProtectionProvider dataProtectionProvider) : IDataProtectionService
 {
-    #region Fields
-    private readonly IDataProtectionProvider _dataProtectionProvider = dataProtectionProvider;
-    #endregion
-
     #region Constants
     /// <summary>
     /// Default data protection purpose.
@@ -40,7 +36,7 @@ public sealed class DataProtectionService(IDataProtectionProvider dataProtection
     {
         var json = JsonSerializer.Serialize(value, _jsonSerializerOptions);
 
-        return _dataProtectionProvider.CreateProtector(DataProtectionPurpose).Protect(json);
+        return dataProtectionProvider.CreateProtector(DataProtectionPurpose).Protect(json);
     }
 
     /// <inheritdoc/>
@@ -53,7 +49,7 @@ public sealed class DataProtectionService(IDataProtectionProvider dataProtection
 
         try
         {
-            var json = _dataProtectionProvider.CreateProtector(DataProtectionPurpose).Unprotect(token);
+            var json = dataProtectionProvider.CreateProtector(DataProtectionPurpose).Unprotect(token);
 
             value = JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions);
 

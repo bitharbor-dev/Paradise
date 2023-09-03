@@ -37,8 +37,6 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 {
     #region Fields
     private readonly SmtpOptions _smtpOptions = smtpOptions.Value;
-    private readonly ISmtpClient _smtpClient = smtpClient;
-    private readonly IEmailTemplatesRepository _emailTemplatesRepository = emailTemplatesRepository;
     #endregion
 
     #region Public methods
@@ -68,7 +66,7 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 
         var message = CreateMessage(template, _smtpOptions.Credentials.UserName, basicData, request.SubjectArgs, request.BodyArgs);
 
-        await _smtpClient.SendAsync(message, cancellationToken);
+        await smtpClient.SendAsync(message, cancellationToken);
 
         EmailMessageSent?.Invoke(this, new(request.TemplateName, request.Culture, request.BodyArgs, request.SubjectArgs, message));
 
@@ -130,15 +128,15 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
                                                               bool useNullOrInvariantCultureAsFallback = true,
                                                               CancellationToken cancellationToken = default)
     {
-        var template = await _emailTemplatesRepository
+        var template = await emailTemplatesRepository
             .GetByNameAndCultureAsync(name, culture, cancellationToken);
 
         if (template is null && useNullOrInvariantCultureAsFallback)
         {
-            template = await _emailTemplatesRepository
+            template = await emailTemplatesRepository
                 .GetByNameAndCultureAsync(name, null, cancellationToken);
 
-            template ??= await _emailTemplatesRepository
+            template ??= await emailTemplatesRepository
                 .GetByNameAndCultureAsync(name, CultureInfo.InvariantCulture, cancellationToken);
         }
 

@@ -20,7 +20,6 @@ using Paradise.Models.Domain.UserModels;
 using Paradise.Options.Models;
 using Paradise.Options.Models.Communication;
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Web;
 using static Paradise.ApplicationLogic.Exceptions.ResultException;
@@ -87,19 +86,13 @@ public sealed class UserService(ILogger<UserService> logger,
     private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
     private readonly EmailTemplateOptions _emailTemplateOptions = emailTemplateOptions.Value;
     private readonly IdentityOptions _identityOptions = identityOptions.Value;
-    private readonly UserManager _userManager = userManager;
-    private readonly IUserRefreshTokensRepository _userRefreshTokensRepository = userRefreshTokensRepository;
-    private readonly IRoleService _roleService = roleService;
-    private readonly ICommunicationService _communicationService = communicationService;
-    private readonly IJsonWebTokenService _jsonWebTokenService = jsonWebTokenService;
-    private readonly IDataProtectionService _dataProtectionService = dataProtectionService;
     #endregion
 
     #region Public methods
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var users = await _userManager.Users.ToListAsync(cancellationToken);
+        var users = await userManager.Users.ToListAsync(cancellationToken);
 
         return new(users.Select(user => user.ToModel()), OK);
     }
@@ -119,7 +112,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var user = model.ToEntity();
 
-        var creationResult = await _userManager.CreateAsync(user, model.Password!);
+        var creationResult = await userManager.CreateAsync(user, model.Password!);
 
         creationResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -129,7 +122,7 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         catch
         {
-            var deletionResult = await _userManager.DeleteAsync(user);
+            var deletionResult = await userManager.DeleteAsync(user);
 
             if (!deletionResult.Succeeded)
                 logger.LogUnsuccessfulUserDeletionAfterFailedInvitation(user.Email, deletionResult);
@@ -143,7 +136,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> ConfirmEmailAsync(string identityToken, CancellationToken cancellationToken = default)
     {
-        _dataProtectionService
+        dataProtectionService
             .TryUnprotectJson<IdentityToken>(identityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
@@ -152,18 +145,18 @@ public sealed class UserService(ILogger<UserService> logger,
         var email = identityTokenModel.Email;
         var emailConfirmationToken = identityTokenModel.InnerToken;
 
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         user.EmailConfirmed.ThrowIfTrue(UnprocessableEntity, UserEmailAlreadyConfirmed, user.Email);
 
-        var emailConfirmationResult = await _userManager.ConfirmEmailAsync(user, emailConfirmationToken);
+        var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, emailConfirmationToken);
 
         emailConfirmationResult.ThrowIfUnsuccessfulIdentityResult();
 
         await AssignDefaultUserRolesAsync(user, cancellationToken);
 
-        var updateResult = await _userManager.UpdateAsync(user);
+        var updateResult = await userManager.UpdateAsync(user);
 
         updateResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -216,7 +209,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> ConfirmLoginAsync(UserTwoFactorAuthenticationModel model, CancellationToken cancellationToken = default)
     {
-        _dataProtectionService
+        dataProtectionService
             .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
@@ -232,7 +225,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         codeIsCorrect.ThrowIfFalse(Unauthorized, UnauthorizedUser);
 
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         return await GenerateAccessTokenAsync(user, null, cancellationToken);
@@ -241,7 +234,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> RenewTokenAsync(string accessToken, CancellationToken cancellationToken = default)
     {
-        _jsonWebTokenService
+        jsonWebTokenService
             .TryParseToken(accessToken, out var securityToken, out var principal, false)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
@@ -258,16 +251,16 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> LogoutAsync(string accessToken, CancellationToken cancellationToken = default)
     {
-        _jsonWebTokenService
+        jsonWebTokenService
             .TryParseToken(accessToken, out var securityToken, out _)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
         Guid.TryParse(securityToken.Id, out var refreshTokenId)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
-        _userRefreshTokensRepository.RemoveById(refreshTokenId);
+        userRefreshTokensRepository.RemoveById(refreshTokenId);
 
-        await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+        await userRefreshTokensRepository.CommitAsync(cancellationToken);
 
         return OK;
     }
@@ -275,15 +268,15 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> LogoutEverywhereAsync(string accessToken, CancellationToken cancellationToken = default)
     {
-        _jsonWebTokenService
+        jsonWebTokenService
             .TryParseToken(accessToken, out _, out var principal)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
         var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
 
-        _userRefreshTokensRepository.RemoveWhere(refreshToken => refreshToken.OwnerId == userId);
+        userRefreshTokensRepository.RemoveWhere(refreshToken => refreshToken.OwnerId == userId);
 
-        await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+        await userRefreshTokensRepository.CommitAsync(cancellationToken);
 
         return OK;
     }
@@ -295,7 +288,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
-        var user = await _userManager.FindByEmailAsync(model.Email);
+        var user = await userManager.FindByEmailAsync(model.Email);
 
         if (user is not null)
         {
@@ -315,7 +308,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> ResetPasswordAsync(UserResetPasswordModel model, CancellationToken cancellationToken = default)
     {
-        _dataProtectionService
+        dataProtectionService
             .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
@@ -333,10 +326,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var email = identityTokenModel.Email;
         var passwordResetToken = identityTokenModel.InnerToken;
 
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
-        var passwordResetResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, model.Password);
+        var passwordResetResult = await userManager.ResetPasswordAsync(user, passwordResetToken, model.Password);
 
         passwordResetResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -397,7 +390,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> ResetEmailAsync(string identityToken, CancellationToken cancellationToken = default)
     {
-        _dataProtectionService
+        dataProtectionService
             .TryUnprotectJson<IdentityToken>(identityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
@@ -413,10 +406,10 @@ public sealed class UserService(ILogger<UserService> logger,
 
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, newEmail);
 
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
-        var changeEmailResult = await _userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
+        var changeEmailResult = await userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
 
         changeEmailResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -464,7 +457,7 @@ public sealed class UserService(ILogger<UserService> logger,
             user.UserName = model.UserName;
         }
 
-        var updateResult = await _userManager.UpdateAsync(user);
+        var updateResult = await userManager.UpdateAsync(user);
 
         updateResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -483,14 +476,14 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             user.CancelDeletionRequest();
 
-            var updateResult = await _userManager.UpdateAsync(user);
+            var updateResult = await userManager.UpdateAsync(user);
 
             updateResult.ThrowIfUnsuccessfulIdentityResult();
 
             Throw(BadRequest, UserDeletionRequestExpired, requestLifetime);
         }
 
-        var deletionResult = await _userManager.DeleteAsync(user);
+        var deletionResult = await userManager.DeleteAsync(user);
 
         deletionResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -521,7 +514,7 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         if (refreshTokenId.HasValue)
         {
-            var refreshToken = await _userRefreshTokensRepository.GetByIdAsync(refreshTokenId.Value, cancellationToken);
+            var refreshToken = await userRefreshTokensRepository.GetByIdAsync(refreshTokenId.Value, cancellationToken);
 
             refreshToken.ThrowIfNull(Unauthorized, OutdatedToken);
 
@@ -533,9 +526,9 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             var refreshToken = new UserRefreshToken(user.Id);
 
-            _userRefreshTokensRepository.Add(refreshToken);
+            userRefreshTokensRepository.Add(refreshToken);
 
-            await _userRefreshTokensRepository.CommitAsync(cancellationToken);
+            await userRefreshTokensRepository.CommitAsync(cancellationToken);
 
             refreshTokenId = refreshToken.Id;
         }
@@ -543,12 +536,12 @@ public sealed class UserService(ILogger<UserService> logger,
         // The minimum claims for the authentication process to be working properly
         // is the user Id claim. In order to pass the authorization process as well -
         // role claims are required.
-        var userClaims = await _userManager.GetClaimsAsync(user);
+        var userClaims = await userManager.GetClaimsAsync(user);
         var rolesAsClaims = await GetUserRolesAsClaimsAsync(user);
 
         var tokenClaims = userClaims.Concat(rolesAsClaims);
 
-        var accessToken = _jsonWebTokenService.GenerateToken(tokenClaims, refreshTokenId.Value, out var expiryDate);
+        var accessToken = jsonWebTokenService.GenerateToken(tokenClaims, refreshTokenId.Value, out var expiryDate);
 
         return new(new(user.Email, expiryDate, accessToken), OK);
     }
@@ -568,7 +561,7 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         var roleClaimType = _jwtBearerOptions.TokenValidationParameters.RoleClaimType;
 
-        var roleNames = await _userManager.GetRolesAsync(user);
+        var roleNames = await userManager.GetRolesAsync(user);
         var roleClaims = roleNames.Select(name => new Claim(roleClaimType, name));
 
         return roleClaims;
@@ -588,11 +581,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private UserAuthorizationTokenModel GenerateTwoFactorToken(User user, out string verificationCode)
     {
-        verificationCode = _dataProtectionService.GenerateRandomDigitCode(
+        verificationCode = dataProtectionService.GenerateRandomDigitCode(
             _applicationOptions.Authentication.TwoFactorVerificationCodeLength);
 
         var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Authentication.TwoFactorTokenLifetime);
-        var identityToken = _dataProtectionService.ProtectAsJson(
+        var identityToken = dataProtectionService.ProtectAsJson(
             new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
 
         return new(user.Email, expiryDate, identityToken);
@@ -611,12 +604,12 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </param>
     private async Task AssignDefaultUserRolesAsync(User user, CancellationToken cancellationToken = default)
     {
-        var defaultRolesResult = await _roleService.GetAllAsync(true, cancellationToken);
+        var defaultRolesResult = await roleService.GetAllAsync(true, cancellationToken);
 
         if (defaultRolesResult.Value is not null)
         {
             foreach (var role in defaultRolesResult.Value)
-                await _roleService.AssignAsync(role.Id, user.Id, cancellationToken);
+                await roleService.AssignAsync(role.Id, user.Id, cancellationToken);
         }
     }
 
@@ -636,7 +629,7 @@ public sealed class UserService(ILogger<UserService> logger,
             user.AccessFailedCount = 0;
             user.LockoutEnd = null;
 
-            var updateResult = await _userManager.UpdateAsync(user);
+            var updateResult = await userManager.UpdateAsync(user);
             updateResult.ThrowIfUnsuccessfulIdentityResult();
         }
     }
@@ -674,7 +667,7 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
 
-        var identityToken = _dataProtectionService.ProtectAsJson(
+        var identityToken = dataProtectionService.ProtectAsJson(
             new IdentityToken(user.Email, innerToken, value, expiryDate));
 
         // Since the scope of the current method is very concrete,
@@ -724,19 +717,19 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
-            user = await _userManager.FindByEmailAsync(model.Email);
+            user = await userManager.FindByEmailAsync(model.Email);
         }
         else if (model.UserName.IsNotNullOrWhiteSpace())
         {
             model.UserName.IsValidUserName(_identityOptions).ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
 
-            user = await _userManager.FindByNameAsync(model.UserName);
+            user = await userManager.FindByNameAsync(model.UserName);
         }
         else if (model.Phone.IsNotNullOrWhiteSpace())
         {
             model.Phone.IsValidPhoneNumber().ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
 
-            user = await _userManager.FindByPhoneNumberAsync(model.Phone);
+            user = await userManager.FindByPhoneNumberAsync(model.Phone);
         }
         else
         {
@@ -771,7 +764,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// The <see cref="User"/> with the given <paramref name="id"/>.
     /// </returns>
     private async Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => (await _userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
+        => (await userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
         ?? throw new ResultException(NotFound, UserIdNotFound, id);
     #endregion
 
@@ -849,9 +842,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </param>
     private async Task ValidatePasswordAsync(string password, ResultException exception)
     {
-        foreach (var validator in _userManager.PasswordValidators)
+        foreach (var validator in userManager.PasswordValidators)
         {
-            var validationResult = await validator.ValidateAsync(_userManager, null!, password);
+            var validationResult = await validator.ValidateAsync(userManager, null!, password);
             if (!validationResult.Succeeded)
                 exception.AddError(validationResult, UnprocessableEntity);
         }
@@ -908,7 +901,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </exception>
     private async Task ValidateUserLockoutAsync(User user)
     {
-        var userLockedOut = await _userManager.IsLockedOutAsync(user);
+        var userLockedOut = await userManager.IsLockedOutAsync(user);
 
         (user.LockoutEnabled && userLockedOut).ThrowIfTrue(Forbidden, UserLockedOut);
     }
@@ -934,13 +927,13 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </exception>
     private async Task ValidateUserPasswordAsync(User user, string password)
     {
-        var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, password);
+        var passwordIsCorrect = await userManager.CheckPasswordAsync(user, password);
 
         if (!passwordIsCorrect)
         {
             if (user.LockoutEnabled)
             {
-                var incrementResult = await _userManager.AccessFailedAsync(user);
+                var incrementResult = await userManager.AccessFailedAsync(user);
                 incrementResult.ThrowIfUnsuccessfulIdentityResult();
             }
 
@@ -959,7 +952,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email)
-        => (await _userManager.FindByEmailAsync(email)) is not null;
+        => (await userManager.FindByEmailAsync(email)) is not null;
 
     /// <summary>
     /// Checks if the given <paramref name="phone"/> number is already in use.
@@ -972,7 +965,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone)
-        => (await _userManager.FindByPhoneNumberAsync(phone)) is not null;
+        => (await userManager.FindByPhoneNumberAsync(phone)) is not null;
 
     /// <summary>
     /// Checks if the given <paramref name="userName"/> is already in use.
@@ -985,7 +978,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfUserNameIsInUseAsync(string userName)
-        => (await _userManager.FindByNameAsync(userName)) is not null;
+        => (await userManager.FindByNameAsync(userName)) is not null;
     #endregion
 
     #region Notification methods
@@ -1006,7 +999,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<Result<EmailModel>> SendEmailAddressConfirmationEmailAsync(User user, CancellationToken cancellationToken = default)
     {
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
         var template = _emailTemplateOptions.EmailAddressConfirmationTemplateName;
 
@@ -1024,7 +1017,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { link });
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1058,7 +1051,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { verificationCode });
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1078,7 +1071,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<Result<EmailModel>> SendPasswordResetEmailAsync(User user, CancellationToken cancellationToken = default)
     {
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
         var template = _emailTemplateOptions.PasswordResetTemplateName;
 
@@ -1086,7 +1079,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
 
-        var identityToken = _dataProtectionService.ProtectAsJson(
+        var identityToken = dataProtectionService.ProtectAsJson(
             new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
 
         var request = new EmailSendRequestModel(
@@ -1095,7 +1088,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { identityToken });
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1128,7 +1121,7 @@ public sealed class UserService(ILogger<UserService> logger,
             templateName: template,
             culture: culture);
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1161,7 +1154,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { user.UserName, newEmail });
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1190,7 +1183,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var culture = Thread.CurrentThread.CurrentUICulture;
 
-        var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+        var token = await userManager.GenerateChangeEmailTokenAsync(user, newEmail);
 
         var url = _applicationOptions.ApiUrl;
         var route = UserRoutes.ResetEmail;
@@ -1204,7 +1197,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new object?[] { user.UserName, link });
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1240,7 +1233,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new object?[] { userName, newEmail });
 
-        return await _communicationService.SendEmailAsync(request, cancellationToken);
+        return await communicationService.SendEmailAsync(request, cancellationToken);
     }
     #endregion
 
