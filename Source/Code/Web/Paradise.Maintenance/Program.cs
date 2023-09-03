@@ -5,27 +5,19 @@ using Paradise.Maintenance.Options;
 using Paradise.Maintenance.Workers;
 using Paradise.Options.Origins;
 
+static void AddWorkerOptions<TOptions>(IServiceCollection services, IConfiguration configuration) where TOptions : class
+    => services.AddOptions<TOptions>().Bind(configuration.GetRequiredSection(typeof(TOptions).Name)).ValidateDataAnnotations().ValidateOnStart();
+
 static void AddWorkersOptions(IServiceCollection services, IConfiguration configuration)
 {
-    services.AddOptions<OutdatedTokensCleanupWorkerOptions>()
-        .Bind(configuration.GetRequiredSection(nameof(OutdatedTokensCleanupWorkerOptions)))
-        .ValidateDataAnnotations()
-        .ValidateOnStart();
-
-    services.AddOptions<PendingDeletionUsersResetWorkerOptions>()
-        .Bind(configuration.GetRequiredSection(nameof(PendingDeletionUsersResetWorkerOptions)))
-        .ValidateDataAnnotations()
-        .ValidateOnStart();
-
-    services.AddOptions<UnconfirmedUsersCleanupWorkerOptions>()
-        .Bind(configuration.GetRequiredSection(nameof(UnconfirmedUsersCleanupWorkerOptions)))
-        .ValidateDataAnnotations()
-        .ValidateOnStart();
+    AddWorkerOptions<OutdatedTokensCleanupWorkerOptions>(services, configuration);
+    AddWorkerOptions<PendingDeletionUsersResetWorkerOptions>(services, configuration);
+    AddWorkerOptions<UnconfirmedUsersCleanupWorkerOptions>(services, configuration);
 }
 
 static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
 {
-    var servicesBuilder = new ServiceCollectionBuilder(services, new JsonConfigurationOrigin());
+    var servicesBuilder = new ServiceCollectionBuilder(services, JsonConfigurationOrigin.DefaultInstance);
 
     servicesBuilder.ConfigureRequiredServices();
 
