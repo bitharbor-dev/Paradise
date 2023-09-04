@@ -1,117 +1,164 @@
 ﻿using Microsoft.Extensions.Logging;
-using static Microsoft.Extensions.Logging.LoggerMessage;
-using static Microsoft.Extensions.Logging.LogLevel;
-using static Paradise.ApplicationLogic.Logging.EventIdContainer;
-using Logs = Paradise.Localization.Logging.LogMessages;
 
-namespace Paradise.ApplicationLogic.Logging.HighPerformance;
+namespace Paradise.Localization.Logging;
 
 /// <summary>
 /// Contains a runtime-defined actions to be executed while logging.
 /// </summary>
-internal static class LogMessagesDefinition
+public static class LogMessagesDefinition
 {
     #region Properties
     /// <summary>
     /// Gets an action to be executed while logging database seed failure.
     /// </summary>
     public static Action<ILogger, string?, Exception?> CriticalDatabaseSeedFailure { get; }
-        = Define<string?>(Critical, DatabaseSeedFailureLogEvent, Logs.CriticalDatabaseSeedFailure);
+        = LoggerMessage.Define<string?>(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventDatabaseSeedFailure,
+            LogMessages.CriticalDatabaseSeedFailure);
 
     /// <summary>
     /// Gets an action to be executed while logging the database-related exception.
     /// </summary>
     public static Action<ILogger, string?, Exception?> CriticalDatabaseException { get; }
-        = Define<string?>(Critical, DatabaseExceptionLogEvent, Logs.CriticalDatabaseException);
+        = LoggerMessage.Define<string?>(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventDatabaseException,
+            LogMessages.CriticalDatabaseException);
 
     /// <summary>
     /// Gets an action to be executed while logging background worker execution failure time.
     /// </summary>
     public static Action<ILogger, DateTime, Exception?> CriticalWorkerExecutionFailure { get; }
-        = Define<DateTime>(Critical, WorkerExecutionFailureLogEvent, Logs.CriticalWorkerExecutionFailure);
+        = LoggerMessage.Define<DateTime>(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventWorkerExecutionFailure,
+            LogMessages.CriticalWorkerExecutionFailure);
 
     /// <summary>
     /// Gets an action to be executed while logging background worker options initial state.
     /// </summary>
     public static Action<ILogger, string, object, Exception?> InformationWorkerOptionsInitialState { get; }
-        = Define<string, object>(Information, WorkerOptionsInitialStateLogEvent, Logs.InformationWorkerOptionsInitialState);
+        = LoggerMessage.Define<string, object>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventWorkerOptionsInitialState,
+            LogMessages.InformationWorkerOptionsInitialState);
 
     /// <summary>
     /// Gets an action to be executed while logging background worker options changed event.
     /// </summary>
     public static Action<ILogger, DateTime, string, object, Exception?> InformationWorkerOptionsChangedState { get; }
-        = Define<DateTime, string, object>(Information, WorkerOptionsChangedStateLogEvent, Logs.InformationWorkerOptionsChangedState);
+        = LoggerMessage.Define<DateTime, string, object>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventWorkerOptionsChangedState,
+            LogMessages.InformationWorkerOptionsChangedState);
 
     /// <summary>
     /// Gets an action to be executed while logging application result errors.
     /// </summary>
     public static Action<ILogger, string, string, Exception?> ErrorResultErrors { get; }
-        = Define<string, string>(Error, ResultErrorsLogEvent, Logs.ErrorResultErrors);
+        = LoggerMessage.Define<string, string>(
+            LogLevel.Error,
+            LogMessagesEventIds.LogEventResultErrors,
+            LogMessages.ErrorResultErrors);
 
     /// <summary>
     /// Gets an action to be executed while logging application result critical errors.
     /// </summary>
     public static Action<ILogger, string, string, Exception?> CriticalResultCriticalErrors { get; }
-        = Define<string, string>(Critical, ResultCriticalErrorsLogEvent, Logs.CriticalResultErrors);
+        = LoggerMessage.Define<string, string>(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventResultCriticalErrors,
+            LogMessages.CriticalResultErrors);
 
     /// <summary>
     /// Gets an action to be executed while logging added seed item information.
     /// </summary>
     public static Action<ILogger, string, string, Exception?> InformationAddedSeedItem { get; }
-        = Define<string, string>(Information, AddedSeedItemLogEvent, Logs.InformationAddedSeedItem);
+        = LoggerMessage.Define<string, string>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventAddedSeedItem,
+            LogMessages.InformationAddedSeedItem);
 
     /// <summary>
     /// Gets an action to be executed while logging updated seed item information.
     /// </summary>
     public static Action<ILogger, string, string, Exception?> InformationUpdatedSeedItem { get; }
-        = Define<string, string>(Information, UpdatedSeedItemLogEvent, Logs.InformationUpdatedSeedItem);
+        = LoggerMessage.Define<string, string>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventUpdatedSeedItem,
+            LogMessages.InformationUpdatedSeedItem);
 
     /// <summary>
     /// Gets an action to be executed while logging the number of pending deletion users.
     /// </summary>
     public static Action<ILogger, int, Exception?> InformationPendingDeletionUsersNumber { get; }
-        = Define<int>(Information, PendingDeletionUsersNumberLogEvent, Logs.InformationPendingDeletionUsersNumber);
+        = LoggerMessage.Define<int>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventPendingDeletionUsersNumber,
+            LogMessages.InformationPendingDeletionUsersNumber);
 
     /// <summary>
     /// Gets an action to be executed while logging the number of outdated user refresh tokens.
     /// </summary>
     public static Action<ILogger, int, Exception?> InformationOutdatedTokensNumber { get; }
-        = Define<int>(Information, OutdatedTokensNumberLogEvent, Logs.InformationOutdatedTokensNumber);
+        = LoggerMessage.Define<int>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventOutdatedTokensNumber,
+            LogMessages.InformationOutdatedTokensNumber);
 
     /// <summary>
     /// Gets an action to be executed while logging the number of unconfirmed users.
     /// </summary>
     public static Action<ILogger, int, Exception?> InformationUnconfirmedUsersNumber { get; }
-        = Define<int>(Information, UnconfirmedUsersNumberLogEvent, Logs.InformationUnconfirmedUsersNumber);
+        = LoggerMessage.Define<int>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventUnconfirmedUsersNumber,
+            LogMessages.InformationUnconfirmedUsersNumber);
 
     /// <summary>
     /// Gets an action to be executed while logging background worker execution time.
     /// </summary>
     public static Action<ILogger, DateTime, Exception?> InformationWorkerRunning { get; }
-        = Define<DateTime>(Information, WorkerRunningLogEvent, Logs.InformationWorkerRunning);
+        = LoggerMessage.Define<DateTime>(
+            LogLevel.Information,
+            LogMessagesEventIds.LogEventWorkerRunning,
+            LogMessages.InformationWorkerRunning);
 
     /// <summary>
     /// Gets an action to be executed while logging database entry seed failure.
     /// </summary>
     public static Action<ILogger, string, string, string, Exception?> WarningDatabaseEntrySeedFailure { get; }
-        = Define<string, string, string>(Warning, DatabaseEntrySeedFailureLogEvent, Logs.WarningDatabaseEntrySeedFailure);
+        = LoggerMessage.Define<string, string, string>(
+            LogLevel.Warning,
+            LogMessagesEventIds.LogEventDatabaseEntrySeedFailure,
+            LogMessages.WarningDatabaseEntrySeedFailure);
 
     /// <summary>
     /// Gets an action to be executed while logging claims addition failure.
     /// </summary>
     public static Action<ILogger, Exception?> CriticalClaimsAdditionFailure { get; }
-        = Define(Critical, ClaimsAdditionFailureLogEvent, Logs.CriticalClaimsAdditionFailure);
+        = LoggerMessage.Define(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventClaimsAdditionFailure,
+            LogMessages.CriticalClaimsAdditionFailure);
 
     /// <summary>
     /// Gets an action to be executed while logging an unhandled exception.
     /// </summary>
     public static Action<ILogger, Exception> CriticalUnhandledExceptionOccurred { get; }
-        = Define(Critical, UnhandledExceptionOccurredLogEvent, Logs.CriticalUnhandledExceptionOccurred);
+        = LoggerMessage.Define(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventUnhandledExceptionOccurred,
+            LogMessages.CriticalUnhandledExceptionOccurred);
 
     /// <summary>
     /// Gets an action to be executed while logging user deletion failure after unsuccessful invitation.
     /// </summary>
     public static Action<ILogger, string, string, string, Exception?> CriticalUnsuccessfulUserDeletionAfterFailedInvitation { get; }
-        = Define<string, string, string>(Critical, UnsuccessfulUserDeletionAfterFailedInvitationLogEvent, Logs.CriticalUnsuccessfulUserDeletionAfterFailedInvitation);
+        = LoggerMessage.Define<string, string, string>(
+            LogLevel.Critical,
+            LogMessagesEventIds.LogEventUnsuccessfulUserDeletionAfterFailedInvitation,
+            LogMessages.CriticalUnsuccessfulUserDeletionAfterFailedInvitation);
     #endregion
 }

@@ -4,7 +4,7 @@ using Paradise.ApplicationLogic.Exceptions;
 using Paradise.Models;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using static Paradise.ApplicationLogic.Logging.HighPerformance.LogMessagesDefinition;
+using static Paradise.Localization.Logging.LogMessagesDefinition;
 using static System.Environment;
 
 namespace Paradise.ApplicationLogic.Extensions;
