@@ -34,24 +34,12 @@ public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IReposi
         => _source.AddRange(entities);
 
     /// <inheritdoc/>
-    public void Remove(TEntity entity)
-        => _source.Remove(entity);
+    public int Commit()
+        => _source.SaveChanges();
 
     /// <inheritdoc/>
-    public void RemoveRange(IEnumerable<TEntity> entities)
-        => _source.RemoveRange(entities);
-
-    /// <inheritdoc/>
-    public void RemoveById(Guid id)
-    {
-        var entity = _source.Set<TEntity>().SingleOrDefault(e => e.Id == id);
-        if (entity is not null)
-            _source.Remove(entity);
-    }
-
-    /// <inheritdoc/>
-    public void RemoveWhere(Expression<Func<TEntity, bool>> predicate)
-        => _source.RemoveRange(_source.Set<TEntity>().Where(predicate));
+    public Task<int> CommitAsync(CancellationToken cancellationToken = default)
+        => _source.SaveChangesAsync(cancellationToken);
 
     /// <inheritdoc/>
     public void ForEach(Action<TEntity> action)
@@ -68,10 +56,6 @@ public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IReposi
     }
 
     /// <inheritdoc/>
-    public int Commit()
-        => _source.SaveChanges();
-
-    /// <inheritdoc/>
     public Task ForEachAsync(Action<TEntity> action, CancellationToken cancellationToken = default)
         => _source.Set<TEntity>().ForEachAsync(action, cancellationToken);
 
@@ -80,7 +64,23 @@ public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IReposi
         => _source.Set<TEntity>().Where(predicate).ForEachAsync(action, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<int> CommitAsync(CancellationToken cancellationToken = default)
-        => _source.SaveChangesAsync(cancellationToken);
+    public void Remove(TEntity entity)
+        => _source.Remove(entity);
+
+    /// <inheritdoc/>
+    public void RemoveById(Guid id)
+    {
+        var entity = _source.Set<TEntity>().SingleOrDefault(e => e.Id == id);
+        if (entity is not null)
+            _source.Remove(entity);
+    }
+
+    /// <inheritdoc/>
+    public void RemoveRange(IEnumerable<TEntity> entities)
+        => _source.RemoveRange(entities);
+
+    /// <inheritdoc/>
+    public void RemoveWhere(Expression<Func<TEntity, bool>> predicate)
+        => _source.RemoveRange(_source.Set<TEntity>().Where(predicate));
     #endregion
 }

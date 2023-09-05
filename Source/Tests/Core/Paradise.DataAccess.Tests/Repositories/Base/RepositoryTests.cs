@@ -439,6 +439,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
 
         // Assert
         Assert.All(entitiesToRemove, entity => Assert.DoesNotContain(entity, Source.Set<TEntity>(), Comparer));
+        Assert.All(entitiesToKeep, entity => Assert.Contains(entity, Source.Set<TEntity>(), Comparer));
     }
     #endregion
 }
