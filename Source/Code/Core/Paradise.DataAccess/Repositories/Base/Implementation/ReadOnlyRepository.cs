@@ -114,6 +114,38 @@ public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
         => _source.Set<TEntity>().SingleOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
     /// <inheritdoc/>
+    public PagedListQueryResult<TEntity> GetPagedList(PagedListQuery<TEntity> query)
+    {
+        var set = _source.Set<TEntity>();
+
+        query.Apply(ref set);
+
+        var total = set.Count();
+
+        set = set.Skip(query.PageSkip).Take(query.PageSize);
+
+        var data = set.ToList();
+
+        return new(data, total);
+    }
+
+    /// <inheritdoc/>
+    public async Task<PagedListQueryResult<TEntity>> GetPagedListAsync(PagedListQuery<TEntity> query, CancellationToken cancellationToken = default)
+    {
+        var set = _source.Set<TEntity>();
+
+        query.Apply(ref set);
+
+        var total = await set.CountAsync(cancellationToken);
+
+        set = set.Skip(query.PageSkip).Take(query.PageSize);
+
+        var data = await set.ToListAsync(cancellationToken);
+
+        return new(data, total);
+    }
+
+    /// <inheritdoc/>
     public IQueryable<TEntity> GetQueryable()
         => _source.Set<TEntity>();
 

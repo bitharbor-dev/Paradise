@@ -178,6 +178,15 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid property type..
+        /// </summary>
+        public static string InvalidPropertyType {
+            get {
+                return ResourceManager.GetString("InvalidPropertyType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Swagger configuration is not valid..
         /// </summary>
         public static string InvalidSwaggerConfiguration {
@@ -210,6 +219,24 @@ namespace Paradise.Localization.ExceptionsHandling {
         public static string PlaceholderNotExists {
             get {
                 return ResourceManager.GetString("PlaceholderNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; is not declared in &apos;{1}&apos; type..
+        /// </summary>
+        public static string PropertyNotDeclared {
+            get {
+                return ResourceManager.GetString("PropertyNotDeclared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; value can not be less or equal to 0..
+        /// </summary>
+        public static string ValueCanNotBeLessOrEqualToZero {
+            get {
+                return ResourceManager.GetString("ValueCanNotBeLessOrEqualToZero", resourceCulture);
             }
         }
     }

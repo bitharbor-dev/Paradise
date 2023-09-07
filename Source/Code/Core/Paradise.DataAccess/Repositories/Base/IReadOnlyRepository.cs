@@ -309,6 +309,37 @@ public interface IReadOnlyRepository<TEntity>
     Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets the paged list of entities of the repository
+    /// using the <paramref name="query"/> parameters.
+    /// </summary>
+    /// <param name="query">
+    /// Contains paged list query properties.
+    /// </param>
+    /// <returns>
+    /// The paged list of entities of the repository
+    /// filtered by the given <paramref name="query"/> parameters.
+    /// </returns>
+    PagedListQueryResult<TEntity> GetPagedList(PagedListQuery<TEntity> query);
+
+    /// <summary>
+    /// Asynchronously gets the paged list of entities of the repository
+    /// using the <paramref name="query"/> parameters.
+    /// </summary>
+    /// <param name="query">
+    /// Contains paged list query properties.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the paged list of entities of the repository
+    /// filtered by the given <paramref name="query"/> parameters.
+    /// </returns>
+    Task<PagedListQueryResult<TEntity>> GetPagedListAsync(PagedListQuery<TEntity> query, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets queryable entities set.
     /// </summary>
     /// <returns>

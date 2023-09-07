@@ -156,6 +156,9 @@
   <data name="InvalidParametersNumber" xml:space="preserve">
     <value>Invalid parameters number.</value>
   </data>
+  <data name="InvalidPropertyType" xml:space="preserve">
+    <value>Invalid property type.</value>
+  </data>
   <data name="InvalidSwaggerConfiguration" xml:space="preserve">
     <value>Swagger configuration is not valid.</value>
   </data>
@@ -167,5 +170,13 @@
   </data>
   <data name="PlaceholderNotExists" xml:space="preserve">
     <value>Placeholder does not exist. Template name: '{0}'; Culture name: '{1}'; Placeholder name: '{2}'.</value>
+  </data>
+  <data name="PropertyNotDeclared" xml:space="preserve">
+    <value>Property '{0}' is not declared in '{1}' type.</value>
+    <comment>Pass property name as the first argument and type name as the second.</comment>
+  </data>
+  <data name="ValueCanNotBeLessOrEqualToZero" xml:space="preserve">
+    <value>'{0}' value can not be less or equal to 0.</value>
+    <comment>Pass parameter name as the argument.</comment>
   </data>
 </root>
