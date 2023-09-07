@@ -20,8 +20,17 @@ namespace Paradise.ApplicationLogic.Tests.Services.Domain;
 public sealed class UserServiceTests
 {
     #region Constants
+    /// <summary>
+    /// Invalid test JWT.
+    /// </summary>
     private const string InvalidAccessToken = "Invalid access token.";
+    /// <summary>
+    /// Invalid test identity token.
+    /// </summary>
     private const string InvalidIdentityToken = "Invalid identity token.";
+    /// <summary>
+    /// Invalid test email address.
+    /// </summary>
     private const string InvalidEmailAddress = "Invalid email address.";
     #endregion
 

@@ -10,6 +10,9 @@ namespace Paradise.WebApi.Swagger.DocumentFilters;
 public sealed class EndpointPathToLowercaseDocumentFilter : IDocumentFilter
 {
     #region Constants
+    /// <summary>
+    /// URI segments separator.
+    /// </summary>
     private const char PathSeparator = '/';
     #endregion
 

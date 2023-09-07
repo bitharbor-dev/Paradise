@@ -11,10 +11,21 @@ namespace Paradise.ApplicationLogic.Tests.Services.Application;
 public sealed class JsonWebTokenServiceTests
 {
     #region Constants
+    /// <summary>
+    /// A <see cref="string"/> containing the encryption key.
+    /// </summary>
     private const string Secret = "Ug5xCXJaNaxfx78KdQxQZDAmniAbZw6V";
-
+    /// <summary>
+    /// Valid test JWT.
+    /// </summary>
     private const string ValidToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.Et9HFtf9R3GEMA0IICOfFMVXY7kkTX1wr4qCyhIf58U";
+    /// <summary>
+    /// Invalid test JWT.
+    /// </summary>
     private const string InvalidToken = "ABCD1234";
+    /// <summary>
+    /// Empty test JWT.
+    /// </summary>
     private const string EmptyToken = "";
     #endregion
 

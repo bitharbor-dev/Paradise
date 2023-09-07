@@ -16,15 +16,41 @@ namespace Paradise.Tests.Miscellaneous.Fakes.Microsoft.Extensions.Logging.Xunit;
 internal sealed class XunitTestOutputLogger<T>(ITestOutputHelper output) : ILogger<T>
 {
     #region Constants
+    /// <summary>
+    /// Trace log level prefix.
+    /// </summary>
     private const string TraceLogLevel = "trce";
+    /// <summary>
+    /// Debug log level prefix.
+    /// </summary>
     private const string DebugLogLevel = "dbug";
+    /// <summary>
+    /// Information log level prefix.
+    /// </summary>
     private const string InformationLogLevel = "info";
+    /// <summary>
+    /// Warning log level prefix.
+    /// </summary>
     private const string WarningLogLevel = "warn";
+    /// <summary>
+    /// Error log level prefix.
+    /// </summary>
     private const string ErrorLogLevel = "fail";
+    /// <summary>
+    /// Critical log level prefix.
+    /// </summary>
     private const string CriticalLogLevel = "crit";
-
+    /// <summary>
+    /// Default log level padding.
+    /// </summary>
     private const string LogLevelPadding = ": ";
+    /// <summary>
+    /// Opening brace to wrap log event id.
+    /// </summary>
     private const char OpenBrace = '[';
+    /// <summary>
+    /// Closing brace to wrap log event id.
+    /// </summary>
     private const char CloseBrace = ']';
 
     private const ushort DefaultStringBuilderCapacity = 1024;

@@ -12,13 +12,14 @@ namespace Paradise.WebApi.Swagger.DocumentFilters;
 internal sealed partial class SummaryDocumentFilter : IDocumentFilter
 {
     #region Constants
-    private const string LangwordTag = "<see langword=\"";
-    private const string ClosingTagBracket = "\" />";
-    #endregion
-
-    #region Fields
-    [GeneratedRegex($"{LangwordTag}.+{ClosingTagBracket}", RegexOptions.IgnoreCase, "en-US")]
-    private static partial Regex LangwordTagRegex();
+    /// <summary>
+    /// First part of "langword" tag.
+    /// </summary>
+    private const string LangwordTagStart = "<see langword=\"";
+    /// <summary>
+    /// Second part of "langword" tag.
+    /// </summary>
+    private const string LangwordTagEnd = "\" />";
     #endregion
 
     #region Public methods
@@ -96,13 +97,13 @@ internal sealed partial class SummaryDocumentFilter : IDocumentFilter
             var value = match.ToString();
 
             value = value
-                .Replace(LangwordTag, string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace(ClosingTagBracket, string.Empty, StringComparison.OrdinalIgnoreCase);
+                .Replace(LangwordTagStart, string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace(LangwordTagEnd, string.Empty, StringComparison.OrdinalIgnoreCase);
 
             return value;
         }
 
-        return LangwordTagRegex().Replace(input, Replacement);
+        return GetLangwordTagRegex().Replace(input, Replacement);
     }
 
     /// <summary>
@@ -134,5 +135,8 @@ internal sealed partial class SummaryDocumentFilter : IDocumentFilter
 
         return namespaces;
     }
+
+    [GeneratedRegex($"{LangwordTagStart}.+{LangwordTagEnd}", RegexOptions.IgnoreCase)]
+    private static partial Regex GetLangwordTagRegex();
     #endregion
 }

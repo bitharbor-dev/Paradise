@@ -13,7 +13,13 @@ namespace Paradise.ApplicationLogic.Tests.Services.Application;
 public sealed class CommunicationServiceTests
 {
     #region Constants
+    /// <summary>
+    /// Test email address.
+    /// </summary>
     private const string TestEmail = "test@test.com";
+    /// <summary>
+    /// Invalid test email address.
+    /// </summary>
     private const string InvalidEmailAddress = "Invalid email address.";
     #endregion
 
