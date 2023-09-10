@@ -114,8 +114,8 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     /// </param>
     internal void Apply(ref IQueryable<TEntity> queryable)
     {
-        foreach (var includedProperty in NavigationProperties)
-            queryable = queryable.Include(includedProperty);
+        foreach (var navigationProperty in NavigationProperties)
+            queryable = queryable.Include(navigationProperty);
 
         if (Filter is not null)
             queryable = queryable.Where(Filter);

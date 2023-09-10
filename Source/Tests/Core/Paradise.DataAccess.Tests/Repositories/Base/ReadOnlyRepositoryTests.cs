@@ -1,4 +1,5 @@
-﻿using Paradise.DataAccess.Repositories.Base;
+﻿using Paradise.DataAccess.Repositories;
+using Paradise.DataAccess.Repositories.Base;
 using Paradise.DataAccess.Repositories.Base.Implementation;
 using Paradise.Domain.Base;
 using Paradise.Tests.Miscellaneous.Fakes.Core.DataAccess.Repositories.Base;
@@ -1015,6 +1016,338 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
 
         // Assert
         Assert.Null(result);
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void GetPagedList()
+    {
+        // Arrange
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
+        Source.AddRange(new[] { entity1, entity2 });
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            PageSize = 2,
+            PageNumber = 1
+        };
+
+        // Act
+        var result = Repository.GetPagedList(query);
+
+        // Assert
+        Assert.Equal(2, result.Total);
+        Assert.Equal(result.CurrentPageItems.Count(), query.PageSize);
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void GetPagedList_WithFilter()
+    {
+        // Arrange
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
+        Source.AddRange(new[] { entity1, entity2 });
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            Filter = e => e.Id == entity1.Id,
+            PageSize = 2,
+            PageNumber = 1
+        };
+
+        // Act
+        var result = Repository.GetPagedList(query);
+
+        // Assert
+        Assert.Equal(1, result.Total);
+        Assert.Single(result.CurrentPageItems);
+        Assert.Equal(result.CurrentPageItems.First().Id, entity1.Id);
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void GetPagedList_WithOrderingProperty()
+    {
+        // Arrange
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
+
+        var set = new[] { entity1, entity2 };
+        Source.AddRange(set);
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            PageSize = 2,
+            PageNumber = 1,
+            OrderAscending = true,
+            OrderBy = nameof(IDatabaseRecord.Id)
+        };
+
+        // Act
+        var result = Repository.GetPagedList(query);
+
+        // Assert
+        Assert.Equal(2, result.Total);
+        Assert.Equal(result.CurrentPageItems.Count(), query.PageSize);
+        Assert.True(set.OrderBy(entity => entity.Id).SequenceEqual(result.CurrentPageItems));
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public void GetPagedList_WithPageNumber()
+    {
+        // Arrange
+        const int PageSize = 3;
+
+        var firstPage = new TEntity[PageSize]
+        {
+            GetTestEntity(),
+            GetTestEntity(),
+            GetTestEntity()
+        };
+
+        var secondPage = new TEntity[PageSize]
+        {
+            GetTestEntity(),
+            GetTestEntity(),
+            GetTestEntity()
+        };
+
+        Source.AddRange(firstPage);
+        Source.AddRange(secondPage);
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            PageSize = PageSize,
+            PageNumber = 2
+        };
+
+        // Act
+        var result = Repository.GetPagedList(query);
+
+        // Assert
+        Assert.Equal(firstPage.Length + secondPage.Length, result.Total);
+        Assert.All(result.CurrentPageItems, item => Assert.Contains(item, secondPage));
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async void GetPagedListAsync()
+    {
+        // Arrange
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
+        Source.AddRange(new[] { entity1, entity2 });
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            PageSize = 2,
+            PageNumber = 1
+        };
+
+        // Act
+        var result = await Repository.GetPagedListAsync(query);
+
+        // Assert
+        Assert.Equal(2, result.Total);
+        Assert.Equal(result.CurrentPageItems.Count(), query.PageSize);
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async void GetPagedListAsync_WithFilter()
+    {
+        // Arrange
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
+        Source.AddRange(new[] { entity1, entity2 });
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            Filter = e => e.Id == entity1.Id,
+            PageSize = 2,
+            PageNumber = 1
+        };
+
+        // Act
+        var result = await Repository.GetPagedListAsync(query);
+
+        // Assert
+        Assert.Equal(1, result.Total);
+        Assert.Single(result.CurrentPageItems);
+        Assert.Equal(result.CurrentPageItems.First().Id, entity1.Id);
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async void GetPagedListAsync_WithOrderingProperty()
+    {
+        // Arrange
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
+
+        var set = new[] { entity1, entity2 };
+        Source.AddRange(set);
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            PageSize = 2,
+            PageNumber = 1,
+            OrderAscending = true,
+            OrderBy = nameof(IDatabaseRecord.Id)
+        };
+
+        // Act
+        var result = await Repository.GetPagedListAsync(query);
+
+        // Assert
+        Assert.Equal(2, result.Total);
+        Assert.Equal(result.CurrentPageItems.Count(), query.PageSize);
+        Assert.True(set.OrderBy(entity => entity.Id).SequenceEqual(result.CurrentPageItems));
+    }
+
+    /// <summary>
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> test method.
+    /// <para>
+    /// <strong>Expected result:</strong>
+    /// successful execution.
+    /// <para>
+    /// Returns the <see cref="PagedListQueryResult{TEntity}"/>
+    /// containing the total number of entities which satisfies
+    /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
+    /// and a list of entities representing particular "page".
+    /// </para>
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async void GetPagedListAsync_WithPageNumber()
+    {
+        // Arrange
+        const int PageSize = 3;
+
+        var firstPage = new TEntity[PageSize]
+        {
+            GetTestEntity(),
+            GetTestEntity(),
+            GetTestEntity()
+        };
+
+        var secondPage = new TEntity[PageSize]
+        {
+            GetTestEntity(),
+            GetTestEntity(),
+            GetTestEntity()
+        };
+
+        Source.AddRange(firstPage);
+        Source.AddRange(secondPage);
+        Source.SaveChanges();
+
+        var query = new PagedListQuery<TEntity>
+        {
+            PageSize = PageSize,
+            PageNumber = 2
+        };
+
+        // Act
+        var result = await Repository.GetPagedListAsync(query);
+
+        // Assert
+        Assert.Equal(firstPage.Length + secondPage.Length, result.Total);
+        Assert.All(result.CurrentPageItems, item => Assert.Contains(item, secondPage));
     }
 
     /// <summary>
