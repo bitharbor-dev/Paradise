@@ -263,7 +263,11 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         var user = model.ToEntity();
 
         if (model.Password.IsNullOrWhiteSpace())
-            throw new InvalidOperationException(ExceptionMessages.IvalidSeedData, new ArgumentException(nameof(model.Password)));
+        {
+            var message = ExceptionMessagesProvider.GetIvalidSeedDataMessage();
+
+            throw new InvalidOperationException(message, new ArgumentException(nameof(model.Password)));
+        }
 
         var creationResult = await userManager.CreateAsync(user, model.Password);
         if (!creationResult.Succeeded)

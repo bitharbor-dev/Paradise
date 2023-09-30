@@ -19,7 +19,6 @@ using Paradise.Models.Application.CommunicationModels;
 using Paradise.Models.Domain.UserModels;
 using Paradise.Options.Models;
 using Paradise.Options.Models.Communication;
-using System.Globalization;
 using System.Security.Claims;
 using System.Web;
 using static Paradise.ApplicationLogic.Exceptions.ResultException;
@@ -702,26 +701,6 @@ public sealed class UserService(ILogger<UserService> logger,
         return new($"{baseUrl}{path}");
     }
 
-    /// <summary>
-    /// Creates a "required at least one" error message.
-    /// </summary>
-    /// <param name="propertyNames">
-    /// Properties to be included in the message.
-    /// </param>
-    /// <returns>
-    /// A <see cref="string"/> value containing the error message.
-    /// </returns>
-    private static string CreateRequiredAtLeastOneErrorMessage(params string[] propertyNames)
-    {
-        const string Separator = ", ";
-
-        var message = ValidationMessages.RequiredAtLeastOne;
-
-        var properties = string.Join(Separator, propertyNames);
-
-        return string.Format(CultureInfo.CurrentCulture, message, properties);
-    }
-
     #region Lookup methods
     /// <summary>
     /// Gets the <see cref="User"/> with the data from the given <paramref name="model"/>.
@@ -757,14 +736,10 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         else
         {
-            var propertyNames = new[]
-            {
+            var error = ValidationMessagesProvider.GetRequiredAtLeastOneMessage(
                 nameof(UserLoginModel.UserName),
                 nameof(UserLoginModel.Email),
-                nameof(UserLoginModel.Phone)
-            };
-
-            var error = CreateRequiredAtLeastOneErrorMessage(propertyNames);
+                nameof(UserLoginModel.Phone));
 
             Throw(BadRequest, InvalidModel, error);
         }

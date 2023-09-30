@@ -75,7 +75,9 @@ public sealed partial class SeedEmailTemplateModel
         }
         else
         {
-            throw new ArgumentException(ExceptionMessages.EitherTemplateTextOrTemplateTextSourcePathIsRequired);
+            var message = ExceptionMessagesProvider.GetTemplateTextOrSourcePathIsRequiredMessage();
+
+            throw new ArgumentException(message);
         }
     }
     #endregion

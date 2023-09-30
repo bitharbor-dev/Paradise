@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Paradise.ApplicationLogic.Extensions;
 using Paradise.Localization.ExceptionsHandling;
-using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Paradise.ApplicationLogic.InternalModels;
@@ -46,7 +45,11 @@ internal sealed class IdentityToken
     public IdentityToken(string email, string innerToken, string? value = null, DateTime? expiryDate = null)
     {
         if (!email.IsValidEmailAddress())
-            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, ExceptionMessages.InvalidEmailAddress, email));
+        {
+            var message = ExceptionMessagesProvider.GetInvalidEmailAddressMessage(email);
+
+            throw new ArgumentException(message);
+        }
 
         Email = email;
         InnerToken = innerToken;

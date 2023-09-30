@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.Common.Extensions;
-using Paradise.Localization.ExceptionsHandling;
 using Paradise.Models;
 using Paradise.Options.Models;
-using System.Globalization;
 using System.Text.Json;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 using static System.Text.Json.JsonSerializer;
 
 namespace Paradise.WebApi.Client.Base;
@@ -471,8 +470,7 @@ public abstract class ApiClientBase : IDisposable
 
         if (result is null)
         {
-            var message = string.Format(CultureInfo.CurrentCulture,
-                ExceptionMessages.FailedToDeserialize, typeof(Result<TValue>).Name);
+            var message = GetFailedToDeserializeMessage(typeof(Result<TValue>));
 
             throw new JsonException(message);
         }
@@ -508,8 +506,7 @@ public abstract class ApiClientBase : IDisposable
 
         if (result is null)
         {
-            var message = string.Format(CultureInfo.CurrentCulture,
-                ExceptionMessages.FailedToDeserialize, typeof(Result).Name);
+            var message = GetFailedToDeserializeMessage(typeof(Result));
 
             throw new JsonException(message);
         }

@@ -1,6 +1,5 @@
 ﻿using Paradise.Common.Extensions;
 using Paradise.Localization.ExceptionsHandling;
-using System.Globalization;
 using static System.Environment;
 
 namespace Paradise.Common;
@@ -74,9 +73,7 @@ public static class EnvironmentNames
 
                 if (_current.IsNullOrWhiteSpace() || !_allowedEnvironments.Contains(_current))
                 {
-                    var environments = string.Join(", ", _allowedEnvironments);
-
-                    var message = string.Format(CultureInfo.CurrentCulture, ExceptionMessages.InvalidEnvironmentName, _current, environments);
+                    var message = ExceptionMessagesProvider.GetInvalidEnvironmentNameMessage(_allowedEnvironments, _current);
 
                     throw new InvalidOperationException(message);
                 }

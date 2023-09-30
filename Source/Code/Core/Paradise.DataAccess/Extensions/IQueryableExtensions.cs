@@ -1,8 +1,7 @@
 ﻿using Paradise.Common.Extensions;
-using Paradise.Localization.ExceptionsHandling;
-using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.DataAccess.Extensions;
 
@@ -227,10 +226,7 @@ internal static class IQueryableExtensions
         var propertyInfo = entityType.GetProperty(propertyName);
         if (propertyInfo is null)
         {
-            var messageFormat = ExceptionMessages.PropertyNotDeclared;
-            var entityName = entityType.Name;
-
-            var message = string.Format(CultureInfo.CurrentCulture, messageFormat, propertyName, entityName);
+            var message = GetPropertyNotDeclaredMessage(propertyName, entityType);
 
             throw new InvalidOperationException(message);
         }
@@ -348,7 +344,11 @@ internal static class IQueryableExtensions
             var propertyInfo = GetPropertyInfo(entityType, propertyName);
 
             if (propertyInfo.PropertyType != typeof(string))
-                throw new InvalidOperationException(ExceptionMessages.InvalidPropertyType);
+            {
+                var message = GetInvalidPropertyTypeMessage();
+
+                throw new InvalidOperationException(message);
+            }
         }
     }
 
@@ -378,11 +378,7 @@ internal static class IQueryableExtensions
 
         if (boxedResult is not T result)
         {
-            var messageFormat = ExceptionMessages.FailedToCast;
-            var actualType = boxedResult?.GetType();
-            var expectedType = typeof(T);
-
-            var message = string.Format(CultureInfo.CurrentCulture, messageFormat, actualType, expectedType);
+            var message = GetFailedToCastMessage(boxedResult?.GetType(), typeof(T));
 
             throw new InvalidCastException(message);
         }

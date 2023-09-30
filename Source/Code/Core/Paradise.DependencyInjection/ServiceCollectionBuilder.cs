@@ -258,7 +258,11 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
             .GetValue<string>(nameof(ApplicationOptions.Secret));
 
         if (secret.IsNullOrWhiteSpace())
-            throw new InvalidOperationException(ExceptionMessages.ApplicationSecretMissing);
+        {
+            var message = ExceptionMessagesProvider.GetApplicationSecretMissingMessage();
+
+            throw new InvalidOperationException(message);
+        }
 
         var bytes = Encoding.UTF8.GetBytes(secret);
         var key = new SymmetricSecurityKey(bytes);

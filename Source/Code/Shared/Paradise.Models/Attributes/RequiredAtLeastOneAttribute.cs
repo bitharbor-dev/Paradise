@@ -1,7 +1,6 @@
 ﻿using Paradise.Common.Extensions;
-using Paradise.Localization.DataValidation;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+using static Paradise.Localization.DataValidation.ValidationMessagesProvider;
 
 namespace Paradise.Models.Attributes;
 
@@ -41,7 +40,7 @@ public sealed class RequiredAtLeastOneAttribute(bool includeEmptyStringOrWhitesp
     {
         if (value is null)
         {
-            var error = GetObjectIsNullErrorMessage(nameof(value));
+            var error = GetObjectIsNullMessage(nameof(value));
 
             return new ValidationResult(error);
         }
@@ -50,7 +49,7 @@ public sealed class RequiredAtLeastOneAttribute(bool includeEmptyStringOrWhitesp
 
         if (properties.All(IsValueNullOrEmptyString))
         {
-            var error = CreateRequiredAtLeastOneErrorMessage(propertyNames);
+            var error = GetRequiredAtLeastOneMessage(propertyNames);
 
             return new ValidationResult(error);
         }
@@ -60,42 +59,6 @@ public sealed class RequiredAtLeastOneAttribute(bool includeEmptyStringOrWhitesp
     #endregion
 
     #region Private methods
-    /// <summary>
-    /// Gets the formatted error message describing that
-    /// the object with the given <paramref name="variableName"/>
-    /// equals <see langword="null"/>.
-    /// </summary>
-    /// <param name="variableName">
-    /// Variable name.
-    /// </param>
-    /// <returns>
-    /// Formatted error message describing that
-    /// the object with the given <paramref name="variableName"/>
-    /// equals <see langword="null"/>.
-    /// </returns>
-    private static string GetObjectIsNullErrorMessage(string variableName)
-        => string.Format(CultureInfo.CurrentCulture, ValidationMessages.ObjectIsNull, variableName);
-
-    /// <summary>
-    /// Creates a "required at least one" error message.
-    /// </summary>
-    /// <param name="properties">
-    /// Properties to be included in the message.
-    /// </param>
-    /// <returns>
-    /// A <see cref="string"/> value containing the error message.
-    /// </returns>
-    private static string CreateRequiredAtLeastOneErrorMessage(params string[] properties)
-    {
-        const string Separator = ", ";
-
-        var messageFormat = ValidationMessages.RequiredAtLeastOne;
-
-        var message = string.Join(Separator, properties);
-
-        return string.Format(CultureInfo.CurrentCulture, messageFormat, message);
-    }
-
     /// <summary>
     /// Determines whether the given <paramref name="value"/>
     /// is an empty <see cref="string"/> or <see langword="null"/>.

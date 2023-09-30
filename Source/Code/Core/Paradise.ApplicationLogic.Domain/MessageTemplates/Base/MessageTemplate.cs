@@ -93,16 +93,25 @@ public abstract class MessageTemplate : ValueObject
         {
             if (PlaceholdersNumber is not 0)
             {
-                InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber,
-                                                                   ExceptionMessages.MessageTemplateTextInInvalidState);
+                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
+
+                InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber, message);
             }
 
             if (parameters.Count is not 0)
-                throw new ArgumentException(ExceptionMessages.MessageTemplateTextInInvalidState);
+            {
+                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
+
+                throw new ArgumentException(message);
+            }
         }
 
         if (parameters.Count != PlaceholdersNumber)
-            throw new IndexOutOfRangeException(ExceptionMessages.InvalidParametersNumber);
+        {
+            var message = ExceptionMessagesProvider.GetInvalidParametersNumberMessage();
+
+            throw new IndexOutOfRangeException(message);
+        }
 
         if (parameters.Count is 0)
             return TemplateText;
@@ -115,11 +124,7 @@ public abstract class MessageTemplate : ValueObject
 
             if (!TemplateText.Contains(placeholder, StringComparison.OrdinalIgnoreCase))
             {
-                var message = string.Format(CultureInfo.CurrentCulture,
-                                            ExceptionMessages.PlaceholderNotExists,
-                                            TemplateName,
-                                            Culture?.Name,
-                                            placeholder);
+                var message = ExceptionMessagesProvider.GetPlaceholderNotExistsMessage(TemplateName, Culture, placeholder);
 
                 throw new FormatException(message);
             }
@@ -139,8 +144,9 @@ public abstract class MessageTemplate : ValueObject
         {
             if (PlaceholdersNumber is not 0)
             {
-                InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber,
-                                                                   ExceptionMessages.MessageTemplateTextInInvalidState);
+                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
+
+                InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber, message);
             }
         }
 

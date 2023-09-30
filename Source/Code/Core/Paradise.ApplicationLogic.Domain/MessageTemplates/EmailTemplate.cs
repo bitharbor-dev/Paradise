@@ -100,16 +100,25 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
         {
             if (SubjectPlaceholdersNumber is not 0)
             {
-                InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber,
-                                                                 ExceptionMessages.EmailTemplateSubjectInInvalidState);
+                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
+
+                InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber, message);
             }
 
             if (parameters.Count is not 0)
-                throw new ArgumentException(ExceptionMessages.EmailTemplateSubjectInInvalidState);
+            {
+                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
+
+                throw new ArgumentException(message);
+            }
         }
 
         if (parameters.Count != SubjectPlaceholdersNumber)
-            throw new IndexOutOfRangeException(ExceptionMessages.InvalidParametersNumber);
+        {
+            var message = ExceptionMessagesProvider.GetInvalidParametersNumberMessage();
+
+            throw new IndexOutOfRangeException(message);
+        }
 
         if (parameters.Count is 0)
             return Subject;
@@ -122,11 +131,7 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
 
             if (!Subject.Contains(placeholder, StringComparison.OrdinalIgnoreCase))
             {
-                var message = string.Format(CultureInfo.CurrentCulture,
-                                            ExceptionMessages.PlaceholderNotExists,
-                                            TemplateName,
-                                            Culture?.Name,
-                                            placeholder);
+                var message = ExceptionMessagesProvider.GetPlaceholderNotExistsMessage(TemplateName, Culture, placeholder);
 
                 throw new FormatException(message);
             }
@@ -262,8 +267,9 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
         {
             if (SubjectPlaceholdersNumber is not 0)
             {
-                InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber,
-                                                                 ExceptionMessages.EmailTemplateSubjectInInvalidState);
+                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
+
+                InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber, message);
             }
         }
 

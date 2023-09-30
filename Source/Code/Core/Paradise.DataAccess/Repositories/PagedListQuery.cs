@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paradise.DataAccess.Extensions;
 using Paradise.Localization.ExceptionsHandling;
-using System.Globalization;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -146,8 +145,7 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
         if (value > 0)
             return;
 
-        var messageFormat = ExceptionMessages.ValueCanNotBeLessOrEqualToZero;
-        var message = string.Format(CultureInfo.CurrentCulture, messageFormat, propertyName);
+        var message = ExceptionMessagesProvider.GetValueCanNotBeLessOrEqualToZeroMessage(propertyName);
 
         throw new ArgumentException(message);
     }

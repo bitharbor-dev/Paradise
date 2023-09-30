@@ -120,9 +120,6 @@
   <data name="ApplicationSecretMissing" xml:space="preserve">
     <value>Application secret is missing. Check the configuration.</value>
   </data>
-  <data name="EitherTemplateTextOrTemplateTextSourcePathIsRequired" xml:space="preserve">
-    <value>Either 'TemplateText' or 'TemplateTextSourcePath' is required.</value>
-  </data>
   <data name="EmailTemplateSubjectInInvalidState" xml:space="preserve">
     <value>Email template subject is in invalid state. Subject placeholder is 'null', but text placeholders number is greater than 0, which leads to impossibility of subject formatting.</value>
   </data>
@@ -174,6 +171,9 @@
   <data name="PropertyNotDeclared" xml:space="preserve">
     <value>Property '{0}' is not declared in '{1}' type.</value>
     <comment>Pass property name as the first argument and type name as the second.</comment>
+  </data>
+  <data name="TemplateTextOrSourcePathIsRequired" xml:space="preserve">
+    <value>Either 'TemplateText' or 'TemplateTextSourcePath' is required.</value>
   </data>
   <data name="ValueCanNotBeLessOrEqualToZero" xml:space="preserve">
     <value>'{0}' value can not be less or equal to 0.</value>

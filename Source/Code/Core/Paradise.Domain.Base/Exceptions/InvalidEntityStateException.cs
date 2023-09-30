@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.CompilerServices;
-using static Paradise.Localization.ExceptionsHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Domain.Base.Exceptions;
 
@@ -15,7 +14,7 @@ public sealed class InvalidEntityStateException : Exception
     /// Separator string to be used during primary exception message
     /// and additional information concatenation.
     /// </summary>
-    private static readonly string ExceptionMessageSeparator = $"{Environment.NewLine}{InvalidEntityStateAdditionalInformation}";
+    private static readonly string ExceptionMessageSeparator = $"{Environment.NewLine}{GetInvalidEntityStateAdditionalInformationMessage}";
     #endregion
 
     #region Constructors
@@ -82,7 +81,7 @@ public sealed class InvalidEntityStateException : Exception
     /// </returns>
     private static string CreateExceptionMessage(Type entityType, object? value, string? additionalInformation, string? propertyName)
     {
-        var message = string.Format(CultureInfo.CurrentCulture, InvalidEntityState, entityType.Name, propertyName, value);
+        var message = GetInvalidEntityStateMessage(entityType, propertyName, value);
 
         if (!string.IsNullOrWhiteSpace(additionalInformation))
             message = string.Concat(message, ExceptionMessageSeparator, additionalInformation);

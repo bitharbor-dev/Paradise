@@ -4,7 +4,7 @@ using Paradise.WebApi.Swagger.DocumentFilters;
 using Paradise.WebApi.Swagger.OperationFilters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using static Paradise.Localization.ExceptionsHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.WebApi.Swagger;
 
@@ -73,11 +73,12 @@ internal static class SwaggerConfigurator
         var name = configuration.GetValue<string>(SwaggerEndpointName);
         var url = configuration.GetValue<string>(SwaggerEndpointUrl);
 
-        if (url.IsNullOrWhiteSpace())
-            throw new InvalidOperationException(InvalidSwaggerConfiguration);
+        if (url.IsNullOrWhiteSpace() || name.IsNullOrWhiteSpace())
+        {
+            var message = GetInvalidSwaggerConfigurationMessage();
 
-        if (name.IsNullOrWhiteSpace())
-            throw new InvalidOperationException(InvalidSwaggerConfiguration);
+            throw new InvalidOperationException(message);
+        }
 
         options.SwaggerEndpoint(url, name);
     }
@@ -116,7 +117,17 @@ internal static class SwaggerConfigurator
     /// retrieved from the input <paramref name="configuration"/>.
     /// </returns>
     private static T GetRequiredInstance<T>(this IConfiguration configuration)
-        => configuration.GetRequiredSection(typeof(T).Name).Get<T>()
-        ?? throw new InvalidOperationException(InvalidSwaggerConfiguration);
+    {
+        var instance = configuration.GetRequiredSection(typeof(T).Name).Get<T>();
+
+        if (instance is null)
+        {
+            var message = GetInvalidSwaggerConfigurationMessage();
+
+            throw new InvalidOperationException(message);
+        }
+
+        return instance;
+    }
     #endregion
 }

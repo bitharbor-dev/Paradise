@@ -52,7 +52,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Update="DataValidation\ValidationMessages.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
+			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>ValidationMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="ErrorsHandling\ErrorMessages.resx">
@@ -60,7 +60,7 @@
 			<LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="ExceptionsHandling\ExceptionMessages.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
+			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Logging\LogMessages.resx">

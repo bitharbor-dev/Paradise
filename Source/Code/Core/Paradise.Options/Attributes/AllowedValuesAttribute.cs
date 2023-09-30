@@ -1,6 +1,5 @@
-﻿using Paradise.Localization.ExceptionsHandling;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Options.Attributes;
 
@@ -45,20 +44,14 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
             {
                 if (!value.IsAssignableTo(typeof(IEqualityComparer<T>)))
                 {
-                    var inputTypeName = value.GetType().Name;
-                    var messageFormat = ExceptionMessages.InvalidEqualityComparerType;
-
-                    var message = string.Format(CultureInfo.CurrentCulture, messageFormat, inputTypeName);
+                    var message = GetInvalidEqualityComparerTypeMessage(value);
 
                     throw new InvalidOperationException(message);
                 }
 
                 if (value.GetConstructor(Type.EmptyTypes) is null)
                 {
-                    var inputTypeName = value.GetType().Name;
-                    var messageFormat = ExceptionMessages.InvalidEqualityComparerConstructor;
-
-                    var message = string.Format(CultureInfo.CurrentCulture, messageFormat, inputTypeName);
+                    var message = GetInvalidEqualityComparerConstructorMessage(value);
 
                     throw new InvalidOperationException(message);
                 }
@@ -78,11 +71,7 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
 
         if (value is not T castedValue)
         {
-            var inputTypeName = value?.GetType().Name;
-            var actualTypeName = typeof(T).Name;
-            var messageFormat = ExceptionMessages.FailedToCast;
-
-            var message = string.Format(CultureInfo.CurrentCulture, messageFormat, inputTypeName, actualTypeName);
+            var message = GetFailedToCastMessage(value?.GetType(), typeof(T));
 
             throw new InvalidCastException(message);
         }
@@ -93,10 +82,7 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
         {
             if (Activator.CreateInstance(_equalityComparerType) is not IEqualityComparer<T> comparer)
             {
-                var typeName = typeof(T).Name;
-                var messageFormat = ExceptionMessages.FailedToCreateInstanceOfType;
-
-                var message = string.Format(CultureInfo.CurrentCulture, messageFormat, typeName);
+                var message = GetFailedToCreateInstanceOfTypeMessage(typeof(IEqualityComparer<T>));
 
                 throw new InvalidOperationException(message);
             }

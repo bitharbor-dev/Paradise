@@ -22,7 +22,7 @@ namespace Paradise.Localization.ExceptionsHandling {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ExceptionMessages {
+    internal class ExceptionMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Paradise.Localization.ExceptionsHandling.ExceptionMessages", typeof(ExceptionMessages).Assembly);
@@ -51,7 +51,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,25 +63,16 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Application secret is missing. Check the configuration..
         /// </summary>
-        public static string ApplicationSecretMissing {
+        internal static string ApplicationSecretMissing {
             get {
                 return ResourceManager.GetString("ApplicationSecretMissing", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Either &apos;TemplateText&apos; or &apos;TemplateTextSourcePath&apos; is required..
-        /// </summary>
-        public static string EitherTemplateTextOrTemplateTextSourcePathIsRequired {
-            get {
-                return ResourceManager.GetString("EitherTemplateTextOrTemplateTextSourcePathIsRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Email template subject is in invalid state. Subject placeholder is &apos;null&apos;, but text placeholders number is greater than 0, which leads to impossibility of subject formatting..
         /// </summary>
-        public static string EmailTemplateSubjectInInvalidState {
+        internal static string EmailTemplateSubjectInInvalidState {
             get {
                 return ResourceManager.GetString("EmailTemplateSubjectInInvalidState", resourceCulture);
             }
@@ -90,7 +81,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Failed to cast an object of type &apos;{0}&apos; into an object of type &apos;{1}&apos;..
         /// </summary>
-        public static string FailedToCast {
+        internal static string FailedToCast {
             get {
                 return ResourceManager.GetString("FailedToCast", resourceCulture);
             }
@@ -99,7 +90,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Failed to create instance of type &apos;{0}&apos;..
         /// </summary>
-        public static string FailedToCreateInstanceOfType {
+        internal static string FailedToCreateInstanceOfType {
             get {
                 return ResourceManager.GetString("FailedToCreateInstanceOfType", resourceCulture);
             }
@@ -108,7 +99,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Failed to deserialize into the instance of type &apos;{0}&apos;..
         /// </summary>
-        public static string FailedToDeserialize {
+        internal static string FailedToDeserialize {
             get {
                 return ResourceManager.GetString("FailedToDeserialize", resourceCulture);
             }
@@ -117,7 +108,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid email address..
         /// </summary>
-        public static string InvalidEmailAddress {
+        internal static string InvalidEmailAddress {
             get {
                 return ResourceManager.GetString("InvalidEmailAddress", resourceCulture);
             }
@@ -126,7 +117,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to The entity of type &apos;{0}&apos; is in invalid state. Column name: &apos;{1}&apos;, value: &apos;{2}&apos;..
         /// </summary>
-        public static string InvalidEntityState {
+        internal static string InvalidEntityState {
             get {
                 return ResourceManager.GetString("InvalidEntityState", resourceCulture);
             }
@@ -135,7 +126,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Additional information: .
         /// </summary>
-        public static string InvalidEntityStateAdditionalInformation {
+        internal static string InvalidEntityStateAdditionalInformation {
             get {
                 return ResourceManager.GetString("InvalidEntityStateAdditionalInformation", resourceCulture);
             }
@@ -144,7 +135,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Environment name &apos;{0}&apos; is not valid. Available options are: {1}..
         /// </summary>
-        public static string InvalidEnvironmentName {
+        internal static string InvalidEnvironmentName {
             get {
                 return ResourceManager.GetString("InvalidEnvironmentName", resourceCulture);
             }
@@ -153,7 +144,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to An instance of type &apos;{0}&apos; does not provide public parameterless constructor..
         /// </summary>
-        public static string InvalidEqualityComparerConstructor {
+        internal static string InvalidEqualityComparerConstructor {
             get {
                 return ResourceManager.GetString("InvalidEqualityComparerConstructor", resourceCulture);
             }
@@ -162,7 +153,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to An instance of type &apos;{0}&apos; is not assignable to &apos;IEqualityComparer&lt;T&gt;&apos;..
         /// </summary>
-        public static string InvalidEqualityComparerType {
+        internal static string InvalidEqualityComparerType {
             get {
                 return ResourceManager.GetString("InvalidEqualityComparerType", resourceCulture);
             }
@@ -171,7 +162,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Invalid parameters number..
         /// </summary>
-        public static string InvalidParametersNumber {
+        internal static string InvalidParametersNumber {
             get {
                 return ResourceManager.GetString("InvalidParametersNumber", resourceCulture);
             }
@@ -180,7 +171,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Invalid property type..
         /// </summary>
-        public static string InvalidPropertyType {
+        internal static string InvalidPropertyType {
             get {
                 return ResourceManager.GetString("InvalidPropertyType", resourceCulture);
             }
@@ -189,7 +180,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Swagger configuration is not valid..
         /// </summary>
-        public static string InvalidSwaggerConfiguration {
+        internal static string InvalidSwaggerConfiguration {
             get {
                 return ResourceManager.GetString("InvalidSwaggerConfiguration", resourceCulture);
             }
@@ -198,7 +189,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Invalid seed data..
         /// </summary>
-        public static string IvalidSeedData {
+        internal static string IvalidSeedData {
             get {
                 return ResourceManager.GetString("IvalidSeedData", resourceCulture);
             }
@@ -207,7 +198,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Message template text is in invalid state. Text placeholder is &apos;null&apos;, but text placeholders number is greater than 0, which leads to impossibility of text formatting..
         /// </summary>
-        public static string MessageTemplateTextInInvalidState {
+        internal static string MessageTemplateTextInInvalidState {
             get {
                 return ResourceManager.GetString("MessageTemplateTextInInvalidState", resourceCulture);
             }
@@ -216,7 +207,7 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Placeholder does not exist. Template name: &apos;{0}&apos;; Culture name: &apos;{1}&apos;; Placeholder name: &apos;{2}&apos;..
         /// </summary>
-        public static string PlaceholderNotExists {
+        internal static string PlaceholderNotExists {
             get {
                 return ResourceManager.GetString("PlaceholderNotExists", resourceCulture);
             }
@@ -225,16 +216,25 @@ namespace Paradise.Localization.ExceptionsHandling {
         /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; is not declared in &apos;{1}&apos; type..
         /// </summary>
-        public static string PropertyNotDeclared {
+        internal static string PropertyNotDeclared {
             get {
                 return ResourceManager.GetString("PropertyNotDeclared", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Either &apos;TemplateText&apos; or &apos;TemplateTextSourcePath&apos; is required..
+        /// </summary>
+        internal static string TemplateTextOrSourcePathIsRequired {
+            get {
+                return ResourceManager.GetString("TemplateTextOrSourcePathIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; value can not be less or equal to 0..
         /// </summary>
-        public static string ValueCanNotBeLessOrEqualToZero {
+        internal static string ValueCanNotBeLessOrEqualToZero {
             get {
                 return ResourceManager.GetString("ValueCanNotBeLessOrEqualToZero", resourceCulture);
             }

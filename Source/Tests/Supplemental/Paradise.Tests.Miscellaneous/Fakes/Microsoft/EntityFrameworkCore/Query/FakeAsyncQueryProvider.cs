@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Tests.Miscellaneous.Fakes.Microsoft.EntityFrameworkCore.Query;
 
@@ -175,7 +176,14 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
     {
         var boxedQueryable = CreateBoxedQueryable(typeof(T), expression);
 
-        return boxedQueryable is IQueryable<T> queryable ? queryable : throw new InvalidOperationException();
+        if (boxedQueryable is not IQueryable<T> queryable)
+        {
+            var message = GetFailedToCastMessage(boxedQueryable?.GetType(), typeof(IQueryable<T>));
+
+            throw new InvalidCastException(message);
+        }
+
+        return queryable;
     }
 
     private object? CreateBoxedQueryable(Type elementType, Expression expression)
