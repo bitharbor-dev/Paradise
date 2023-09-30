@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Paradise.Common;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
@@ -17,7 +18,7 @@ public sealed class UserResetPasswordRequestModel
     /// User's new email address.
     /// </param>
     [JsonConstructor]
-    [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Primary constructors not working with constructor attributes.")]
+    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
     public UserResetPasswordRequestModel(string email)
         => Email = email;
     #endregion

@@ -1,4 +1,5 @@
-﻿using Paradise.Localization.ModelsLocalization;
+﻿using Paradise.Common;
+using Paradise.Localization.ModelsLocalization;
 using Paradise.Models.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -23,7 +24,7 @@ public readonly struct ApplicationError : IEquatable<ApplicationError>
     /// Error description.
     /// </param>
     [JsonConstructor]
-    [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Primary constructors not working with constructor attributes.")]
+    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
     public ApplicationError(ErrorCode code, string description)
     {
         Code = code;

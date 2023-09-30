@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Paradise.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Paradise.DataAccess.Seed.Models.Domain.Users;
@@ -22,7 +23,7 @@ public sealed class SeedUserModel
     /// User's password.
     /// </param>
     [JsonConstructor]
-    [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Primary constructors not working with constructor attributes.")]
+    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
     public SeedUserModel(string userName, string email, string password)
     {
         UserName = userName;

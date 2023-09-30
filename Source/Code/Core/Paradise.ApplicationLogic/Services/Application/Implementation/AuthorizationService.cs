@@ -201,7 +201,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
         {
             if (response.HasStarted)
             {
-                handleResponseDelegate();
+                handleResponseDelegate(); // TODO: Add meaningful comment explaining
+                                          // why this call is required here.
                 return;
             }
 
@@ -210,7 +211,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser)
                     .ConfigureAwait(false);
 
-                handleResponseDelegate();
+                handleResponseDelegate(); // TODO: Add meaningful comment explaining
+                                          // why this call is required here.
             }
 
             if (!jsonWebTokenService.ValidateFormat(token))
@@ -218,7 +220,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, InvalidToken)
                     .ConfigureAwait(false);
 
-                handleResponseDelegate();
+                handleResponseDelegate(); // TODO: Add meaningful comment explaining
+                                          // why this call is required here.
             }
         }
         catch (Exception e)

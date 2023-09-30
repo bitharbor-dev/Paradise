@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Paradise.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Paradise.DataAccess.Seed.Models.Domain.Roles;
@@ -16,7 +17,7 @@ public sealed class SeedRoleModel
     /// Role name.
     /// </param>
     [JsonConstructor]
-    [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Primary constructors not working with constructor attributes.")]
+    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
     public SeedRoleModel(string name)
         => Name = name;
     #endregion
