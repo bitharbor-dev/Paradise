@@ -37,7 +37,9 @@ public sealed class RoleService(UserManager userManager,
         if (isDefault.HasValue)
             rolesQuery = rolesQuery.Where(role => role.IsDefault == isDefault.Value);
 
-        var roles = await rolesQuery.ToListAsync(cancellationToken);
+        var roles = await rolesQuery
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return new(roles.Select(role => role.ToModel()), OK);
     }
@@ -45,7 +47,8 @@ public sealed class RoleService(UserManager userManager,
     /// <inheritdoc/>
     public async Task<Result<RoleModel>> GetByIdAsync(Guid roleId, CancellationToken cancellationToken = default)
     {
-        var role = await FindRoleByIdAsync(roleId, cancellationToken);
+        var role = await FindRoleByIdAsync(roleId, cancellationToken)
+            .ConfigureAwait(false);
 
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
 
@@ -55,11 +58,13 @@ public sealed class RoleService(UserManager userManager,
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<RoleModel>>> GetUserRolesAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var user = await FindUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
 
         user.ThrowIfNull(NotFound, UserIdNotFound, userId);
 
-        var userRoles = await GetUserRolesInternalAsync(user, cancellationToken);
+        var userRoles = await GetUserRolesInternalAsync(user, cancellationToken)
+            .ConfigureAwait(false);
 
         return new(userRoles.Select(role => role.ToModel()), OK);
     }
@@ -71,13 +76,16 @@ public sealed class RoleService(UserManager userManager,
 
         model.Name.ThrowIfEmptyOrWhiteSpace(UnprocessableEntity, InvalidRoleName, model.Name);
 
-        var role = await FindRoleByNameAsync(model.Name, cancellationToken);
+        var role = await FindRoleByNameAsync(model.Name, cancellationToken)
+            .ConfigureAwait(false);
 
         role.ThrowIfNotNull(UnprocessableEntity, DuplicateRoleName, model.Name);
 
         role = model.ToEntity();
 
-        var creationResult = await roleManager.CreateAsync(role);
+        var creationResult = await roleManager
+            .CreateAsync(role)
+            .ConfigureAwait(false);
 
         creationResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -89,13 +97,16 @@ public sealed class RoleService(UserManager userManager,
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var role = await FindRoleByIdAsync(roleId, cancellationToken);
+        var role = await FindRoleByIdAsync(roleId, cancellationToken)
+            .ConfigureAwait(false);
 
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
 
         role.IsDefault = model.IsDefault;
 
-        var updateResult = await roleManager.UpdateAsync(role);
+        var updateResult = await roleManager
+            .UpdateAsync(role)
+            .ConfigureAwait(false);
 
         updateResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -105,15 +116,20 @@ public sealed class RoleService(UserManager userManager,
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<RoleModel>>> DeleteAsync(Guid roleId, CancellationToken cancellationToken = default)
     {
-        var role = await FindRoleByIdAsync(roleId, cancellationToken);
+        var role = await FindRoleByIdAsync(roleId, cancellationToken)
+            .ConfigureAwait(false);
 
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
 
-        var deletionResult = await roleManager.DeleteAsync(role);
+        var deletionResult = await roleManager
+            .DeleteAsync(role)
+            .ConfigureAwait(false);
 
         deletionResult.ThrowIfUnsuccessfulIdentityResult();
 
-        var roles = await roleManager.Roles.ToListAsync(cancellationToken);
+        var roles = await roleManager.Roles
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return new(roles.Select(role => role.ToModel()), OK);
     }
@@ -153,19 +169,24 @@ public sealed class RoleService(UserManager userManager,
     /// </returns>
     private async Task<Result<IEnumerable<RoleModel>>> AssignOrUnassignUserRole(Guid roleId, Guid userId, bool assign, CancellationToken cancellationToken = default)
     {
-        var role = await FindRoleByIdAsync(roleId, cancellationToken);
-        var user = await FindUserByIdAsync(userId, cancellationToken);
+        var role = await FindRoleByIdAsync(roleId, cancellationToken)
+            .ConfigureAwait(false);
+
+        var user = await FindUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
 
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
         user.ThrowIfNull(NotFound, UserIdNotFound, userId);
 
         var identityResult = await (assign
             ? userManager.AddToRoleAsync(user, role.Name)
-            : userManager.RemoveFromRoleAsync(user, role.Name));
+            : userManager.RemoveFromRoleAsync(user, role.Name))
+            .ConfigureAwait(false);
 
         identityResult.ThrowIfUnsuccessfulIdentityResult();
 
-        var userRoles = await GetUserRolesInternalAsync(user, cancellationToken);
+        var userRoles = await GetUserRolesInternalAsync(user, cancellationToken)
+            .ConfigureAwait(false);
 
         return new(userRoles.Select(role => role.ToModel()), OK);
     }
@@ -240,14 +261,21 @@ public sealed class RoleService(UserManager userManager,
     /// </returns>
     private async Task<IEnumerable<Role>> GetUserRolesInternalAsync(User user, CancellationToken cancellationToken = default)
     {
-        var roleNames = await userManager.GetRolesAsync(user);
+        var roleNames = await userManager
+            .GetRolesAsync(user)
+            .ConfigureAwait(false);
+
         var userRoles = new List<Role>();
 
         foreach (var name in roleNames)
         {
             var normalizedName = roleManager.NormalizeKey(name);
 
-            var role = await roleManager.Roles.SingleAsync(r => r.NormalizedName == normalizedName, cancellationToken);
+            var role = await roleManager
+                .Roles
+                .SingleAsync(r => r.NormalizedName == normalizedName, cancellationToken)
+                .ConfigureAwait(false);
+
             userRoles.Add(role);
         }
 

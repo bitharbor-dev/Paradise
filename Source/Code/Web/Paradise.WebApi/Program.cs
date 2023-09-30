@@ -48,14 +48,29 @@ static void ConfigureApplication(WebApplication app, IConfiguration configuratio
 
 static async Task SeedDatabasesAsync(IServiceProvider serviceProvider)
 {
-    await using var scope = serviceProvider.CreateAsyncScope();
+    var scope = serviceProvider.CreateAsyncScope();
     var dbService = scope.ServiceProvider.GetRequiredService<IDatabaseService>();
     var dataProvider = scope.ServiceProvider.GetRequiredService<ISeedDataProvider>();
 
-    await dbService.EnsureDatabasesCreatedAsync();
-    await dbService.SeedRolesAsync(dataProvider.GetSeedRoles());
-    await dbService.SeedUsersAsync(dataProvider.GetSeedUsers());
-    await dbService.SeedEmailTemplatesAsync(dataProvider.GetSeedEmailTemplates());
+    await dbService
+        .EnsureDatabasesCreatedAsync()
+        .ConfigureAwait(false);
+
+    await dbService
+        .SeedRolesAsync(dataProvider.GetSeedRoles())
+        .ConfigureAwait(false);
+
+    await dbService
+        .SeedUsersAsync(dataProvider.GetSeedUsers())
+        .ConfigureAwait(false);
+
+    await dbService
+        .SeedEmailTemplatesAsync(dataProvider.GetSeedEmailTemplates())
+        .ConfigureAwait(false);
+
+    await scope
+        .DisposeAsync()
+        .ConfigureAwait(false);
 }
 
 // Create WebApplication instance with configured DI.
@@ -65,6 +80,8 @@ var app = CreateApp(args, out var configuration);
 ConfigureApplication(app, configuration);
 
 // Seed application databases.
-await SeedDatabasesAsync(app.Services);
+await SeedDatabasesAsync(app.Services)
+    .ConfigureAwait(false);
 
-await app.RunAsync();
+await app.RunAsync()
+    .ConfigureAwait(false);

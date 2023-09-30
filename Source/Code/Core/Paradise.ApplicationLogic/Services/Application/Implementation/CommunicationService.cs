@@ -59,13 +59,15 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
         if (request.BasicData.Bcc is not null)
             ValidateRecipients(request.BasicData.Bcc);
 
-        var template = await FindEmailTemplateAsync(request, cancellationToken);
+        var template = await FindEmailTemplateAsync(request, cancellationToken)
+            .ConfigureAwait(false);
 
         template.ThrowIfNull(NotFound, MessageTemplateNotFound, request.TemplateName, request.Culture?.Name);
 
         var message = CreateMessage(template, request, _smtpOptions.Credentials.UserName);
 
-        await smtpClient.SendAsync(message, cancellationToken);
+        await smtpClient.SendAsync(message, cancellationToken)
+            .ConfigureAwait(false);
 
         EmailMessageSent?.Invoke(this, new(request.TemplateName, request.Culture, request.BodyArgs, request.SubjectArgs, message));
 
@@ -121,17 +123,23 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
         var templateName = request.TemplateName;
         var culture = request.Culture;
 
-        var template = await emailTemplatesRepository.GetByNameAndCultureAsync(templateName, culture, cancellationToken);
+        var template = await emailTemplatesRepository
+            .GetByNameAndCultureAsync(templateName, culture, cancellationToken)
+            .ConfigureAwait(false);
 
         if (template is null && request.UseNullOrInvariantCultureAsFallback)
         {
             culture = null;
 
-            template = await emailTemplatesRepository.GetByNameAndCultureAsync(templateName, culture, cancellationToken);
+            template = await emailTemplatesRepository
+                .GetByNameAndCultureAsync(templateName, culture, cancellationToken)
+                .ConfigureAwait(false);
 
             culture = CultureInfo.InvariantCulture;
 
-            template ??= await emailTemplatesRepository.GetByNameAndCultureAsync(templateName, culture, cancellationToken);
+            template ??= await emailTemplatesRepository
+                .GetByNameAndCultureAsync(templateName, culture, cancellationToken)
+                .ConfigureAwait(false);
         }
 
         return template;

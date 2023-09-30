@@ -103,7 +103,7 @@ public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
 
     /// <inheritdoc/>
     public async Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-        => (await Source.Set<TEntity>().ToListAsync(cancellationToken)).AsReadOnly();
+        => (await Source.Set<TEntity>().ToListAsync(cancellationToken).ConfigureAwait(false)).AsReadOnly();
 
     /// <inheritdoc/>
     public TEntity? GetById(Guid id)
@@ -140,11 +140,15 @@ public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
 
         query.Apply(ref set);
 
-        var total = await set.CountAsync(cancellationToken);
+        var total = await set
+            .CountAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         set = set.Skip(query.PageSkip).Take(query.PageSize);
 
-        var data = await set.ToListAsync(cancellationToken);
+        var data = await set
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return new(data, total);
     }

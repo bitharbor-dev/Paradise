@@ -91,7 +91,10 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var users = await userManager.Users.ToListAsync(cancellationToken);
+        var users = await userManager
+            .Users
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return new(users.Select(user => user.ToModel()), OK);
     }
@@ -99,7 +102,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await GetUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
 
         return new(user.ToModel(), OK);
     }
@@ -109,21 +113,27 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        await ValidateRegistrationModelAsync(model);
+        await ValidateRegistrationModelAsync(model)
+            .ConfigureAwait(false);
 
         var user = model.ToEntity();
 
-        var creationResult = await userManager.CreateAsync(user, model.Password!);
+        var creationResult = await userManager
+            .CreateAsync(user, model.Password!)
+            .ConfigureAwait(false);
 
         creationResult.ThrowIfUnsuccessfulIdentityResult();
 
         try
         {
-            await SendEmailAddressConfirmationEmailAsync(user, cancellationToken);
+            await SendEmailAddressConfirmationEmailAsync(user, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch
         {
-            var deletionResult = await userManager.DeleteAsync(user);
+            var deletionResult = await userManager
+                .DeleteAsync(user)
+                .ConfigureAwait(false);
 
             if (!deletionResult.Succeeded)
                 logger.LogUnsuccessfulUserDeletionAfterFailedInvitation(user.Email, deletionResult);
@@ -146,18 +156,26 @@ public sealed class UserService(ILogger<UserService> logger,
         var email = identityTokenModel.Email;
         var emailConfirmationToken = identityTokenModel.InnerToken;
 
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager
+            .FindByEmailAsync(email)
+            .ConfigureAwait(false);
+
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         user.EmailConfirmed.ThrowIfTrue(UnprocessableEntity, UserEmailAlreadyConfirmed, user.Email);
 
-        var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, emailConfirmationToken);
+        var emailConfirmationResult = await userManager
+            .ConfirmEmailAsync(user, emailConfirmationToken)
+            .ConfigureAwait(false);
 
         emailConfirmationResult.ThrowIfUnsuccessfulIdentityResult();
 
-        await AssignDefaultUserRolesAsync(user, cancellationToken);
+        await AssignDefaultUserRolesAsync(user, cancellationToken)
+            .ConfigureAwait(false);
 
-        var updateResult = await userManager.UpdateAsync(user);
+        var updateResult = await userManager
+            .UpdateAsync(user)
+            .ConfigureAwait(false);
 
         updateResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -171,13 +189,17 @@ public sealed class UserService(ILogger<UserService> logger,
 
         model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
 
-        var user = await FindUserByLoginModelAsync(model);
+        var user = await FindUserByLoginModelAsync(model)
+            .ConfigureAwait(false);
 
-        await ValidateUserLockoutAsync(user);
+        await ValidateUserLockoutAsync(user)
+            .ConfigureAwait(false);
 
-        await ValidateUserPasswordAsync(user, model.Password);
+        await ValidateUserPasswordAsync(user, model.Password)
+            .ConfigureAwait(false);
 
-        await ResetUserLockoutStateAsync(user);
+        await ResetUserLockoutStateAsync(user)
+            .ConfigureAwait(false);
 
         user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
 
@@ -185,7 +207,9 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             var tokenModel = GenerateTwoFactorToken(user, out var verificationCode);
 
-            var emailResult = await SendTwoFactorAuthenticationEmailAsync(user, verificationCode, cancellationToken);
+            var emailResult = await SendTwoFactorAuthenticationEmailAsync(user, verificationCode, cancellationToken)
+                .ConfigureAwait(false);
+
             if (!emailResult.IsSuccess)
             {
                 logger.LogResultErrors(emailResult);
@@ -205,7 +229,8 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             // 'refreshTokenId: null' means that we are generating
             // access token which would be bound to a newly created refresh token.
-            var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken);
+            var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken)
+                .ConfigureAwait(false);
 
             return accessTokenResult;
         }
@@ -232,12 +257,16 @@ public sealed class UserService(ILogger<UserService> logger,
 
         codeIsCorrect.ThrowIfFalse(Unauthorized, UnauthorizedUser);
 
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager
+            .FindByEmailAsync(email)
+            .ConfigureAwait(false);
+
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
         // 'refreshTokenId: null' means that we are generating
         // access token which would be bound to a newly created refresh token.
-        var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken);
+        var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken)
+            .ConfigureAwait(false);
 
         return accessTokenResult;
     }
@@ -254,8 +283,11 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
 
-        var user = await GetUserByIdAsync(userId, cancellationToken);
-        var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+
+        var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken)
+            .ConfigureAwait(false);
 
         return accessTokenResult;
     }
@@ -272,7 +304,9 @@ public sealed class UserService(ILogger<UserService> logger,
 
         userRefreshTokensRepository.RemoveById(refreshTokenId);
 
-        await userRefreshTokensRepository.CommitAsync(cancellationToken);
+        await userRefreshTokensRepository
+            .CommitAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return OK;
     }
@@ -288,7 +322,9 @@ public sealed class UserService(ILogger<UserService> logger,
 
         userRefreshTokensRepository.RemoveWhere(refreshToken => refreshToken.OwnerId == userId);
 
-        await userRefreshTokensRepository.CommitAsync(cancellationToken);
+        await userRefreshTokensRepository
+            .CommitAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return OK;
     }
@@ -302,11 +338,15 @@ public sealed class UserService(ILogger<UserService> logger,
 
         model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
-        var user = await userManager.FindByEmailAsync(model.Email);
+        var user = await userManager
+            .FindByEmailAsync(model.Email)
+            .ConfigureAwait(false);
 
         if (user is not null)
         {
-            var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken);
+            var emailResult = await SendPasswordResetEmailAsync(user, cancellationToken)
+                .ConfigureAwait(false);
+
             if (!emailResult.IsSuccess)
             {
                 logger.LogResultErrors(emailResult);
@@ -334,7 +374,8 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var exception = new ResultException();
 
-        await ValidatePasswordAsync(model.Password, model.PasswordConfirmation, exception);
+        await ValidatePasswordAsync(model.Password, model.PasswordConfirmation, exception)
+            .ConfigureAwait(false);
 
         if (exception.HaveErrors)
             throw exception;
@@ -342,16 +383,22 @@ public sealed class UserService(ILogger<UserService> logger,
         var email = identityTokenModel.Email;
         var passwordResetToken = identityTokenModel.InnerToken;
 
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager
+            .FindByEmailAsync(email)
+            .ConfigureAwait(false);
+
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
-        var passwordResetResult = await userManager.ResetPasswordAsync(user, passwordResetToken, model.Password);
+        var passwordResetResult = await userManager
+            .ResetPasswordAsync(user, passwordResetToken, model.Password)
+            .ConfigureAwait(false);
 
         passwordResetResult.ThrowIfUnsuccessfulIdentityResult();
 
         try
         {
-            await SendPasswordResetCompletedEmailAsync(user, cancellationToken);
+            await SendPasswordResetCompletedEmailAsync(user, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (InvalidOperationException ex)
         {
@@ -374,15 +421,18 @@ public sealed class UserService(ILogger<UserService> logger,
 
         model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
-        var emailAddressIsInUse = await CheckIfEmailAddressIsInUseAsync(model.Email);
+        var emailAddressIsInUse = await CheckIfEmailAddressIsInUseAsync(model.Email)
+            .ConfigureAwait(false);
 
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, model.Email);
 
-        var user = await GetUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
 
         try
         {
-            await SendEmailAddressResetNotificationEmailAsync(user, model.Email, cancellationToken);
+            await SendEmailAddressResetNotificationEmailAsync(user, model.Email, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (InvalidOperationException ex)
         {
@@ -393,7 +443,9 @@ public sealed class UserService(ILogger<UserService> logger,
             logger.LogResultException(ex);
         }
 
-        var emailResult = await SendEmailAddressResetEmailAsync(user, model.Email, cancellationToken);
+        var emailResult = await SendEmailAddressResetEmailAsync(user, model.Email, cancellationToken)
+            .ConfigureAwait(false);
+
         if (!emailResult.IsSuccess)
         {
             logger.LogResultErrors(emailResult);
@@ -420,20 +472,27 @@ public sealed class UserService(ILogger<UserService> logger,
 
         newEmail.ThrowIfNullOrWhiteSpace(BadRequest, InvalidToken, newEmail);
 
-        var emailAddressIsInUse = await CheckIfEmailAddressIsInUseAsync(newEmail);
+        var emailAddressIsInUse = await CheckIfEmailAddressIsInUseAsync(newEmail)
+            .ConfigureAwait(false);
 
         emailAddressIsInUse.ThrowIfTrue(BadRequest, DuplicateEmail, newEmail);
 
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager
+            .FindByEmailAsync(email)
+            .ConfigureAwait(false);
+
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
-        var changeEmailResult = await userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
+        var changeEmailResult = await userManager
+            .ChangeEmailAsync(user, newEmail, changeEmailToken)
+            .ConfigureAwait(false);
 
         changeEmailResult.ThrowIfUnsuccessfulIdentityResult();
 
         try
         {
-            await SendEmailAddressResetCompletedEmailAsync(user.UserName, email, newEmail, cancellationToken);
+            await SendEmailAddressResetCompletedEmailAsync(user.UserName, email, newEmail, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (InvalidOperationException ex)
         {
@@ -452,7 +511,8 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var user = await GetUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
 
         if (model.IsPendingDeletion.HasValue)
         {
@@ -470,14 +530,17 @@ public sealed class UserService(ILogger<UserService> logger,
 
             userNameIsValid.ThrowIfFalse(UnprocessableEntity, InvalidUserName, model.UserName);
 
-            var userNameInUse = await CheckIfUserNameIsInUseAsync(model.UserName);
+            var userNameInUse = await CheckIfUserNameIsInUseAsync(model.UserName)
+                .ConfigureAwait(false);
 
             userNameInUse.ThrowIfTrue(UnprocessableEntity, DuplicateUserName, model.UserName);
 
             user.UserName = model.UserName;
         }
 
-        var updateResult = await userManager.UpdateAsync(user);
+        var updateResult = await userManager
+            .UpdateAsync(user)
+            .ConfigureAwait(false);
 
         updateResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -487,7 +550,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> DeleteAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await GetUserByIdAsync(userId, cancellationToken);
+        var user = await GetUserByIdAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+
         var requestLifetime = _applicationOptions.Tokens.UserDeletionRequestLifetime;
 
         user.DeletionRequestSubmitted.HasValue.ThrowIfFalse(BadRequest, UserNotPendingDeletion, user.Email);
@@ -496,14 +561,18 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             user.CancelDeletionRequest();
 
-            var updateResult = await userManager.UpdateAsync(user);
+            var updateResult = await userManager
+                .UpdateAsync(user)
+                .ConfigureAwait(false);
 
             updateResult.ThrowIfUnsuccessfulIdentityResult();
 
             Throw(BadRequest, UserDeletionRequestExpired, requestLifetime);
         }
 
-        var deletionResult = await userManager.DeleteAsync(user);
+        var deletionResult = await userManager
+            .DeleteAsync(user)
+            .ConfigureAwait(false);
 
         deletionResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -534,7 +603,9 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         if (refreshTokenId.HasValue)
         {
-            var refreshToken = await userRefreshTokensRepository.GetByIdAsync(refreshTokenId.Value, cancellationToken);
+            var refreshToken = await userRefreshTokensRepository
+                .GetByIdAsync(refreshTokenId.Value, cancellationToken)
+                .ConfigureAwait(false);
 
             refreshToken.ThrowIfNull(Unauthorized, OutdatedToken);
 
@@ -548,7 +619,9 @@ public sealed class UserService(ILogger<UserService> logger,
 
             userRefreshTokensRepository.Add(refreshToken);
 
-            await userRefreshTokensRepository.CommitAsync(cancellationToken);
+            await userRefreshTokensRepository
+                .CommitAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             refreshTokenId = refreshToken.Id;
         }
@@ -556,8 +629,12 @@ public sealed class UserService(ILogger<UserService> logger,
         // The minimum claims for the authentication process to be working properly
         // is the user Id claim. In order to pass the authorization process as well -
         // role claims are required.
-        var userClaims = await userManager.GetClaimsAsync(user);
-        var rolesAsClaims = await GetUserRolesAsClaimsAsync(user);
+        var userClaims = await userManager
+            .GetClaimsAsync(user)
+            .ConfigureAwait(false);
+
+        var rolesAsClaims = await GetUserRolesAsClaimsAsync(user)
+            .ConfigureAwait(false);
 
         var tokenClaims = userClaims.Concat(rolesAsClaims);
 
@@ -581,7 +658,10 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         var roleClaimType = _jwtBearerOptions.TokenValidationParameters.RoleClaimType;
 
-        var roleNames = await userManager.GetRolesAsync(user);
+        var roleNames = await userManager
+            .GetRolesAsync(user)
+            .ConfigureAwait(false);
+
         var roleClaims = roleNames.Select(name => new Claim(roleClaimType, name));
 
         return roleClaims;
@@ -624,12 +704,18 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </param>
     private async Task AssignDefaultUserRolesAsync(User user, CancellationToken cancellationToken = default)
     {
-        var defaultRolesResult = await roleService.GetAllAsync(true, cancellationToken);
+        var defaultRolesResult = await roleService
+            .GetAllAsync(true, cancellationToken)
+            .ConfigureAwait(false);
 
         if (defaultRolesResult.Value is not null)
         {
             foreach (var role in defaultRolesResult.Value)
-                await roleService.AssignAsync(role.Id, user.Id, cancellationToken);
+            {
+                await roleService
+                    .AssignAsync(role.Id, user.Id, cancellationToken)
+                    .ConfigureAwait(false);
+            }
         }
     }
 
@@ -649,7 +735,10 @@ public sealed class UserService(ILogger<UserService> logger,
             user.AccessFailedCount = 0;
             user.LockoutEnd = null;
 
-            var updateResult = await userManager.UpdateAsync(user);
+            var updateResult = await userManager
+                .UpdateAsync(user)
+                .ConfigureAwait(false);
+
             updateResult.ThrowIfUnsuccessfulIdentityResult();
         }
     }
@@ -720,19 +809,25 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
-            user = await userManager.FindByEmailAsync(model.Email);
+            user = await userManager
+                .FindByEmailAsync(model.Email)
+                .ConfigureAwait(false);
         }
         else if (model.UserName.IsNotNullOrWhiteSpace())
         {
             model.UserName.IsValidUserName(_identityOptions).ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
 
-            user = await userManager.FindByNameAsync(model.UserName);
+            user = await userManager
+                .FindByNameAsync(model.UserName)
+                .ConfigureAwait(false);
         }
         else if (model.Phone.IsNotNullOrWhiteSpace())
         {
             model.Phone.IsValidPhoneNumber().ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
 
-            user = await userManager.FindByPhoneNumberAsync(model.Phone);
+            user = await userManager
+                .FindByPhoneNumberAsync(model.Phone)
+                .ConfigureAwait(false);
         }
         else
         {
@@ -766,7 +861,8 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         var user = await userManager
             .Users
-            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken)
+            .ConfigureAwait(false);
 
         return user ?? throw new ResultException(NotFound, UserIdNotFound, id);
     }
@@ -785,14 +881,20 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         var exception = new ResultException();
 
-        await ValidateEmailAddressAsync(model.Email, exception);
+        await ValidateEmailAddressAsync(model.Email, exception)
+            .ConfigureAwait(false);
 
-        await ValidatePasswordAsync(model.Password, model.PasswordConfirmation, exception);
+        await ValidatePasswordAsync(model.Password, model.PasswordConfirmation, exception)
+            .ConfigureAwait(false);
 
         if (model.Phone is not null)
-            await ValidatePhoneNumberAsync(model.Phone, exception);
+        {
+            await ValidatePhoneNumberAsync(model.Phone, exception)
+                .ConfigureAwait(false);
+        }
 
-        await ValidateUserNameAsync(model.UserName, exception);
+        await ValidateUserNameAsync(model.UserName, exception)
+            .ConfigureAwait(false);
 
         if (exception.HaveErrors)
             throw exception;
@@ -815,7 +917,8 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         else
         {
-            var emailTaken = await CheckIfEmailAddressIsInUseAsync(email);
+            var emailTaken = await CheckIfEmailAddressIsInUseAsync(email)
+                .ConfigureAwait(false);
 
             if (emailTaken)
                 exception.AddError(UnprocessableEntity, DuplicateEmail, email);
@@ -855,7 +958,10 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         foreach (var validator in userManager.PasswordValidators)
         {
-            var validationResult = await validator.ValidateAsync(userManager, null!, password);
+            var validationResult = await validator
+                .ValidateAsync(userManager, null!, password)
+                .ConfigureAwait(false);
+
             if (!validationResult.Succeeded)
                 exception.AddError(validationResult, UnprocessableEntity);
         }
@@ -878,7 +984,8 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         else
         {
-            var phoneTaken = await CheckIfPhoneNumberIsInUseAsync(phone);
+            var phoneTaken = await CheckIfPhoneNumberIsInUseAsync(phone)
+                .ConfigureAwait(false);
 
             if (phoneTaken)
                 exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
@@ -902,7 +1009,8 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         else
         {
-            var userNameTaken = await CheckIfUserNameIsInUseAsync(userName);
+            var userNameTaken = await CheckIfUserNameIsInUseAsync(userName)
+                .ConfigureAwait(false);
 
             if (userNameTaken)
                 exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
@@ -926,7 +1034,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </exception>
     private async Task ValidateUserLockoutAsync(User user)
     {
-        var userLockedOut = await userManager.IsLockedOutAsync(user);
+        var userLockedOut = await userManager
+            .IsLockedOutAsync(user)
+            .ConfigureAwait(false);
 
         (user.LockoutEnabled && userLockedOut).ThrowIfTrue(Forbidden, UserLockedOut);
     }
@@ -952,13 +1062,18 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </exception>
     private async Task ValidateUserPasswordAsync(User user, string password)
     {
-        var passwordIsCorrect = await userManager.CheckPasswordAsync(user, password);
+        var passwordIsCorrect = await userManager
+            .CheckPasswordAsync(user, password)
+            .ConfigureAwait(false);
 
         if (!passwordIsCorrect)
         {
             if (user.LockoutEnabled)
             {
-                var incrementResult = await userManager.AccessFailedAsync(user);
+                var incrementResult = await userManager
+                    .AccessFailedAsync(user)
+                    .ConfigureAwait(false);
+
                 incrementResult.ThrowIfUnsuccessfulIdentityResult();
             }
 
@@ -978,7 +1093,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager
+            .FindByEmailAsync(email)
+            .ConfigureAwait(false);
 
         return user is not null;
     }
@@ -995,7 +1112,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone)
     {
-        var user = await userManager.FindByPhoneNumberAsync(phone);
+        var user = await userManager
+            .FindByPhoneNumberAsync(phone)
+            .ConfigureAwait(false);
 
         return user is not null;
     }
@@ -1012,7 +1131,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<bool> CheckIfUserNameIsInUseAsync(string userName)
     {
-        var user = await userManager.FindByNameAsync(userName);
+        var user = await userManager
+            .FindByNameAsync(userName)
+            .ConfigureAwait(false);
 
         return user is not null;
     }
@@ -1036,7 +1157,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<Result<EmailModel>> SendEmailAddressConfirmationEmailAsync(User user, CancellationToken cancellationToken = default)
     {
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var token = await userManager
+            .GenerateEmailConfirmationTokenAsync(user)
+            .ConfigureAwait(false);
 
         var url = _applicationOptions.ApiUrl;
         var route = UserRoutes.ConfirmEmail;
@@ -1054,7 +1177,9 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: [link]);
 
-        var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
+        var emailResult = await communicationService
+            .SendEmailAsync(request, cancellationToken)
+            .ConfigureAwait(false);
 
         return emailResult;
     }
@@ -1110,7 +1235,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<Result<EmailModel>> SendPasswordResetEmailAsync(User user, CancellationToken cancellationToken = default)
     {
-        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var token = await userManager
+            .GeneratePasswordResetTokenAsync(user)
+            .ConfigureAwait(false);
 
         var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
 
@@ -1127,7 +1254,9 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: [identityToken]);
 
-        var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
+        var emailResult = await communicationService
+            .SendEmailAsync(request, cancellationToken)
+            .ConfigureAwait(false);
 
         return emailResult;
     }
@@ -1218,7 +1347,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<Result<EmailModel>> SendEmailAddressResetEmailAsync(User user, string newEmail, CancellationToken cancellationToken = default)
     {
-        var token = await userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+        var token = await userManager
+            .GenerateChangeEmailTokenAsync(user, newEmail)
+            .ConfigureAwait(false);
 
         var url = _applicationOptions.ApiUrl;
         var route = UserRoutes.ResetEmail;
@@ -1238,7 +1369,9 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: [user.UserName, link]);
 
-        var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
+        var emailResult = await communicationService
+            .SendEmailAsync(request, cancellationToken)
+            .ConfigureAwait(false);
 
         return emailResult;
     }

@@ -30,7 +30,10 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
     public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
     {
         _domainDataSource.Add(role);
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        await _domainDataSource
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success;
     }
@@ -41,7 +44,10 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
         ArgumentNullException.ThrowIfNull(role);
 
         role.ConcurrencyStamp = Guid.NewGuid().ToString();
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        await _domainDataSource
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success;
     }
@@ -50,7 +56,10 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
     public async Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
     {
         _domainDataSource.Remove(role);
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        await _domainDataSource
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success;
     }

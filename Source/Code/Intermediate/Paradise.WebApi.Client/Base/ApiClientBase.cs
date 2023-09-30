@@ -354,9 +354,13 @@ public abstract class ApiClientBase : IDisposable
     private async Task<Result<TValue>> ExecuteRequestAsync<TValue>(HttpMethod method, Uri uri, string? accessToken = null, object? content = null)
     {
         using var request = CreateRequest(method, uri, accessToken, content);
-        using var response = await _httpClient.SendAsync(request);
 
-        var result = await ParseResultAsync<TValue>(response);
+        using var response = await _httpClient
+            .SendAsync(request)
+            .ConfigureAwait(false);
+
+        var result = await ParseResultAsync<TValue>(response)
+            .ConfigureAwait(false);
 
         return result;
     }
@@ -383,9 +387,13 @@ public abstract class ApiClientBase : IDisposable
     private async Task<Result> ExecuteRequestAsync(HttpMethod method, Uri uri, string? accessToken = null, object? content = null)
     {
         using var request = CreateRequest(method, uri, accessToken, content);
-        using var response = await _httpClient.SendAsync(request);
 
-        var result = await ParesResultAsync(response);
+        using var response = await _httpClient
+            .SendAsync(request)
+            .ConfigureAwait(false);
+
+        var result = await ParesResultAsync(response)
+            .ConfigureAwait(false);
 
         return result;
     }
@@ -457,7 +465,10 @@ public abstract class ApiClientBase : IDisposable
     /// </exception>
     private async Task<Result<TValue>> ParseResultAsync<TValue>(HttpResponseMessage response)
     {
-        var content = await response.Content.ReadAsStreamAsync();
+        var content = await response
+            .Content
+            .ReadAsStreamAsync()
+            .ConfigureAwait(false);
 
         if (content.Length is 0)
         {
@@ -466,7 +477,8 @@ public abstract class ApiClientBase : IDisposable
             return errorResult;
         }
 
-        var result = await DeserializeAsync<Result<TValue>>(content, _jsonSerializerOptions);
+        var result = await DeserializeAsync<Result<TValue>>(content, _jsonSerializerOptions)
+            .ConfigureAwait(false);
 
         if (result is null)
         {
@@ -493,7 +505,10 @@ public abstract class ApiClientBase : IDisposable
     /// </exception>
     private async Task<Result> ParesResultAsync(HttpResponseMessage response)
     {
-        var content = await response.Content.ReadAsStreamAsync();
+        var content = await response
+            .Content
+            .ReadAsStreamAsync()
+            .ConfigureAwait(false);
 
         if (content.Length is 0)
         {
@@ -502,7 +517,8 @@ public abstract class ApiClientBase : IDisposable
             return errorResult;
         }
 
-        var result = await DeserializeAsync<Result>(content, _jsonSerializerOptions);
+        var result = await DeserializeAsync<Result>(content, _jsonSerializerOptions)
+            .ConfigureAwait(false);
 
         if (result is null)
         {

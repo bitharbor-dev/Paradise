@@ -68,15 +68,23 @@ public sealed class UserManager(IUserStore<User> store,
     {
         ArgumentNullException.ThrowIfNull(user);
 
-        var creationResult = await base.CreateAsync(user);
+        var creationResult = await base
+            .CreateAsync(user)
+            .ConfigureAwait(false);
+
         if (!creationResult.Succeeded)
             return creationResult;
 
-        var claimsAdditionResult = await AddDefaultUserClaimsAsync(user);
+        var claimsAdditionResult = await AddDefaultUserClaimsAsync(user)
+            .ConfigureAwait(false);
+
         if (!claimsAdditionResult.Succeeded)
         {
             Logger.LogClaimsAdditionFailure();
-            await DeleteAsync(user);
+
+            await DeleteAsync(user)
+                .ConfigureAwait(false);
+
             return claimsAdditionResult;
         }
 
@@ -99,7 +107,9 @@ public sealed class UserManager(IUserStore<User> store,
 
         ArgumentException.ThrowIfNullOrEmpty(phoneNumber);
 
-        var user = await Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber, CancellationToken).ConfigureAwait(false);
+        var user = await Users
+            .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber, CancellationToken)
+            .ConfigureAwait(false);
 
         if (user is null && Options.Stores.ProtectPersonalData)
         {
@@ -112,7 +122,9 @@ public sealed class UserManager(IUserStore<User> store,
                 {
                     var protectedPhoneNumber = protector.Protect(key, phoneNumber);
 
-                    user = await Users.FirstOrDefaultAsync(u => u.PhoneNumber == protectedPhoneNumber, CancellationToken).ConfigureAwait(false);
+                    user = await Users
+                        .FirstOrDefaultAsync(u => u.PhoneNumber == protectedPhoneNumber, CancellationToken)
+                        .ConfigureAwait(false);
 
                     if (user is not null)
                         return user;

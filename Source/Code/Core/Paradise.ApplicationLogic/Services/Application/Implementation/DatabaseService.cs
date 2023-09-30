@@ -66,8 +66,11 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// <inheritdoc/>
     public async Task EnsureDatabasesCreatedAsync(CancellationToken cancellationToken = default)
     {
-        await applicationDataSource.PreparePersistenceStorageAsync(cancellationToken);
-        await domainDataSource.PreparePersistenceStorageAsync(cancellationToken);
+        await applicationDataSource.PreparePersistenceStorageAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        await domainDataSource.PreparePersistenceStorageAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -81,12 +84,15 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             try
             {
-                var roleExists = await RoleExistsAsync(model, cancellationToken);
+                var roleExists = await RoleExistsAsync(model, cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (roleExists)
                     continue;
 
-                await CreateRoleAsync(model);
+                await CreateRoleAsync(model)
+                    .ConfigureAwait(false);
+
                 addedItemsNumber++;
             }
             catch (Exception e)
@@ -109,12 +115,15 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             try
             {
-                var userExists = await UserExistsAsync(model, cancellationToken);
+                var userExists = await UserExistsAsync(model, cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (userExists)
                     continue;
 
-                await CreateUserAsync(model);
+                await CreateUserAsync(model)
+                    .ConfigureAwait(false);
+
                 addedItemsNumber++;
             }
             catch (Exception e)
@@ -137,11 +146,14 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             try
             {
-                var emailTemplateExists = await UpdateEmailTemplateAsync(model, cancellationToken);
+                var emailTemplateExists = await UpdateEmailTemplateAsync(model, cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (!emailTemplateExists)
                 {
-                    await CreateEmailTemplateAsync(model, cancellationToken);
+                    await CreateEmailTemplateAsync(model, cancellationToken)
+                        .ConfigureAwait(false);
+
                     addedItemsNumber++;
                 }
             }
@@ -159,13 +171,16 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     {
         var deletedItemsNumber = 0;
 
-        var unconfirmedUsers = await GetUnconfirmedUsersAsync(confirmationPeriod, cancellationToken);
+        var unconfirmedUsers = await GetUnconfirmedUsersAsync(confirmationPeriod, cancellationToken)
+            .ConfigureAwait(false);
 
         foreach (var user in unconfirmedUsers)
         {
             try
             {
-                await DeleteUserAsync(user);
+                await DeleteUserAsync(user)
+                    .ConfigureAwait(false);
+
                 deletedItemsNumber++;
             }
             catch (Exception e)
@@ -187,13 +202,16 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
 
         ushort updatedItemsNumber = 0;
 
-        var pendingDeletionUsers = await GetPendingDeletionUsersAsync(requestLifetime, cancellationToken);
+        var pendingDeletionUsers = await GetPendingDeletionUsersAsync(requestLifetime, cancellationToken)
+            .ConfigureAwait(false);
 
         foreach (var user in pendingDeletionUsers)
         {
             try
             {
-                await UpdateUserAsync(user, ResetAction);
+                await UpdateUserAsync(user, ResetAction)
+                    .ConfigureAwait(false);
+
                 updatedItemsNumber++;
             }
             catch (Exception e)
@@ -214,11 +232,14 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
 
         try
         {
-            var outdatedTokens = await GetOutdatedTokensAsync(refreshTokenLifetime, cancellationToken);
+            var outdatedTokens = await GetOutdatedTokensAsync(refreshTokenLifetime, cancellationToken)
+                .ConfigureAwait(false);
 
             userRefreshTokensRepository.RemoveRange(outdatedTokens);
 
-            removedTokensNumber = await userRefreshTokensRepository.CommitAsync(cancellationToken);
+            removedTokensNumber = await userRefreshTokensRepository
+                .CommitAsync(cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -243,7 +264,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     {
         var role = model.ToEntity();
 
-        var creationResult = await roleManager.CreateAsync(role);
+        var creationResult = await roleManager
+            .CreateAsync(role)
+            .ConfigureAwait(false);
 
         if (creationResult.Succeeded)
             logger.LogAddedSeedItem<Role>(role.Name);
@@ -269,12 +292,18 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             throw new InvalidOperationException(message, new ArgumentException(nameof(model.Password)));
         }
 
-        var creationResult = await userManager.CreateAsync(user, model.Password);
+        var creationResult = await userManager
+            .CreateAsync(user, model.Password)
+            .ConfigureAwait(false);
+
         if (!creationResult.Succeeded)
             throw new IdentityException(creationResult);
 
         var rolesToAdd = MergeUserRolesWithDefault(model);
-        var rolesResult = await userManager.AddToRolesAsync(user, rolesToAdd);
+
+        var rolesResult = await userManager
+            .AddToRolesAsync(user, rolesToAdd)
+            .ConfigureAwait(false);
 
         if (rolesResult.Succeeded)
         {
@@ -282,7 +311,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         }
         else
         {
-            await DeleteUserAsync(user);
+            await DeleteUserAsync(user)
+                .ConfigureAwait(false);
+
             throw new IdentityException(rolesResult);
         }
     }
@@ -300,7 +331,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </param>
     private async Task CreateEmailTemplateAsync(SeedEmailTemplateModel model, CancellationToken cancellationToken = default)
     {
-        var result = await emailTemplateService.CreateAsync(model.ToCreationModel(), cancellationToken);
+        var result = await emailTemplateService
+            .CreateAsync(model.ToCreationModel(), cancellationToken)
+            .ConfigureAwait(false);
 
         if (result.IsSuccess)
         {
@@ -332,12 +365,16 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     {
         var culture = model.CultureId.HasValue ? CultureInfo.GetCultureInfo(model.CultureId.Value) : null;
 
-        var template = await emailTemplatesRepository.GetByNameAndCultureAsync(model.TemplateName, culture, cancellationToken);
+        var template = await emailTemplatesRepository
+            .GetByNameAndCultureAsync(model.TemplateName, culture, cancellationToken)
+            .ConfigureAwait(false);
 
         if (template is null)
             return false;
 
-        var result = await emailTemplateService.UpdateAsync(template.Id, model.ToUpdateModel(), cancellationToken);
+        var result = await emailTemplateService
+            .UpdateAsync(template.Id, model.ToUpdateModel(), cancellationToken)
+            .ConfigureAwait(false);
 
         if (result.IsSuccess)
         {
@@ -373,7 +410,10 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     private async Task UpdateUserAsync(User user, Action<User> updateAction)
     {
         updateAction(user);
-        var updateResult = await userManager.UpdateAsync(user);
+
+        var updateResult = await userManager
+            .UpdateAsync(user)
+            .ConfigureAwait(false);
 
         if (!updateResult.Succeeded)
             throw new IdentityException(updateResult);
@@ -388,7 +428,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// </param>
     private async Task DeleteUserAsync(User user)
     {
-        var deleteResult = await userManager.DeleteAsync(user);
+        var deleteResult = await userManager
+            .DeleteAsync(user)
+            .ConfigureAwait(false);
 
         if (!deleteResult.Succeeded)
             throw new IdentityException(deleteResult);
@@ -488,7 +530,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             => user.IsEmailConfirmationPeriodExceeded(confirmationPeriod);
 
         var unconfirmedUsers = await userManager.Users
-            .Where(user => !user.EmailConfirmed).ToListAsync(cancellationToken);
+            .Where(user => !user.EmailConfirmed)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return unconfirmedUsers.Where(Predicate);
     }
@@ -516,7 +560,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
             => user.IsDeletionRequestOutdated(requestLifetime);
 
         var pendingUsers = await userManager.Users
-            .Where(user => user.DeletionRequestSubmitted.HasValue).ToListAsync(cancellationToken);
+            .Where(user => user.DeletionRequestSubmitted.HasValue)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return pendingUsers.Where(Predicate);
     }
@@ -539,7 +585,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         bool Predicate(UserRefreshToken userRefreshToken)
             => userRefreshToken.IsOutdated(refreshTokenLifetime);
 
-        var refreshTokens = await userRefreshTokensRepository.GetAllAsync(cancellationToken);
+        var refreshTokens = await userRefreshTokensRepository
+            .GetAllAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return refreshTokens.Where(Predicate);
     }

@@ -87,7 +87,10 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
     {
         _domainDataSource.Add(user);
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        await _domainDataSource
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success;
     }
@@ -98,7 +101,10 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         ArgumentNullException.ThrowIfNull(user);
 
         user.ConcurrencyStamp = Guid.NewGuid().ToString();
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        await _domainDataSource
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success;
     }
@@ -107,7 +113,10 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
     {
         _domainDataSource.Remove(user);
-        await _domainDataSource.SaveChangesAsync(cancellationToken);
+
+        await _domainDataSource
+            .SaveChangesAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success;
     }

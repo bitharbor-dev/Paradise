@@ -35,14 +35,29 @@ static void ConfigureServices(HostBuilderContext context, IServiceCollection ser
 
 static async Task SeedDatabasesAsync(IServiceProvider serviceProvider)
 {
-    await using var scope = serviceProvider.CreateAsyncScope();
+    var scope = serviceProvider.CreateAsyncScope();
     var dbService = scope.ServiceProvider.GetRequiredService<IDatabaseService>();
     var dataProvider = scope.ServiceProvider.GetRequiredService<ISeedDataProvider>();
 
-    await dbService.EnsureDatabasesCreatedAsync();
-    await dbService.SeedRolesAsync(dataProvider.GetSeedRoles());
-    await dbService.SeedUsersAsync(dataProvider.GetSeedUsers());
-    await dbService.SeedEmailTemplatesAsync(dataProvider.GetSeedEmailTemplates());
+    await dbService
+        .EnsureDatabasesCreatedAsync()
+        .ConfigureAwait(false);
+
+    await dbService
+        .SeedRolesAsync(dataProvider.GetSeedRoles())
+        .ConfigureAwait(false);
+
+    await dbService
+        .SeedUsersAsync(dataProvider.GetSeedUsers())
+        .ConfigureAwait(false);
+
+    await dbService
+        .SeedEmailTemplatesAsync(dataProvider.GetSeedEmailTemplates())
+        .ConfigureAwait(false);
+
+    await scope
+        .DisposeAsync()
+        .ConfigureAwait(false);
 }
 
 var host = Host
@@ -52,6 +67,8 @@ var host = Host
     .Build();
 
 // Seed application databases.
-await SeedDatabasesAsync(host.Services);
+await SeedDatabasesAsync(host.Services)
+    .ConfigureAwait(false);
 
-await host.RunAsync();
+await host.RunAsync()
+    .ConfigureAwait(false);

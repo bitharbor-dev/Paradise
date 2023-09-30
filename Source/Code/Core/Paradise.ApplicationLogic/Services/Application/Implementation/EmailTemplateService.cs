@@ -25,7 +25,9 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result<IEnumerable<EmailTemplateModel>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var emailTemplates = await emailTemplatesRepository.GetAllAsync(cancellationToken);
+        var emailTemplates = await emailTemplatesRepository
+            .GetAllAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         var models = emailTemplates.Select(emailTemplate => emailTemplate.ToModel());
 
@@ -35,7 +37,9 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result<EmailTemplateModel>> GetByIdAsync(Guid emailTemplateId, CancellationToken cancellationToken = default)
     {
-        var emailTemplate = await emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
+        var emailTemplate = await emailTemplatesRepository
+            .GetByIdAsync(emailTemplateId, cancellationToken)
+            .ConfigureAwait(false);
 
         emailTemplate.ThrowIfNull(NotFound, MessageTemplateIdNotFound, emailTemplateId);
 
@@ -55,12 +59,17 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
 
         ValidateEmailTemplateFormat(emailTemplate);
 
-        var existingTemplate = await emailTemplatesRepository.GetByNameAndCultureAsync(emailTemplate.TemplateName, emailTemplate.Culture, cancellationToken);
+        var existingTemplate = await emailTemplatesRepository
+            .GetByNameAndCultureAsync(emailTemplate.TemplateName, emailTemplate.Culture, cancellationToken)
+            .ConfigureAwait(false);
 
         existingTemplate.ThrowIfNotNull(UnprocessableEntity, MessageTemplateAlreadyExists, emailTemplate.TemplateName, emailTemplate.Culture?.LCID);
 
         emailTemplatesRepository.Add(emailTemplate);
-        await emailTemplatesRepository.CommitAsync(cancellationToken);
+
+        await emailTemplatesRepository
+            .CommitAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return new(emailTemplate.ToModel(), Created);
     }
@@ -70,7 +79,9 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var emailTemplate = await emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
+        var emailTemplate = await emailTemplatesRepository
+            .GetByIdAsync(emailTemplateId, cancellationToken)
+            .ConfigureAwait(false);
 
         emailTemplate.ThrowIfNull(NotFound, MessageTemplateIdNotFound, emailTemplateId);
 
@@ -88,7 +99,9 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
         {
             ValidateEmailTemplateFormat(emailTemplate);
 
-            await emailTemplatesRepository.CommitAsync(cancellationToken);
+            await emailTemplatesRepository
+                .CommitAsync(cancellationToken)
+                .ConfigureAwait(false);
         }
         else
         {
@@ -102,7 +115,10 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     public async Task<Result> DeleteAsync(Guid emailTemplateId, CancellationToken cancellationToken = default)
     {
         emailTemplatesRepository.RemoveById(emailTemplateId);
-        await emailTemplatesRepository.CommitAsync(cancellationToken);
+
+        await emailTemplatesRepository
+            .CommitAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return OK;
     }

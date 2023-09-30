@@ -47,7 +47,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse<IEnumerable<UserModel>>(HttpStatusCode.OK)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetAll()
-        => await userService.GetAllAsync();
+        => await userService.GetAllAsync().ConfigureAwait(false);
 
     /// <summary>
     /// Gets the user with the given <paramref name="userId"/>.
@@ -65,7 +65,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.NotFound)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetById([FromRoute(Name = UserIdParameter)] Guid userId)
-        => await userService.GetByIdAsync(userId);
+        => await userService.GetByIdAsync(userId).ConfigureAwait(false);
 
     /// <summary>
     /// Registers a new user.
@@ -84,7 +84,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.UnprocessableEntity)]
     [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> Register([FromBody, Required] UserRegistrationModel model)
-        => await userService.RegisterAsync(model);
+        => await userService.RegisterAsync(model).ConfigureAwait(false);
 
     /// <summary>
     /// Confirms the user's email address.
@@ -103,7 +103,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.NotFound)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ConfirmEmail([FromRoute(Name = IdentityTokenParameter)] string identityToken)
-        => await userService.ConfirmEmailAsync(identityToken);
+        => await userService.ConfirmEmailAsync(identityToken).ConfigureAwait(false);
 
     /// <summary>
     /// Generates a new user authorization token or
@@ -125,7 +125,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.NotFound)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Login([FromBody, Required] UserLoginModel model)
-        => await userService.LoginAsync(model);
+        => await userService.LoginAsync(model).ConfigureAwait(false);
 
     /// <summary>
     /// Generates a new user authorization token
@@ -147,7 +147,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ConfirmLogin([FromBody, Required] UserTwoFactorAuthenticationModel model)
-        => await userService.ConfirmLoginAsync(model);
+        => await userService.ConfirmLoginAsync(model).ConfigureAwait(false);
 
     /// <summary>
     /// Generates a new user authorization token
@@ -167,7 +167,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> RenewToken([FromHeader(Name = AuthorizationHeaderName)] string accessToken)
-        => await userService.RenewTokenAsync(accessToken);
+        => await userService.RenewTokenAsync(accessToken).ConfigureAwait(false);
 
     /// <summary>
     /// Invalidates the given <paramref name="accessToken"/>
@@ -184,7 +184,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Logout([FromHeader(Name = AuthorizationHeaderName), Required] string accessToken)
-        => await userService.LogoutAsync(accessToken);
+        => await userService.LogoutAsync(accessToken).ConfigureAwait(false);
 
     /// <summary>
     /// Invalidates all user's refresh tokens
@@ -201,7 +201,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> LogoutEverywhere([FromHeader(Name = AuthorizationHeaderName), Required] string accessToken)
-        => await userService.LogoutEverywhereAsync(accessToken);
+        => await userService.LogoutEverywhereAsync(accessToken).ConfigureAwait(false);
 
     /// <summary>
     /// Creates a password reset request.
@@ -218,7 +218,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.NotFound)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreatePasswordResetRequest([FromBody, Required] UserResetPasswordRequestModel model)
-        => await userService.CreatePasswordResetRequestAsync(model);
+        => await userService.CreatePasswordResetRequestAsync(model).ConfigureAwait(false);
 
     /// <summary>
     /// Resets the user's password.
@@ -236,7 +236,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.NotFound)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResetPassword([FromBody, Required] UserResetPasswordModel model)
-        => await userService.ResetPasswordAsync(model);
+        => await userService.ResetPasswordAsync(model).ConfigureAwait(false);
 
     /// <summary>
     /// Creates an email address reset request.
@@ -254,7 +254,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateEmailResetRequest([FromBody, Required] UserResetEmailRequestModel model)
-        => await userService.CreateEmailResetRequestAsync(User.GetGuidClaim(_idClaimType), model);
+        => await userService.CreateEmailResetRequestAsync(User.GetGuidClaim(_idClaimType), model).ConfigureAwait(false);
 
     /// <summary>
     /// Resets the user's email address.
@@ -273,7 +273,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResetEmail([FromRoute(Name = IdentityTokenParameter)] string identityToken)
-        => await userService.ResetEmailAsync(identityToken);
+        => await userService.ResetEmailAsync(identityToken).ConfigureAwait(false);
 
     /// <summary>
     /// Updates the user.
@@ -293,7 +293,7 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.NotFound)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Update([FromBody, Required] UserUpdateModel model)
-        => await userService.UpdateAsync(User.GetGuidClaim(_idClaimType), model);
+        => await userService.UpdateAsync(User.GetGuidClaim(_idClaimType), model).ConfigureAwait(false);
 
     /// <summary>
     /// Deletes the user.
@@ -307,6 +307,6 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Delete()
-        => await userService.DeleteAsync(User.GetGuidClaim(_idClaimType));
+        => await userService.DeleteAsync(User.GetGuidClaim(_idClaimType)).ConfigureAwait(false);
     #endregion
 }

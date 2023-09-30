@@ -71,11 +71,13 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
 
         try
         {
-            await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser);
+            await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser)
+                .ConfigureAwait(false);
         }
         catch (Exception e)
         {
-            await WriteExceptionResultAsync(response, e);
+            await WriteExceptionResultAsync(response, e)
+                .ConfigureAwait(false);
         }
     }
 
@@ -86,11 +88,13 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
 
         try
         {
-            await WriteErrorResultAsync(response, Forbidden, AccessForbidden);
+            await WriteErrorResultAsync(response, Forbidden, AccessForbidden)
+                .ConfigureAwait(false);
         }
         catch (Exception e)
         {
-            await WriteExceptionResultAsync(response, e);
+            await WriteExceptionResultAsync(response, e)
+                .ConfigureAwait(false);
         }
     }
 
@@ -108,13 +112,16 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
             {
                 var error = InvalidToken;
 
-                await WriteErrorResultAsync(response, Unauthorized, error);
+                await WriteErrorResultAsync(response, Unauthorized, error)
+                    .ConfigureAwait(false);
 
                 failureDelegate(error.GetFormattedErrorDescription());
                 return;
             }
 
-            var refreshToken = await userRefreshTokensRepository.GetByIdAsync(refreshTokenId);
+            var refreshToken = await userRefreshTokensRepository
+                .GetByIdAsync(refreshTokenId)
+                .ConfigureAwait(false);
 
             var tokenIsOutdated = refreshToken is null
                 || refreshToken.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime);
@@ -124,7 +131,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 var error = OutdatedToken;
                 var errorDescription = error.GetFormattedErrorDescription();
 
-                await WriteErrorResultAsync(response, Unauthorized, error);
+                await WriteErrorResultAsync(response, Unauthorized, error)
+                    .ConfigureAwait(false);
 
                 failureDelegate(errorDescription);
                 return;
@@ -135,26 +143,33 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 var error = UnauthorizedUser;
                 var errorDescription = error.GetFormattedErrorDescription();
 
-                await WriteErrorResultAsync(response, Unauthorized, error);
+                await WriteErrorResultAsync(response, Unauthorized, error)
+                    .ConfigureAwait(false);
 
                 failureDelegate(errorDescription);
                 return;
             }
 
-            var user = await userManager.GetUserAsync(principal);
+            var user = await userManager
+                .GetUserAsync(principal)
+                .ConfigureAwait(false);
 
             if (user is null)
             {
                 var error = TokenOwnerNotExists;
                 var errorDescription = error.GetFormattedErrorDescription();
 
-                await WriteErrorResultAsync(response, Unauthorized, error);
+                await WriteErrorResultAsync(response, Unauthorized, error)
+                    .ConfigureAwait(false);
 
                 failureDelegate(errorDescription);
                 return;
             }
 
-            var roles = await userManager.GetRolesAsync(user);
+            var roles = await userManager
+                .GetRolesAsync(user)
+                .ConfigureAwait(false);
+
             var rolesAreMatching = PrincipalRolesAreMatching(principal, roles);
 
             if (!rolesAreMatching)
@@ -162,7 +177,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 var error = OutdatedToken;
                 var errorDescription = error.GetFormattedErrorDescription();
 
-                await WriteErrorResultAsync(response, Unauthorized, error);
+                await WriteErrorResultAsync(response, Unauthorized, error)
+                    .ConfigureAwait(false);
 
                 failureDelegate(errorDescription);
                 return;
@@ -170,7 +186,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
         }
         catch (Exception e)
         {
-            await WriteExceptionResultAsync(response, e);
+            await WriteExceptionResultAsync(response, e)
+                .ConfigureAwait(false);
         }
     }
 
@@ -190,21 +207,24 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
 
             if (!TryGetAccessToken(response, out var token))
             {
-                await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser);
+                await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser)
+                    .ConfigureAwait(false);
 
                 handleResponseDelegate();
             }
 
             if (!jsonWebTokenService.ValidateFormat(token))
             {
-                await WriteErrorResultAsync(response, Unauthorized, InvalidToken);
+                await WriteErrorResultAsync(response, Unauthorized, InvalidToken)
+                    .ConfigureAwait(false);
 
                 handleResponseDelegate();
             }
         }
         catch (Exception e)
         {
-            await WriteExceptionResultAsync(response, e);
+            await WriteExceptionResultAsync(response, e)
+                .ConfigureAwait(false);
         }
     }
     #endregion
@@ -236,9 +256,11 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
         var result = new Result();
         result.AddError(statusCode, errorCode, args);
 
-        await result.WriteResponseContentAsync(response, _jsonSerializerOptions);
+        await result.WriteResponseContentAsync(response, _jsonSerializerOptions)
+            .ConfigureAwait(false);
 
-        await response.CompleteAsync();
+        await response.CompleteAsync()
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -261,9 +283,11 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
         var result = new Result();
         result.AddException(exception);
 
-        await result.WriteResponseContentAsync(response, _jsonSerializerOptions);
+        await result.WriteResponseContentAsync(response, _jsonSerializerOptions)
+            .ConfigureAwait(false);
 
-        await response.CompleteAsync();
+        await response.CompleteAsync()
+            .ConfigureAwait(false);
     }
 
     /// <summary>
