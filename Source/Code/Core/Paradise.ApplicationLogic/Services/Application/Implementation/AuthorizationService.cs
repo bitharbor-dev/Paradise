@@ -67,6 +67,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// <inheritdoc/>
     public async Task OnAuthenticationFailedAsync(HttpResponse response)
     {
+        ArgumentNullException.ThrowIfNull(response);
+
         try
         {
             await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser);
@@ -80,6 +82,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// <inheritdoc/>
     public async Task OnForbiddenAsync(HttpResponse response)
     {
+        ArgumentNullException.ThrowIfNull(response);
+
         try
         {
             await WriteErrorResultAsync(response, Forbidden, AccessForbidden);
@@ -94,6 +98,10 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     public async Task OnTokenValidatedAsync(HttpResponse response, ClaimsPrincipal? principal,
                                             SecurityToken securityToken, Action<string> failureDelegate)
     {
+        ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(securityToken);
+        ArgumentNullException.ThrowIfNull(failureDelegate);
+
         try
         {
             if (!TryGetRefreshTokenId(securityToken, out var refreshTokenId))
@@ -169,6 +177,9 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// <inheritdoc/>
     public async Task OnChallengeAsync(HttpResponse response, Action handleResponseDelegate)
     {
+        ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(handleResponseDelegate);
+
         try
         {
             if (response.HasStarted)

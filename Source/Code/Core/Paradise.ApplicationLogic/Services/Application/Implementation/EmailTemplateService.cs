@@ -45,6 +45,8 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result<EmailTemplateModel>> CreateAsync(EmailTemplateCreationModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         model.Subject.ThrowIfEmptyOrWhiteSpace(BadRequest, MessageTemplateEmptyText);
         model.TemplateName.ThrowIfEmptyOrWhiteSpace(BadRequest, MessageTemplateMissingName);
         model.TemplateText.ThrowIfEmptyOrWhiteSpace(BadRequest, MessageTemplateEmptyText);
@@ -66,6 +68,8 @@ public sealed class EmailTemplateService(IEmailTemplatesRepository emailTemplate
     /// <inheritdoc/>
     public async Task<Result<EmailTemplateModel>> UpdateAsync(Guid emailTemplateId, EmailTemplateUpdateModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         var emailTemplate = await emailTemplatesRepository.GetByIdAsync(emailTemplateId, cancellationToken);
 
         emailTemplate.ThrowIfNull(NotFound, MessageTemplateIdNotFound, emailTemplateId);

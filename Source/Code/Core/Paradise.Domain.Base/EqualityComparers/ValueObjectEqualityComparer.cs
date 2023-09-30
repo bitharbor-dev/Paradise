@@ -34,6 +34,8 @@ public sealed class ValueObjectEqualityComparer<TValueObject> : IEqualityCompare
     /// <inheritdoc/>
     public int GetHashCode([DisallowNull] TValueObject obj)
     {
+        ArgumentNullException.ThrowIfNull(obj);
+
         var hash = new HashCode();
         hash.Add(obj.GetType());
 

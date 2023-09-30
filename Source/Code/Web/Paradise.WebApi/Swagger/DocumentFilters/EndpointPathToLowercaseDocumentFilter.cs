@@ -20,6 +20,8 @@ public sealed class EndpointPathToLowercaseDocumentFilter : IDocumentFilter
     /// <inheritdoc/>
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
+        ArgumentNullException.ThrowIfNull(swaggerDoc);
+
         var paths = new OpenApiPaths();
 
         swaggerDoc

@@ -94,6 +94,8 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
     /// </exception>
     public string GetFormattedSubject(IList<object?> parameters)
     {
+        ArgumentNullException.ThrowIfNull(parameters);
+
         if (SubjectPlaceholderName is null)
         {
             if (SubjectPlaceholdersNumber is not 0)

@@ -33,6 +33,8 @@ public sealed class AzureSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpCl
     /// <inheritdoc/>
     public Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         if (Options.StoreEmailsInsteadOfSending)
         {
             var localClient = new LocalSmtpClient(smtpOptions);

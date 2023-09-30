@@ -27,6 +27,8 @@ public static class ILoggerExtensions
     /// </param>
     public static void LogResultErrors(this ILogger logger, Result result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         var nonCriticalErrors = result.Errors.Where(error => !error.IsCritical);
 
         if (nonCriticalErrors.Any())
@@ -49,6 +51,8 @@ public static class ILoggerExtensions
     /// </param>
     public static void LogResultCriticalErrors(this ILogger logger, Result result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         var criticalErrors = result.Errors.Where(error => error.IsCritical);
 
         if (criticalErrors.Any())
@@ -159,6 +163,8 @@ public static class ILoggerExtensions
     /// </param>
     public static void LogDatabaseEntrySeedFailure(this ILogger logger, string itemName, Result result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         var errorMessage = string.Join(NewLine, result.Errors);
 
         WarningDatabaseEntrySeedFailure(logger, itemName, NewLine, errorMessage, null);
@@ -280,6 +286,8 @@ public static class ILoggerExtensions
     /// </param>
     public static void LogResultException(this ILogger logger, ResultException resultException)
     {
+        ArgumentNullException.ThrowIfNull(resultException);
+
         var result = resultException.GetResult();
 
         logger.LogResultErrors(result);
@@ -301,6 +309,8 @@ public static class ILoggerExtensions
     /// </param>
     public static void LogUnsuccessfulUserDeletionAfterFailedInvitation(this ILogger logger, string email, IdentityResult identityResult)
     {
+        ArgumentNullException.ThrowIfNull(identityResult);
+
         var errors = string.Join(NewLine, identityResult.Errors.Select(error => error.Description));
 
         CriticalUnsuccessfulUserDeletionAfterFailedInvitation(logger, email, NewLine, errors, null);

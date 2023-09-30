@@ -44,6 +44,8 @@ public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IReposi
     /// <inheritdoc/>
     public void ForEach(Action<TEntity> action)
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         foreach (var entity in Source.Set<TEntity>())
             action(entity);
     }
@@ -51,6 +53,8 @@ public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IReposi
     /// <inheritdoc/>
     public void ForEach(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action)
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         foreach (var entity in Source.Set<TEntity>().Where(predicate))
             action(entity);
     }

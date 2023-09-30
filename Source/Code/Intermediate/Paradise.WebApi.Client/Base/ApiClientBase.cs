@@ -49,6 +49,9 @@ public abstract class ApiClientBase : IDisposable
                             HttpClient httpClient,
                             string schemeName)
     {
+        ArgumentNullException.ThrowIfNull(applicationOptions);
+        ArgumentNullException.ThrowIfNull(jsonSerializerOptions);
+
         _apiUrl = applicationOptions.CurrentValue.ApiUrl;
 
         _httpClient = httpClient;

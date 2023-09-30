@@ -66,6 +66,8 @@ public sealed class UserManager(IUserStore<User> store,
     /// <inheritdoc/>
     public override async Task<IdentityResult> CreateAsync(User user)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         var creationResult = await base.CreateAsync(user);
         if (!creationResult.Succeeded)
             return creationResult;

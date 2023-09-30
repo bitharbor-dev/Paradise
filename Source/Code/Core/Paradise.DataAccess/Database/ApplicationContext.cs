@@ -109,6 +109,8 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDat
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
         ApplicationContextConfiguration.OnModelCreating(modelBuilder);
     }

@@ -47,7 +47,8 @@ public sealed class EmailModel : BaseEmailModel
     /// <param name="baseModel">
     /// Basic email information.
     /// </param>
-    public EmailModel(string subject, string body, string from, BaseEmailModel baseModel) : base(baseModel.To)
+    public EmailModel(string subject, string body, string from, BaseEmailModel baseModel)
+        : base(baseModel?.To ?? throw new ArgumentNullException(nameof(baseModel)))
     {
         Subject = subject;
         Body = body;

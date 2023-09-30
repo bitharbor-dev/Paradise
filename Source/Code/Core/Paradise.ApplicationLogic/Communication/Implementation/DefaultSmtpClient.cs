@@ -32,6 +32,8 @@ public sealed class DefaultSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtp
     /// <inheritdoc/>
     public Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         if (Options.StoreEmailsInsteadOfSending)
         {
             var localClient = new LocalSmtpClient(smtpOptions);

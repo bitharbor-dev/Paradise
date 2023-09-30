@@ -47,6 +47,10 @@ public static class ClaimsPrincipalExtensions
     /// The list of claims with the given <paramref name="type"/>.
     /// </returns>
     public static IEnumerable<string> FindValues(this ClaimsPrincipal principal, string type)
-        => principal.FindAll(type).Select(claim => claim.Value);
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+
+        return principal.FindAll(type).Select(claim => claim.Value);
+    }
     #endregion
 }

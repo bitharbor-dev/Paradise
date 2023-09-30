@@ -73,6 +73,8 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// <inheritdoc/>
     public async Task<ushort> SeedRolesAsync(IEnumerable<SeedRoleModel> seedRoles, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(seedRoles);
+
         ushort addedItemsNumber = 0;
 
         foreach (var model in seedRoles)
@@ -99,6 +101,8 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// <inheritdoc/>
     public async Task<ushort> SeedUsersAsync(IEnumerable<SeedUserModel> seedUsers, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(seedUsers);
+
         ushort addedItemsNumber = 0;
 
         foreach (var model in seedUsers)
@@ -125,6 +129,8 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// <inheritdoc/>
     public async Task<ushort> SeedEmailTemplatesAsync(IEnumerable<SeedEmailTemplateModel> seedEmailTemplates, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(seedEmailTemplates);
+
         ushort addedItemsNumber = 0;
 
         foreach (var model in seedEmailTemplates)

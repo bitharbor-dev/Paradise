@@ -87,6 +87,8 @@ public abstract class MessageTemplate : ValueObject
     /// </exception>
     public string GetFormattedText(IList<object?> parameters)
     {
+        ArgumentNullException.ThrowIfNull(parameters);
+
         if (PlaceholderName is null)
         {
             if (PlaceholdersNumber is not 0)

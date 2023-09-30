@@ -52,6 +52,8 @@ public static class StringExtensions
     /// </returns>
     public static bool IsValidUserName(this string userName, IdentityOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         if (userName.IsNullOrWhiteSpace())
             return false;
 

@@ -162,6 +162,8 @@ public class Result : IActionResult
     /// </param>
     public void Merge(Result result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         _errors.AddRange(result.Errors);
 
         if (result.StatusCode.HasValue)
@@ -184,6 +186,8 @@ public class Result : IActionResult
     /// </param>
     public void AddIdentityResult(IdentityResult identityResult, HttpStatusCode? statusCode = null)
     {
+        ArgumentNullException.ThrowIfNull(identityResult);
+
         StatusCode = statusCode;
 
         foreach (var error in identityResult.Errors)
@@ -208,6 +212,8 @@ public class Result : IActionResult
     /// </param>
     public void AddException(Exception exception, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         Exception = exception;
         StatusCode = statusCode;
 
@@ -224,6 +230,8 @@ public class Result : IActionResult
     /// <inheritdoc/>
     public Task ExecuteResultAsync(ActionContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var serviceProvider = context.HttpContext.RequestServices;
 
         var jsonSerializerOptions = serviceProvider.GetService<IOptions<JsonSerializerOptions>>()?.Value;
@@ -248,6 +256,8 @@ public class Result : IActionResult
     public Task WriteResponseContentAsync(HttpResponse response, JsonSerializerOptions? options = null,
                                           CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(response);
+
         if (response.HasStarted)
             return Task.CompletedTask;
 

@@ -82,6 +82,8 @@ public interface IJsonWebTokenService
     /// </param>
     public static void RemoveTokenPrefixIfExists(ref string token)
     {
+        ArgumentNullException.ThrowIfNull(token);
+
         if (token.StartsWith(JwtBearerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
             token = token[(JwtBearerDefaults.AuthenticationScheme.Length + 1)..];
     }

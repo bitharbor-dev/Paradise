@@ -82,6 +82,8 @@ public sealed class CommunicationServiceTests
     [Theory, MemberData(nameof(SendEmailAsync_MemberData))]
     public async void SendEmailAsync(BaseEmailModel baseEmailModel)
     {
+        ArgumentNullException.ThrowIfNull(baseEmailModel);
+
         // Arrange
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;

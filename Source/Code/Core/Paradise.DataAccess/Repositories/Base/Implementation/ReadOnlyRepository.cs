@@ -116,6 +116,8 @@ public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// <inheritdoc/>
     public PagedListQueryResult<TEntity> GetPagedList(PagedListQuery<TEntity> query)
     {
+        ArgumentNullException.ThrowIfNull(query);
+
         var set = Source.Set<TEntity>();
 
         query.Apply(ref set);
@@ -132,6 +134,8 @@ public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// <inheritdoc/>
     public async Task<PagedListQueryResult<TEntity>> GetPagedListAsync(PagedListQuery<TEntity> query, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(query);
+
         var set = Source.Set<TEntity>();
 
         query.Apply(ref set);

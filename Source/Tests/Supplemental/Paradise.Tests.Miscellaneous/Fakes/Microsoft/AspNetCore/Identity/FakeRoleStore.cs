@@ -38,6 +38,8 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
     /// <inheritdoc/>
     public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(role);
+
         role.ConcurrencyStamp = Guid.NewGuid().ToString();
         await _domainDataSource.SaveChangesAsync(cancellationToken);
 
@@ -55,15 +57,25 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
 
     /// <inheritdoc/>
     public Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken)
-        => Task.FromResult(role.Id.ToString());
+    {
+        ArgumentNullException.ThrowIfNull(role);
+
+        return Task.FromResult(role.Id.ToString());
+    }
 
     /// <inheritdoc/>
     public Task<string?> GetRoleNameAsync(Role role, CancellationToken cancellationToken)
-        => Task.FromResult((string?)role.Name);
+    {
+        ArgumentNullException.ThrowIfNull(role);
+
+        return Task.FromResult((string?)role.Name);
+    }
 
     /// <inheritdoc/>
     public Task SetRoleNameAsync(Role role, string? roleName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(role);
+
         role.Name = roleName;
 
         return Task.CompletedTask;
@@ -71,11 +83,17 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
 
     /// <inheritdoc/>
     public Task<string?> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)
-        => Task.FromResult(role.NormalizedName);
+    {
+        ArgumentNullException.ThrowIfNull(role);
+
+        return Task.FromResult(role.NormalizedName);
+    }
 
     /// <inheritdoc/>
     public Task SetNormalizedRoleNameAsync(Role role, string? normalizedName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(role);
+
         role.NormalizedName = normalizedName;
 
         return Task.CompletedTask;

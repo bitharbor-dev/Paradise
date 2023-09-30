@@ -67,6 +67,8 @@ public sealed class RoleService(UserManager userManager,
     /// <inheritdoc/>
     public async Task<Result<RoleModel>> CreateAsync(RoleCreationModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         model.Name.ThrowIfEmptyOrWhiteSpace(UnprocessableEntity, InvalidRoleName, model.Name);
 
         var role = await FindRoleByNameAsync(model.Name, cancellationToken);
@@ -85,6 +87,8 @@ public sealed class RoleService(UserManager userManager,
     /// <inheritdoc/>
     public async Task<Result<RoleModel>> UpdateAsync(Guid roleId, RoleUpdateModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         var role = await FindRoleByIdAsync(roleId, cancellationToken);
 
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);

@@ -22,6 +22,8 @@ public static class JwtEvents
     /// </param>
     public static Task OnAuthenticationFailed(AuthenticationFailedContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
         return authorizationService.OnAuthenticationFailedAsync(context.Response);
@@ -35,6 +37,8 @@ public static class JwtEvents
     /// </param>
     public static Task OnForbidden(ForbiddenContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
         return authorizationService.OnForbiddenAsync(context.Response);
@@ -49,6 +53,8 @@ public static class JwtEvents
     /// </param>
     public static Task OnTokenValidated(TokenValidatedContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
         return authorizationService.OnTokenValidatedAsync(context.Response,
@@ -65,6 +71,8 @@ public static class JwtEvents
     /// </param>
     public static Task OnChallenge(JwtBearerChallengeContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
         return authorizationService.OnChallengeAsync(context.Response,

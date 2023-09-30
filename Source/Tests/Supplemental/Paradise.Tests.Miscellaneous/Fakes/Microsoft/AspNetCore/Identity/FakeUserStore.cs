@@ -39,15 +39,24 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     #region Public methods
     /// <inheritdoc/>
     public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.Id.ToString());
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.Id.ToString());
+    }
 
     /// <inheritdoc/>
     public Task<string?> GetUserNameAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult((string?)user.UserName);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult((string?)user.UserName);
+    }
 
     /// <inheritdoc/>
     public Task SetUserNameAsync(User user, string? userName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrEmpty(userName);
 
         user.UserName = userName;
@@ -57,11 +66,16 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<string?> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.NormalizedUserName);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.NormalizedUserName);
+    }
 
     /// <inheritdoc/>
     public Task SetNormalizedUserNameAsync(User user, string? normalizedName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrEmpty(normalizedName);
 
         user.NormalizedUserName = normalizedName;
@@ -81,6 +95,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.ConcurrencyStamp = Guid.NewGuid().ToString();
         await _domainDataSource.SaveChangesAsync(cancellationToken);
 
@@ -110,6 +126,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         var result = _userClaims.TryGetValue(user.Id, out var claims)
             ? claims.ToList() as IList<Claim>
             : Array.Empty<Claim>();
@@ -120,6 +138,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         if (_userClaims.TryGetValue(user.Id, out var storedClaims))
             storedClaims.AddRange(claims);
         else
@@ -131,6 +151,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         if (_userClaims.TryGetValue(user.Id, out var storedClaims))
         {
             var oldClaim = storedClaims.Find(c => c.Type == claim.Type);
@@ -151,6 +173,9 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(claims);
+
         if (_userClaims.TryGetValue(user.Id, out var storedClaims))
         {
             foreach (var claim in claims)
@@ -183,6 +208,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task SetEmailAsync(User user, string? email, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrEmpty(email);
 
         user.Email = email;
@@ -192,15 +218,25 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<string?> GetEmailAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult((string?)user.Email);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult((string?)user.Email);
+    }
 
     /// <inheritdoc/>
     public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.EmailConfirmed);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.EmailConfirmed);
+    }
 
     /// <inheritdoc/>
     public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.EmailConfirmed = confirmed;
 
         return Task.CompletedTask;
@@ -212,11 +248,16 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<string?> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.NormalizedEmail);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.NormalizedEmail);
+    }
 
     /// <inheritdoc/>
     public Task SetNormalizedEmailAsync(User user, string? normalizedEmail, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrEmpty(normalizedEmail);
 
         user.NormalizedEmail = normalizedEmail;
@@ -226,11 +267,17 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.LockoutEnd);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.LockoutEnd);
+    }
 
     /// <inheritdoc/>
     public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.LockoutEnd = lockoutEnd;
 
         return Task.CompletedTask;
@@ -239,6 +286,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.AccessFailedCount++;
 
         return Task.FromResult(user.AccessFailedCount);
@@ -247,6 +296,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.AccessFailedCount = default;
 
         return Task.CompletedTask;
@@ -254,15 +305,25 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.AccessFailedCount);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.AccessFailedCount);
+    }
 
     /// <inheritdoc/>
     public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.LockoutEnabled);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.LockoutEnabled);
+    }
 
     /// <inheritdoc/>
     public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.LockoutEnabled = enabled;
 
         return Task.CompletedTask;
@@ -271,6 +332,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task SetPasswordHashAsync(User user, string? passwordHash, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         user.PasswordHash = passwordHash;
 
         return Task.CompletedTask;
@@ -278,15 +341,25 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<string?> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(user.PasswordHash);
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(user.PasswordHash);
+    }
 
     /// <inheritdoc/>
     public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
+    }
 
     /// <inheritdoc/>
     public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         if (_userRoles.TryGetValue(user.Id, out var storedRoles))
             storedRoles.Add(roleName);
         else
@@ -298,6 +371,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         if (_userRoles.TryGetValue(user.Id, out var storedRoles) && storedRoles.Contains(roleName))
             storedRoles.Remove(roleName);
 
@@ -307,6 +382,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         var result = _userRoles.TryGetValue(user.Id, out var roles)
             ? roles as IList<string>
             : Array.Empty<string>().ToList();
@@ -316,7 +393,11 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
-        => Task.FromResult(_userRoles[user.Id].Contains(roleName));
+    {
+        ArgumentNullException.ThrowIfNull(user);
+
+        return Task.FromResult(_userRoles[user.Id].Contains(roleName));
+    }
 
     /// <inheritdoc/>
     public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)

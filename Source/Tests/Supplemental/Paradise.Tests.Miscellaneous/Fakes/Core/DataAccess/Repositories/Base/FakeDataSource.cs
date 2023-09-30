@@ -33,6 +33,8 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
     /// <inheritdoc/>
     public void AddRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IDatabaseRecord
     {
+        ArgumentNullException.ThrowIfNull(entities);
+
         foreach (var entity in entities)
             _cache.Add(entity);
     }
@@ -44,6 +46,8 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
     /// <inheritdoc/>
     public void RemoveRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IDatabaseRecord
     {
+        ArgumentNullException.ThrowIfNull(entities);
+
         foreach (var entity in entities)
             _cache.Remove(entity);
     }

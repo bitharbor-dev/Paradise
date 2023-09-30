@@ -32,7 +32,7 @@ public static class ErrorCodeExtensions
 
         return errorDisplayValue.IsNullOrWhiteSpace()
             ? errorCode.ToString()
-            : args.Length is not 0
+            : args is not null && args.Length is not 0
             ? string.Format(CultureInfo.CurrentCulture, errorDisplayValue, args)
             : errorDisplayValue;
     }

@@ -108,6 +108,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> RegisterAsync(UserRegistrationModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         await ValidateRegistrationModelAsync(model);
 
         var user = model.ToEntity();
@@ -166,6 +168,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         model.Password.ThrowIfEmptyOrWhiteSpace(BadRequest, PasswordMissing);
 
         var user = await FindUserByLoginModelAsync(model);
@@ -211,6 +215,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserAuthorizationTokenModel>> ConfirmLoginAsync(UserTwoFactorAuthenticationModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         dataProtectionService
             .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
@@ -291,6 +297,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> CreatePasswordResetRequestAsync(UserResetPasswordRequestModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         model.Email.ThrowIfEmptyOrWhiteSpace(BadRequest, InvalidEmail, model.Email);
 
         model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
@@ -315,6 +323,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> ResetPasswordAsync(UserResetPasswordModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         dataProtectionService
             .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
@@ -359,6 +369,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result> CreateEmailResetRequestAsync(Guid userId, UserResetEmailRequestModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         model.Email.ThrowIfEmptyOrWhiteSpace(BadRequest, InvalidEmail, model.Email);
 
         model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
@@ -439,6 +451,8 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <inheritdoc/>
     public async Task<Result<UserModel>> UpdateAsync(Guid userId, UserUpdateModel model, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         var user = await GetUserByIdAsync(userId, cancellationToken);
 
         if (model.IsPendingDeletion.HasValue)
