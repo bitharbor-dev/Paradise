@@ -405,7 +405,9 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     {
         ArgumentNullException.ThrowIfNull(user);
 
-        return Task.FromResult(_userRoles[user.Id].Contains(roleName));
+        var result = _userRoles.ContainsKey(user.Id) && _userRoles[user.Id].Contains(roleName);
+
+        return Task.FromResult(result);
     }
 
     /// <inheritdoc/>

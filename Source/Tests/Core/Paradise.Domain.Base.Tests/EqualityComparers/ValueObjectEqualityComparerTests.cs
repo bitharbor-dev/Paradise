@@ -253,7 +253,7 @@ public sealed class ValueObjectEqualityComparerTests
         // Act
 
         // Assert
-        Assert.Throws<NullReferenceException>(()
+        Assert.Throws<ArgumentNullException>(()
             => Comparer.GetHashCode(firstValueObject!));
     }
     #endregion
