@@ -51,6 +51,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         ArgumentException.ThrowIfNullOrEmpty(userName);
 
         user.UserName = userName;
+
         return Task.CompletedTask;
     }
 
@@ -64,6 +65,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         ArgumentException.ThrowIfNullOrEmpty(normalizedName);
 
         user.NormalizedUserName = normalizedName;
+
         return Task.CompletedTask;
     }
 
@@ -107,7 +109,13 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(_userClaims.TryGetValue(user.Id, out var claims) ? claims.ToList() as IList<Claim> : Array.Empty<Claim>());
+    {
+        var result = _userClaims.TryGetValue(user.Id, out var claims)
+            ? claims.ToList() as IList<Claim>
+            : Array.Empty<Claim>();
+
+        return Task.FromResult(result);
+    }
 
     /// <inheritdoc/>
     public Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
@@ -178,6 +186,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         ArgumentException.ThrowIfNullOrEmpty(email);
 
         user.Email = email;
+
         return Task.CompletedTask;
     }
 
@@ -193,6 +202,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
     {
         user.EmailConfirmed = confirmed;
+
         return Task.CompletedTask;
     }
 
@@ -210,6 +220,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         ArgumentException.ThrowIfNullOrEmpty(normalizedEmail);
 
         user.NormalizedEmail = normalizedEmail;
+
         return Task.CompletedTask;
     }
 
@@ -221,6 +232,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
     {
         user.LockoutEnd = lockoutEnd;
+
         return Task.CompletedTask;
     }
 
@@ -228,6 +240,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
     {
         user.AccessFailedCount++;
+
         return Task.FromResult(user.AccessFailedCount);
     }
 
@@ -235,6 +248,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
     {
         user.AccessFailedCount = default;
+
         return Task.CompletedTask;
     }
 
@@ -250,6 +264,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
     {
         user.LockoutEnabled = enabled;
+
         return Task.CompletedTask;
     }
 
@@ -257,6 +272,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     public Task SetPasswordHashAsync(User user, string? passwordHash, CancellationToken cancellationToken)
     {
         user.PasswordHash = passwordHash;
+
         return Task.CompletedTask;
     }
 
@@ -290,11 +306,17 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
-        => Task.FromResult(_userRoles.TryGetValue(user.Id, out var roles) ? roles as IList<string> : Array.Empty<string>().ToList());
+    {
+        var result = _userRoles.TryGetValue(user.Id, out var roles)
+            ? roles as IList<string>
+            : Array.Empty<string>().ToList();
+
+        return Task.FromResult(result);
+    }
 
     /// <inheritdoc/>
     public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
-        => Task.FromResult(_userRoles.ContainsKey(user.Id) && _userRoles[user.Id].Contains(roleName));
+        => Task.FromResult(_userRoles[user.Id].Contains(roleName));
 
     /// <inheritdoc/>
     public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)

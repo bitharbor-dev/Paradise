@@ -2747,10 +2747,9 @@ public sealed class UserServiceTests
     /// </returns>
     private T GetEmailBodyParameterOfType<T>(int index = 0)
     {
-        var firstEmail = SentEmailsCache.FirstOrDefault();
+        var firstEmail = SentEmailsCache.First();
 
-        return firstEmail is not null
-            && firstEmail.BodyArgs is not null
+        return firstEmail.BodyArgs is not null
             && firstEmail.BodyArgs.ElementAt(index) is T castedParameter
             ? castedParameter
             : throw new NullReferenceException();

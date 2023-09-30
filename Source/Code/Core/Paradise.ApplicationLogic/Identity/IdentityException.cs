@@ -30,9 +30,12 @@ public sealed class IdentityException(IdentityResult result) : Exception(string.
     /// </returns>
     private static string ErrorMessageSelector(IdentityError error)
     {
-        var formatString = ModelsLocalizationMessages.ErrorToStringFormat;
+        var messageFormat = ModelsLocalizationMessages.ErrorToStringFormat;
 
-        return string.Format(CultureInfo.CurrentCulture, formatString, error.Code, error.Description);
+        return string.Format(CultureInfo.CurrentCulture,
+                             messageFormat,
+                             error.Code,
+                             error.Description);
     }
     #endregion
 }

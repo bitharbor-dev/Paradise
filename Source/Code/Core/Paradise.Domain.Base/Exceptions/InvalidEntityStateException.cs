@@ -61,6 +61,25 @@ public sealed class InvalidEntityStateException : Exception
     #endregion
 
     #region Private methods
+    /// <summary>
+    /// Creates exception message based on the input arguments.
+    /// </summary>
+    /// <param name="entityType">
+    /// Entity type.
+    /// </param>
+    /// <param name="value">
+    /// Entity's property value.
+    /// </param>
+    /// <param name="additionalInformation">
+    /// Optional additional information.
+    /// </param>
+    /// <param name="propertyName">
+    /// Entity's property name.
+    /// </param>
+    /// <returns>
+    /// A <see cref="string"/> value containing exception
+    /// message based on the input arguments.
+    /// </returns>
     private static string CreateExceptionMessage(Type entityType, object? value, string? additionalInformation, string? propertyName)
     {
         var message = string.Format(CultureInfo.CurrentCulture, InvalidEntityState, entityType.Name, propertyName, value);

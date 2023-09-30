@@ -15,12 +15,12 @@ internal static class DomainContextConfiguration
     /// <summary>
     /// Configures <see cref="DomainContext"/> entities.
     /// </summary>
-    /// <param name="builder">
+    /// <param name="modelBuilder">
     /// The builder being used to construct the model for this context.
     /// </param>
-    public static void OnModelCreating(ModelBuilder builder)
+    public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.Entity<UserRefreshToken>(entity =>
+        modelBuilder.Entity<UserRefreshToken>(entity =>
         {
             entity.ToTable(UserRefreshTokens).HasKey(nameof(UserRefreshToken.Id));
 
@@ -29,7 +29,7 @@ internal static class DomainContextConfiguration
                   .HasForeignKey(userRefreshToken => userRefreshToken.OwnerId);
         });
 
-        builder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
+        modelBuilder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
     }
     #endregion
 }

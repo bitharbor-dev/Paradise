@@ -196,7 +196,9 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IEmailTemplateService, EmailTemplateService>();
         services.AddScoped<IJsonWebTokenService, JsonWebTokenService>();
-        services.AddDataProtection().PersistKeysToDbContext<ApplicationContext>();
+
+        services.AddDataProtection()
+                .PersistKeysToDbContext<ApplicationContext>();
 
         services.AddScoped<IDataProtectionService, DataProtectionService>();
 
@@ -224,9 +226,13 @@ public sealed class ServiceCollectionBuilder(IServiceCollection services, IConfi
     private void AddOptionsInternal<TOptions>(Action<TOptions>? postConfigure = null, bool validateOnStartup = false, bool validateDataAnnotations = false)
         where TOptions : class
     {
+        static void WithDefaultBinderOptions(BinderOptions options)
+            => options.ErrorOnUnknownConfiguration = true;
+
         var configurationSection = _configuration.GetRequiredSection(typeof(TOptions).Name);
 
-        var optionsBuilder = services.AddOptions<TOptions>().Bind(configurationSection);
+        var optionsBuilder = services.AddOptions<TOptions>()
+            .Bind(configurationSection, WithDefaultBinderOptions);
 
         if (validateDataAnnotations)
             optionsBuilder.ValidateDataAnnotations();

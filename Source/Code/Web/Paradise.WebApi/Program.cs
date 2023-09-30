@@ -11,7 +11,7 @@ static WebApplication CreateApp(string[] args, out IConfiguration configuration)
     var builder = WebApplication.CreateBuilder(args);
     builder.Configuration.AddEnvironmentVariables();
 
-    var servicesBuilder = new ServiceCollectionBuilder(builder.Services, JsonConfigurationOrigin.DefaultInstance);
+    var servicesBuilder = new ServiceCollectionBuilder(builder.Services, JsonConfigurationOrigin.Default);
     servicesBuilder.AddBearerAuth();
 
     servicesBuilder.ConfigureRequiredServices();

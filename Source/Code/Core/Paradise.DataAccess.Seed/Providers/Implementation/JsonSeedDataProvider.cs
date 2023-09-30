@@ -69,11 +69,16 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     /// <param name="seedFolder">
     /// Seed data files directory name.
     /// </param>
-    public JsonSeedDataProvider(IOptions<JsonSerializerOptions>? jsonSerializerOptions, string seedFolder = DefaultSeedFolder)
+    public JsonSeedDataProvider(IOptions<JsonSerializerOptions>? jsonSerializerOptions, string? seedFolder = DefaultSeedFolder)
     {
         var root = AppContext.BaseDirectory;
-        var applicationFilePath = Combine(root, seedFolder.Replace('\\', DirectorySeparatorChar), ApplicationDataFileName);
-        var domainFilePath = Combine(root, seedFolder.Replace('\\', DirectorySeparatorChar), DomainDataFileName);
+
+        var normalizedSeedFolderPath = seedFolder is null
+            ? string.Empty
+            : seedFolder.Replace('\\', DirectorySeparatorChar);
+
+        var applicationFilePath = Combine(root, normalizedSeedFolderPath, ApplicationDataFileName);
+        var domainFilePath = Combine(root, normalizedSeedFolderPath, DomainDataFileName);
 
         var applicationJson = ReadAllText(applicationFilePath);
         var domainJson = ReadAllText(domainFilePath);

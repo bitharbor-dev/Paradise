@@ -111,7 +111,7 @@ public abstract class MessageTemplate : ValueObject
         {
             var placeholder = string.Concat(PlaceholderName, index);
 
-            if (!TemplateText.Contains(placeholder, StringComparison.InvariantCulture))
+            if (!TemplateText.Contains(placeholder, StringComparison.OrdinalIgnoreCase))
             {
                 var message = string.Format(CultureInfo.CurrentCulture,
                                             ExceptionMessages.PlaceholderNotExists,

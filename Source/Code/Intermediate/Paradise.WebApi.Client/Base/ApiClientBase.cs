@@ -305,7 +305,10 @@ public abstract class ApiClientBase : IDisposable
                 if (parameter.Value is null)
                     continue;
 
-                route = route.Replace($"{{{parameter.Key}}}", parameter.Value.ToString(), StringComparison.Ordinal);
+                var placeholder = $"{{{parameter.Key}}}";
+                var replacement = parameter.Value.ToString();
+
+                route = route.Replace(placeholder, replacement, StringComparison.OrdinalIgnoreCase);
             }
         }
 

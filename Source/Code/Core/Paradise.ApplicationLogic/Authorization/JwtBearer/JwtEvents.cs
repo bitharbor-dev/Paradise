@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Services.Application;
 using System.Security.Claims;
@@ -20,11 +21,11 @@ public static class JwtEvents
     /// Context object that contains event data.
     /// </param>
     public static Task OnAuthenticationFailed(AuthenticationFailedContext context)
-        => context
-        .HttpContext
-        .RequestServices
-        .GetRequiredService<IAuthorizationService>()
-        .OnAuthenticationFailedAsync(context.Response);
+    {
+        var authorizationService = GetAuthorizationService(context.HttpContext);
+
+        return authorizationService.OnAuthenticationFailedAsync(context.Response);
+    }
 
     /// <summary>
     /// Invoked if Authorization fails and results in a Forbidden response.
@@ -33,11 +34,11 @@ public static class JwtEvents
     /// Context object that contains event data.
     /// </param>
     public static Task OnForbidden(ForbiddenContext context)
-        => context
-        .HttpContext
-        .RequestServices
-        .GetRequiredService<IAuthorizationService>()
-        .OnForbiddenAsync(context.Response);
+    {
+        var authorizationService = GetAuthorizationService(context.HttpContext);
+
+        return authorizationService.OnForbiddenAsync(context.Response);
+    }
 
     /// <summary>
     /// Invoked after the security token has passed validation
@@ -47,11 +48,14 @@ public static class JwtEvents
     /// Context object that contains event data.
     /// </param>
     public static Task OnTokenValidated(TokenValidatedContext context)
-        => context
-        .HttpContext
-        .RequestServices
-        .GetRequiredService<IAuthorizationService>()
-        .OnTokenValidatedAsync(context.Response, context.Principal, context.SecurityToken, context.Fail);
+    {
+        var authorizationService = GetAuthorizationService(context.HttpContext);
+
+        return authorizationService.OnTokenValidatedAsync(context.Response,
+                                                          context.Principal,
+                                                          context.SecurityToken,
+                                                          context.Fail);
+    }
 
     /// <summary>
     /// Invoked before a challenge is sent back to the caller.
@@ -60,10 +64,31 @@ public static class JwtEvents
     /// Context object that contains event data.
     /// </param>
     public static Task OnChallenge(JwtBearerChallengeContext context)
-        => context
-        .HttpContext
-        .RequestServices
-        .GetRequiredService<IAuthorizationService>()
-        .OnChallengeAsync(context.Response, context.HandleResponse);
+    {
+        var authorizationService = GetAuthorizationService(context.HttpContext);
+
+        return authorizationService.OnChallengeAsync(context.Response,
+                                                     context.HandleResponse);
+    }
+    #endregion
+
+    #region Private methods
+    /// <summary>
+    /// Gets the <see cref="IAuthorizationService"/> instance from the current
+    /// <see cref="HttpContext"/> service collection.
+    /// </summary>
+    /// <param name="httpContext">
+    /// The <see cref="HttpContext"/> to be used to
+    /// retrieve an <see cref="IAuthorizationService"/> instance.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="IAuthorizationService"/> instance.
+    /// </returns>
+    private static IAuthorizationService GetAuthorizationService(HttpContext httpContext)
+    {
+        var serviceProvider = httpContext.RequestServices;
+
+        return serviceProvider.GetRequiredService<IAuthorizationService>();
+    }
     #endregion
 }

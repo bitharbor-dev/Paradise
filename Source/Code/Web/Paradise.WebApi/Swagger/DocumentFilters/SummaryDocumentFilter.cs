@@ -48,20 +48,28 @@ internal sealed partial class SummaryDocumentFilter : IDocumentFilter
     /// </param>
     private static void TrimNamespaces(IEnumerable<OpenApiOperation> operations)
     {
+        const string Replacement = "";
+
         var namespaces = GetApplicationNamespaces();
 
         foreach (var operation in operations)
         {
-            foreach (var ns in namespaces)
+            foreach (var nameSpace in namespaces)
             {
                 if (operation.RequestBody?.Description is not null)
                 {
-                    operation.RequestBody.Description
-                        = operation.RequestBody.Description.Replace(ns, string.Empty, StringComparison.OrdinalIgnoreCase);
+                    operation.RequestBody.Description = operation
+                        .RequestBody
+                        .Description
+                        .Replace(nameSpace, Replacement, StringComparison.OrdinalIgnoreCase);
                 }
 
                 if (operation.Summary is not null)
-                    operation.Summary = operation.Summary.Replace(ns, string.Empty, StringComparison.OrdinalIgnoreCase);
+                {
+                    operation.Summary = operation
+                        .Summary
+                        .Replace(nameSpace, Replacement, StringComparison.OrdinalIgnoreCase);
+                }
             }
         }
     }
@@ -92,18 +100,20 @@ internal sealed partial class SummaryDocumentFilter : IDocumentFilter
     /// </returns>
     private static string TrimLangwordTag(string input)
     {
-        static string Replacement(Match match)
+        static string GetReplacementValue(Match match)
         {
+            const string Replacement = "";
+
             var value = match.ToString();
 
             value = value
-                .Replace(LangwordTagStart, string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace(LangwordTagEnd, string.Empty, StringComparison.OrdinalIgnoreCase);
+                .Replace(LangwordTagStart, Replacement, StringComparison.OrdinalIgnoreCase)
+                .Replace(LangwordTagEnd, Replacement, StringComparison.OrdinalIgnoreCase);
 
             return value;
         }
 
-        return GetLangwordTagRegex().Replace(input, Replacement);
+        return GetLangwordTagRegex().Replace(input, GetReplacementValue);
     }
 
     /// <summary>

@@ -28,13 +28,13 @@ internal sealed class PendingDeletionUsersResetWorker(ILogger<PendingDeletionUse
 {
     #region Public methods
     /// <inheritdoc/>
-    public override async Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
+    public override Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        await databaseService.ResetUsersPendingDeletionAsync(applicationOptions.Tokens.UserDeletionRequestLifetime, cancellationToken);
+        return databaseService.ResetUsersPendingDeletionAsync(applicationOptions.Tokens.UserDeletionRequestLifetime, cancellationToken);
     }
     #endregion
 }

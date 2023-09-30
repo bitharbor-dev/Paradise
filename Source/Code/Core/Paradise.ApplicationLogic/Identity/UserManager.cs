@@ -56,20 +56,12 @@ public sealed class UserManager(IUserStore<User> store,
                                 IServiceProvider services,
                                 ILogger<UserManager> logger)
     : UserManager<User>(store, identityOptions, passwordHasher, userValidators,
-                        passwordValidators, keyNormalizer, errors,
-#pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type
-                               // and its value is also passed to the base constructor.
-                               // The value might be captured by the base class as well.
-                               // Justification: 'services' parameter is passed to
-                               // a private readonly field, which is not accessible from here.
-                        services,
-#pragma warning restore CS9107 // Parameter is captured into the state of the enclosing type
-                               // and its value is also passed to the base constructor.
-                               // The value might be captured by the base class as well.
-                               // Justification: 'services' parameter is passed to
-                               // a private readonly field, which is not accessible from here.
-                        logger)
+                        passwordValidators, keyNormalizer, errors, services, logger)
 {
+    #region Fields
+    private readonly IServiceProvider _services = services;
+    #endregion
+
     #region Public methods
     /// <inheritdoc/>
     public override async Task<IdentityResult> CreateAsync(User user)
@@ -109,8 +101,8 @@ public sealed class UserManager(IUserStore<User> store,
 
         if (user is null && Options.Stores.ProtectPersonalData)
         {
-            var keyRing = services.GetService<ILookupProtectorKeyRing>();
-            var protector = services.GetService<ILookupProtector>();
+            var keyRing = _services.GetService<ILookupProtectorKeyRing>();
+            var protector = _services.GetService<ILookupProtector>();
 
             if (keyRing is not null && protector is not null)
             {
@@ -141,7 +133,7 @@ public sealed class UserManager(IUserStore<User> store,
     /// The <see cref="Task"/> that represents the asynchronous operation,
     /// containing the <see cref="IdentityResult"/> of the operation.
     /// </returns>
-    private async Task<IdentityResult> AddDefaultUserClaimsAsync(User user)
+    private Task<IdentityResult> AddDefaultUserClaimsAsync(User user)
     {
         var claims = new Claim[]
         {
@@ -150,7 +142,7 @@ public sealed class UserManager(IUserStore<User> store,
             new(Options.ClaimsIdentity.EmailClaimType, user.Email),
         };
 
-        return await AddClaimsAsync(user, claims);
+        return AddClaimsAsync(user, claims);
     }
     #endregion
 }

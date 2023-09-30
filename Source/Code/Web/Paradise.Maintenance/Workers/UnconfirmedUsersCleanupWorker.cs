@@ -29,13 +29,13 @@ internal sealed class UnconfirmedUsersCleanupWorker(ILogger<UnconfirmedUsersClea
 {
     #region Public methods
     /// <inheritdoc/>
-    public override async Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
+    public override Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        await databaseService.DeleteUnconfirmedUsersAsync(applicationOptions.Tokens.EmailConfirmationTokenLifetime, cancellationToken);
+        return databaseService.DeleteUnconfirmedUsersAsync(applicationOptions.Tokens.EmailConfirmationTokenLifetime, cancellationToken);
     }
     #endregion
 }

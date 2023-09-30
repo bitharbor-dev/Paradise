@@ -16,12 +16,12 @@ internal static class ApplicationContextConfiguration
     /// <summary>
     /// Configures <see cref="ApplicationContext"/> entities.
     /// </summary>
-    /// <param name="builder">
+    /// <param name="modelBuilder">
     /// The builder being used to construct the model for this context.
     /// </param>
-    public static void OnModelCreating(ModelBuilder builder)
+    public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.Entity<EmailTemplate>(entity =>
+        modelBuilder.Entity<EmailTemplate>(entity =>
         {
             entity.ToTable(EmailTemplates);
             entity.HasKey(nameof(EmailTemplate.Id));
@@ -33,7 +33,7 @@ internal static class ApplicationContextConfiguration
                   .HasConversion<CultureInfoConverter>();
         });
 
-        builder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
+        modelBuilder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
     }
     #endregion
 }

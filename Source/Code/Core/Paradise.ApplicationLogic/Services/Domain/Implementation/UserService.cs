@@ -202,7 +202,9 @@ public sealed class UserService(ILogger<UserService> logger,
         {
             // 'refreshTokenId: null' means that we are generating
             // access token which would be bound to a newly created refresh token.
-            return await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken);
+            var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken);
+
+            return accessTokenResult;
         }
     }
 
@@ -228,7 +230,11 @@ public sealed class UserService(ILogger<UserService> logger,
         var user = await userManager.FindByEmailAsync(email);
         user.ThrowIfNull(NotFound, UserEmailNotFound, email);
 
-        return await GenerateAccessTokenAsync(user, null, cancellationToken);
+        // 'refreshTokenId: null' means that we are generating
+        // access token which would be bound to a newly created refresh token.
+        var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId: null, cancellationToken);
+
+        return accessTokenResult;
     }
 
     /// <inheritdoc/>
@@ -244,8 +250,9 @@ public sealed class UserService(ILogger<UserService> logger,
         var userId = principal.GetGuidClaim(_identityOptions.ClaimsIdentity.UserIdClaimType);
 
         var user = await GetUserByIdAsync(userId, cancellationToken);
+        var accessTokenResult = await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken);
 
-        return await GenerateAccessTokenAsync(user, refreshTokenId, cancellationToken);
+        return accessTokenResult;
     }
 
     /// <inheritdoc/>
@@ -673,7 +680,10 @@ public sealed class UserService(ILogger<UserService> logger,
         // Since the scope of the current method is very concrete,
         // we can assume that the 'path' parameter has the '{identityToken}' placeholder string inside.
         // Here we are replacing it with the actual identity token.
-        path = path.Replace($"{{{IdentityTokenParameter}}}", HttpUtility.UrlEncode(identityToken), StringComparison.Ordinal);
+        var placeholder = $"{{{IdentityTokenParameter}}}";
+        var replacement = HttpUtility.UrlEncode(identityToken);
+
+        path = path.Replace(placeholder, replacement, StringComparison.OrdinalIgnoreCase);
 
         return new($"{baseUrl}{path}");
     }
@@ -764,8 +774,13 @@ public sealed class UserService(ILogger<UserService> logger,
     /// The <see cref="User"/> with the given <paramref name="id"/>.
     /// </returns>
     private async Task<User> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => (await userManager.Users.SingleOrDefaultAsync(user => user.Id == id, cancellationToken))
-        ?? throw new ResultException(NotFound, UserIdNotFound, id);
+    {
+        var user = await userManager
+            .Users
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+        return user ?? throw new ResultException(NotFound, UserIdNotFound, id);
+    }
     #endregion
 
     #region Validation methods
@@ -806,9 +821,16 @@ public sealed class UserService(ILogger<UserService> logger,
     private async Task ValidateEmailAddressAsync(string email, ResultException exception)
     {
         if (!email.IsValidEmailAddress())
+        {
             exception.AddError(BadRequest, InvalidEmail, email);
-        else if (await CheckIfEmailAddressIsInUseAsync(email))
-            exception.AddError(UnprocessableEntity, DuplicateEmail, email);
+        }
+        else
+        {
+            var emailTaken = await CheckIfEmailAddressIsInUseAsync(email);
+
+            if (emailTaken)
+                exception.AddError(UnprocessableEntity, DuplicateEmail, email);
+        }
     }
 
     /// <summary>
@@ -823,12 +845,12 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <param name="passwordConfirmation">
     /// Password confirmation value.
     /// </param>
-    private async Task ValidatePasswordAsync(string password, string passwordConfirmation, ResultException exception)
+    private Task ValidatePasswordAsync(string password, string passwordConfirmation, ResultException exception)
     {
         if (password != passwordConfirmation)
             exception.AddError(BadRequest, PasswordNotMatchConfirmation);
 
-        await ValidatePasswordAsync(password, exception);
+        return ValidatePasswordAsync(password, exception);
     }
 
     /// <summary>
@@ -862,9 +884,16 @@ public sealed class UserService(ILogger<UserService> logger,
     private async Task ValidatePhoneNumberAsync(string phone, ResultException exception)
     {
         if (!phone.IsValidPhoneNumber())
+        {
             exception.AddError(BadRequest, InvalidPhoneNumber, phone);
-        else if (await CheckIfPhoneNumberIsInUseAsync(phone))
-            exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
+        }
+        else
+        {
+            var phoneTaken = await CheckIfPhoneNumberIsInUseAsync(phone);
+
+            if (phoneTaken)
+                exception.AddError(UnprocessableEntity, DuplicatePhoneNumber, phone);
+        }
     }
 
     /// <summary>
@@ -879,9 +908,16 @@ public sealed class UserService(ILogger<UserService> logger,
     private async Task ValidateUserNameAsync(string userName, ResultException exception)
     {
         if (!userName.IsValidUserName(_identityOptions))
+        {
             exception.AddError(BadRequest, InvalidUserName, userName);
-        else if (await CheckIfUserNameIsInUseAsync(userName))
-            exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
+        }
+        else
+        {
+            var userNameTaken = await CheckIfUserNameIsInUseAsync(userName);
+
+            if (userNameTaken)
+                exception.AddError(UnprocessableEntity, DuplicateUserName, userName);
+        }
     }
 
     /// <summary>
@@ -952,7 +988,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email)
-        => (await userManager.FindByEmailAsync(email)) is not null;
+    {
+        var user = await userManager.FindByEmailAsync(email);
+
+        return user is not null;
+    }
 
     /// <summary>
     /// Checks if the given <paramref name="phone"/> number is already in use.
@@ -965,7 +1005,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone)
-        => (await userManager.FindByPhoneNumberAsync(phone)) is not null;
+    {
+        var user = await userManager.FindByPhoneNumberAsync(phone);
+
+        return user is not null;
+    }
 
     /// <summary>
     /// Checks if the given <paramref name="userName"/> is already in use.
@@ -978,7 +1022,11 @@ public sealed class UserService(ILogger<UserService> logger,
     /// otherwise - <see langword="false"/>.
     /// </returns>
     private async Task<bool> CheckIfUserNameIsInUseAsync(string userName)
-        => (await userManager.FindByNameAsync(userName)) is not null;
+    {
+        var user = await userManager.FindByNameAsync(userName);
+
+        return user is not null;
+    }
     #endregion
 
     #region Notification methods
@@ -1001,15 +1049,15 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        var template = _emailTemplateOptions.EmailAddressConfirmationTemplateName;
-
-        var culture = Thread.CurrentThread.CurrentUICulture;
-
         var url = _applicationOptions.ApiUrl;
         var route = UserRoutes.ConfirmEmail;
         var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Tokens.EmailConfirmationTokenLifetime);
 
         var link = CreateIdentityTokenLink(url, route, user, token, expiryDate);
+
+        var template = _emailTemplateOptions.EmailAddressConfirmationTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
             basicData: new(to: new[] { user.Email }),
@@ -1017,7 +1065,9 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { link });
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
+
+        return emailResult;
     }
 
     /// <summary>
@@ -1039,7 +1089,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
     /// containing information about the message sent.
     /// </returns>
-    private async Task<Result<EmailModel>> SendTwoFactorAuthenticationEmailAsync(User user, string verificationCode, CancellationToken cancellationToken = default)
+    private Task<Result<EmailModel>> SendTwoFactorAuthenticationEmailAsync(User user, string verificationCode, CancellationToken cancellationToken = default)
     {
         var template = _emailTemplateOptions.TwoFactorVerificationTemplateName;
 
@@ -1051,7 +1101,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { verificationCode });
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        return communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1073,14 +1123,14 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-        var template = _emailTemplateOptions.PasswordResetTemplateName;
-
-        var culture = Thread.CurrentThread.CurrentUICulture;
-
         var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
 
         var identityToken = dataProtectionService.ProtectAsJson(
             new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
+
+        var template = _emailTemplateOptions.PasswordResetTemplateName;
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
             basicData: new(to: new[] { user.Email }),
@@ -1088,7 +1138,9 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { identityToken });
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
+
+        return emailResult;
     }
 
     /// <summary>
@@ -1106,7 +1158,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
     /// containing information about the message sent.
     /// </returns>
-    private async Task<Result<EmailModel>> SendPasswordResetCompletedEmailAsync(User user, CancellationToken cancellationToken = default)
+    private Task<Result<EmailModel>> SendPasswordResetCompletedEmailAsync(User user, CancellationToken cancellationToken = default)
     {
         user.Email.ThrowIfNullOrWhiteSpace(BadRequest, InvalidEmail, user.Email);
 
@@ -1121,7 +1173,7 @@ public sealed class UserService(ILogger<UserService> logger,
             templateName: template,
             culture: culture);
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        return communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1142,7 +1194,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
     /// containing information about the message sent.
     /// </returns>
-    private async Task<Result<EmailModel>> SendEmailAddressResetNotificationEmailAsync(User user, string newEmail, CancellationToken cancellationToken = default)
+    private Task<Result<EmailModel>> SendEmailAddressResetNotificationEmailAsync(User user, string newEmail, CancellationToken cancellationToken = default)
     {
         var template = _emailTemplateOptions.EmailAddressResetNotificationTemplateName;
 
@@ -1154,7 +1206,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new[] { user.UserName, newEmail });
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        return communicationService.SendEmailAsync(request, cancellationToken);
     }
 
     /// <summary>
@@ -1177,12 +1229,6 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<Result<EmailModel>> SendEmailAddressResetEmailAsync(User user, string newEmail, CancellationToken cancellationToken = default)
     {
-        var template = _emailTemplateOptions.EmailAddressResetTemplateName;
-        if (template.IsNullOrWhiteSpace())
-            throw new InvalidOperationException(nameof(EmailTemplateOptions.EmailAddressResetTemplateName));
-
-        var culture = Thread.CurrentThread.CurrentUICulture;
-
         var token = await userManager.GenerateChangeEmailTokenAsync(user, newEmail);
 
         var url = _applicationOptions.ApiUrl;
@@ -1191,13 +1237,21 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var link = CreateIdentityTokenLink(url, route, user, token, expiryDate, newEmail);
 
+        var template = _emailTemplateOptions.EmailAddressResetTemplateName;
+        if (template.IsNullOrWhiteSpace())
+            throw new InvalidOperationException(nameof(EmailTemplateOptions.EmailAddressResetTemplateName));
+
+        var culture = Thread.CurrentThread.CurrentUICulture;
+
         var request = new EmailSendRequestModel(
             basicData: new(to: new[] { newEmail }),
             templateName: template,
             culture: culture,
             bodyArgs: new object?[] { user.UserName, link });
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
+
+        return emailResult;
     }
 
     /// <summary>
@@ -1221,7 +1275,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailModel"/>
     /// containing information about the message sent.
     /// </returns>
-    private async Task<Result<EmailModel>> SendEmailAddressResetCompletedEmailAsync(string? userName, string oldEmail, string newEmail, CancellationToken cancellationToken = default)
+    private Task<Result<EmailModel>> SendEmailAddressResetCompletedEmailAsync(string? userName, string oldEmail, string newEmail, CancellationToken cancellationToken = default)
     {
         var template = _emailTemplateOptions.EmailAddressResetCompletedTemplateName;
 
@@ -1233,7 +1287,7 @@ public sealed class UserService(ILogger<UserService> logger,
             culture: culture,
             bodyArgs: new object?[] { userName, newEmail });
 
-        return await communicationService.SendEmailAsync(request, cancellationToken);
+        return communicationService.SendEmailAsync(request, cancellationToken);
     }
     #endregion
 

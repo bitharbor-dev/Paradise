@@ -23,10 +23,10 @@ public sealed class JsonConfigurationOrigin(JsonConfigurationOriginOptions? opti
     /// <summary>
     /// Default <see cref="JsonConfigurationOrigin"/> instance.
     /// </summary>
-    public static JsonConfigurationOrigin DefaultInstance { get; } = new();
+    public static JsonConfigurationOrigin Default { get; } = new(JsonConfigurationOriginOptions.Default);
 
     /// <inheritdoc/>
-    public JsonConfigurationOriginOptions Options { get; } = options ?? new();
+    public JsonConfigurationOriginOptions Options { get; } = options ?? JsonConfigurationOriginOptions.Default;
     #endregion
 
     #region Public methods

@@ -138,8 +138,8 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
         /// <returns>
         /// An <see cref="IQueryable{Task}"/> of <typeparamref name="TEntity"/>.
         /// </returns>
-        public IQueryable<TEntity> GetQueryable<TEntity>() where TEntity : class, IDatabaseRecord
-            => new FakeAsyncQueryProvider<TEntity>(GetOrAdd<TEntity>().Select(entry => entry.Entity));
+        public FakeAsyncQueryProvider<TEntity> GetQueryable<TEntity>() where TEntity : class, IDatabaseRecord
+            => new(GetOrAdd<TEntity>().Select(entry => entry.Entity));
 
         /// <summary>
         /// Adds the given <paramref name="entity"/>

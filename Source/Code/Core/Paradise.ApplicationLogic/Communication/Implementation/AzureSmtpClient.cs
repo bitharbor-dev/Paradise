@@ -31,14 +31,12 @@ public sealed class AzureSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpCl
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
+    public Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
         if (Options.StoreEmailsInsteadOfSending)
         {
             var localClient = new LocalSmtpClient(smtpOptions);
-            await localClient.SendAsync(model, cancellationToken);
-
-            return;
+            return localClient.SendAsync(model, cancellationToken);
         }
 
         Options.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
@@ -70,7 +68,7 @@ public sealed class AzureSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpCl
                 message.Attachments.Add(new(attachment.FileName, attachment.MimeType, new(attachment.Data)));
         }
 
-        await client.SendAsync(WaitUntil.Completed, message, cancellationToken);
+        return client.SendAsync(WaitUntil.Completed, message, cancellationToken);
     }
     #endregion
 }

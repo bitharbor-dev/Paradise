@@ -57,8 +57,8 @@ internal static class UserDataConverter
     /// A new <see cref="User"/> instance
     /// converted from the input <paramref name="model"/>.
     /// </returns>
-    public static User ToEntity(this SeedUserModel model) =>
-        new(model.Email, model.UserName)
+    public static User ToEntity(this SeedUserModel model)
+        => new(model.Email, model.UserName)
         {
             EmailConfirmed = model.IsEmailConfirmed,
         };

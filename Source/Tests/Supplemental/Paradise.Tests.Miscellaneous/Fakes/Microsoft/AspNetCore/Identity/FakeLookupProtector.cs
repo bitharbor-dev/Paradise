@@ -17,6 +17,11 @@ internal sealed class FakeLookupProtector : ILookupProtector
     /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(data))]
     public string? Unprotect(string keyId, string? data)
-        => data?.Replace($"{keyId}-", string.Empty);
+    {
+        var placeholder = $"{keyId}-";
+        var replacement = string.Empty;
+
+        return data?.Replace(placeholder, replacement, StringComparison.OrdinalIgnoreCase);
+    }
     #endregion
 }

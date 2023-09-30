@@ -135,7 +135,7 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     /// An <see cref="int"/> value to be checked.
     /// </param>
     /// <param name="propertyName">
-    /// Property name, which value to be checked..
+    /// Property name, which value to be checked.
     /// </param>
     /// <exception cref="ArgumentException">
     /// Thrown if the given <paramref name="value"/> is

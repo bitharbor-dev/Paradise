@@ -45,8 +45,8 @@ internal static class EmailTemplateDataConverters
     /// A new <see cref="EmailTemplate"/> instance
     /// converted from the input <paramref name="creationModel"/>.
     /// </returns>
-    public static EmailTemplate ToEntity(this EmailTemplateCreationModel creationModel) =>
-        new(creationModel.TemplateName, creationModel.TemplateText, creationModel.Subject)
+    public static EmailTemplate ToEntity(this EmailTemplateCreationModel creationModel)
+        => new(creationModel.TemplateName, creationModel.TemplateText, creationModel.Subject)
         {
             Culture = creationModel.CultureId.HasValue ? CultureInfo.GetCultureInfo(creationModel.CultureId.Value) : null,
             IsBodyHtml = creationModel.IsBodyHtml,
@@ -87,15 +87,16 @@ internal static class EmailTemplateDataConverters
     /// A new <see cref="EmailTemplateUpdateModel"/> instance
     /// converted from the input <paramref name="model"/>.
     /// </returns>
-    public static EmailTemplateUpdateModel ToUpdateModel(this SeedEmailTemplateModel model) => new()
-    {
-        IsBodyHtml = model.IsBodyHtml,
-        PlaceholderName = model.PlaceholderName,
-        PlaceholdersNumber = model.PlaceholdersNumber,
-        Subject = model.Subject,
-        SubjectPlaceholderName = model.SubjectPlaceholderName,
-        SubjectPlaceholdersNumber = model.SubjectPlaceholdersNumber,
-        TemplateText = model.TemplateText
-    };
+    public static EmailTemplateUpdateModel ToUpdateModel(this SeedEmailTemplateModel model)
+        => new()
+        {
+            IsBodyHtml = model.IsBodyHtml,
+            PlaceholderName = model.PlaceholderName,
+            PlaceholdersNumber = model.PlaceholdersNumber,
+            Subject = model.Subject,
+            SubjectPlaceholderName = model.SubjectPlaceholderName,
+            SubjectPlaceholdersNumber = model.SubjectPlaceholdersNumber,
+            TemplateText = model.TemplateText
+        };
     #endregion
 }

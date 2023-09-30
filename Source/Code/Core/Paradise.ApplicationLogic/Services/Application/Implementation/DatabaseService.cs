@@ -79,7 +79,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             try
             {
-                if (await RoleExistsAsync(model, cancellationToken))
+                var roleExists = await RoleExistsAsync(model, cancellationToken);
+
+                if (roleExists)
                     continue;
 
                 await CreateRoleAsync(model);
@@ -103,7 +105,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             try
             {
-                if (await UserExistsAsync(model, cancellationToken))
+                var userExists = await UserExistsAsync(model, cancellationToken);
+
+                if (userExists)
                     continue;
 
                 await CreateUserAsync(model);
@@ -127,7 +131,9 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         {
             try
             {
-                if (!await UpdateEmailTemplateAsync(model, cancellationToken))
+                var emailTemplateExists = await UpdateEmailTemplateAsync(model, cancellationToken);
+
+                if (!emailTemplateExists)
                 {
                     await CreateEmailTemplateAsync(model, cancellationToken);
                     addedItemsNumber++;
@@ -170,10 +176,10 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
     /// <inheritdoc/>
     public async Task<int> ResetUsersPendingDeletionAsync(TimeSpan requestLifetime, CancellationToken cancellationToken = default)
     {
-        ushort updatedItemsNumber = 0;
-
         static void ResetAction(User user)
             => user.CancelDeletionRequest();
+
+        ushort updatedItemsNumber = 0;
 
         var pendingDeletionUsers = await GetPendingDeletionUsersAsync(requestLifetime, cancellationToken);
 
@@ -296,6 +302,22 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
         }
     }
 
+    /// <summary>
+    /// Updates an <see cref="EmailTemplate"/> with the data from the given
+    /// <paramref name="model"/>.
+    /// </summary>
+    /// <param name="model">
+    /// The <see cref="SeedEmailTemplateModel"/> which data to be used to
+    /// update the email template.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if an <see cref="EmailTemplate"/> was found and updated,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
     private async Task<bool> UpdateEmailTemplateAsync(SeedEmailTemplateModel model, CancellationToken cancellationToken = default)
     {
         var culture = model.CultureId.HasValue ? CultureInfo.GetCultureInfo(model.CultureId.Value) : null;

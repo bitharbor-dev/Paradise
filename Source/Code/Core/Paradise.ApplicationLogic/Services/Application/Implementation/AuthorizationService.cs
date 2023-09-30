@@ -108,23 +108,28 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
 
             var refreshToken = await userRefreshTokensRepository.GetByIdAsync(refreshTokenId);
 
-            if (refreshToken is null || refreshToken.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime))
+            var tokenIsOutdated = refreshToken is null
+                || refreshToken.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime);
+
+            if (tokenIsOutdated)
             {
                 var error = OutdatedToken;
+                var errorDescription = error.GetFormattedErrorDescription();
 
                 await WriteErrorResultAsync(response, Unauthorized, error);
 
-                failureDelegate(error.GetFormattedErrorDescription());
+                failureDelegate(errorDescription);
                 return;
             }
 
             if (principal is null)
             {
                 var error = UnauthorizedUser;
+                var errorDescription = error.GetFormattedErrorDescription();
 
                 await WriteErrorResultAsync(response, Unauthorized, error);
 
-                failureDelegate(error.GetFormattedErrorDescription());
+                failureDelegate(errorDescription);
                 return;
             }
 
@@ -133,10 +138,11 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
             if (user is null)
             {
                 var error = TokenOwnerNotExists;
+                var errorDescription = error.GetFormattedErrorDescription();
 
                 await WriteErrorResultAsync(response, Unauthorized, error);
 
-                failureDelegate(error.GetFormattedErrorDescription());
+                failureDelegate(errorDescription);
                 return;
             }
 
@@ -146,10 +152,11 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
             if (!rolesAreMatching)
             {
                 var error = OutdatedToken;
+                var errorDescription = error.GetFormattedErrorDescription();
 
                 await WriteErrorResultAsync(response, Unauthorized, error);
 
-                failureDelegate(error.GetFormattedErrorDescription());
+                failureDelegate(errorDescription);
                 return;
             }
         }
@@ -314,7 +321,9 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// </returns>
     private static bool TryGetAccessToken(HttpResponse response, [NotNullWhen(true)] out string? accessToken)
     {
-        var result = response.HttpContext.Request.Headers.TryGetValue(HeaderNames.Authorization, out var value);
+        var headers = response.HttpContext.Request.Headers;
+        var result = headers.TryGetValue(HeaderNames.Authorization, out var value);
+
         accessToken = value.FirstOrDefault();
 
         return result;

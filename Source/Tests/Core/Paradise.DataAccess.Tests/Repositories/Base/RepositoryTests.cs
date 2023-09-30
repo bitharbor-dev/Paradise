@@ -211,9 +211,10 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     public void ForEach()
     {
         // Arrange
-        var entities = new[] { GetTestEntity(), GetTestEntity() };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
         var created = DateTime.UtcNow;
@@ -242,20 +243,24 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     public void ForEach_WithCondition()
     {
         // Arrange
-        var entities = new[] { GetTestEntity(), GetTestEntity() };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
-        var id = entities.First().Id;
+        var id = entity1.Id;
         var created = DateTime.UtcNow;
 
+        Expression<Func<TEntity, bool>> predicate =
+            entry => entry.Id != id;
+
         // Act
-        Repository.ForEach(entry => entry.Id != id, entry => entry.Created = created);
+        Repository.ForEach(predicate, entry => entry.Created = created);
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.Set<TEntity>().Where(entry => entry.Id != id), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.Set<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
     }
 
     /// <summary>
@@ -273,9 +278,10 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     public async void ForEachAsync()
     {
         // Arrange
-        var entities = new[] { GetTestEntity(), GetTestEntity() };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
         var created = DateTime.UtcNow;
@@ -304,20 +310,24 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     public async void ForEachAsync_WithCondition()
     {
         // Arrange
-        var entities = new[] { GetTestEntity(), GetTestEntity() };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
-        var id = entities.First().Id;
+        var id = entity1.Id;
         var created = DateTime.UtcNow;
 
+        Expression<Func<TEntity, bool>> predicate =
+            entry => entry.Id != id;
+
         // Act
-        await Repository.ForEachAsync(entry => entry.Id != id, entry => entry.Created = created);
+        await Repository.ForEachAsync(predicate, entry => entry.Created = created);
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.Set<TEntity>().Where(entry => entry.Id != id), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.Set<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
     }
 
     /// <summary>

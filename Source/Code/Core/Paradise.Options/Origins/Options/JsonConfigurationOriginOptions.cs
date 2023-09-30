@@ -16,6 +16,11 @@ public sealed class JsonConfigurationOriginOptions
 
     #region Properties
     /// <summary>
+    /// Default <see cref="JsonConfigurationOriginOptions"/> instance.
+    /// </summary>
+    public static JsonConfigurationOriginOptions Default { get; } = new();
+
+    /// <summary>
     /// Environment name.
     /// </summary>
     public string EnvironmentName { get; set; } = EnvironmentNames.Current;

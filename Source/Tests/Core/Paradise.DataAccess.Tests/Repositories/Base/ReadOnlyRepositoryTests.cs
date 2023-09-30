@@ -1259,7 +1259,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     }
 
     /// <summary>
-    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> test method.
+    /// <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -1910,13 +1910,10 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     public void Single_ThrowsOnMultiple()
     {
         // Arrange
-        var entities = new TEntity[]
-        {
-            GetTestEntity(),
-            GetTestEntity()
-        };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
         // Act
@@ -2083,13 +2080,10 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     public async void SingleAsync_ThrowsOnMultiple()
     {
         // Arrange
-        var entities = new TEntity[]
-        {
-            GetTestEntity(),
-            GetTestEntity()
-        };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
         // Act
@@ -2260,13 +2254,10 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     public void SingleOrDefault_ThrowsOnMultiple()
     {
         // Arrange
-        var entities = new TEntity[]
-        {
-            GetTestEntity(),
-            GetTestEntity()
-        };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
         // Act
@@ -2441,13 +2432,10 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     public async void SingleOrDefaultAsync_ThrowsOnMultiple()
     {
         // Arrange
-        var entities = new TEntity[]
-        {
-            GetTestEntity(),
-            GetTestEntity()
-        };
+        var entity1 = GetTestEntity();
+        var entity2 = GetTestEntity();
 
-        Source.AddRange(entities);
+        Source.AddRange(new[] { entity1, entity2 });
         Source.SaveChanges();
 
         // Act

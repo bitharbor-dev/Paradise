@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text;
 using Xunit.Abstractions;
+using static System.Environment;
 
 namespace Paradise.Tests.Miscellaneous.Fakes.Microsoft.Extensions.Logging.Xunit;
 
@@ -61,7 +62,7 @@ internal sealed class XunitTestOutputLogger<T>(ITestOutputHelper output) : ILogg
     private static StringBuilder? _logBuilder;
 
     private static readonly string _messagePadding = new(' ', GetLogLevelString(default).Length + LogLevelPadding.Length);
-    private static readonly string _newLineWithMessagePadding = Environment.NewLine + _messagePadding;
+    private static readonly string _newLineWithMessagePadding = NewLine + _messagePadding;
 
     private readonly ITestOutputHelper _output = output;
     #endregion
@@ -128,7 +129,7 @@ internal sealed class XunitTestOutputLogger<T>(ITestOutputHelper output) : ILogg
             var currentTextLength = builder.Length;
 
             builder.AppendLine(message);
-            builder.Replace(Environment.NewLine, _newLineWithMessagePadding, currentTextLength, message.Length);
+            builder.Replace(NewLine, _newLineWithMessagePadding, currentTextLength, message.Length);
         }
 
         if (exception is not null)

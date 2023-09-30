@@ -7,7 +7,7 @@ namespace Paradise.Localization.Logging;
 /// Contains <see cref="EventId"/> instances used by the application.
 /// </summary>
 /// <remarks>
-/// There is a convention on how to define a new event id:
+/// <strong>There is a convention on how to define a new event id:</strong>
 /// <list type="number">
 /// <item>
 /// All numbers start from 5 to leave some capacity
@@ -39,25 +39,19 @@ namespace Paradise.Localization.Logging;
 /// </item>
 /// <item>
 /// The rest of the numbers can be used as you like,
-/// but avoid the number 55 except at the beginning of the id
+/// but avoid number 55 except at the beginning
 /// to make it easier to find critical errors.
 /// </item>
 /// </list>
-/// There is also a naming convention:
-/// <list type="number">
-/// <item>
-/// Take the name of the logging action from <see cref="LogMessagesDefinition"/> and remove <see cref="LogLevel"/> prefix.
+/// <strong>There is also a naming convention:</strong>
 /// <para>
-/// <c>CriticalDatabaseSeedFailure => DatabaseSeedFailure</c>
-/// </para>
-/// </item>
-/// <item>
-/// Add "LogEvent" to the end.
+/// Take the name of the logging action from <see cref="LogMessagesDefinition"/>
+/// and replace <see cref="LogLevel"/> prefix
+/// with the "LogEvent".
 /// <para>
-/// <c>DatabaseSeedFailure => DatabaseSeedFailureLogEvent</c>
+/// <c>CriticalDatabaseSeedFailure => LogEventDatabaseSeedFailure</c>
 /// </para>
-/// </item>
-/// </list>
+/// </para>
 /// </remarks>
 internal static class LogMessagesEventIds
 {

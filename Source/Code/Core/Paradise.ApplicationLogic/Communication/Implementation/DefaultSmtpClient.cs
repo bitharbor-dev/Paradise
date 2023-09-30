@@ -30,14 +30,12 @@ public sealed class DefaultSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtp
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
+    public Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
         if (Options.StoreEmailsInsteadOfSending)
         {
             var localClient = new LocalSmtpClient(smtpOptions);
-            await localClient.SendAsync(model, cancellationToken);
-
-            return;
+            return localClient.SendAsync(model, cancellationToken);
         }
 
         Options.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
@@ -81,7 +79,7 @@ public sealed class DefaultSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtp
                 message.Attachments.Add(new(new MemoryStream(attachment.Data), attachment.FileName, attachment.MimeType));
         }
 
-        await client.SendMailAsync(message, cancellationToken);
+        return client.SendMailAsync(message, cancellationToken);
     }
     #endregion
 }

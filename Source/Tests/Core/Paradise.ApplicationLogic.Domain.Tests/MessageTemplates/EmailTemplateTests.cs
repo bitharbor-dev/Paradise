@@ -64,7 +64,7 @@ public sealed class EmailTemplateTests
         var formatterSubject = emailTemplate.GetFormattedSubject(parameters);
 
         // Assert
-        Assert.All(parameters, parameter => Assert.Contains(parameter!.ToString()!, formatterSubject));
+        Assert.All(parameters, parameter => Assert.Contains(parameter!.ToString()!, formatterSubject, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public sealed class EmailTemplateTests
     public void GetFormattedSubject_ThrowsOnInvalidParametersNumber()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}", "{placeholder}" };
+        var parameters = new[] { "{arg}", "{arg}" };
 
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject")
         {
@@ -134,7 +134,7 @@ public sealed class EmailTemplateTests
     public void GetFormattedSubject_ThrowsOnMissingPlaceholder()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}" };
+        var parameters = new[] { "{arg}" };
 
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject without necessary parameter")
         {
@@ -163,7 +163,7 @@ public sealed class EmailTemplateTests
     public void GetFormattedSubject_ThrowsOnNullSubjectPlaceholderNameWithNonZeroParametersNumber()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}" };
+        var parameters = new[] { "{arg}" };
 
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject without necessary parameter")
         {
@@ -191,7 +191,7 @@ public sealed class EmailTemplateTests
     public void GetFormattedSubject_ThrowsOnNullSubjectPlaceholderNameWithNonZeroPlaceholdersNumber()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}" };
+        var parameters = new[] { "{arg}" };
 
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject Parameter1")
         {
@@ -224,9 +224,9 @@ public sealed class EmailTemplateTests
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject")
         {
             IsBodyHtml = true,
-            PlaceholderName = "{placeholder}",
+            PlaceholderName = "{arg}",
             PlaceholdersNumber = 1,
-            SubjectPlaceholderName = "{placeholder}",
+            SubjectPlaceholderName = "{arg}",
             SubjectPlaceholdersNumber = 1
         };
 
@@ -264,9 +264,9 @@ public sealed class EmailTemplateTests
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject")
         {
             IsBodyHtml = true,
-            PlaceholderName = "{placeholder}",
+            PlaceholderName = "{arg}",
             PlaceholdersNumber = 1,
-            SubjectPlaceholderName = "{placeholder}",
+            SubjectPlaceholderName = "{arg}",
             SubjectPlaceholdersNumber = 1
         };
 
@@ -316,9 +316,9 @@ public sealed class EmailTemplateTests
         // Arrange
         var emailTemplate = new EmailTemplate("Template name", "Template text", "Subject")
         {
-            PlaceholderName = "{placeholder}",
+            PlaceholderName = "{arg}",
             PlaceholdersNumber = 1,
-            SubjectPlaceholderName = "{placeholder}",
+            SubjectPlaceholderName = "{arg}",
             SubjectPlaceholdersNumber = 1
         };
 
@@ -374,15 +374,15 @@ public sealed class EmailTemplateTests
         },
         new object?[]
         {
-            "Test with {placeholder}0",
-            "{placeholder}",
+            "Test with {arg}0",
+            "{arg}",
             (ushort)1,
             new List<object?> { "My placeholder replacement" }
         },
         new object?[]
         {
-            "Test with {placeholder}0 and another {placeholder}1",
-            "{placeholder}",
+            "Test with {arg}0 and another {arg}1",
+            "{arg}",
             (ushort)2,
             new List<object?> { "My placeholder replacement", "And another one" }
        }

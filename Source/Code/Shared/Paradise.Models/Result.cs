@@ -26,6 +26,7 @@ public class Result : IActionResult
 
     #region Fields
     private protected readonly List<ApplicationError> _errors = new();
+    private HttpStatusCode? _statusCode;
     #endregion
 
     #region Constructors
@@ -41,7 +42,23 @@ public class Result : IActionResult
     /// The <see cref="HttpStatusCode"/> value to be set.
     /// </param>
     public Result(HttpStatusCode statusCode)
-       => SetStatusCode(statusCode);
+       => StatusCode = statusCode;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Result"/> class.
+    /// </summary>
+    /// <param name="errors">
+    /// Result errors.
+    /// </param>
+    /// <param name="statusCode">
+    /// Result status code.
+    /// </param>
+    [JsonConstructor]
+    public Result(IEnumerable<ApplicationError> errors, HttpStatusCode? statusCode)
+    {
+        _errors.AddRange(errors);
+        StatusCode = statusCode;
+    }
     #endregion
 
     #region Indexes
@@ -71,8 +88,18 @@ public class Result : IActionResult
     public IEnumerable<ApplicationError> Errors
         => _errors.AsReadOnly();
 
-    /// <inheritdoc/>
-    public HttpStatusCode? StatusCode { get; private set; }
+    /// <summary>
+    /// Gets or sets the HTTP status code.
+    /// </summary>
+    public HttpStatusCode? StatusCode
+    {
+        get => _statusCode;
+        set
+        {
+            if (value.HasValue)
+                _statusCode = value.Value;
+        }
+    }
 
     /// <summary>
     /// Indicates whether the result has any errors.
@@ -82,19 +109,6 @@ public class Result : IActionResult
     #endregion
 
     #region Public methods
-    /// <summary>
-    /// Sets the given <paramref name="statusCode"/> value
-    /// into the <see cref="StatusCode"/> property.
-    /// </summary>
-    /// <param name="statusCode">
-    /// The <see cref="HttpStatusCode"/> value to be set.
-    /// </param>
-    public void SetStatusCode(HttpStatusCode? statusCode)
-    {
-        if (statusCode.HasValue)
-            StatusCode = statusCode.Value;
-    }
-
     /// <summary>
     /// Adds a new <see cref="ApplicationError"/> instance to the <see cref="Errors"/>
     /// based on the given <paramref name="error"/> and <paramref name="args"/>.
@@ -110,7 +124,7 @@ public class Result : IActionResult
     /// </param>
     public void AddError(HttpStatusCode statusCode, ErrorCode error, params object?[] args)
     {
-        SetStatusCode(statusCode);
+        StatusCode = statusCode;
 
         var description = error.GetFormattedErrorDescription(args);
 
@@ -132,7 +146,7 @@ public class Result : IActionResult
     /// </param>
     public void AddErrors(IEnumerable<ApplicationError> errors, HttpStatusCode? statusCode = null)
     {
-        SetStatusCode(statusCode);
+        StatusCode = statusCode;
         _errors.AddRange(errors);
     }
 
@@ -170,7 +184,7 @@ public class Result : IActionResult
     /// </param>
     public void AddIdentityResult(IdentityResult identityResult, HttpStatusCode? statusCode = null)
     {
-        SetStatusCode(statusCode);
+        StatusCode = statusCode;
 
         foreach (var error in identityResult.Errors)
         {
@@ -195,7 +209,7 @@ public class Result : IActionResult
     public void AddException(Exception exception, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
     {
         Exception = exception;
-        SetStatusCode(statusCode);
+        StatusCode = statusCode;
 
         var message =
 #if !DEBUG
@@ -210,9 +224,11 @@ public class Result : IActionResult
     /// <inheritdoc/>
     public Task ExecuteResultAsync(ActionContext context)
     {
-        var jsonOptions = context.HttpContext.RequestServices.GetService<IOptions<JsonSerializerOptions>>()?.Value;
+        var serviceProvider = context.HttpContext.RequestServices;
 
-        return WriteResponseContentAsync(context.HttpContext.Response, jsonOptions);
+        var jsonSerializerOptions = serviceProvider.GetService<IOptions<JsonSerializerOptions>>()?.Value;
+
+        return WriteResponseContentAsync(context.HttpContext.Response, jsonSerializerOptions);
     }
 
     /// <summary>
@@ -225,19 +241,20 @@ public class Result : IActionResult
     /// <param name="options">
     /// The <see cref="JsonSerializerOptions"/> instance.
     /// </param>
-    public async Task WriteResponseContentAsync(HttpResponse response, JsonSerializerOptions? options = null)
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    public Task WriteResponseContentAsync(HttpResponse response, JsonSerializerOptions? options = null,
+                                          CancellationToken cancellationToken = default)
     {
         if (response.HasStarted)
-            return;
+            return Task.CompletedTask;
 
         if (StatusCode.HasValue)
             response.StatusCode = (int)StatusCode.Value;
 
-        response.ContentType = ContentType;
-
-        var json = JsonSerializer.Serialize(this, GetType(), options);
-
-        await response.WriteAsync(json);
+        return response.WriteAsJsonAsync(this, GetType(), options, ContentType, cancellationToken);
     }
 
     /// <summary>
@@ -321,7 +338,7 @@ public sealed class Result<TValue> : Result
     public Result(TValue? value, HttpStatusCode statusCode)
     {
         Value = value;
-        SetStatusCode(statusCode);
+        StatusCode = statusCode;
     }
 
     /// <summary>
@@ -343,7 +360,7 @@ public sealed class Result<TValue> : Result
     {
         Value = value;
         _errors.AddRange(errors);
-        SetStatusCode(statusCode);
+        StatusCode = statusCode;
     }
     #endregion
 
@@ -351,23 +368,6 @@ public sealed class Result<TValue> : Result
     /// <summary>
     /// Result value.
     /// </summary>
-    public TValue? Value { get; private set; }
-    #endregion
-
-    #region Public methods
-    /// <summary>
-    /// Sets the result value and status code.
-    /// </summary>
-    /// <param name="value">
-    /// Value to be set.
-    /// </param>
-    /// <param name="statusCode">
-    /// Result status code.
-    /// </param>
-    public void SetValue(TValue value, HttpStatusCode statusCode)
-    {
-        SetStatusCode(statusCode);
-        Value = value;
-    }
+    public TValue? Value { get; set; }
     #endregion
 }

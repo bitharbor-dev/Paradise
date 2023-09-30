@@ -57,7 +57,7 @@ public sealed class DataProtectionServiceTests
     /// <param name="length">
     /// Code length.
     /// </param>
-    [Theory, InlineData(1), InlineData(6), InlineData(ushort.MaxValue)]
+    [Theory, InlineData(0), InlineData(1), InlineData(6), InlineData(ushort.MaxValue)]
     public void GenerateRandomDigitCode(ushort length)
     {
         // Arrange
@@ -67,7 +67,7 @@ public sealed class DataProtectionServiceTests
 
         // Assert
         Assert.Equal(length, result.Length);
-        Assert.All(result, element => Assert.True(char.IsDigit(element)));
+        Assert.All(result, character => Assert.True(char.IsDigit(character)));
     }
 
     /// <summary>

@@ -27,10 +27,10 @@ public sealed class EndpointPathToLowercaseDocumentFilter : IDocumentFilter
             .Select(item =>
             {
                 var decomposedKey = item
-                .Key
-                .Split(PathSeparator)
-                .Where(segment => !string.IsNullOrEmpty(segment))
-                .Select(segment => char.ToLower(segment.First(), CultureInfo.InvariantCulture) + segment[1..]);
+                    .Key
+                    .Split(PathSeparator)
+                    .Where(segment => !string.IsNullOrEmpty(segment))
+                    .Select(segment => char.ToLower(segment.First(), CultureInfo.InvariantCulture) + segment[1..]);
 
                 var camelCaseKey = PathSeparator + string.Join(PathSeparator, decomposedKey);
 

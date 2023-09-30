@@ -67,7 +67,7 @@ internal static class IQueryableExtensions
 
         ValidateStringProperties(entityType, propertyNames);
 
-        var expression = ConstructFilterExpression(entityType, propertyNames, value.ToLower());
+        var expression = ConstructFilterExpression(entityType, propertyNames, value);
 
         var whereMethod = GetWhereMethodInfo(entityType);
 
@@ -130,7 +130,7 @@ internal static class IQueryableExtensions
         return typeof(Queryable)
             .GetMethods()
             .Where(method => method.Name is nameof(Queryable.Where) && method.IsGenericMethodDefinition)
-            .First(method => method.GetParameters().Length is OrderByMethodsArgumentsNumber)
+            .First(method => method.GetParameters().Length is WhereMethodArgumentsNumber)
             .MakeGenericMethod(entityType);
     }
 
@@ -258,34 +258,36 @@ internal static class IQueryableExtensions
     /// the <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource, bool}})"/>
     /// invocation call.
     /// </returns>
-    private static Expression ConstructFilterExpression(Type entityType, IEnumerable<string> propertyNames, string? value)
+    private static LambdaExpression ConstructFilterExpression(Type entityType, IEnumerable<string> propertyNames, string? value)
     {
+        value = value?.ToUpperInvariant();
+
         var toLowerMethod = GetToLowerMethodInfo();
 
         var containsMethod = GetContainsMethodInfo();
 
         var searchValueExpression = Expression.Constant(value, typeof(string));
-        var argument = Expression.Parameter(entityType, entityType.Name.ToLowerInvariant());
+        var argument = Expression.Parameter(entityType, entityType.Name.ToUpperInvariant());
 
         var loweredPropertiesContainsCalls = propertyNames
             .Select(name => Expression.Property(argument, name))
             .Select(propertyCall => Expression.Call(propertyCall, toLowerMethod))
-            .Select(loweredStringProperty => Expression.Call(loweredStringProperty, containsMethod, searchValueExpression));
+            .Select(loweredStringProperty => Expression.Call(loweredStringProperty, containsMethod, searchValueExpression))
+            .ToArray();
 
         LambdaExpression? selector = null;
 
-        if (loweredPropertiesContainsCalls.Count() is 1)
+        if (loweredPropertiesContainsCalls.Length is 1)
         {
             selector = Expression.Lambda(loweredPropertiesContainsCalls.First(), argument);
         }
         else
         {
-            var firstTwoStatements = loweredPropertiesContainsCalls.Take(2);
-            var otherStatements = loweredPropertiesContainsCalls.Skip(2);
+            var statementsExceptFirstTwo = loweredPropertiesContainsCalls.Skip(2);
 
-            var orStatement = Expression.OrElse(firstTwoStatements.First(), firstTwoStatements.Last());
+            var orStatement = Expression.OrElse(loweredPropertiesContainsCalls[0], loweredPropertiesContainsCalls[1]);
 
-            foreach (var statement in otherStatements)
+            foreach (var statement in statementsExceptFirstTwo)
                 orStatement = Expression.OrElse(orStatement, statement);
 
             selector = Expression.Lambda(orStatement, argument);
@@ -316,9 +318,9 @@ internal static class IQueryableExtensions
     /// <see cref="Queryable.OrderByDescending{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource, TKey}})"/>
     /// invocation call.
     /// </returns>
-    private static Expression ConstructOrderingExpression(Type entityType, string propertyName)
+    private static LambdaExpression ConstructOrderingExpression(Type entityType, string propertyName)
     {
-        var argument = Expression.Parameter(entityType, entityType.Name.ToLowerInvariant());
+        var argument = Expression.Parameter(entityType, entityType.Name.ToUpperInvariant());
         var property = Expression.Property(argument, propertyName);
         var selector = Expression.Lambda(property, argument);
 

@@ -19,7 +19,7 @@ public sealed class MessageTemplateTests
     /// </para>
     /// </summary>
     [Theory, MemberData(nameof(GetFormattedText_MemberData))]
-    public void GetFormattedText(string? placeholderName, ushort placeholdersNumber, string templateText, IList<object?> parameters)
+    public void GetFormattedText(string templateText, string? placeholderName, ushort placeholdersNumber, IList<object?> parameters)
     {
         // Arrange
         var messageTemplate = new FakeMessageTemplate("Template name", templateText)
@@ -32,7 +32,7 @@ public sealed class MessageTemplateTests
         var formatterText = messageTemplate.GetFormattedText(parameters);
 
         // Assert
-        Assert.All(parameters, parameter => Assert.Contains(parameter!.ToString()!, formatterText));
+        Assert.All(parameters, parameter => Assert.Contains(parameter!.ToString()!, formatterText, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public sealed class MessageTemplateTests
     public void GetFormattedText_ThrowsOnInvalidParametersNumber()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}", "{placeholder}" };
+        var parameters = new[] { "{arg}", "{arg}" };
 
         var messageTemplate = new FakeMessageTemplate("Template name", "Template text")
         {
@@ -102,7 +102,7 @@ public sealed class MessageTemplateTests
     public void GetFormattedText_ThrowsOnMissingPlaceholder()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}" };
+        var parameters = new[] { "{arg}" };
 
         var messageTemplate = new FakeMessageTemplate("Template name", "Template text")
         {
@@ -131,7 +131,7 @@ public sealed class MessageTemplateTests
     public void GetFormattedText_ThrowsOnNullPlaceholderNameWithNonZeroParametersNumber()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}" };
+        var parameters = new[] { "{arg}" };
 
         var messageTemplate = new FakeMessageTemplate("Template name", "Template text")
         {
@@ -159,7 +159,7 @@ public sealed class MessageTemplateTests
     public void GetFormattedText_ThrowsOnNullPlaceholderNameWithNonZeroPlaceholdersNumber()
     {
         // Arrange
-        var parameters = new[] { "{placeholder}" };
+        var parameters = new[] { "{arg}" };
 
         var messageTemplate = new FakeMessageTemplate("Template name", "Template text")
         {
@@ -191,7 +191,7 @@ public sealed class MessageTemplateTests
         // Arrange
         var messageTemplate = new FakeMessageTemplate("Template name", "Template text")
         {
-            PlaceholderName = "{placeholder}",
+            PlaceholderName = "{arg}",
             PlaceholdersNumber = 1
         };
 
@@ -242,16 +242,16 @@ public sealed class MessageTemplateTests
         },
         new object?[]
         {
-            "{placeholder}",
+            "{arg}",
             (ushort)1,
-            "Test with {placeholder}0",
+            "Test with {arg}0",
             new List<object?> { "My placeholder replacement" }
         },
         new object?[]
         {
-            "{placeholder}",
+            "{arg}",
             (ushort)2,
-            "Test with {placeholder}0 and another {placeholder}1",
+            "Test with {arg}0 and another {arg}1",
             new List<object?> { "My placeholder replacement", "And another one" }
        }
     };

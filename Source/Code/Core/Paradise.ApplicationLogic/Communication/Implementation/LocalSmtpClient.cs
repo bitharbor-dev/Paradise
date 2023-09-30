@@ -21,7 +21,7 @@ namespace Paradise.ApplicationLogic.Communication.Implementation;
 /// <param name="smtpOptions">
 /// The accessor used to access the <see cref="SmtpOptions"/>.
 /// </param>
-internal class LocalSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpClient
+internal sealed class LocalSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpClient
 {
     #region Properties
     /// <inheritdoc/>
@@ -30,7 +30,7 @@ internal class LocalSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpClient
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
+    public Task SendAsync(EmailModel model, CancellationToken cancellationToken = default)
     {
         model.From.ThrowIfEmptyOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration);
 
@@ -77,7 +77,7 @@ internal class LocalSmtpClient(IOptions<SmtpOptions> smtpOptions) : ISmtpClient
                 message.Attachments.Add(new(new MemoryStream(attachment.Data), attachment.FileName, attachment.MimeType));
         }
 
-        await client.SendMailAsync(message, cancellationToken);
+        return client.SendMailAsync(message, cancellationToken);
     }
     #endregion
 }

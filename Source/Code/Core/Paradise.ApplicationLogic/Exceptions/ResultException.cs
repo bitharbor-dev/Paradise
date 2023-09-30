@@ -118,8 +118,8 @@ public sealed class ResultException : Exception
     /// </param>
     internal void AddError(HttpStatusCode statusCode, ErrorCode errorCode, params object?[] args)
     {
-        StatusCode = statusCode;
         _errorData.Add(new(errorCode, args));
+        StatusCode = statusCode;
     }
 
     /// <summary>

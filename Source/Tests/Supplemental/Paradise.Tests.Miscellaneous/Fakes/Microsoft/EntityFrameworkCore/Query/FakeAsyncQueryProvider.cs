@@ -102,8 +102,9 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
 
             var fromResultMethod = typeof(Task).GetMethod(nameof(Task.FromResult))!;
 
-            return (TResult)fromResultMethod.MakeGenericMethod(invocationParameterizerType)
-                .Invoke(null, new[] { invocationResult })!;
+            var genericMethod = fromResultMethod.MakeGenericMethod(invocationParameterizerType);
+
+            return (TResult)genericMethod.Invoke(null, new[] { invocationResult })!;
         }
         catch (TargetInvocationException e)
         {
@@ -202,7 +203,9 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
     /// </returns>
     private static T Compile<T>(Expression expression)
     {
-        var body = FakeExpressionVisitor.Visit(expression) ?? throw new InvalidOperationException();
+        var body = FakeExpressionVisitor.VisitExpression(expression)
+            ?? throw new InvalidOperationException(); // TODO: Provide meaningful exception message.
+
         var function = Expression.Lambda<Func<T>>(body);
 
         return function.Compile().Invoke();
@@ -217,8 +220,8 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
     {
         #region Public methods
         /// <inheritdoc cref="ExpressionVisitor.Visit(Expression?)"/>
-        public static new Expression? Visit(Expression expression)
-            => (new FakeExpressionVisitor() as ExpressionVisitor).Visit(expression);
+        public static Expression? VisitExpression(Expression expression)
+            => new FakeExpressionVisitor().Visit(expression);
         #endregion
     }
 

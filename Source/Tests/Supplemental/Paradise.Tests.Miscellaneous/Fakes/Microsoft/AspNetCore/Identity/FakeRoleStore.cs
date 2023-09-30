@@ -65,6 +65,7 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
     public Task SetRoleNameAsync(Role role, string? roleName, CancellationToken cancellationToken)
     {
         role.Name = roleName;
+
         return Task.CompletedTask;
     }
 
@@ -76,6 +77,7 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
     public Task SetNormalizedRoleNameAsync(Role role, string? normalizedName, CancellationToken cancellationToken)
     {
         role.NormalizedName = normalizedName;
+
         return Task.CompletedTask;
     }
 

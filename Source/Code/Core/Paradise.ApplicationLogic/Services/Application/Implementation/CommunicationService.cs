@@ -47,24 +47,21 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 
         _smtpOptions.Credentials.UserName.ThrowIfNullOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration, SenderEmailIsMissing);
 
-        var basicData = request.BasicData;
+        request.BasicData.To.ThrowIfEmpty(BadRequest, EmptyRecipientsList);
 
-        basicData.To.ThrowIfEmpty(BadRequest, EmptyRecipientsList);
+        ValidateRecipients(request.BasicData.To);
 
-        ValidateRecipients(basicData.To);
+        if (request.BasicData.Cc is not null)
+            ValidateRecipients(request.BasicData.Cc);
 
-        if (basicData.Cc is not null)
-            ValidateRecipients(basicData.Cc);
+        if (request.BasicData.Bcc is not null)
+            ValidateRecipients(request.BasicData.Bcc);
 
-        if (basicData.Bcc is not null)
-            ValidateRecipients(basicData.Bcc);
-
-        var template = await FindEmailTemplateAsync(
-            request.TemplateName, request.Culture, request.UseNullOrInvariantCultureAsFallback, cancellationToken);
+        var template = await FindEmailTemplateAsync(request, cancellationToken);
 
         template.ThrowIfNull(NotFound, MessageTemplateNotFound, request.TemplateName, request.Culture?.Name);
 
-        var message = CreateMessage(template, _smtpOptions.Credentials.UserName, basicData, request.SubjectArgs, request.BodyArgs);
+        var message = CreateMessage(template, request, _smtpOptions.Credentials.UserName);
 
         await smtpClient.SendAsync(message, cancellationToken);
 
@@ -97,25 +94,18 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 
     /// <summary>
     /// Asynchronously finds an <see cref="EmailTemplate"/>
-    /// with the given <paramref name="name"/> and <paramref name="culture"/>.
+    /// with the name and culture specified in the given <paramref name="request"/>.
     /// <para>
     /// If such <see cref="EmailTemplate"/> does not exist and
-    /// <paramref name="useNullOrInvariantCultureAsFallback"/> is <see langword="true"/>,
-    /// attempts to find another one with <see cref="CultureInfo.InvariantCulture"/> or
-    /// <see langword="null"/> culture.
+    /// <see cref="EmailSendRequestModel.UseNullOrInvariantCultureAsFallback"/>
+    /// is <see langword="true"/> - attempts to find another
+    /// <see cref="EmailTemplate"/> with <see cref="CultureInfo.InvariantCulture"/>
+    /// or <see langword="null"/> culture.
     /// </para>
     /// </summary>
-    /// <param name="name">
-    /// Template name.
-    /// </param>
-    /// <param name="culture">
-    /// Template culture.
-    /// </param>
-    /// <param name="useNullOrInvariantCultureAsFallback">
-    /// Indicates whether the <see cref="CultureInfo.InvariantCulture"/>
-    /// or <see langword="null"/> culture should be used
-    /// in case the template with the specified <paramref name="culture"/>
-    /// does not exist.
+    /// <param name="request">
+    /// Contains <see cref="EmailTemplate"/>
+    /// lookup criteria.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
@@ -124,20 +114,22 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
     /// <returns>
     /// The <see cref="EmailTemplate"/> found or <see langword="null"/>.
     /// </returns>
-    private async Task<EmailTemplate?> FindEmailTemplateAsync(string name, CultureInfo? culture,
-                                                              bool useNullOrInvariantCultureAsFallback = true,
-                                                              CancellationToken cancellationToken = default)
+    private async Task<EmailTemplate?> FindEmailTemplateAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default)
     {
-        var template = await emailTemplatesRepository
-            .GetByNameAndCultureAsync(name, culture, cancellationToken);
+        var templateName = request.TemplateName;
+        var culture = request.Culture;
 
-        if (template is null && useNullOrInvariantCultureAsFallback)
+        var template = await emailTemplatesRepository.GetByNameAndCultureAsync(templateName, culture, cancellationToken);
+
+        if (template is null && request.UseNullOrInvariantCultureAsFallback)
         {
-            template = await emailTemplatesRepository
-                .GetByNameAndCultureAsync(name, null, cancellationToken);
+            culture = null;
 
-            template ??= await emailTemplatesRepository
-                .GetByNameAndCultureAsync(name, CultureInfo.InvariantCulture, cancellationToken);
+            template = await emailTemplatesRepository.GetByNameAndCultureAsync(templateName, culture, cancellationToken);
+
+            culture = CultureInfo.InvariantCulture;
+
+            template ??= await emailTemplatesRepository.GetByNameAndCultureAsync(templateName, culture, cancellationToken);
         }
 
         return template;
@@ -145,39 +137,32 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 
     /// <summary>
     /// Creates the <see cref="EmailModel"/> using the given
-    /// <paramref name="template"/>, <paramref name="from"/>,
-    /// <paramref name="model"/>, <paramref name="subjectArgs"/>
-    /// and <paramref name="bodyArgs"/>.
+    /// <paramref name="template"/>, <paramref name="request"/> and
+    /// <paramref name="from"/>.
     /// </summary>
     /// <param name="template">
     /// The <see cref="EmailTemplate"/> to be used to
     /// format the email body.
     /// </param>
+    /// <param name="request">
+    /// Contains other data, necessary for proper
+    /// <see cref="EmailModel"/> creation.
+    /// </param>
     /// <param name="from">
     /// Sender email address.
-    /// </param>
-    /// <param name="model">
-    /// Basic email information.
-    /// </param>
-    /// <param name="subjectArgs">
-    /// An object array that contains zero or more objects to format the email template subject.
-    /// </param>
-    /// <param name="bodyArgs">
-    /// An object array that contains zero or more objects to format the email template body.
     /// </param>
     /// <returns>
     /// Prepared for sending <see cref="EmailModel"/> instance.
     /// </returns>
-    private static EmailModel CreateMessage(EmailTemplate template, string from, BaseEmailModel model,
-                                            IList<object?>? subjectArgs, IList<object?>? bodyArgs)
+    private static EmailModel CreateMessage(EmailTemplate template, EmailSendRequestModel request, string from)
     {
         string? body = null;
         string? subject = null;
 
         try
         {
-            body = template.GetFormattedText(bodyArgs ?? Array.Empty<object>());
-            subject = template.GetFormattedSubject(subjectArgs ?? Array.Empty<object>());
+            body = template.GetFormattedText(request.BodyArgs ?? Array.Empty<object>());
+            subject = template.GetFormattedSubject(request.SubjectArgs ?? Array.Empty<object>());
         }
         catch (IndexOutOfRangeException e)
         {
@@ -188,7 +173,7 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
             Throw(ServiceUnavailable, MessageTemplateMissingPlaceholder, e.Message);
         }
 
-        return new(subject, body, from, model)
+        return new(subject, body, from, request.BasicData)
         {
             IsBodyHtml = template.IsBodyHtml,
             Sent = DateTime.UtcNow

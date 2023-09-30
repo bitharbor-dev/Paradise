@@ -6,7 +6,10 @@ using Paradise.Maintenance.Workers;
 using Paradise.Options.Origins;
 
 static void AddWorkerOptions<TOptions>(IServiceCollection services, IConfiguration configuration) where TOptions : class
-    => services.AddOptions<TOptions>().Bind(configuration.GetRequiredSection(typeof(TOptions).Name)).ValidateDataAnnotations().ValidateOnStart();
+    => services.AddOptions<TOptions>()
+    .Bind(configuration.GetRequiredSection(typeof(TOptions).Name))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 static void AddWorkersOptions(IServiceCollection services, IConfiguration configuration)
 {
@@ -17,7 +20,7 @@ static void AddWorkersOptions(IServiceCollection services, IConfiguration config
 
 static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
 {
-    var servicesBuilder = new ServiceCollectionBuilder(services, JsonConfigurationOrigin.DefaultInstance);
+    var servicesBuilder = new ServiceCollectionBuilder(services, JsonConfigurationOrigin.Default);
 
     servicesBuilder.ConfigureRequiredServices();
 

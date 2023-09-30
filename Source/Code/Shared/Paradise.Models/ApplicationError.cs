@@ -62,9 +62,13 @@ public readonly struct ApplicationError : IEquatable<ApplicationError>
     /// </returns>
     public override string ToString()
     {
-        var format = ModelsLocalizationMessages.ErrorToStringFormat;
+        var messageFormat = ModelsLocalizationMessages.ErrorToStringFormat;
+        var code = (int)Code;
 
-        return string.Format(CultureInfo.CurrentCulture, format, (int)Code, Description);
+        return string.Format(CultureInfo.CurrentCulture,
+                             messageFormat,
+                             code,
+                             Description);
     }
 
     /// <inheritdoc/>

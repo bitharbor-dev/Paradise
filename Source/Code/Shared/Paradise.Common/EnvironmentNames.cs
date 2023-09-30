@@ -17,7 +17,7 @@ public static class EnvironmentNames
     private const string AspNetCoreEnvironmentVariableName = "ASPNETCORE_ENVIRONMENT";
 
     /// <summary>
-    /// Default environment variable name for "EnvironmentName" in .NET Core applications.
+    /// Default environment variable name for "EnvironmentName" in .NET or .NET Core applications.
     /// </summary>
     private const string DotNetCoreEnvironmentVariableName = "DOTNET_ENVIRONMENT";
 

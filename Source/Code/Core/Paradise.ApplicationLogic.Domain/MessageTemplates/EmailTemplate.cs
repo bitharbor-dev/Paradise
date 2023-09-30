@@ -118,7 +118,7 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
         {
             var placeholder = string.Concat(SubjectPlaceholderName, index);
 
-            if (!Subject.Contains(placeholder, StringComparison.InvariantCulture))
+            if (!Subject.Contains(placeholder, StringComparison.OrdinalIgnoreCase))
             {
                 var message = string.Format(CultureInfo.CurrentCulture,
                                             ExceptionMessages.PlaceholderNotExists,

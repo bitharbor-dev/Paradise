@@ -155,8 +155,9 @@ public sealed class RoleService(UserManager userManager,
         role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
         user.ThrowIfNull(NotFound, UserIdNotFound, userId);
 
-        var identityResult = assign ? await userManager.AddToRoleAsync(user, role.Name)
-                                    : await userManager.RemoveFromRoleAsync(user, role.Name);
+        var identityResult = await (assign
+            ? userManager.AddToRoleAsync(user, role.Name)
+            : userManager.RemoveFromRoleAsync(user, role.Name));
 
         identityResult.ThrowIfUnsuccessfulIdentityResult();
 
@@ -182,7 +183,9 @@ public sealed class RoleService(UserManager userManager,
     {
         var normalizedName = roleManager.NormalizeKey(name);
 
-        return roleManager.Roles.SingleOrDefaultAsync(role => role.NormalizedName == normalizedName, cancellationToken);
+        return roleManager
+            .Roles
+            .SingleOrDefaultAsync(role => role.NormalizedName == normalizedName, cancellationToken);
     }
 
     /// <summary>
