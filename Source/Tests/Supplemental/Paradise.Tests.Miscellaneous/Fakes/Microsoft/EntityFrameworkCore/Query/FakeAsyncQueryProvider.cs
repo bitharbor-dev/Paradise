@@ -96,15 +96,15 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
             // Invokes the IQueryProvider.Execute<T>(Expression) method on the current instance
             // parametrized with "invocationParameterizerType"
             var invocationResult = typeof(IQueryProvider)
-                .GetMethod(nameof(IQueryProvider.Execute), 1, new[] { typeof(Expression) })!
+                .GetMethod(nameof(IQueryProvider.Execute), 1, [typeof(Expression)])!
                 .MakeGenericMethod(invocationParameterizerType)
-                .Invoke(this, new[] { expression });
+                .Invoke(this, [expression]);
 
             var fromResultMethod = typeof(Task).GetMethod(nameof(Task.FromResult))!;
 
             var genericMethod = fromResultMethod.MakeGenericMethod(invocationParameterizerType);
 
-            return (TResult)genericMethod.Invoke(null, new[] { invocationResult })!;
+            return (TResult)genericMethod.Invoke(null, [invocationResult])!;
         }
         catch (TargetInvocationException e)
         {

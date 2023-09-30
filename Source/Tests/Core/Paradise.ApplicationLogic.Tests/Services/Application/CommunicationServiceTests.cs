@@ -24,7 +24,7 @@ public sealed class CommunicationServiceTests
     #endregion
 
     #region Fields
-    private static readonly string[] _defaultArgs = new[] { "Test parameter" };
+    private static readonly string[] _defaultArgs = ["Test parameter"];
     #endregion
 
     #region Constructors
@@ -134,7 +134,7 @@ public sealed class CommunicationServiceTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(Array.Empty<string>()),
+        var request = new EmailSendRequestModel(new([]),
                                                 templateName,
                                                 culture,
                                                 _defaultArgs);
@@ -171,10 +171,7 @@ public sealed class CommunicationServiceTests
         await CreateEmailTemplateAsync(templateName: templateName,
                                        culture: culture);
 
-        var request = new EmailSendRequestModel(new(new[] { TestEmail })
-                                                {
-                                                    Bcc = new[] { InvalidEmailAddress }
-                                                },
+        var request = new EmailSendRequestModel(new([TestEmail]) { Bcc = [InvalidEmailAddress] },
                                                 templateName,
                                                 culture);
 
@@ -203,7 +200,7 @@ public sealed class CommunicationServiceTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(new[] { TestEmail }),
+        var request = new EmailSendRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 _defaultArgs);
@@ -236,10 +233,7 @@ public sealed class CommunicationServiceTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(new[] { TestEmail })
-                                                {
-                                                    Cc = new[] { InvalidEmailAddress }
-                                                },
+        var request = new EmailSendRequestModel(new([TestEmail]) { Cc = [InvalidEmailAddress] },
                                                 templateName,
                                                 culture);
 
@@ -271,7 +265,7 @@ public sealed class CommunicationServiceTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(new[] { InvalidEmailAddress }),
+        var request = new EmailSendRequestModel(new([InvalidEmailAddress]),
                                                 templateName,
                                                 culture);
 
@@ -303,7 +297,7 @@ public sealed class CommunicationServiceTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(new[] { TestEmail }),
+        var request = new EmailSendRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 null,
@@ -338,7 +332,7 @@ public sealed class CommunicationServiceTests
         var templateText = "Text without placeholder.";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(new[] { TestEmail }),
+        var request = new EmailSendRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 _defaultArgs);
@@ -374,7 +368,7 @@ public sealed class CommunicationServiceTests
         var subject = "Text without placeholder.";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new(new[] { TestEmail }),
+        var request = new EmailSendRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 null,
@@ -407,7 +401,7 @@ public sealed class CommunicationServiceTests
     public async void SendEmailAsync_ThrowsOnNonExistingEmailTemplate()
     {
         // Arrange
-        var request = new EmailSendRequestModel(new(new[] { TestEmail }),
+        var request = new EmailSendRequestModel(new([TestEmail]),
                                                 string.Empty,
                                                 null,
                                                 _defaultArgs);
@@ -479,42 +473,12 @@ public sealed class CommunicationServiceTests
     /// <summary>
     /// Provides member data for <see cref="SendEmailAsync"/> method.
     /// </summary>
-    public static IEnumerable<object[]> SendEmailAsync_MemberData => new[]
+    public static IEnumerable<object[]> SendEmailAsync_MemberData => new object[][]
     {
-        new object[]
-        {
-            new BaseEmailModel(new[] { TestEmail })
-        },
-        new object[]
-        {
-            new BaseEmailModel(new[] { TestEmail })
-            {
-                Attachmetns = new[]
-                {
-                    new EmailAttachmentModel(Array.Empty<byte>(), "Test", "text/plain")
-                }
-            }
-        },
-        new object[]
-        {
-            new BaseEmailModel(new[] { TestEmail })
-            {
-                Cc = new[]
-                {
-                    TestEmail
-                }
-            }
-        },
-        new object[]
-        {
-            new BaseEmailModel(new[] { TestEmail })
-            {
-                Bcc = new[]
-                {
-                    TestEmail
-                }
-            }
-        }
+        [new BaseEmailModel([TestEmail])],
+        [new BaseEmailModel([TestEmail]) { Attachmetns = [new([], "Test", "text/plain")] }],
+        [new BaseEmailModel([TestEmail]) { Cc = [TestEmail] }],
+        [new BaseEmailModel([TestEmail]) { Bcc = [TestEmail] }]
     };
     #endregion
 }

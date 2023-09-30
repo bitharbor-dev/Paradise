@@ -214,7 +214,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
 
-        Source.AddRange(new[] { entity1, entity2 });
+        Source.AddRange([entity1, entity2]);
         Source.SaveChanges();
 
         var created = DateTime.UtcNow;
@@ -246,7 +246,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
 
-        Source.AddRange(new[] { entity1, entity2 });
+        Source.AddRange([entity1, entity2]);
         Source.SaveChanges();
 
         var id = entity1.Id;
@@ -281,7 +281,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
 
-        Source.AddRange(new[] { entity1, entity2 });
+        Source.AddRange([entity1, entity2]);
         Source.SaveChanges();
 
         var created = DateTime.UtcNow;
@@ -313,7 +313,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
 
-        Source.AddRange(new[] { entity1, entity2 });
+        Source.AddRange([entity1, entity2]);
         Source.SaveChanges();
 
         var id = entity1.Id;

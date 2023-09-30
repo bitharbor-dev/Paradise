@@ -186,7 +186,7 @@ internal static class IQueryableExtensions
     {
         var stringType = typeof(string);
 
-        return stringType.GetMethod(nameof(string.Contains), new[] { stringType })!;
+        return stringType.GetMethod(nameof(string.Contains), [stringType])!;
     }
 
     /// <summary>

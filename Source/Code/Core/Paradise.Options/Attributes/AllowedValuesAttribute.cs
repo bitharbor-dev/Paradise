@@ -26,7 +26,7 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
     /// <summary>
     /// Allowed values array.
     /// </summary>
-    public T[] Values { get; } = values ?? Array.Empty<T>();
+    public T[] Values { get; } = values ?? [];
 
     /// <summary>
     /// Equality comparer type.

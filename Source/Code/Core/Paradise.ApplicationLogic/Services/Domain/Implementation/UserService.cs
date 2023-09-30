@@ -1060,10 +1060,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { user.Email }),
+            basicData: new([user.Email]),
             templateName: template,
             culture: culture,
-            bodyArgs: new[] { link });
+            bodyArgs: [link]);
 
         var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
 
@@ -1096,10 +1096,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { user.Email }),
+            basicData: new([user.Email]),
             templateName: template,
             culture: culture,
-            bodyArgs: new[] { verificationCode });
+            bodyArgs: [verificationCode]);
 
         return communicationService.SendEmailAsync(request, cancellationToken);
     }
@@ -1133,10 +1133,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { user.Email }),
+            basicData: new([user.Email]),
             templateName: template,
             culture: culture,
-            bodyArgs: new[] { identityToken });
+            bodyArgs: [identityToken]);
 
         var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
 
@@ -1169,7 +1169,7 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { user.Email }),
+            basicData: new([user.Email]),
             templateName: template,
             culture: culture);
 
@@ -1201,10 +1201,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { user.Email }),
+            basicData: new([user.Email]),
             templateName: template,
             culture: culture,
-            bodyArgs: new[] { user.UserName, newEmail });
+            bodyArgs: [user.UserName, newEmail]);
 
         return communicationService.SendEmailAsync(request, cancellationToken);
     }
@@ -1244,10 +1244,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { newEmail }),
+            basicData: new([newEmail]),
             templateName: template,
             culture: culture,
-            bodyArgs: new object?[] { user.UserName, link });
+            bodyArgs: [user.UserName, link]);
 
         var emailResult = await communicationService.SendEmailAsync(request, cancellationToken);
 
@@ -1282,10 +1282,10 @@ public sealed class UserService(ILogger<UserService> logger,
         var culture = Thread.CurrentThread.CurrentUICulture;
 
         var request = new EmailSendRequestModel(
-            basicData: new(to: new[] { oldEmail, newEmail }),
+            basicData: new([oldEmail, newEmail]),
             templateName: template,
             culture: culture,
-            bodyArgs: new object?[] { userName, newEmail });
+            bodyArgs: [userName, newEmail]);
 
         return communicationService.SendEmailAsync(request, cancellationToken);
     }

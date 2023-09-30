@@ -363,29 +363,11 @@ public sealed class EmailTemplateTests
     /// <summary>
     /// Provides member data for <see cref="GetFormattedSubject"/> method.
     /// </summary>
-    public static IEnumerable<object?[]> GetFormattedSubject_MemberData => new[]
+    public static IEnumerable<object?[]> GetFormattedSubject_MemberData => new object?[][]
     {
-        new object?[]
-        {
-            "Test",
-            null,
-            (ushort)0,
-            new List<object?>()
-        },
-        new object?[]
-        {
-            "Test with {arg}0",
-            "{arg}",
-            (ushort)1,
-            new List<object?> { "My placeholder replacement" }
-        },
-        new object?[]
-        {
-            "Test with {arg}0 and another {arg}1",
-            "{arg}",
-            (ushort)2,
-            new List<object?> { "My placeholder replacement", "And another one" }
-       }
+        ["Test",                        null,       (ushort)0,  new List<object?>()],
+        ["Test with {arg}0",            "{arg}",    (ushort)1,  new List<object?> { "Value" }],
+        ["Test with {arg}0 and {arg}1", "{arg}",    (ushort)2,  new List<object?> { "First value", "Second value" }]
     };
     #endregion
 }

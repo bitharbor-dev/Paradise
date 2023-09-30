@@ -53,15 +53,8 @@ public static class EnvironmentNames
     #endregion
 
     #region Fields
-    private static readonly IEnumerable<string> _allowedEnvironments = new[]
-    {
-        Development,
-        Staging,
-        Production,
-        DockerDevelopment,
-        DockerStaging,
-        DockerProduction
-    };
+    private static readonly IEnumerable<string> _allowedEnvironments =
+        [Development, Staging, Production, DockerDevelopment, DockerStaging, DockerProduction];
 
     private static string? _current;
     #endregion

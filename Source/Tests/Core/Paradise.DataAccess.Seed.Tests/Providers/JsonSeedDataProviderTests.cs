@@ -13,13 +13,13 @@ public sealed class JsonSeedDataProviderTests
     {
         using var applicationDataStream = new MemoryStream(JsonSerializer.SerializeToUtf8Bytes(new ApplicationDataSeedModel
         {
-            EmailTemplates = new SeedEmailTemplateModel[] { new("", "", "") }
+            EmailTemplates = [new("", "", "")]
         }));
 
         using var domainDataStream = new MemoryStream(JsonSerializer.SerializeToUtf8Bytes(new DomainDataSeedModel
         {
-            Roles = new SeedRoleModel[] { new("") },
-            Users = new SeedUserModel[] { new("", "", "") }
+            Roles = [new("")],
+            Users = [new("", "", "")]
         }));
 
         Provider = new(null, applicationDataStream, domainDataStream);

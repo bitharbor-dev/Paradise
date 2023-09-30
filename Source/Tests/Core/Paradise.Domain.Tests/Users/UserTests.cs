@@ -163,10 +163,10 @@ public sealed class UserTests
     /// <summary>
     /// Provides member data for <see cref="IsDeletionRequestOutdated_ReturnsFalse"/> method.
     /// </summary>
-    public static IEnumerable<object?[]> IsDeletionRequestOutdated_ReturnsFalse_MemberData => new[]
+    public static IEnumerable<object?[]> IsDeletionRequestOutdated_ReturnsFalse_MemberData => new object?[][]
     {
-        new object?[] { null },
-        new object?[] { DateTime.UtcNow }
+        [null],
+        [DateTime.UtcNow]
     };
     #endregion
 }

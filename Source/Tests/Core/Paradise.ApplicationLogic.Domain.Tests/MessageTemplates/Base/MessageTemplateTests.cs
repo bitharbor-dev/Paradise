@@ -231,29 +231,11 @@ public sealed class MessageTemplateTests
     /// <summary>
     /// Provides member data for <see cref="GetFormattedText"/> method.
     /// </summary>
-    public static IEnumerable<object?[]> GetFormattedText_MemberData => new[]
+    public static IEnumerable<object?[]> GetFormattedText_MemberData => new object?[][]
     {
-        new object?[]
-        {
-            null,
-            (ushort)0,
-            "Test",
-            new List<object?>()
-        },
-        new object?[]
-        {
-            "{arg}",
-            (ushort)1,
-            "Test with {arg}0",
-            new List<object?> { "My placeholder replacement" }
-        },
-        new object?[]
-        {
-            "{arg}",
-            (ushort)2,
-            "Test with {arg}0 and another {arg}1",
-            new List<object?> { "My placeholder replacement", "And another one" }
-       }
+        ["Test",                        null,       (ushort)0,  new List<object?>()],
+        ["Test with {arg}0",            "{arg}",    (ushort)1,  new List<object?> { "Value" }],
+        ["Test with {arg}0 and {arg}1", "{arg}",    (ushort)2,  new List<object?> { "First value", "Second value" }]
     };
     #endregion
 }

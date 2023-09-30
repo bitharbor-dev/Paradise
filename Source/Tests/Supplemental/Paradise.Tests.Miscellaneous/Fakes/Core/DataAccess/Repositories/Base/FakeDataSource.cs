@@ -66,7 +66,7 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
                             if (entry.Entity.Id != Guid.Empty)
                                 throw new ArgumentException(nameof(entry));
 
-                            if (set.Except(new[] { entry }).Any(e => ReferenceEquals(e.Entity, entry.Entity)))
+                            if (set.Except([entry]).Any(e => ReferenceEquals(e.Entity, entry.Entity)))
                                 throw new ArgumentException(nameof(entry));
 
                             entry.Entity.ValidateState();
@@ -159,7 +159,7 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
             }
             else
             {
-                set = new() { entity };
+                set = [entity];
 
                 _dataSets.Add(typeof(TEntity), set);
             }
@@ -210,7 +210,7 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
             }
             else
             {
-                set = new();
+                set = [];
 
                 _dataSets.Add(typeof(TEntity), set);
 
