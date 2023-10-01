@@ -211,8 +211,7 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
     /// </returns>
     private static T Compile<T>(Expression expression)
     {
-        var body = FakeExpressionVisitor.VisitExpression(expression)
-            ?? throw new InvalidOperationException(); // TODO: Provide meaningful exception message.
+        var body = FakeExpressionVisitor.VisitExpression(expression);
 
         var function = Expression.Lambda<Func<T>>(body);
 
@@ -228,7 +227,7 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
     {
         #region Public methods
         /// <inheritdoc cref="ExpressionVisitor.Visit(Expression?)"/>
-        public static Expression? VisitExpression(Expression expression)
+        public static Expression VisitExpression(Expression expression)
             => new FakeExpressionVisitor().Visit(expression);
         #endregion
     }
