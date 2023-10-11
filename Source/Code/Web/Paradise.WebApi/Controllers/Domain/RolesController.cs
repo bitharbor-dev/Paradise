@@ -51,8 +51,8 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpGet(RoleRoutes.GetAll)]
     [ResultResponse<IEnumerable<RoleModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
     public async Task<IActionResult> GetAll([FromQuery(Name = IsDefaultParameter)] bool? isDefault = null)
         => await roleService.GetAllAsync(isDefault).ConfigureAwait(false);
 
@@ -69,9 +69,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpGet(RoleRoutes.GetById)]
     [ResultResponse<RoleModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetById([FromRoute(Name = RoleIdParameter)] Guid roleId)
         => await roleService.GetByIdAsync(roleId).ConfigureAwait(false);
 
@@ -91,9 +91,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpGet(RoleRoutes.GetUserRoles)]
     [ResultResponse<IEnumerable<RoleModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetUserRoles([FromRoute(Name = UserIdParameter)] Guid userId)
         => await roleService.GetUserRolesAsync(userId).ConfigureAwait(false);
 
@@ -111,9 +111,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpPost(RoleRoutes.Create)]
     [ResultResponse<RoleModel>(HttpStatusCode.Created)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
     public async Task<IActionResult> Create([FromBody, Required] RoleCreationModel model)
         => await roleService.CreateAsync(model).ConfigureAwait(false);
 
@@ -134,9 +134,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpPatch(RoleRoutes.Update)]
     [ResultResponse<RoleModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> Update([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromBody, Required] RoleUpdateModel model)
         => await roleService.UpdateAsync(roleId, model).ConfigureAwait(false);
 
@@ -154,9 +154,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpDelete(RoleRoutes.Delete)]
     [ResultResponse<IEnumerable<RoleModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> Delete([FromRoute(Name = RoleIdParameter)] Guid roleId)
         => await roleService.DeleteAsync(roleId).ConfigureAwait(false);
 
@@ -178,9 +178,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpPatch(RoleRoutes.Assign)]
     [ResultResponse<IEnumerable<RoleModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> Assign([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromRoute(Name = UserIdParameter)] Guid userId)
         => await roleService.AssignAsync(roleId, userId).ConfigureAwait(false);
 
@@ -202,9 +202,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// </returns>
     [HttpDelete(RoleRoutes.Unassign)]
     [ResultResponse<IEnumerable<RoleModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(HttpStatusCode.NotFound)]
     public async Task<IActionResult> Unassign([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromRoute(Name = UserIdParameter)] Guid userId)
         => await roleService.UnassignAsync(roleId, userId).ConfigureAwait(false);
     #endregion
