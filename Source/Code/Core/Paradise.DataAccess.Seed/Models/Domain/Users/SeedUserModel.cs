@@ -1,52 +1,40 @@
-﻿using Paradise.Common;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Paradise.DataAccess.Seed.Models.Domain.Users;
 
 /// <summary>
 /// User seed data schema.
 /// </summary>
-public sealed class SeedUserModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="SeedUserModel"/> class.
+/// </remarks>
+/// <param name="userName">
+/// User's user-name.
+/// </param>
+/// <param name="email">
+/// User's email address.
+/// </param>
+/// <param name="password">
+/// User's password.
+/// </param>
+[method: JsonConstructor]
+public sealed class SeedUserModel(string userName, string email, string password)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SeedUserModel"/> class.
-    /// </summary>
-    /// <param name="userName">
-    /// User's user-name.
-    /// </param>
-    /// <param name="email">
-    /// User's email address.
-    /// </param>
-    /// <param name="password">
-    /// User's password.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public SeedUserModel(string userName, string email, string password)
-    {
-        UserName = userName;
-        Email = email;
-        Password = password;
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// User's user-name.
     /// </summary>
-    public string UserName { get; set; }
+    public string UserName { get; set; } = userName;
 
     /// <summary>
     /// User's email address.
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = email;
 
     /// <summary>
     /// User's password.
     /// </summary>
-    public string Password { get; set; }
+    public string Password { get; set; } = password;
 
     /// <summary>
     /// Indicates whether the user's email address has been confirmed.

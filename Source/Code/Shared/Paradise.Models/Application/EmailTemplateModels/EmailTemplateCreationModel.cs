@@ -1,6 +1,4 @@
-﻿using Paradise.Common;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Paradise.Models.Application.EmailTemplateModels;
@@ -8,37 +6,27 @@ namespace Paradise.Models.Application.EmailTemplateModels;
 /// <summary>
 /// Email template creation schema.
 /// </summary>
-public sealed class EmailTemplateCreationModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="EmailTemplateCreationModel"/> class.
+/// </remarks>
+/// <param name="templateName">
+/// Template name.
+/// </param>
+/// <param name="templateText">
+/// Template text.
+/// </param>
+/// <param name="subject">
+/// Email subject.
+/// </param>
+[method: JsonConstructor]
+public sealed class EmailTemplateCreationModel(string templateName, string subject, string templateText)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EmailTemplateCreationModel"/> class.
-    /// </summary>
-    /// <param name="templateName">
-    /// Template name.
-    /// </param>
-    /// <param name="templateText">
-    /// Template text.
-    /// </param>
-    /// <param name="subject">
-    /// Email subject.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public EmailTemplateCreationModel(string templateName, string subject, string templateText)
-    {
-        TemplateName = templateName;
-        Subject = subject;
-        TemplateText = templateText;
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// Template name.
     /// </summary>
     [Required, DataType(DataType.Text)]
-    public string TemplateName { get; set; }
+    public string TemplateName { get; set; } = templateName;
 
     /// <summary>
     /// Template culture LCID.
@@ -49,13 +37,13 @@ public sealed class EmailTemplateCreationModel
     /// Template text.
     /// </summary>
     [Required, DataType(DataType.Html)]
-    public string TemplateText { get; set; }
+    public string TemplateText { get; set; } = templateText;
 
     /// <summary>
     /// Email subject.
     /// </summary>
     [Required, DataType(DataType.Text)]
-    public string Subject { get; set; }
+    public string Subject { get; set; } = subject;
 
     /// <summary>
     /// Placeholder name to be replaced with values during a message formatting.

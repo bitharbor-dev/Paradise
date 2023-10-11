@@ -1,7 +1,5 @@
-﻿using Paradise.Common;
-using Paradise.Localization.ModelsLocalization;
+﻿using Paradise.Localization.ModelsLocalization;
 using Paradise.Models.Extensions;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
@@ -10,45 +8,35 @@ namespace Paradise.Models;
 /// <summary>
 /// Represents an application error.
 /// </summary>
-public readonly struct ApplicationError : IEquatable<ApplicationError>
+/// <remarks>
+/// Initializes a new instance of the <see cref="ApplicationError"/> structure
+/// with the specified error code and description.
+/// </remarks>
+/// <param name="code">
+/// Error code.
+/// </param>
+/// <param name="description">
+/// Error description.
+/// </param>
+[method: JsonConstructor]
+public readonly struct ApplicationError(ErrorCode code, string description) : IEquatable<ApplicationError>
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ApplicationError"/> structure
-    /// with the specified error code and description.
-    /// </summary>
-    /// <param name="code">
-    /// Error code.
-    /// </param>
-    /// <param name="description">
-    /// Error description.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public ApplicationError(ErrorCode code, string description)
-    {
-        Code = code;
-        Description = description;
-        IsCritical = code.GetIsCritical();
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// Error code.
     /// </summary>
-    public ErrorCode Code { get; }
+    public ErrorCode Code { get; } = code;
 
     /// <summary>
     /// Error description.
     /// </summary>
-    public string Description { get; }
+    public string Description { get; } = description;
 
     /// <summary>
     /// Indicates whether the error is critical.
     /// </summary>
     [JsonIgnore]
-    public bool IsCritical { get; }
+    public bool IsCritical { get; } = code.GetIsCritical();
     #endregion
 
     #region Public methods

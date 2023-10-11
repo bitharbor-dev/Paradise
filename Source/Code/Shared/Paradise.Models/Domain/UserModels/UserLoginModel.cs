@@ -1,7 +1,5 @@
-﻿using Paradise.Common;
-using Paradise.Models.Attributes;
+﻿using Paradise.Models.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Paradise.Models.Domain.UserModels;
@@ -9,22 +7,16 @@ namespace Paradise.Models.Domain.UserModels;
 /// <summary>
 /// User login schema.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserLoginModel"/> class.
+/// </remarks>
+/// <param name="password">
+/// User's password.
+/// </param>
+[method: JsonConstructor]
 [RequiredAtLeastOne(true, nameof(UserName), nameof(Email), nameof(Phone))]
-public sealed class UserLoginModel
+public sealed class UserLoginModel(string password)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserLoginModel"/> class.
-    /// </summary>
-    /// <param name="password">
-    /// User's password.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public UserLoginModel(string password)
-        => Password = password;
-    #endregion
-
     #region Properties
     /// <summary>
     /// User's user-name.
@@ -48,6 +40,6 @@ public sealed class UserLoginModel
     /// User's password.
     /// </summary>
     [Required, DataType(DataType.Password)]
-    public string Password { get; set; }
+    public string Password { get; set; } = password;
     #endregion
 }

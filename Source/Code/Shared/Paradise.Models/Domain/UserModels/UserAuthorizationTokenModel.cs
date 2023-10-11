@@ -1,6 +1,4 @@
-﻿using Paradise.Common;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Paradise.Models.Domain.UserModels;
@@ -8,48 +6,38 @@ namespace Paradise.Models.Domain.UserModels;
 /// <summary>
 /// Represents a user authorization token.
 /// </summary>
-public sealed class UserAuthorizationTokenModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserAuthorizationTokenModel"/> class.
+/// </remarks>
+/// <param name="email">
+/// User's email address.
+/// </param>
+/// <param name="expiryDate">
+/// Token expiry date.
+/// </param>
+/// <param name="token">
+/// Authorization token.
+/// </param>
+[method: JsonConstructor]
+public sealed class UserAuthorizationTokenModel(string email, DateTime expiryDate, string token)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserAuthorizationTokenModel"/> class.
-    /// </summary>
-    /// <param name="email">
-    /// User's email address.
-    /// </param>
-    /// <param name="expiryDate">
-    /// Token expiry date.
-    /// </param>
-    /// <param name="token">
-    /// Authorization token.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public UserAuthorizationTokenModel(string email, DateTime expiryDate, string token)
-    {
-        Email = email;
-        ExpiryDate = expiryDate;
-        Token = token;
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// User's email address.
     /// </summary>
     [Required, EmailAddress, DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    public string Email { get; set; } = email;
 
     /// <summary>
     /// Token expiry date.
     /// </summary>
     [DataType(DataType.Date)]
-    public DateTime ExpiryDate { get; set; }
+    public DateTime ExpiryDate { get; set; } = expiryDate;
 
     /// <summary>
     /// Authorization token.
     /// </summary>
     [Required, DataType(DataType.Text)]
-    public string Token { get; set; }
+    public string Token { get; set; } = token;
     #endregion
 }

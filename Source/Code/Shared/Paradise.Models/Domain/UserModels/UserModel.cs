@@ -1,6 +1,4 @@
-﻿using Paradise.Common;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Paradise.Models.Domain.UserModels;
@@ -8,27 +6,18 @@ namespace Paradise.Models.Domain.UserModels;
 /// <summary>
 /// Represents an application user.
 /// </summary>
-public sealed class UserModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserModel"/> class.
+/// </remarks>
+/// <param name="email">
+/// User's email address.
+/// </param>
+/// <param name="userName">
+/// User's user-name.
+/// </param>
+[method: JsonConstructor]
+public sealed class UserModel(string email, string userName)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserModel"/> class.
-    /// </summary>
-    /// <param name="email">
-    /// User's email address.
-    /// </param>
-    /// <param name="userName">
-    /// User's user-name.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public UserModel(string email, string userName)
-    {
-        Email = email;
-        UserName = userName;
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// User Id.
@@ -39,13 +28,13 @@ public sealed class UserModel
     /// User's user-name.
     /// </summary>
     [Required, DataType(DataType.Text)]
-    public string UserName { get; set; }
+    public string UserName { get; set; } = userName;
 
     /// <summary>
     /// User's email address.
     /// </summary>
     [Required, EmailAddress, DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    public string Email { get; set; } = email;
 
     /// <summary>
     /// User phone number.

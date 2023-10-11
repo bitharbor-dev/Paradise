@@ -1,51 +1,39 @@
-﻿using Paradise.Common;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Paradise.Models.Application.CommunicationModels;
 
 /// <summary>
 /// Represents an email attachment.
 /// </summary>
-public sealed class EmailAttachmentModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="EmailAttachmentModel"/> class.
+/// </remarks>
+/// <param name="data">
+/// Attachment content.
+/// </param>
+/// <param name="fileName">
+/// Attachment file name.
+/// </param>
+/// <param name="mimeType">
+/// Attachment MIME type.
+/// </param>
+[method: JsonConstructor]
+public sealed class EmailAttachmentModel(byte[] data, string fileName, string mimeType)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EmailAttachmentModel"/> class.
-    /// </summary>
-    /// <param name="data">
-    /// Attachment content.
-    /// </param>
-    /// <param name="fileName">
-    /// Attachment file name.
-    /// </param>
-    /// <param name="mimeType">
-    /// Attachment MIME type.
-    /// </param>
-    [JsonConstructor]
-    [SuppressMessage(SuppressionOfIDE0290.Category, SuppressionOfIDE0290.CheckId, Justification = SuppressionOfIDE0290.Justification)]
-    public EmailAttachmentModel(byte[] data, string fileName, string mimeType)
-    {
-        Data = data;
-        FileName = fileName;
-        MimeType = mimeType;
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// Attachment content.
     /// </summary>
-    public byte[] Data { get; set; }
+    public byte[] Data { get; set; } = data;
 
     /// <summary>
     /// Attachment file name.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = fileName;
 
     /// <summary>
     /// Attachment MIME type.
     /// </summary>
-    public string MimeType { get; set; }
+    public string MimeType { get; set; } = mimeType;
     #endregion
 }
