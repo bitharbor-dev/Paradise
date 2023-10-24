@@ -9,8 +9,8 @@ namespace Paradise.ApplicationLogic.Exceptions;
 public sealed class ResultException : Exception
 {
     #region Fields
-    private readonly List<Tuple<ErrorCode, object?[]>> _errorData = new();
-    private readonly List<IdentityResult> _identityErrors = new();
+    private readonly List<Tuple<ErrorCode, object?[]>> _errorData = [];
+    private readonly List<IdentityResult> _identityErrors = [];
     #endregion
 
     #region Constructors

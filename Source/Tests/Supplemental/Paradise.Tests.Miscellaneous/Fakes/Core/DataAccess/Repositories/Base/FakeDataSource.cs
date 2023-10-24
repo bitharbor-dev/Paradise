@@ -120,7 +120,7 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
     private sealed class DataSetCache
     {
         #region Fields
-        private readonly Dictionary<Type, List<Entry<IDatabaseRecord>>> _dataSets = new();
+        private readonly Dictionary<Type, List<Entry<IDatabaseRecord>>> _dataSets = [];
         #endregion
 
         #region Public methods

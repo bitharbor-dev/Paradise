@@ -26,8 +26,8 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     #region Fields
     private readonly IDomainDataSource _domainDataSource = domainDataSource;
 
-    private readonly Dictionary<Guid, List<string>> _userRoles = new();
-    private readonly Dictionary<Guid, List<Claim>> _userClaims = new();
+    private readonly Dictionary<Guid, List<string>> _userRoles = [];
+    private readonly Dictionary<Guid, List<Claim>> _userClaims = [];
     #endregion
 
     #region Properties
@@ -173,7 +173,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         }
         else
         {
-            _userClaims.Add(user.Id, new() { newClaim });
+            _userClaims.Add(user.Id, [newClaim]);
         }
 
         return Task.CompletedTask;
@@ -372,7 +372,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         if (_userRoles.TryGetValue(user.Id, out var storedRoles))
             storedRoles.Add(roleName);
         else
-            _userRoles.Add(user.Id, new() { roleName });
+            _userRoles.Add(user.Id, [roleName]);
 
         return Task.CompletedTask;
     }

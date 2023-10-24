@@ -130,7 +130,7 @@ public sealed class UserServiceTests
     /// <summary>
     /// All sent emails will appear in this list during test methods execution.
     /// </summary>
-    private List<EmailMessageSentEventArgs> SentEmailsCache { get; } = new();
+    private List<EmailMessageSentEventArgs> SentEmailsCache { get; } = [];
     #endregion
 
     #region Public methods

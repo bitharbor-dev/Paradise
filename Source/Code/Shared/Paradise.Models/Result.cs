@@ -25,7 +25,7 @@ public class Result : IActionResult
     #endregion
 
     #region Fields
-    private protected readonly List<ApplicationError> _errors = new();
+    private protected readonly List<ApplicationError> _errors = [];
     private HttpStatusCode? _statusCode;
     #endregion
 
