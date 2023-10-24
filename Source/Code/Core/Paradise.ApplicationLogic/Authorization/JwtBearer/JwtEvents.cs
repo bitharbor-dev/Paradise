@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Services.Application;
+using Paradise.Models;
 using System.Security.Claims;
 
 namespace Paradise.ApplicationLogic.Authorization.JwtBearer;
@@ -26,7 +27,9 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        return authorizationService.OnAuthenticationFailedAsync(context.Response);
+        var wrapper = new HttpResponseWrapper(context.Response);
+
+        return authorizationService.OnAuthenticationFailedAsync(wrapper);
     }
 
     /// <summary>
@@ -41,7 +44,9 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        return authorizationService.OnForbiddenAsync(context.Response);
+        var wrapper = new HttpResponseWrapper(context.Response);
+
+        return authorizationService.OnForbiddenAsync(wrapper);
     }
 
     /// <summary>
@@ -57,7 +62,9 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        return authorizationService.OnTokenValidatedAsync(context.Response,
+        var wrapper = new HttpResponseWrapper(context.Response);
+
+        return authorizationService.OnTokenValidatedAsync(wrapper,
                                                           context.Principal,
                                                           context.SecurityToken,
                                                           context.Fail);
@@ -75,8 +82,9 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        return authorizationService.OnChallengeAsync(context.Response,
-                                                     context.HandleResponse);
+        var wrapper = new HttpResponseWrapper(context.Response);
+
+        return authorizationService.OnChallengeAsync(wrapper, context.HandleResponse);
     }
     #endregion
 

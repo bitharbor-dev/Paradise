@@ -15,7 +15,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
-using System.Text.Json;
 using static Paradise.Models.ErrorCode;
 using static System.Net.HttpStatusCode;
 
@@ -36,9 +35,6 @@ namespace Paradise.ApplicationLogic.Services.Application.Implementation;
 /// <param name="jwtBearerOptions">
 /// The accessor used to access the <see cref="JwtBearerOptions"/>.
 /// </param>
-/// <param name="jsonSerializerOptions">
-/// The accessor used to access the <see cref="JsonSerializerOptions"/>.
-/// </param>
 /// <param name="userManager">
 /// User manager.
 /// </param>
@@ -51,7 +47,6 @@ namespace Paradise.ApplicationLogic.Services.Application.Implementation;
 public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                                          IOptions<ApplicationOptions> applicationOptions,
                                          IOptions<JwtBearerOptions> jwtBearerOptions,
-                                         IOptions<JsonSerializerOptions>? jsonSerializerOptions,
                                          UserManager userManager,
                                          IUserRefreshTokensRepository userRefreshTokensRepository,
                                          IJsonWebTokenService jsonWebTokenService)
@@ -60,12 +55,11 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     #region Fields
     private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
     private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
-    private readonly JsonSerializerOptions? _jsonSerializerOptions = jsonSerializerOptions?.Value;
     #endregion
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task OnAuthenticationFailedAsync(HttpResponse response)
+    public async Task OnAuthenticationFailedAsync(IHttpResponseWrapper response)
     {
         ArgumentNullException.ThrowIfNull(response);
 
@@ -82,7 +76,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
-    public async Task OnForbiddenAsync(HttpResponse response)
+    public async Task OnForbiddenAsync(IHttpResponseWrapper response)
     {
         ArgumentNullException.ThrowIfNull(response);
 
@@ -99,7 +93,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
-    public async Task OnTokenValidatedAsync(HttpResponse response, ClaimsPrincipal? principal,
+    public async Task OnTokenValidatedAsync(IHttpResponseWrapper response, ClaimsPrincipal? principal,
                                             SecurityToken securityToken, Action<string> failureDelegate)
     {
         ArgumentNullException.ThrowIfNull(response);
@@ -192,7 +186,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
-    public async Task OnChallengeAsync(HttpResponse response, Action handleResponseDelegate)
+    public async Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate)
     {
         ArgumentNullException.ThrowIfNull(response);
         ArgumentNullException.ThrowIfNull(handleResponseDelegate);
@@ -250,8 +244,8 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// <param name="args">
     /// An object array that contains zero or more objects to format.
     /// </param>
-    private async Task WriteErrorResultAsync(HttpResponse response, HttpStatusCode statusCode,
-                                             ErrorCode errorCode, params string[] args)
+    private static async Task WriteErrorResultAsync(IHttpResponseWrapper response, HttpStatusCode statusCode,
+                                                    ErrorCode errorCode, params string[] args)
     {
         if (response.HasStarted)
             return;
@@ -259,7 +253,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
         var result = new Result();
         result.AddError(statusCode, errorCode, args);
 
-        await result.WriteResponseContentAsync(response, _jsonSerializerOptions)
+        await response.WriteResultAsync(result)
             .ConfigureAwait(false);
 
         await response.CompleteAsync()
@@ -276,7 +270,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// <param name="exception">
     /// The <see cref="Exception"/> to be written.
     /// </param>
-    private async Task WriteExceptionResultAsync(HttpResponse response, Exception exception)
+    private async Task WriteExceptionResultAsync(IHttpResponseWrapper response, Exception exception)
     {
         logger.LogUnhandledException(exception);
 
@@ -286,7 +280,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
         var result = new Result();
         result.AddException(exception);
 
-        await result.WriteResponseContentAsync(response, _jsonSerializerOptions)
+        await response.WriteResultAsync(result)
             .ConfigureAwait(false);
 
         await response.CompleteAsync()
@@ -348,7 +342,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// Attempts to get the access token from the given response instance.
     /// </summary>
     /// <param name="response">
-    /// The <see cref="HttpResponse"/> to get the access token from.
+    /// The <see cref="IHttpResponseWrapper"/> to get the access token from.
     /// </param>
     /// <param name="accessToken">
     /// Access token.
@@ -357,9 +351,9 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// <see langword="true"/> if the token was retrieved successfully,
     /// otherwise - <see langword="false"/>.
     /// </returns>
-    private static bool TryGetAccessToken(HttpResponse response, [NotNullWhen(true)] out string? accessToken)
+    private static bool TryGetAccessToken(IHttpResponseWrapper response, [NotNullWhen(true)] out string? accessToken)
     {
-        var headers = response.HttpContext.Request.Headers;
+        var headers = response.RequestHeaders;
         var result = headers.TryGetValue(HeaderNames.Authorization, out var value);
 
         accessToken = value.FirstOrDefault();

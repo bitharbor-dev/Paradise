@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
+using Paradise.Models;
 using System.Security.Claims;
 
 namespace Paradise.ApplicationLogic.Services.Application;
@@ -17,7 +17,7 @@ public interface IAuthorizationService
     /// <param name="response">
     /// The response.
     /// </param>
-    Task OnAuthenticationFailedAsync(HttpResponse response);
+    Task OnAuthenticationFailedAsync(IHttpResponseWrapper response);
 
     /// <summary>
     /// Invoked if Authorization fails and results in a Forbidden response.
@@ -25,7 +25,7 @@ public interface IAuthorizationService
     /// <param name="response">
     /// The response.
     /// </param>
-    Task OnForbiddenAsync(HttpResponse response);
+    Task OnForbiddenAsync(IHttpResponseWrapper response);
 
     /// <summary>
     /// Invoked after the security token has passed validation
@@ -43,7 +43,7 @@ public interface IAuthorizationService
     /// <param name="failureDelegate">
     /// If invoked - indicates that there was a failure during authentication.
     /// </param>
-    Task OnTokenValidatedAsync(HttpResponse response, ClaimsPrincipal? principal, SecurityToken securityToken, Action<string> failureDelegate);
+    Task OnTokenValidatedAsync(IHttpResponseWrapper response, ClaimsPrincipal? principal, SecurityToken securityToken, Action<string> failureDelegate);
 
     /// <summary>
     /// Invoked before a challenge is sent back to the caller.
@@ -54,6 +54,6 @@ public interface IAuthorizationService
     /// <param name="handleResponseDelegate">
     /// Skips any default logic for this challenge.
     /// </param>
-    Task OnChallengeAsync(HttpResponse response, Action handleResponseDelegate);
+    Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate);
     #endregion
 }
