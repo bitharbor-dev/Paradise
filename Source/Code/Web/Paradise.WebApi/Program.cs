@@ -6,7 +6,7 @@ using Paradise.Options.Origins;
 using Paradise.WebApi.Filters.ExceptionHandling;
 using Paradise.WebApi.Swagger;
 
-static WebApplication CreateApp(string[] args, out IConfiguration configuration)
+static WebApplication CreateApp(string[] args, out IConfiguration appSettings)
 {
     var builder = WebApplication.CreateBuilder(args);
     builder.Configuration.AddEnvironmentVariables();
@@ -23,7 +23,7 @@ static WebApplication CreateApp(string[] args, out IConfiguration configuration)
 
     builder.Services.AddSwaggerGen(options => options.Configure(builder.Configuration));
 
-    configuration = builder.Configuration;
+    appSettings = builder.Configuration;
 
     return builder.Build();
 }

@@ -81,7 +81,6 @@ public sealed class UserServiceTests
 
         Service = new(logger,
                       applicationOptions,
-                      jwtBearerOptions,
                       emailTemplateOptions,
                       identityOptions,
                       userManager,

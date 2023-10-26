@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -40,9 +39,6 @@ namespace Paradise.ApplicationLogic.Services.Domain.Implementation;
 /// <param name="applicationOptions">
 /// The accessor used to access the <see cref="ApplicationOptions"/>.
 /// </param>
-/// <param name="jwtBearerOptions">
-/// The accessor used to access the <see cref="JwtBearerOptions"/>.
-/// </param>
 /// <param name="emailTemplateOptions">
 /// The accessor used to access the <see cref="EmailTemplateOptions"/>.
 /// </param>
@@ -69,7 +65,6 @@ namespace Paradise.ApplicationLogic.Services.Domain.Implementation;
 /// </param>
 public sealed class UserService(ILogger<UserService> logger,
                                 IOptions<ApplicationOptions> applicationOptions,
-                                IOptions<JwtBearerOptions> jwtBearerOptions,
                                 IOptions<EmailTemplateOptions> emailTemplateOptions,
                                 IOptions<IdentityOptions> identityOptions,
                                 UserManager userManager,
@@ -82,7 +77,6 @@ public sealed class UserService(ILogger<UserService> logger,
 {
     #region Fields
     private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
-    private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
     private readonly EmailTemplateOptions _emailTemplateOptions = emailTemplateOptions.Value;
     private readonly IdentityOptions _identityOptions = identityOptions.Value;
     #endregion
@@ -656,7 +650,7 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<IEnumerable<Claim>> GetUserRolesAsClaimsAsync(User user)
     {
-        var roleClaimType = _jwtBearerOptions.TokenValidationParameters.RoleClaimType;
+        var roleClaimType = _identityOptions.ClaimsIdentity.RoleClaimType;
 
         var roleNames = await userManager
             .GetRolesAsync(user)
