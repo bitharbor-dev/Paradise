@@ -1,0 +1,134 @@
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Paradise.ApplicationLogic.Identity;
+using Paradise.ApplicationLogic.Services.Application;
+using Paradise.ApplicationLogic.Services.Application.Implementation;
+using Paradise.DataAccess.Database;
+using Paradise.DataAccess.Repositories;
+using Paradise.DataAccess.Repositories.Application;
+using Paradise.DataAccess.Repositories.Application.Implementation;
+using Paradise.DataAccess.Repositories.Domain;
+using Paradise.DataAccess.Repositories.Domain.Implementation;
+using Paradise.DataAccess.Seed.Providers;
+using Paradise.DataAccess.Seed.Providers.Implementation;
+using Paradise.Domain.Roles;
+using Paradise.Domain.Users;
+using Paradise.Options.Models;
+using Paradise.Options.Origins.Base;
+using System.Text.Json;
+
+namespace Paradise.DependencyInjection.Base;
+
+/// <summary>
+/// Contains common application services configuration.
+/// </summary>
+public abstract class ServiceCollectionBuilderCore : ServiceCollectionBuilderBase
+{
+    #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ServiceCollectionBuilderCore"/> class.
+    /// </summary>
+    /// <param name="services">
+    /// The service collection the builder will operate over.
+    /// </param>
+    /// <param name="configurationOrigin">
+    /// Configuration origin.
+    /// </param>
+    protected ServiceCollectionBuilderCore(IServiceCollection services, IConfigurationOrigin configurationOrigin)
+        : base(services, configurationOrigin) { }
+    #endregion
+
+    #region Protected methods
+    /// <inheritdoc/>
+    protected override void AddMiscellaneous()
+    {
+        base.AddMiscellaneous();
+
+        AddOptions<ApplicationOptions>(null, true, true);
+        AddOptions<JsonSerializerOptions>(null, true, true);
+
+        AddIdentity();
+
+        Services.AddScoped<ISeedDataProvider, JsonSeedDataProvider>();
+
+        Services.AddDataProtection()
+                .SetApplicationName(nameof(Paradise))
+                .PersistKeysToDbContext<ApplicationContext>();
+
+        Services.AddLogging();
+    }
+
+    /// <inheritdoc/>
+    protected override void AddRepositories()
+    {
+        base.AddRepositories();
+
+        AddDbContexts();
+
+        Services.AddScoped<IEmailTemplatesRepository, EmailTemplatesRepository>();
+        Services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
+    }
+
+    /// <inheritdoc/>
+    protected override void AddServices()
+    {
+        base.AddServices();
+
+        Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+        Services.AddScoped<IDatabaseService, DatabaseService>();
+    }
+    #endregion
+
+    #region Private methods
+    /// <summary>
+    /// Adds the identity services.
+    /// </summary>
+    private void AddIdentity()
+    {
+        AddOptions<IdentityOptions>(null, true, true);
+
+        void SetUpIdentity(IdentityOptions options)
+            => Configuration.GetRequiredSection(nameof(IdentityOptions)).Bind(options);
+
+        Services.AddIdentity<User, Role>(SetUpIdentity)
+            .AddEntityFrameworkStores<DomainContext>()
+            .AddRoleManager<RoleManager<Role>>()
+            .AddUserManager<UserManager>()
+            .AddDefaultTokenProviders();
+    }
+
+    /// <summary>
+    /// Adds the database contexts.
+    /// </summary>
+    private void AddDbContexts()
+    {
+        AddDbContext<IApplicationDataSource, ApplicationContext>(ApplicationContext.ConnectionStringName);
+        AddDbContext<IDomainDataSource, DomainContext>(DomainContext.ConnectionStringName);
+    }
+
+    /// <summary>
+    /// Adds the database context.
+    /// </summary>
+    /// <typeparam name="TContextService">
+    /// Database context service type.
+    /// </typeparam>
+    /// <typeparam name="TContextImplementation">
+    /// Database context implementation type.
+    /// </typeparam>
+    /// <param name="connectionStringName">
+    /// The name of the configuration value,
+    /// which contains the connection string.
+    /// </param>
+    private void AddDbContext<TContextService, TContextImplementation>(string connectionStringName)
+        where TContextImplementation : DbContext, TContextService
+    {
+        var connectionString = Configuration.GetConnectionString(connectionStringName);
+
+        Services.AddDbContext<TContextService, TContextImplementation>(
+            options => options.UseSqlServer(connectionString));
+    }
+    #endregion
+}

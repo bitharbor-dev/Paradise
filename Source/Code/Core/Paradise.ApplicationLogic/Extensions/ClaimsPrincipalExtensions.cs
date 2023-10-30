@@ -25,8 +25,7 @@ public static class ClaimsPrincipalExtensions
     /// </returns>
     public static Guid GetGuidClaim(this ClaimsPrincipal? principal, string type)
     {
-        if (principal is null)
-            return Guid.Empty;
+        ArgumentNullException.ThrowIfNull(principal);
 
         var guid = principal.FindFirstValue(type);
 

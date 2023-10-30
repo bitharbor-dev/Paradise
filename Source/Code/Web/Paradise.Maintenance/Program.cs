@@ -20,7 +20,7 @@ static void AddWorkersOptions(IServiceCollection services, IConfiguration config
 
 static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
 {
-    var servicesBuilder = new ServiceCollectionBuilder(services, JsonConfigurationOrigin.Default);
+    var servicesBuilder = new WorkerServiceCollectionBuilder(services, JsonConfigurationOrigin.Default);
 
     servicesBuilder.ConfigureRequiredServices();
 

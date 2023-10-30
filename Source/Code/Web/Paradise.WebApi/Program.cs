@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Paradise.ApplicationLogic.Authorization.JwtBearer.Keys.Implementation;
 using Paradise.ApplicationLogic.Services.Application;
 using Paradise.DataAccess.Seed.Providers;
 using Paradise.DependencyInjection;
@@ -11,8 +12,9 @@ static WebApplication CreateApp(string[] args, out IConfiguration appSettings)
     var builder = WebApplication.CreateBuilder(args);
     builder.Configuration.AddEnvironmentVariables();
 
-    var servicesBuilder = new ServiceCollectionBuilder(builder.Services, JsonConfigurationOrigin.Default);
-    servicesBuilder.AddBearerAuth();
+    var configurationOrigin = JsonConfigurationOrigin.Default;
+    var signingKeyProvider = new SecretBasedSigningKeyProvider(configurationOrigin.GetConfiguration());
+    var servicesBuilder = new ApiServiceCollectionBuilder(builder.Services, configurationOrigin, signingKeyProvider);
 
     servicesBuilder.ConfigureRequiredServices();
 
@@ -44,6 +46,7 @@ static void ConfigureApplication(WebApplication app, IConfiguration configuratio
     app.MapControllers();
 
     app.UseHttpsRedirection();
+    app.UseRequestLocalization();
 }
 
 static async Task SeedDatabasesAsync(IServiceProvider serviceProvider)
