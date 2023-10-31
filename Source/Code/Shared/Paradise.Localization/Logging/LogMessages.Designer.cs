@@ -196,7 +196,7 @@ namespace Paradise.Localization.Logging {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Running at {0}..
+        ///   Looks up a localized string similar to {0} - Running at {1}..
         /// </summary>
         internal static string InformationWorkerRunning {
             get {

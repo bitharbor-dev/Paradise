@@ -119,8 +119,8 @@ public static class LogMessagesDefinition
     /// <summary>
     /// Gets an action to be executed while logging background worker execution time.
     /// </summary>
-    public static Action<ILogger, DateTime, Exception?> InformationWorkerRunning { get; }
-        = LoggerMessage.Define<DateTime>(
+    public static Action<ILogger, string, DateTime, Exception?> InformationWorkerRunning { get; }
+        = LoggerMessage.Define<string, DateTime>(
             LogLevel.Information,
             LogMessagesEventIds.LogEventWorkerRunning,
             LogMessages.InformationWorkerRunning);

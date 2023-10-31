@@ -70,8 +70,11 @@ public static class ILoggerExtensions
     /// <param name="logger">
     /// The input <see cref="ILogger"/> object.
     /// </param>
-    public static void LogWorkerRunning(this ILogger logger)
-        => InformationWorkerRunning(logger, DateTime.UtcNow, null);
+    /// <param name="workerType">
+    /// The <see cref="Type"/> of running worker.
+    /// </param>
+    public static void LogWorkerRunning(this ILogger logger, Type workerType)
+        => InformationWorkerRunning(logger, workerType.Name, DateTime.UtcNow, null);
 
     /// <summary>
     /// Creates a log entry containing information

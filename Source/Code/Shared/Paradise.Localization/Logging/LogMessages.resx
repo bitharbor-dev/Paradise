@@ -168,7 +168,7 @@
     <comment>Pass `Environment.NewLine` as the second argument.</comment>
   </data>
   <data name="InformationWorkerRunning" xml:space="preserve">
-    <value>Running at {0}.</value>
+    <value>{0} - Running at {1}.</value>
   </data>
   <data name="WarningDatabaseEntrySeedFailure" xml:space="preserve">
     <value>Failed to create an entry of '{0}'.{1}{2}</value>
