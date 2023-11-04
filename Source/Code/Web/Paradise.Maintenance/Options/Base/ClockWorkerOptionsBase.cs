@@ -8,7 +8,7 @@ namespace Paradise.Maintenance.Options.Base;
 internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
 {
     #region Fields
-    private TimeOnly _executionTime;
+    private TimeSpan _executionTime;
     #endregion
 
     #region Properties
@@ -17,10 +17,10 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
     /// </summary>
     public TimeOnly ExecutionTime
     {
-        get => _executionTime;
+        get => TimeOnly.FromTimeSpan(_executionTime);
         set
         {
-            _executionTime = value;
+            _executionTime = value.ToTimeSpan();
             CalculateDelayAndInterval();
         }
     }
@@ -48,14 +48,11 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
     private void CalculateDelayAndInterval()
     {
         var oneDay = TimeSpan.FromDays(1d);
-        var oneDayTicks = oneDay.Ticks;
-        var currentTimeTicks = DateTime.UtcNow.TimeOfDay.Ticks;
-        var executionTimeTicks = _executionTime.Ticks;
+        var currentTime = DateTime.UtcNow.TimeOfDay;
 
-        Delay = TimeSpan.FromTicks(
-            currentTimeTicks < executionTimeTicks
-                ? executionTimeTicks - currentTimeTicks
-                : oneDayTicks - currentTimeTicks + executionTimeTicks);
+        Delay = currentTime < _executionTime
+            ? _executionTime - currentTime
+            : oneDay - currentTime + _executionTime;
 
         Interval = oneDay;
     }
