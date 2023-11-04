@@ -50,8 +50,6 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
 
         _options = optionsMonitor.CurrentValue;
 
-        OptionsChanged += OnOptionsChanged;
-
         _logger.LogWorkerOptionsInitialState(Options, _jsonSerializerOptions);
     }
     #endregion
@@ -66,8 +64,11 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
         private set
         {
             var oldValue = _options;
-            _options = value;
-            OptionsChanged?.Invoke(this, new(oldValue, _options));
+            var newValue = value;
+
+            OnOptionsChanged(oldValue, newValue);
+
+            _options = newValue;
         }
     }
     #endregion
@@ -105,8 +106,6 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <inheritdoc/>
     public void Dispose()
     {
-        OptionsChanged -= OnOptionsChanged;
-
         _optionsReloadToken?.Dispose();
         _executionTimer.Dispose();
 
@@ -152,19 +151,21 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// <see cref="OptionsChanged"/> event handler.
+    /// <see cref="OptionsChanged"/> event raiser.
     /// </summary>
-    /// <param name="source">
-    /// The source of the event.
+    /// <param name="oldValue">
+    /// Old options value.
     /// </param>
-    /// <param name="args">
-    /// An object that contains <see cref="OptionsChanged"/> event data.
+    /// <param name="newValue">
+    /// New options value.
     /// </param>
-    private void OnOptionsChanged(object? source, WorkerOptionsChangedEventArgs<TOptions> args)
+    private void OnOptionsChanged(TOptions oldValue, TOptions newValue)
     {
-        _executionTimer.Change(Options.Delay, Options.Interval);
+        _executionTimer.Change(newValue.Delay, newValue.Interval);
 
-        _logger.LogWorkerOptionsChangedState(Options, _jsonSerializerOptions);
+        OptionsChanged?.Invoke(this, new(oldValue, newValue));
+
+        _logger.LogWorkerOptionsChangedState(newValue, _jsonSerializerOptions);
     }
     #endregion
 
@@ -172,6 +173,6 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <summary>
     /// Occurs when worker options were updated.
     /// </summary>
-    public event EventHandler<WorkerOptionsChangedEventArgs<TOptions>> OptionsChanged;
+    public event EventHandler<WorkerOptionsChangedEventArgs<TOptions>>? OptionsChanged;
     #endregion
 }

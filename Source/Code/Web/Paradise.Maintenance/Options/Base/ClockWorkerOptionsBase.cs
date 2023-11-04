@@ -5,7 +5,7 @@ namespace Paradise.Maintenance.Options.Base;
 /// <summary>
 /// Provides options for the <see cref="WorkerBase{TOptions}"/> classes.
 /// </summary>
-internal class ClockWorkerOptionsBase : WorkerOptionsBase
+internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
 {
     #region Fields
     private TimeOnly _executionTime;
@@ -47,10 +47,17 @@ internal class ClockWorkerOptionsBase : WorkerOptionsBase
     /// </summary>
     private void CalculateDelayAndInterval()
     {
-        var delta = DateTime.UtcNow.TimeOfDay.Ticks - _executionTime.Ticks;
+        var oneDay = TimeSpan.FromDays(1d);
+        var oneDayTicks = oneDay.Ticks;
+        var currentTimeTicks = DateTime.UtcNow.TimeOfDay.Ticks;
+        var executionTimeTicks = _executionTime.Ticks;
 
-        Delay = TimeSpan.FromTicks(Math.Abs(delta));
-        Interval = TimeSpan.FromDays(1d) - Delay;
+        Delay = TimeSpan.FromTicks(
+            currentTimeTicks < executionTimeTicks
+                ? executionTimeTicks - currentTimeTicks
+                : oneDayTicks - currentTimeTicks + executionTimeTicks);
+
+        Interval = oneDay;
     }
     #endregion
 }
