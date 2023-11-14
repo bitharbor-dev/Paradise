@@ -11,12 +11,12 @@ internal abstract class WorkerOptionsBase : IEquatable<WorkerOptionsBase>
     /// <summary>
     /// Action execution delay.
     /// </summary>
-    public TimeSpan Delay { get; set; }
+    public TimeSpan Delay { get; set; } = TimeSpan.Zero;
 
     /// <summary>
     /// Action execution interval.
     /// </summary>
-    public TimeSpan Interval { get; set; }
+    public TimeSpan Interval { get; set; } = TimeSpan.FromDays(1d);
     #endregion
 
     #region Public methods

@@ -74,7 +74,11 @@ public static class ILoggerExtensions
     /// The <see cref="Type"/> of running worker.
     /// </param>
     public static void LogWorkerRunning(this ILogger logger, Type workerType)
-        => InformationWorkerRunning(logger, workerType.Name, DateTime.UtcNow, null);
+    {
+        ArgumentNullException.ThrowIfNull(workerType);
+
+        InformationWorkerRunning(logger, workerType.Name, DateTime.UtcNow, null);
+    }
 
     /// <summary>
     /// Creates a log entry containing information

@@ -21,7 +21,7 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
         set
         {
             _executionTime = value.ToTimeSpan();
-            CalculateDelayAndInterval();
+            CalculateDelay();
         }
     }
     #endregion
@@ -42,10 +42,10 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
 
     #region Private methods
     /// <summary>
-    /// Calculates the timer delay and interval in order to
+    /// Calculates the timer delay in order to
     /// execute the bounded action at the specific time of the day.
     /// </summary>
-    private void CalculateDelayAndInterval()
+    private void CalculateDelay()
     {
         var oneDay = TimeSpan.FromDays(1d);
         var currentTime = DateTime.UtcNow.TimeOfDay;
@@ -53,8 +53,6 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
         Delay = currentTime < _executionTime
             ? _executionTime - currentTime
             : oneDay - currentTime + _executionTime;
-
-        Interval = oneDay;
     }
     #endregion
 }

@@ -30,6 +30,8 @@ public sealed class HttpResponseWrapper(HttpResponse response) : IHttpResponseWr
     /// <inheritdoc/>
     public Task WriteResultAsync(Result result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         var serviceProvider = response.HttpContext.RequestServices;
 
         var jsonSerializerOptions = serviceProvider.GetRequiredService<IOptions<JsonSerializerOptions>>().Value;

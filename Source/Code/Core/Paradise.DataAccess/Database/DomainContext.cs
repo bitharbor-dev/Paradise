@@ -83,12 +83,12 @@ public sealed class DomainContext : IdentityDbContext<User, Role, Guid>, IDomain
 
     #region Protected methods
     /// <inheritdoc/>
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(modelBuilder);
+        ArgumentNullException.ThrowIfNull(builder);
 
-        base.OnModelCreating(modelBuilder);
-        DomainContextConfiguration.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
+        DomainContextConfiguration.OnModelCreating(builder);
     }
     #endregion
 }

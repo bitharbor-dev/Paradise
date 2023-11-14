@@ -125,10 +125,9 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     {
         try
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
-
             _logger.LogWorkerRunning(GetType());
 
+            await using var scope = _serviceProvider.CreateAsyncScope();
             await DoWorkAsync(scope.ServiceProvider)
                 .ConfigureAwait(false);
         }
