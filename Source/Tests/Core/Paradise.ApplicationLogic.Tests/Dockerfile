@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0
+FROM mcr.microsoft.com/dotnet/sdk:8.0
 
 WORKDIR /src
 COPY ["Source/Tests/Core/Paradise.ApplicationLogic.Tests/Paradise.ApplicationLogic.Tests.csproj", "Source/Tests/Core/Paradise.ApplicationLogic.Tests/"]

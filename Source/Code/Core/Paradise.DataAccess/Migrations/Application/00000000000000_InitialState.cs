@@ -43,7 +43,7 @@ public partial class InitialState : Migration
         migrationBuilder.CreateIndex(
             name: "IX_EmailTemplates_TemplateName_Culture",
             table: "EmailTemplates",
-            columns: new[] { "TemplateName", "Culture" },
+            columns: ["TemplateName", "Culture"],
             unique: true,
             filter: "[Culture] IS NOT NULL");
     }
