@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Paradise.Models;
 using System.Text.Json;
 
-namespace Paradise.Models;
+namespace Paradise.ApplicationLogic.Authorization.Models;
 
 /// <summary>
 /// A class to access HTTP response methods.
@@ -24,6 +25,10 @@ public sealed class HttpResponseWrapper(HttpResponse response) : IHttpResponseWr
     /// <inheritdoc/>
     public IHeaderDictionary RequestHeaders
         => response.HttpContext.Request.Headers;
+
+    /// <inheritdoc/>
+    public IReadOnlyList<object>? EndpointMetadata
+        => response.HttpContext.GetEndpoint()?.Metadata.ToList().AsReadOnly();
     #endregion
 
     #region Public methods

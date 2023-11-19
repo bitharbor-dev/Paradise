@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Paradise.ApplicationLogic.Authorization.Models;
 using Paradise.ApplicationLogic.Services.Application;
-using Paradise.Models;
 using System.Security.Claims;
 
 namespace Paradise.ApplicationLogic.Authorization.JwtBearer;

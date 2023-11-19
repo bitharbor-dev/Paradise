@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using Paradise.Models;
+using Paradise.ApplicationLogic.Authorization.Models;
 using System.Security.Claims;
 
 namespace Paradise.ApplicationLogic.Services.Application;

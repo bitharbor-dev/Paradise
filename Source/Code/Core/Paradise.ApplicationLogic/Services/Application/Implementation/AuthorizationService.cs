@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using Paradise.ApplicationLogic.Authorization.Models;
 using Paradise.ApplicationLogic.Extensions;
 using Paradise.ApplicationLogic.Identity;
 using Paradise.DataAccess.Repositories.Domain;

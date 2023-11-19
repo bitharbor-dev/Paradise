@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Paradise.Models;
 
-namespace Paradise.Models;
+namespace Paradise.ApplicationLogic.Authorization.Models;
 
 /// <summary>
 /// An interface to access HTTP response methods.
@@ -17,6 +18,11 @@ public interface IHttpResponseWrapper
     /// Gets the request headers.
     /// </summary>
     IHeaderDictionary RequestHeaders { get; }
+
+    /// <summary>
+    /// Gets the endpoint meta-data.
+    /// </summary>
+    IReadOnlyList<object>? EndpointMetadata { get; }
     #endregion
 
     #region Methods

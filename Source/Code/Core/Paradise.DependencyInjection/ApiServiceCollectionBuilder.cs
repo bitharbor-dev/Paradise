@@ -43,6 +43,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
 
         AddOptions<EmailTemplateOptions>(null, true, true);
         AddOptions<SmtpOptions>(null, true, true);
+        AddOptions<JwtBearerOptions>(SetJwtIssuerSigningKey, true, true);
 
         Services.AddScoped<ISmtpClient, AzureSmtpClient>();
 
@@ -75,7 +76,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
             .AddJwtBearer(options =>
             {
                 Configuration.GetRequiredSection(nameof(JwtBearerOptions)).Bind(options);
-                options.TokenValidationParameters.IssuerSigningKey = signingKeyProvider.GetSigningKey();
+                SetJwtIssuerSigningKey(options);
 
                 options.Events = new()
                 {
@@ -90,5 +91,8 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
 
         Services.AddScoped<IAuthorizationService, AuthorizationService>();
     }
+
+    private void SetJwtIssuerSigningKey(JwtBearerOptions options)
+        => options.TokenValidationParameters.IssuerSigningKey = signingKeyProvider.GetSigningKey();
     #endregion
 }
