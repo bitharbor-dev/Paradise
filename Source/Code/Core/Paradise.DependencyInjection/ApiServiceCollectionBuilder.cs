@@ -83,6 +83,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
                     OnAuthenticationFailed = JwtEvents.OnAuthenticationFailed,
                     OnChallenge = JwtEvents.OnChallenge,
                     OnForbidden = JwtEvents.OnForbidden,
+                    OnMessageReceived = JwtEvents.OnMessageReceived,
                     OnTokenValidated = JwtEvents.OnTokenValidated
                 };
             });

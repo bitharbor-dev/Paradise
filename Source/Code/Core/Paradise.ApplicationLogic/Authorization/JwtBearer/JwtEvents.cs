@@ -76,6 +76,26 @@ public static class JwtEvents
     }
 
     /// <summary>
+    /// Invoked when a protocol message is first received.
+    /// </summary>
+    /// <param name="context">
+    /// Context object that contains event data.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    public static Task OnMessageReceived(MessageReceivedContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        var authorizationService = GetAuthorizationService(context.HttpContext);
+
+        var wrapper = new HttpResponseWrapper(context.Response);
+
+        return authorizationService.OnMessageReceivedAsync(wrapper, token => context.Token = token);
+    }
+
+    /// <summary>
     /// Invoked after the security token has passed validation
     /// and a <see cref="ClaimsIdentity"/> has been generated.
     /// </summary>

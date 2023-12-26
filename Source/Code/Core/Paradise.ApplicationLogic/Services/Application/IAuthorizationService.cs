@@ -37,6 +37,20 @@ public interface IAuthorizationService
     Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate);
 
     /// <summary>
+    /// Invoked when a protocol message is first received.
+    /// </summary>
+    /// <param name="response">
+    /// The response.
+    /// </param>
+    /// <param name="setTokenDelegate">
+    /// Sets the authentication token from an external source.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    Task OnMessageReceivedAsync(IHttpResponseWrapper response, Action<string?> setTokenDelegate);
+
+    /// <summary>
     /// Invoked if Authorization fails and results in a Forbidden response.
     /// </summary>
     /// <param name="response">

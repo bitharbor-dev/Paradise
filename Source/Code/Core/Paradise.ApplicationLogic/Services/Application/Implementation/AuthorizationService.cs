@@ -134,6 +134,10 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
+    public Task OnMessageReceivedAsync(IHttpResponseWrapper response, Action<string?> setTokenDelegate)
+        => Task.CompletedTask;
+
+    /// <inheritdoc/>
     public async Task OnTokenValidatedAsync(IHttpResponseWrapper response, ClaimsPrincipal? principal,
                                             SecurityToken securityToken, Action<string> failureDelegate)
     {
