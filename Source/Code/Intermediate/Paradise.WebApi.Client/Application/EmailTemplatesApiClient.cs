@@ -45,17 +45,21 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
     /// of <see cref="EmailTemplateModel"/>
     /// containing information about the email templates.
     /// </returns>
-    public Task<Result<IEnumerable<EmailTemplateModel>>> GetAllAsync(string accessToken)
+    public Task<Result<IEnumerable<EmailTemplateModel>>> GetAllAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(GetAll);
 
-        return GetAsync<IEnumerable<EmailTemplateModel>>(uri, accessToken);
+        return GetAsync<IEnumerable<EmailTemplateModel>>(uri, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -67,19 +71,23 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailTemplateModel"/>
     /// containing information about the email template found.
     /// </returns>
-    public Task<Result<EmailTemplateModel>> GetByIdAsync(Guid emailTemplateId, string accessToken)
+    public Task<Result<EmailTemplateModel>> GetByIdAsync(Guid emailTemplateId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(GetById, routeParameters: new()
         {
             { EmailTemplateIdParameter, emailTemplateId }
         });
 
-        return GetAsync<EmailTemplateModel>(uri, accessToken);
+        return GetAsync<EmailTemplateModel>(uri, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -92,16 +100,20 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailTemplateModel"/>
     /// containing information about the created email template.
     /// </returns>
-    public Task<Result<EmailTemplateModel>> CreateAsync(EmailTemplateCreationModel model, string accessToken)
+    public Task<Result<EmailTemplateModel>> CreateAsync(EmailTemplateCreationModel model, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Create);
 
-        return PostAsync<EmailTemplateModel>(uri, model, accessToken);
+        return PostAsync<EmailTemplateModel>(uri, model, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -117,19 +129,23 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailTemplateModel"/>
     /// containing information about the created email template.
     /// </returns>
-    public Task<Result<EmailTemplateModel>> UpdateAsync(Guid emailTemplateId, EmailTemplateUpdateModel model, string accessToken)
+    public Task<Result<EmailTemplateModel>> UpdateAsync(Guid emailTemplateId, EmailTemplateUpdateModel model, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Update, routeParameters: new()
         {
             { EmailTemplateIdParameter, emailTemplateId }
         });
 
-        return PatchAsync<EmailTemplateModel>(uri, model, accessToken);
+        return PatchAsync<EmailTemplateModel>(uri, model, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -141,17 +157,21 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> DeleteAsync(Guid emailTemplateId, string accessToken)
+    public Task<Result> DeleteAsync(Guid emailTemplateId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Delete, routeParameters: new()
         {
             { EmailTemplateIdParameter, emailTemplateId }
         });
 
-        return DeleteAsync(uri, accessToken);
+        return DeleteAsync(uri, accessToken, cancellationToken);
     }
     #endregion
 }

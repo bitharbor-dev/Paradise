@@ -107,11 +107,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result{TValue}"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result<TValue>> GetAsync<TValue>(Uri uri, string? accessToken = null)
-        => ExecuteRequestAsync<TValue>(HttpMethod.Get, uri, accessToken);
+    private protected Task<Result<TValue>> GetAsync<TValue>(Uri uri, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync<TValue>(HttpMethod.Get, uri, accessToken, cancellationToken: cancellationToken);
 
     /// <summary>
     /// Executes GET request.
@@ -122,11 +126,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result> GetAsync(Uri uri, string? accessToken = null)
-        => ExecuteRequestAsync(HttpMethod.Get, uri, accessToken);
+    private protected Task<Result> GetAsync(Uri uri, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync(HttpMethod.Get, uri, accessToken, cancellationToken: cancellationToken);
 
     /// <summary>
     /// Executes POST request.
@@ -143,11 +151,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result{TValue}"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result<TValue>> PostAsync<TValue>(Uri uri, object content, string? accessToken = null)
-        => ExecuteRequestAsync<TValue>(HttpMethod.Post, uri, accessToken, content);
+    private protected Task<Result<TValue>> PostAsync<TValue>(Uri uri, object content, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync<TValue>(HttpMethod.Post, uri, accessToken, content, cancellationToken);
 
     /// <summary>
     /// Executes POST request.
@@ -161,11 +173,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result> PostAsync(Uri uri, object content, string? accessToken = null)
-        => ExecuteRequestAsync(HttpMethod.Post, uri, accessToken, content);
+    private protected Task<Result> PostAsync(Uri uri, object content, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync(HttpMethod.Post, uri, accessToken, content, cancellationToken);
 
     /// <summary>
     /// Executes PUT request.
@@ -182,11 +198,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result{TValue}"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result<TValue>> PutAsync<TValue>(Uri uri, object content, string? accessToken = null)
-        => ExecuteRequestAsync<TValue>(HttpMethod.Put, uri, accessToken, content);
+    private protected Task<Result<TValue>> PutAsync<TValue>(Uri uri, object content, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync<TValue>(HttpMethod.Put, uri, accessToken, content, cancellationToken);
 
     /// <summary>
     /// Executes PUT request.
@@ -200,11 +220,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result> PutAsync(Uri uri, object content, string? accessToken = null)
-        => ExecuteRequestAsync(HttpMethod.Put, uri, accessToken, content);
+    private protected Task<Result> PutAsync(Uri uri, object content, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync(HttpMethod.Put, uri, accessToken, content, cancellationToken);
 
     /// <summary>
     /// Executes PATCH request.
@@ -221,11 +245,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result{TValue}"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result<TValue>> PatchAsync<TValue>(Uri uri, object? content = null, string? accessToken = null)
-        => ExecuteRequestAsync<TValue>(HttpMethod.Patch, uri, accessToken, content);
+    private protected Task<Result<TValue>> PatchAsync<TValue>(Uri uri, object? content = null, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync<TValue>(HttpMethod.Patch, uri, accessToken, content, cancellationToken);
 
     /// <summary>
     /// Executes PATCH request.
@@ -239,11 +267,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result> PatchAsync(Uri uri, object? content = null, string? accessToken = null)
-        => ExecuteRequestAsync(HttpMethod.Patch, uri, accessToken, content);
+    private protected Task<Result> PatchAsync(Uri uri, object? content = null, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync(HttpMethod.Patch, uri, accessToken, content, cancellationToken);
 
     /// <summary>
     /// Executes DELETE request.
@@ -257,11 +289,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result{TValue}"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result<TValue>> DeleteAsync<TValue>(Uri uri, string? accessToken = null)
-        => ExecuteRequestAsync<TValue>(HttpMethod.Delete, uri, accessToken);
+    private protected Task<Result<TValue>> DeleteAsync<TValue>(Uri uri, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync<TValue>(HttpMethod.Delete, uri, accessToken, cancellationToken: cancellationToken);
 
     /// <summary>
     /// Executes DELETE request.
@@ -272,11 +308,15 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// The <see cref="Result"/> containing the deserialized response.
     /// </returns>
-    private protected Task<Result> DeleteAsync(Uri uri, string? accessToken = null)
-        => ExecuteRequestAsync(HttpMethod.Delete, uri, accessToken);
+    private protected Task<Result> DeleteAsync(Uri uri, string? accessToken = null, CancellationToken cancellationToken = default)
+        => ExecuteRequestAsync(HttpMethod.Delete, uri, accessToken, cancellationToken: cancellationToken);
 
     /// <summary>
     /// Creates a <see cref="Uri"/> based on the <see cref="ApplicationOptions.ApiUrl"/>,
@@ -348,18 +388,22 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="content">
     /// Request content.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A deserialized <see cref="Result{TValue}"/> from the HTTP request response.
     /// </returns>
-    private async Task<Result<TValue>> ExecuteRequestAsync<TValue>(HttpMethod method, Uri uri, string? accessToken = null, object? content = null)
+    private async Task<Result<TValue>> ExecuteRequestAsync<TValue>(HttpMethod method, Uri uri, string? accessToken = null, object? content = null, CancellationToken cancellationToken = default)
     {
         using var request = CreateRequest(method, uri, accessToken, content);
 
         using var response = await _httpClient
-            .SendAsync(request)
+            .SendAsync(request, cancellationToken)
             .ConfigureAwait(false);
 
-        var result = await ParseResultAsync<TValue>(response)
+        var result = await ParseResultAsync<TValue>(response, cancellationToken)
             .ConfigureAwait(false);
 
         return result;
@@ -381,18 +425,22 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="content">
     /// Request content.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A deserialized <see cref="Result"/> from the HTTP request response.
     /// </returns>
-    private async Task<Result> ExecuteRequestAsync(HttpMethod method, Uri uri, string? accessToken = null, object? content = null)
+    private async Task<Result> ExecuteRequestAsync(HttpMethod method, Uri uri, string? accessToken = null, object? content = null, CancellationToken cancellationToken = default)
     {
         using var request = CreateRequest(method, uri, accessToken, content);
 
         using var response = await _httpClient
-            .SendAsync(request)
+            .SendAsync(request, cancellationToken)
             .ConfigureAwait(false);
 
-        var result = await ParesResultAsync(response)
+        var result = await ParseResultAsync(response, cancellationToken)
             .ConfigureAwait(false);
 
         return result;
@@ -457,17 +505,21 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="response">
     /// HTTP response.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A deserialized <see cref="Result{TValue}"/> from the given <paramref name="response"/>.
     /// </returns>
     /// <exception cref="JsonException">
     /// Occurs when deserialization fails, which means that the response is badly formatted.
     /// </exception>
-    private async Task<Result<TValue>> ParseResultAsync<TValue>(HttpResponseMessage response)
+    private async Task<Result<TValue>> ParseResultAsync<TValue>(HttpResponseMessage response, CancellationToken cancellationToken = default)
     {
         var content = await response
             .Content
-            .ReadAsStreamAsync()
+            .ReadAsStreamAsync(cancellationToken)
             .ConfigureAwait(false);
 
         if (content.Length is 0)
@@ -477,7 +529,7 @@ public abstract class ApiClientBase : IDisposable
             return errorResult;
         }
 
-        var result = await DeserializeAsync<Result<TValue>>(content, _jsonSerializerOptions)
+        var result = await DeserializeAsync<Result<TValue>>(content, _jsonSerializerOptions, cancellationToken)
             .ConfigureAwait(false);
 
         if (result is null)
@@ -497,17 +549,21 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="response">
     /// HTTP response.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A deserialized <see cref="Result"/> from the given <paramref name="response"/>.
     /// </returns>
     /// <exception cref="JsonException">
     /// Occurs when deserialization fails, which means that the response is badly formatted.
     /// </exception>
-    private async Task<Result> ParesResultAsync(HttpResponseMessage response)
+    private async Task<Result> ParseResultAsync(HttpResponseMessage response, CancellationToken cancellationToken = default)
     {
         var content = await response
             .Content
-            .ReadAsStreamAsync()
+            .ReadAsStreamAsync(cancellationToken)
             .ConfigureAwait(false);
 
         if (content.Length is 0)
@@ -517,7 +573,7 @@ public abstract class ApiClientBase : IDisposable
             return errorResult;
         }
 
-        var result = await DeserializeAsync<Result>(content, _jsonSerializerOptions)
+        var result = await DeserializeAsync<Result>(content, _jsonSerializerOptions, cancellationToken)
             .ConfigureAwait(false);
 
         if (result is null)

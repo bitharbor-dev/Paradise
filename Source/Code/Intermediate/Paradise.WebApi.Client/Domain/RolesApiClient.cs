@@ -61,13 +61,17 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
     /// of <see cref="RoleModel"/>
     /// containing information about the application roles.
     /// </returns>
-    public Task<Result<IEnumerable<RoleModel>>> GetAllAsync(bool? isDefault, string accessToken)
+    public Task<Result<IEnumerable<RoleModel>>> GetAllAsync(bool? isDefault, string accessToken, CancellationToken cancellationToken = default)
     {
         var queryParameters = isDefault.HasValue
             ? new Dictionary<string, object?>
@@ -78,7 +82,7 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
 
         var uri = CreateUri(GetAll, queryParameters: queryParameters);
 
-        return GetAsync<IEnumerable<RoleModel>>(uri, accessToken);
+        return GetAsync<IEnumerable<RoleModel>>(uri, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -90,19 +94,23 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is a <see cref="RoleModel"/>
     /// containing information about the role found.
     /// </returns>
-    public Task<Result<RoleModel>> GetByIdAsync(Guid roleId, string accessToken)
+    public Task<Result<RoleModel>> GetByIdAsync(Guid roleId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(GetById, routeParameters: new()
         {
             { RoleIdParameter, roleId }
         });
 
-        return GetAsync<RoleModel>(uri, accessToken);
+        return GetAsync<RoleModel>(uri, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -116,6 +124,10 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
@@ -124,14 +136,14 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// to the user with the given <paramref name="userId"/>,
     /// or the current user if no value was provided.
     /// </returns>
-    public Task<Result<IEnumerable<RoleModel>>> GetUserRolesAsync(Guid? userId, string accessToken)
+    public Task<Result<IEnumerable<RoleModel>>> GetUserRolesAsync(Guid? userId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(GetUserRoles, routeParameters: new()
         {
             { UserIdParameter, userId }
         });
 
-        return GetAsync<IEnumerable<RoleModel>>(uri, accessToken);
+        return GetAsync<IEnumerable<RoleModel>>(uri, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -144,16 +156,20 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is a <see cref="RoleModel"/>
     /// containing information about the created role.
     /// </returns>
-    public Task<Result<RoleModel>> CreateAsync(RoleCreationModel model, string accessToken)
+    public Task<Result<RoleModel>> CreateAsync(RoleCreationModel model, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Create);
 
-        return PostAsync<RoleModel>(uri, model, accessToken);
+        return PostAsync<RoleModel>(uri, model, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -169,19 +185,23 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is a <see cref="RoleModel"/>
     /// containing information about the updated role.
     /// </returns>
-    public Task<Result<RoleModel>> UpdateAsync(Guid roleId, RoleUpdateModel model, string accessToken)
+    public Task<Result<RoleModel>> UpdateAsync(Guid roleId, RoleUpdateModel model, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Update, routeParameters: new()
         {
             { RoleIdParameter, roleId }
         });
 
-        return PatchAsync<RoleModel>(uri, model, accessToken);
+        return PatchAsync<RoleModel>(uri, model, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -193,20 +213,24 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
     /// of <see cref="RoleModel"/>
     /// containing information about the application roles.
     /// </returns>
-    public Task<Result<IEnumerable<RoleModel>>> DeleteAsync(Guid roleId, string accessToken)
+    public Task<Result<IEnumerable<RoleModel>>> DeleteAsync(Guid roleId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Delete, routeParameters: new()
         {
             { RoleIdParameter, roleId }
         });
 
-        return DeleteAsync<IEnumerable<RoleModel>>(uri, accessToken);
+        return DeleteAsync<IEnumerable<RoleModel>>(uri, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -221,6 +245,10 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
@@ -228,7 +256,7 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// containing information about the application roles, which belong
     /// to the user with the given <paramref name="userId"/>.
     /// </returns>
-    public Task<Result<IEnumerable<RoleModel>>> AssignAsync(Guid roleId, Guid userId, string accessToken)
+    public Task<Result<IEnumerable<RoleModel>>> AssignAsync(Guid roleId, Guid userId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Assign, routeParameters: new()
         {
@@ -236,7 +264,7 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
             { UserIdParameter, userId }
         });
 
-        return PatchAsync<IEnumerable<RoleModel>>(uri, null, accessToken);
+        return PatchAsync<IEnumerable<RoleModel>>(uri, null, accessToken, cancellationToken);
     }
 
     /// <summary>
@@ -251,6 +279,10 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="accessToken">
     /// Authorization token.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A <see cref="Result{TValue}"/> where
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
@@ -258,7 +290,7 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// containing information about the application roles, which belong
     /// to the user with the given <paramref name="userId"/>.
     /// </returns>
-    public Task<Result<IEnumerable<RoleModel>>> UnassignAsync(Guid roleId, Guid userId, string accessToken)
+    public Task<Result<IEnumerable<RoleModel>>> UnassignAsync(Guid roleId, Guid userId, string accessToken, CancellationToken cancellationToken = default)
     {
         var uri = CreateUri(Unassign, routeParameters: new()
         {
@@ -266,7 +298,7 @@ public sealed class RolesApiClient(IOptionsMonitor<ApplicationOptions> applicati
             { UserIdParameter, userId }
         });
 
-        return DeleteAsync<IEnumerable<RoleModel>>(uri, accessToken);
+        return DeleteAsync<IEnumerable<RoleModel>>(uri, accessToken, cancellationToken);
     }
     #endregion
 }
