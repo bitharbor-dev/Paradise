@@ -17,7 +17,24 @@ public interface IAuthorizationService
     /// <param name="response">
     /// The response.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     Task OnAuthenticationFailedAsync(IHttpResponseWrapper response);
+
+    /// <summary>
+    /// Invoked before a challenge is sent back to the caller.
+    /// </summary>
+    /// <param name="response">
+    /// The response.
+    /// </param>
+    /// <param name="handleResponseDelegate">
+    /// Skips any default logic for this challenge.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate);
 
     /// <summary>
     /// Invoked if Authorization fails and results in a Forbidden response.
@@ -25,6 +42,9 @@ public interface IAuthorizationService
     /// <param name="response">
     /// The response.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     Task OnForbiddenAsync(IHttpResponseWrapper response);
 
     /// <summary>
@@ -43,17 +63,9 @@ public interface IAuthorizationService
     /// <param name="failureDelegate">
     /// If invoked - indicates that there was a failure during authentication.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     Task OnTokenValidatedAsync(IHttpResponseWrapper response, ClaimsPrincipal? principal, SecurityToken securityToken, Action<string> failureDelegate);
-
-    /// <summary>
-    /// Invoked before a challenge is sent back to the caller.
-    /// </summary>
-    /// <param name="response">
-    /// The response.
-    /// </param>
-    /// <param name="handleResponseDelegate">
-    /// Skips any default logic for this challenge.
-    /// </param>
-    Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate);
     #endregion
 }

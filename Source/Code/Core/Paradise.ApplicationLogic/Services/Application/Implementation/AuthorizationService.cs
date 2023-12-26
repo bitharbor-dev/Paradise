@@ -77,6 +77,46 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
+    public async Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate)
+    {
+        // 'handleResponseDelegate' invocation prevents the authorization pipeline
+        // from writing 'WWW-Authenticate' header.
+
+        ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(handleResponseDelegate);
+
+        try
+        {
+            if (response.HasStarted)
+            {
+                handleResponseDelegate();
+                return;
+            }
+
+            if (!TryGetAccessToken(response, out var token))
+            {
+                await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser)
+                    .ConfigureAwait(false);
+
+                handleResponseDelegate();
+            }
+
+            if (!jsonWebTokenService.ValidateFormat(token))
+            {
+                await WriteErrorResultAsync(response, Unauthorized, InvalidToken)
+                    .ConfigureAwait(false);
+
+                handleResponseDelegate();
+            }
+        }
+        catch (Exception e)
+        {
+            await WriteExceptionResultAsync(response, e)
+                .ConfigureAwait(false);
+        }
+    }
+
+    /// <inheritdoc/>
     public async Task OnForbiddenAsync(IHttpResponseWrapper response)
     {
         ArgumentNullException.ThrowIfNull(response);
@@ -177,46 +217,6 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
 
                 failureDelegate(errorDescription);
                 return;
-            }
-        }
-        catch (Exception e)
-        {
-            await WriteExceptionResultAsync(response, e)
-                .ConfigureAwait(false);
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task OnChallengeAsync(IHttpResponseWrapper response, Action handleResponseDelegate)
-    {
-        ArgumentNullException.ThrowIfNull(response);
-        ArgumentNullException.ThrowIfNull(handleResponseDelegate);
-
-        try
-        {
-            if (response.HasStarted)
-            {
-                handleResponseDelegate(); // TODO: Add meaningful comment explaining
-                                          // why this call is required here.
-                return;
-            }
-
-            if (!TryGetAccessToken(response, out var token))
-            {
-                await WriteErrorResultAsync(response, Unauthorized, UnauthorizedUser)
-                    .ConfigureAwait(false);
-
-                handleResponseDelegate(); // TODO: Add meaningful comment explaining
-                                          // why this call is required here.
-            }
-
-            if (!jsonWebTokenService.ValidateFormat(token))
-            {
-                await WriteErrorResultAsync(response, Unauthorized, InvalidToken)
-                    .ConfigureAwait(false);
-
-                handleResponseDelegate(); // TODO: Add meaningful comment explaining
-                                          // why this call is required here.
             }
         }
         catch (Exception e)

@@ -21,6 +21,9 @@ public static class JwtEvents
     /// <param name="context">
     /// Context object that contains event data.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     public static Task OnAuthenticationFailed(AuthenticationFailedContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -33,11 +36,34 @@ public static class JwtEvents
     }
 
     /// <summary>
+    /// Invoked before a challenge is sent back to the caller.
+    /// </summary>
+    /// <param name="context">
+    /// Context object that contains event data.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    public static Task OnChallenge(JwtBearerChallengeContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        var authorizationService = GetAuthorizationService(context.HttpContext);
+
+        var wrapper = new HttpResponseWrapper(context.Response);
+
+        return authorizationService.OnChallengeAsync(wrapper, context.HandleResponse);
+    }
+
+    /// <summary>
     /// Invoked if Authorization fails and results in a Forbidden response.
     /// </summary>
     /// <param name="context">
     /// Context object that contains event data.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     public static Task OnForbidden(ForbiddenContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -56,6 +82,9 @@ public static class JwtEvents
     /// <param name="context">
     /// Context object that contains event data.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     public static Task OnTokenValidated(TokenValidatedContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -68,23 +97,6 @@ public static class JwtEvents
                                                           context.Principal,
                                                           context.SecurityToken,
                                                           context.Fail);
-    }
-
-    /// <summary>
-    /// Invoked before a challenge is sent back to the caller.
-    /// </summary>
-    /// <param name="context">
-    /// Context object that contains event data.
-    /// </param>
-    public static Task OnChallenge(JwtBearerChallengeContext context)
-    {
-        ArgumentNullException.ThrowIfNull(context);
-
-        var authorizationService = GetAuthorizationService(context.HttpContext);
-
-        var wrapper = new HttpResponseWrapper(context.Response);
-
-        return authorizationService.OnChallengeAsync(wrapper, context.HandleResponse);
     }
     #endregion
 
