@@ -67,7 +67,7 @@ public sealed class EmailTemplateServiceTests
         // Assert
         result.AssertSuccess(Created);
         Assert.NotNull(result.Value);
-        Assert.NotNull(Source.Set<EmailTemplate>().ToList().Find(t => t.Id == result.Value.Id));
+        Assert.NotNull(Source.GetQueryable<EmailTemplate>().ToList().Find(t => t.Id == result.Value.Id));
     }
 
     /// <summary>

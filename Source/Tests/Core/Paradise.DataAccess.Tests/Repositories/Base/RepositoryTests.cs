@@ -56,7 +56,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.Contains(entity, Source.Set<TEntity>(), Comparer);
+        Assert.Contains(entity, Source.GetQueryable<TEntity>(), Comparer);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(entities, entity => Assert.Contains(entity, Source.Set<TEntity>(), Comparer));
+        Assert.All(entities, entity => Assert.Contains(entity, Source.GetQueryable<TEntity>(), Comparer));
     }
 
     /// <summary>
@@ -224,7 +224,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.Set<TEntity>(), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Created == created));
     }
 
     /// <summary>
@@ -260,7 +260,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.Set<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
     }
 
     /// <summary>
@@ -291,7 +291,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.Set<TEntity>(), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Created == created));
     }
 
     /// <summary>
@@ -327,7 +327,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.Set<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
     }
 
     /// <summary>
@@ -354,7 +354,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.DoesNotContain(entity, Source.Set<TEntity>(), Comparer);
+        Assert.DoesNotContain(entity, Source.GetQueryable<TEntity>(), Comparer);
     }
 
     /// <summary>
@@ -382,7 +382,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.DoesNotContain(entity, Source.Set<TEntity>(), Comparer);
+        Assert.DoesNotContain(entity, Source.GetQueryable<TEntity>(), Comparer);
     }
 
     /// <summary>
@@ -415,7 +415,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(entities, entity => Assert.DoesNotContain(entity, Source.Set<TEntity>(), Comparer));
+        Assert.All(entities, entity => Assert.DoesNotContain(entity, Source.GetQueryable<TEntity>(), Comparer));
     }
 
     /// <summary>
@@ -448,8 +448,8 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         Source.SaveChanges();
 
         // Assert
-        Assert.All(entitiesToRemove, entity => Assert.DoesNotContain(entity, Source.Set<TEntity>(), Comparer));
-        Assert.All(entitiesToKeep, entity => Assert.Contains(entity, Source.Set<TEntity>(), Comparer));
+        Assert.All(entitiesToRemove, entity => Assert.DoesNotContain(entity, Source.GetQueryable<TEntity>(), Comparer));
+        Assert.All(entitiesToKeep, entity => Assert.Contains(entity, Source.GetQueryable<TEntity>(), Comparer));
     }
     #endregion
 }

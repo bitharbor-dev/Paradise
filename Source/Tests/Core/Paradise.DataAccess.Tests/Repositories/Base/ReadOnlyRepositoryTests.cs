@@ -881,7 +881,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var result = Repository.GetAll().Count;
 
         // Assert
-        Assert.Equal(Source.Set<TEntity>().Count(), result);
+        Assert.Equal(Source.GetQueryable<TEntity>().Count(), result);
     }
 
     /// <summary>
@@ -905,7 +905,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var result = (await Repository.GetAllAsync()).Count;
 
         // Assert
-        Assert.Equal(Source.Set<TEntity>().Count(), result);
+        Assert.Equal(Source.GetQueryable<TEntity>().Count(), result);
     }
 
     /// <summary>

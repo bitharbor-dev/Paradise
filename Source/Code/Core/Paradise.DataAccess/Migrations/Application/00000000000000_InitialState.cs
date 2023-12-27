@@ -10,6 +10,8 @@ public partial class InitialState : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.CreateTable(
             name: "DataProtectionKeys",
             columns: table => new
@@ -51,6 +53,8 @@ public partial class InitialState : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.DropTable(
             name: "DataProtectionKeys");
 

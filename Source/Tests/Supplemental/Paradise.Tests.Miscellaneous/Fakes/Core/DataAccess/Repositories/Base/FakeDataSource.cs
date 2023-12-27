@@ -23,7 +23,7 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
         => Task.CompletedTask;
 
     /// <inheritdoc/>
-    public IQueryable<TEntity> Set<TEntity>() where TEntity : class, IDatabaseRecord
+    public IQueryable<TEntity> GetQueryable<TEntity>() where TEntity : class, IDatabaseRecord
         => _cache.GetQueryable<TEntity>();
 
     /// <inheritdoc/>

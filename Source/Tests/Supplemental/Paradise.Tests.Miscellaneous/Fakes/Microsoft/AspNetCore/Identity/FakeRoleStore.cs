@@ -22,7 +22,7 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
     #region Properties
     /// <inheritdoc/>
     public IQueryable<Role> Roles
-        => _domainDataSource.Set<Role>();
+        => _domainDataSource.GetQueryable<Role>();
     #endregion
 
     #region Public methods
@@ -110,11 +110,11 @@ public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleSto
 
     /// <inheritdoc/>
     public Task<Role?> FindByIdAsync(string? roleId, CancellationToken cancellationToken)
-        => Task.FromResult(_domainDataSource.Set<Role>().FirstOrDefault(r => r.Id.ToString() == roleId));
+        => Task.FromResult(_domainDataSource.GetQueryable<Role>().FirstOrDefault(r => r.Id.ToString() == roleId));
 
     /// <inheritdoc/>
     public Task<Role?> FindByNameAsync(string? normalizedRoleName, CancellationToken cancellationToken)
-        => Task.FromResult(_domainDataSource.Set<Role>().FirstOrDefault(r => r.NormalizedName == normalizedRoleName));
+        => Task.FromResult(_domainDataSource.GetQueryable<Role>().FirstOrDefault(r => r.NormalizedName == normalizedRoleName));
 
     /// <inheritdoc/>
     public void Dispose() { }

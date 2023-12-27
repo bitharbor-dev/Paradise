@@ -80,14 +80,16 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
 
         if (_equalityComparerType is not null)
         {
-            if (Activator.CreateInstance(_equalityComparerType) is not IEqualityComparer<T> comparer)
+            if (Activator.CreateInstance(_equalityComparerType) is IEqualityComparer<T> comparer)
+            {
+                equalityComparer = comparer;
+            }
+            else
             {
                 var message = GetFailedToCreateInstanceOfTypeMessage(typeof(IEqualityComparer<T>));
 
                 throw new InvalidOperationException(message);
             }
-
-            equalityComparer = comparer;
         }
 
         equalityComparer ??= EqualityComparer<T>.Default;

@@ -57,7 +57,7 @@ public sealed class DomainContext : IdentityDbContext<User, Role, Guid>, IDomain
     public Task PreparePersistenceStorageAsync(CancellationToken cancellationToken = default)
         => Database.MigrateAsync(cancellationToken);
 
-    IQueryable<TEntity> IDataSource.Set<TEntity>()
+    IQueryable<TEntity> IDataSource.GetQueryable<TEntity>()
         => Set<TEntity>();
 
     void IDataSource.Add<TEntity>(TEntity entity)

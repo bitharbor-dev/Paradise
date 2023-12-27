@@ -22,6 +22,9 @@ public abstract class ServiceCollectionBuilderBase
     /// </param>
     protected ServiceCollectionBuilderBase(IServiceCollection services, IConfigurationOrigin configurationOrigin)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configurationOrigin);
+
         Services = services;
         Configuration = configurationOrigin.GetConfiguration();
     }

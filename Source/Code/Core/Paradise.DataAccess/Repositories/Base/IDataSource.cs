@@ -33,7 +33,7 @@ public interface IDataSource
     /// <returns>
     /// An <see cref="IQueryable{T}"/> of <typeparamref name="TEntity"/>.
     /// </returns>
-    IQueryable<TEntity> Set<TEntity>() where TEntity : class, IDatabaseRecord;
+    IQueryable<TEntity> GetQueryable<TEntity>() where TEntity : class, IDatabaseRecord;
 
     /// <summary>
     /// Marks the given <paramref name="entity"/> as added,

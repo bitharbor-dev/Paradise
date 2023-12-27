@@ -81,7 +81,7 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDat
     public Task PreparePersistenceStorageAsync(CancellationToken cancellationToken = default)
         => Database.MigrateAsync(cancellationToken);
 
-    IQueryable<TEntity> IDataSource.Set<TEntity>()
+    IQueryable<TEntity> IDataSource.GetQueryable<TEntity>()
         => Set<TEntity>();
 
     void IDataSource.Add<TEntity>(TEntity entity)

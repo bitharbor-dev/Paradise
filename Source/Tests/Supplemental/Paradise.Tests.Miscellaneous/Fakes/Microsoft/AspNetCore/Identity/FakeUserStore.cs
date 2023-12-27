@@ -33,7 +33,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     #region Properties
     /// <inheritdoc/>
     public IQueryable<User> Users
-        => _domainDataSource.Set<User>();
+        => _domainDataSource.GetQueryable<User>();
     #endregion
 
     #region Public methods
@@ -123,11 +123,11 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<User?> FindByIdAsync(string userId, CancellationToken cancellationToken)
-        => Task.FromResult(_domainDataSource.Set<User>().FirstOrDefault(u => u.Id.ToString() == userId));
+        => Task.FromResult(_domainDataSource.GetQueryable<User>().FirstOrDefault(u => u.Id.ToString() == userId));
 
     /// <inheritdoc/>
     public Task<User?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-        => Task.FromResult(_domainDataSource.Set<User>().FirstOrDefault(u => u.NormalizedUserName == normalizedUserName));
+        => Task.FromResult(_domainDataSource.GetQueryable<User>().FirstOrDefault(u => u.NormalizedUserName == normalizedUserName));
 
     /// <inheritdoc/>
     public void Dispose() { }
@@ -202,7 +202,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
     {
-        var set = _domainDataSource.Set<User>();
+        var set = _domainDataSource.GetQueryable<User>();
         var users = new List<User>();
 
         foreach (var userClaim in _userClaims)
@@ -253,7 +253,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
     /// <inheritdoc/>
     public Task<User?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-        => Task.FromResult(_domainDataSource.Set<User>().FirstOrDefault(u => u.NormalizedEmail == normalizedEmail));
+        => Task.FromResult(_domainDataSource.GetQueryable<User>().FirstOrDefault(u => u.NormalizedEmail == normalizedEmail));
 
     /// <inheritdoc/>
     public Task<string?> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
@@ -413,7 +413,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
     /// <inheritdoc/>
     public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
     {
-        var set = _domainDataSource.Set<User>();
+        var set = _domainDataSource.GetQueryable<User>();
         var users = new List<User>();
 
         foreach (var userRole in _userRoles)
