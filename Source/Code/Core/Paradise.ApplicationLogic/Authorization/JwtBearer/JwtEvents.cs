@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Authorization.Models;
@@ -30,9 +31,10 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        var wrapper = new HttpResponseWrapper(context.Response);
+        var wrapper = CreateWrapper(context);
+        var delegates = CreateDelegates(context);
 
-        return authorizationService.OnAuthenticationFailedAsync(wrapper);
+        return authorizationService.OnAuthenticationFailedAsync(wrapper, delegates);
     }
 
     /// <summary>
@@ -50,7 +52,7 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        var wrapper = new HttpResponseWrapper(context.Response);
+        var wrapper = CreateWrapper(context);
 
         return authorizationService.OnChallengeAsync(wrapper, context.HandleResponse);
     }
@@ -70,9 +72,10 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        var wrapper = new HttpResponseWrapper(context.Response);
+        var wrapper = CreateWrapper(context);
+        var delegates = CreateDelegates(context);
 
-        return authorizationService.OnForbiddenAsync(wrapper);
+        return authorizationService.OnForbiddenAsync(wrapper, delegates);
     }
 
     /// <summary>
@@ -90,9 +93,12 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        var wrapper = new HttpResponseWrapper(context.Response);
+        var wrapper = CreateWrapper(context);
+        var delegates = CreateDelegates(context);
 
-        return authorizationService.OnMessageReceivedAsync(wrapper, token => context.Token = token);
+        return authorizationService.OnMessageReceivedAsync(wrapper,
+                                                           delegates,
+                                                           token => context.Token = token);
     }
 
     /// <summary>
@@ -111,12 +117,13 @@ public static class JwtEvents
 
         var authorizationService = GetAuthorizationService(context.HttpContext);
 
-        var wrapper = new HttpResponseWrapper(context.Response);
+        var wrapper = CreateWrapper(context);
+        var delegates = CreateDelegates(context);
 
         return authorizationService.OnTokenValidatedAsync(wrapper,
                                                           context.Principal,
                                                           context.SecurityToken,
-                                                          context.Fail);
+                                                          delegates);
     }
     #endregion
 
@@ -138,5 +145,33 @@ public static class JwtEvents
 
         return serviceProvider.GetRequiredService<IAuthorizationService>();
     }
+
+    /// <summary>
+    /// Creates a new <see cref="HttpResponseWrapper"/> instance
+    /// from the given <paramref name="context"/>.
+    /// </summary>
+    /// <param name="context">
+    /// The <see cref="BaseContext{TOptions}"/> which
+    /// <see cref="BaseContext{TOptions}.Response"/> to be wrapped.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="HttpResponseWrapper"/> instance.
+    /// </returns>
+    private static HttpResponseWrapper CreateWrapper(BaseContext<JwtBearerOptions> context)
+        => new(context.Response);
+
+    /// <summary>
+    /// Creates a new <see cref="ResultContextDelegates"/> instance
+    /// from the given <paramref name="context"/>.
+    /// </summary>
+    /// <param name="context">
+    /// The <see cref="ResultContext{TOptions}"/> which methods to be used
+    /// during authentication process.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="ResultContextDelegates"/> instance.
+    /// </returns>
+    private static ResultContextDelegates CreateDelegates(ResultContext<JwtBearerOptions> context)
+        => new(context.Success, context.NoResult, context.Fail, context.Fail);
     #endregion
 }

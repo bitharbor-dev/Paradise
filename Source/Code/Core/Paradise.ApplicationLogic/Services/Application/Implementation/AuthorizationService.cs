@@ -60,7 +60,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task OnAuthenticationFailedAsync(IHttpResponseWrapper response)
+    public async Task OnAuthenticationFailedAsync(IHttpResponseWrapper response, ResultContextDelegates delegates)
     {
         ArgumentNullException.ThrowIfNull(response);
 
@@ -117,7 +117,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
-    public async Task OnForbiddenAsync(IHttpResponseWrapper response)
+    public async Task OnForbiddenAsync(IHttpResponseWrapper response, ResultContextDelegates delegates)
     {
         ArgumentNullException.ThrowIfNull(response);
 
@@ -134,16 +134,16 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     }
 
     /// <inheritdoc/>
-    public Task OnMessageReceivedAsync(IHttpResponseWrapper response, Action<string?> setTokenDelegate)
+    public Task OnMessageReceivedAsync(IHttpResponseWrapper response, ResultContextDelegates delegates, Action<string?> setTokenDelegate)
         => Task.CompletedTask;
 
     /// <inheritdoc/>
     public async Task OnTokenValidatedAsync(IHttpResponseWrapper response, ClaimsPrincipal? principal,
-                                            SecurityToken securityToken, Action<string> failureDelegate)
+                                            SecurityToken securityToken, ResultContextDelegates delegates)
     {
         ArgumentNullException.ThrowIfNull(response);
         ArgumentNullException.ThrowIfNull(securityToken);
-        ArgumentNullException.ThrowIfNull(failureDelegate);
+        ArgumentNullException.ThrowIfNull(delegates);
 
         try
         {
@@ -154,7 +154,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, error)
                     .ConfigureAwait(false);
 
-                failureDelegate(error.GetFormattedErrorDescription());
+                delegates.FailWithMessage(error.GetFormattedErrorDescription());
                 return;
             }
 
@@ -162,8 +162,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 .GetByIdAsync(refreshTokenId)
                 .ConfigureAwait(false);
 
-            var tokenIsOutdated = refreshToken is null
-                || refreshToken.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime);
+            var tokenIsOutdated = refreshToken?.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime) ?? true;
 
             if (tokenIsOutdated)
             {
@@ -173,7 +172,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, error)
                     .ConfigureAwait(false);
 
-                failureDelegate(errorDescription);
+                delegates.FailWithMessage(errorDescription);
                 return;
             }
 
@@ -185,7 +184,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, error)
                     .ConfigureAwait(false);
 
-                failureDelegate(errorDescription);
+                delegates.FailWithMessage(errorDescription);
                 return;
             }
 
@@ -201,7 +200,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, error)
                     .ConfigureAwait(false);
 
-                failureDelegate(errorDescription);
+                delegates.FailWithMessage(errorDescription);
                 return;
             }
 
@@ -219,7 +218,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 await WriteErrorResultAsync(response, Unauthorized, error)
                     .ConfigureAwait(false);
 
-                failureDelegate(errorDescription);
+                delegates.FailWithMessage(errorDescription);
                 return;
             }
         }
