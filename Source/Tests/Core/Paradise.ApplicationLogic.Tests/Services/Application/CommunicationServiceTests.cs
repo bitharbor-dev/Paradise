@@ -475,12 +475,12 @@ public sealed class CommunicationServiceTests
     /// <summary>
     /// Provides member data for <see cref="SendEmailAsync"/> method.
     /// </summary>
-    public static IEnumerable<object[]> SendEmailAsync_MemberData => new object[][]
+    public static TheoryData<BaseEmailModel> SendEmailAsync_MemberData => new()
     {
-        [new BaseEmailModel([TestEmail])],
-        [new BaseEmailModel([TestEmail]) { Attachmetns = [new([], "Test", "text/plain")] }],
-        [new BaseEmailModel([TestEmail]) { Cc = [TestEmail] }],
-        [new BaseEmailModel([TestEmail]) { Bcc = [TestEmail] }]
+        { new BaseEmailModel([TestEmail]) },
+        { new BaseEmailModel([TestEmail]) { Attachmetns = [new([], "Test", "text/plain")] } },
+        { new BaseEmailModel([TestEmail]) { Cc = [TestEmail] } },
+        { new BaseEmailModel([TestEmail]) { Bcc = [TestEmail] } }
     };
     #endregion
 }

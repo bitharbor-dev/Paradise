@@ -262,10 +262,10 @@ public sealed class ValueObjectEqualityComparerTests
     /// <summary>
     /// Provides member data for <see cref="Equals_ReturnsFalseOnNullArgument"/> method.
     /// </summary>
-    public static IEnumerable<object?[]> Equals_ReturnsFalseOnNullArgument_MemberData => new object?[][]
+    public static TheoryData<FakeValueObject1?, FakeValueObject1?> Equals_ReturnsFalseOnNullArgument_MemberData => new()
     {
-        [new FakeValueObject1() { Id = Guid.NewGuid() }, null],
-        [null, new FakeValueObject1() { Id = Guid.NewGuid() }]
+        { new FakeValueObject1() { Id = Guid.NewGuid() }, null },
+        { null, new FakeValueObject1() { Id = Guid.NewGuid() } }
     };
     #endregion
 }

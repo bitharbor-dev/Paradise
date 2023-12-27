@@ -363,11 +363,11 @@ public sealed class EmailTemplateTests
     /// <summary>
     /// Provides member data for <see cref="GetFormattedSubject"/> method.
     /// </summary>
-    public static IEnumerable<object?[]> GetFormattedSubject_MemberData => new object?[][]
+    public static TheoryData<string, string?, ushort, List<object?>> GetFormattedSubject_MemberData => new()
     {
-        ["Test",                        null,       (ushort)0,  new List<object?>()],
-        ["Test with {arg}0",            "{arg}",    (ushort)1,  new List<object?> { "Value" }],
-        ["Test with {arg}0 and {arg}1", "{arg}",    (ushort)2,  new List<object?> { "First value", "Second value" }]
+        { "Test",                           null,       0,  [] },
+        { "Test with {arg}0",               "{arg}",    1,  ["Value"] },
+        { "Test with {arg}0 and {arg}1",    "{arg}",    2,  ["First value", "Second value"] }
     };
     #endregion
 }

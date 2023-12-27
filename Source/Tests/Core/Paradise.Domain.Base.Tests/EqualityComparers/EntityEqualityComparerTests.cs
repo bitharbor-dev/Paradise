@@ -262,10 +262,10 @@ public sealed class EntityEqualityComparerTests
     /// <summary>
     /// Provides member data for <see cref="Equals_ReturnsFalseOnNullArgument"/> method.
     /// </summary>
-    public static IEnumerable<object?[]> Equals_ReturnsFalseOnNullArgument_MemberData => new object?[][]
+    public static TheoryData<FakeEntity1?, FakeEntity1?> Equals_ReturnsFalseOnNullArgument_MemberData => new()
     {
-        [new FakeEntity1() { Id = Guid.NewGuid() }, null],
-        [null, new FakeEntity1() { Id = Guid.NewGuid() }]
+        { new FakeEntity1() { Id = Guid.NewGuid() }, null },
+        { null, new FakeEntity1() { Id = Guid.NewGuid() } }
     };
     #endregion
 }
