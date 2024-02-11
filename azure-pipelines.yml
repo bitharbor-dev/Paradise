@@ -32,29 +32,29 @@ steps:
     command: 'test'
     arguments: --collect:"Code Coverage"
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Web API project'
-  inputs:
-    command: 'publish'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    modifyOutputPath: true
-    zipAfterPublish: true
-    publishWebProjects: false
-    projects: '**/*.WebApi.csproj'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Publish Web API project'
+#   inputs:
+#     command: 'publish'
+#     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+#     modifyOutputPath: true
+#     zipAfterPublish: true
+#     publishWebProjects: false
+#     projects: '**/*.WebApi.csproj'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Upload Web API build'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'WebApi'
-    publishLocation: 'Container'
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Upload Web API build'
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     ArtifactName: 'WebApi'
+#     publishLocation: 'Container'
 
-- task: Docker@2
-  displayName: 'Build and upload Maintenance project'
-  inputs:
-    containerRegistry: '$(containerRegistry_ConnecitonName)'
-    repository: '$(containerRegistry_RepositoryName)'
-    command: 'buildAndPush'
-    Dockerfile: '**/*.Maintenance/Dockerfile'
-    buildContext: '.'
-    tags:
+# - task: Docker@2
+#   displayName: 'Build and upload Maintenance project'
+#   inputs:
+#     containerRegistry: '$(containerRegistry_ConnecitonName)'
+#     repository: '$(containerRegistry_RepositoryName)'
+#     command: 'buildAndPush'
+#     Dockerfile: '**/*.Maintenance/Dockerfile'
+#     buildContext: '.'
+#     tags:
