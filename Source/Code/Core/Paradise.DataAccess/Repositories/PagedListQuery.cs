@@ -82,13 +82,13 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     /// The list of entity's navigation properties
     /// to be included into the query.
     /// </summary>
-    public IEnumerable<string> NavigationProperties { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> NavigationProperties { get; set; } = [];
 
     /// <summary>
     /// The list of entity's properties to lookup
     /// through with the <see cref="LookupValue"/>.
     /// </summary>
-    public IEnumerable<string> LookupProperties { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> LookupProperties { get; set; } = [];
 
     /// <summary>
     /// The value to be searched through the

@@ -10,20 +10,16 @@ namespace Paradise.DataAccess.Repositories.Base.Implementation;
 /// <typeparam name="TEntity">
 /// Entity type.
 /// </typeparam>
-public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IRepository<TEntity>
+/// <remarks>
+/// Initializes a new instance of <see cref="Repository{TEntity}"/> class
+/// with the specified data source.
+/// </remarks>
+/// <param name="source">
+/// Repository data source.
+/// </param>
+public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyRepository<TEntity>(source), IRepository<TEntity>
     where TEntity : class, IDatabaseRecord
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of <see cref="Repository{TEntity}"/> class
-    /// with the specified data source.
-    /// </summary>
-    /// <param name="source">
-    /// Repository data source.
-    /// </param>
-    protected Repository(IDataSource source) : base(source) { }
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public void Add(TEntity entity)

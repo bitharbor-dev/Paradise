@@ -9,14 +9,6 @@ namespace Paradise.Domain.Base.Exceptions;
 /// </summary>
 public sealed class InvalidEntityStateException : Exception
 {
-    #region Constants
-    /// <summary>
-    /// Separator string to be used during primary exception message
-    /// and additional information concatenation.
-    /// </summary>
-    private static readonly string ExceptionMessageSeparator = $"{Environment.NewLine}{GetInvalidEntityStateAdditionalInformationMessage}";
-    #endregion
-
     #region Constructors
     /// <summary>
     /// Initializes a new instance of the <see cref="InvalidEntityStateException"/> class.
@@ -81,10 +73,12 @@ public sealed class InvalidEntityStateException : Exception
     /// </returns>
     private static string CreateExceptionMessage(Type entityType, object? value, string? additionalInformation, string? propertyName)
     {
+        var exceptionMessageSeparator = $"{Environment.NewLine}{GetInvalidEntityStateAdditionalInformationMessage()}";
+
         var message = GetInvalidEntityStateMessage(entityType, propertyName, value);
 
         if (!string.IsNullOrWhiteSpace(additionalInformation))
-            message = string.Concat(message, ExceptionMessageSeparator, additionalInformation);
+            message = string.Concat(message, exceptionMessageSeparator, additionalInformation);
 
         return message;
     }

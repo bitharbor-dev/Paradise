@@ -93,14 +93,14 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     #region Public methods
     /// <inheritdoc/>
     public IEnumerable<SeedEmailTemplateModel> GetSeedEmailTemplates()
-        => _applicationData.EmailTemplates ?? Array.Empty<SeedEmailTemplateModel>();
+        => _applicationData.EmailTemplates ?? [];
 
     /// <inheritdoc/>
     public IEnumerable<SeedRoleModel> GetSeedRoles()
-        => _domainData.Roles ?? Array.Empty<SeedRoleModel>();
+        => _domainData.Roles ?? [];
 
     /// <inheritdoc/>
     public IEnumerable<SeedUserModel> GetSeedUsers()
-        => _domainData.Users ?? Array.Empty<SeedUserModel>();
+        => _domainData.Users ?? [];
     #endregion
 }

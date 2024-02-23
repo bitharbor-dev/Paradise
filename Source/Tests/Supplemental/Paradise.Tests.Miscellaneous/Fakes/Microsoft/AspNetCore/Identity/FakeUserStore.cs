@@ -139,7 +139,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
         var result = _userClaims.TryGetValue(user.Id, out var claims)
             ? claims.ToList() as IList<Claim>
-            : Array.Empty<Claim>();
+            : [];
 
         return Task.FromResult(result);
     }
@@ -395,7 +395,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
 
         var result = _userRoles.TryGetValue(user.Id, out var roles)
             ? roles as IList<string>
-            : Array.Empty<string>().ToList();
+            : [];
 
         return Task.FromResult(result);
     }

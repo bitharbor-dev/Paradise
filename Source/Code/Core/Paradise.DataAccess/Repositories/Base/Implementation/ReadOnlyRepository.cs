@@ -10,26 +10,21 @@ namespace Paradise.DataAccess.Repositories.Base.Implementation;
 /// <typeparam name="TEntity">
 /// Entity type.
 /// </typeparam>
-public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
+/// <remarks>
+/// Initializes a new instance of <see cref="ReadOnlyRepository{TEntity}"/> class
+/// with the specified data source.
+/// </remarks>
+/// <param name="source">
+/// Repository data source.
+/// </param>
+public abstract class ReadOnlyRepository<TEntity>(IDataSource source) : IReadOnlyRepository<TEntity>
     where TEntity : class, IDatabaseRecord
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of <see cref="ReadOnlyRepository{TEntity}"/> class
-    /// with the specified data source.
-    /// </summary>
-    /// <param name="source">
-    /// Repository data source.
-    /// </param>
-    protected ReadOnlyRepository(IDataSource source)
-        => Source = source;
-    #endregion
-
     #region Properties
     /// <summary>
     /// Repository data source.
     /// </summary>
-    protected IDataSource Source { get; }
+    protected IDataSource Source { get; } = source;
     #endregion
 
     #region Public methods

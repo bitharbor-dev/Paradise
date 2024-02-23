@@ -9,8 +9,7 @@ namespace Paradise.DataAccess.Tests.Repositories.Application;
 /// <summary>
 /// Test class for the <see cref="EmailTemplatesRepository"/>.
 /// </summary>
-public sealed class EmailTemplatesRepositoryTests
-    : RepositoryTests<EmailTemplatesRepository, EmailTemplate>
+public sealed class EmailTemplatesRepositoryTests : RepositoryTests<EmailTemplatesRepository, EmailTemplate>
 {
     #region Public methods
     /// <summary>

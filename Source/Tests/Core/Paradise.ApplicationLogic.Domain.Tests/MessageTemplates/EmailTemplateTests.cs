@@ -89,7 +89,7 @@ public sealed class EmailTemplateTests
         };
 
         // Act
-        var formatterSubject = emailTemplate.GetFormattedSubject(Array.Empty<object>());
+        var formatterSubject = emailTemplate.GetFormattedSubject([]);
 
         // Assert
         Assert.Equal(emailTemplate.Subject, formatterSubject);

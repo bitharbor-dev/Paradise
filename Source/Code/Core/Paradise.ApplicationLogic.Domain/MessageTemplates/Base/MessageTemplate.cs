@@ -9,30 +9,22 @@ namespace Paradise.ApplicationLogic.Domain.MessageTemplates.Base;
 /// <summary>
 /// Base message template class.
 /// </summary>
-public abstract class MessageTemplate : ValueObject
+/// <remarks>
+/// Initializes a new instance of the <see cref="MessageTemplate"/> class.
+/// </remarks>
+/// <param name="templateName">
+/// Template name.
+/// </param>
+/// <param name="templateText">
+/// Template text.
+/// </param>
+public abstract class MessageTemplate(string templateName, string templateText) : ValueObject
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MessageTemplate"/> class.
-    /// </summary>
-    /// <param name="templateName">
-    /// Template name.
-    /// </param>
-    /// <param name="templateText">
-    /// Template text.
-    /// </param>
-    protected MessageTemplate(string templateName, string templateText)
-    {
-        TemplateName = templateName;
-        TemplateText = templateText;
-    }
-    #endregion
-
     #region Properties
     /// <summary>
     /// Template name.
     /// </summary>
-    public string TemplateName { get; set; }
+    public string TemplateName { get; set; } = templateName;
 
     /// <summary>
     /// Template culture.
@@ -42,7 +34,7 @@ public abstract class MessageTemplate : ValueObject
     /// <summary>
     /// Template text.
     /// </summary>
-    public string TemplateText { get; set; }
+    public string TemplateText { get; set; } = templateText;
 
     /// <summary>
     /// Placeholder name to be replaced with values during a message formatting.

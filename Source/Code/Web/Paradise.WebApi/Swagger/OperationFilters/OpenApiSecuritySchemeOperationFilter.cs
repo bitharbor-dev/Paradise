@@ -25,7 +25,7 @@ internal sealed class OpenApiSecuritySchemeOperationFilter(OpenApiSecurityScheme
             .Any();
 
         if (authRequired)
-            operation.Security.Add(new() { { scheme, Array.Empty<string>() } });
+            operation.Security.Add(new() { { scheme, [] } });
     }
     #endregion
 }

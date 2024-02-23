@@ -2,7 +2,6 @@
 using Paradise.Common.Extensions;
 using Paradise.Domain.Base.Exceptions;
 using Paradise.Localization.ExceptionsHandling;
-using System.Globalization;
 using System.Text;
 
 namespace Paradise.ApplicationLogic.Domain.MessageTemplates;

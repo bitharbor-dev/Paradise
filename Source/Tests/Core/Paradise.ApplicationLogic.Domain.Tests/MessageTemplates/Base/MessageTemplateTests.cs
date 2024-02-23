@@ -57,7 +57,7 @@ public sealed class MessageTemplateTests
         };
 
         // Act
-        var formatterText = messageTemplate.GetFormattedText(Array.Empty<object>());
+        var formatterText = messageTemplate.GetFormattedText([]);
 
         // Assert
         Assert.Equal(messageTemplate.TemplateText, formatterText);

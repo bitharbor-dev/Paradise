@@ -171,8 +171,8 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 
         try
         {
-            body = template.GetFormattedText(request.BodyArgs ?? Array.Empty<object>());
-            subject = template.GetFormattedSubject(request.SubjectArgs ?? Array.Empty<object>());
+            body = template.GetFormattedText(request.BodyArgs ?? []);
+            subject = template.GetFormattedSubject(request.SubjectArgs ?? []);
         }
         catch (IndexOutOfRangeException e)
         {

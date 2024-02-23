@@ -19,6 +19,6 @@ public sealed class FakeMessageTemplate(string templateName, string templateText
     #region Public methods
     /// <inheritdoc/>
     public override IEnumerable<object?> GetEqualityComponents()
-        => Array.Empty<object?>();
+        => [];
     #endregion
 }

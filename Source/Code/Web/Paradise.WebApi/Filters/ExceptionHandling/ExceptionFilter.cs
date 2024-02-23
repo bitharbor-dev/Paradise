@@ -10,16 +10,11 @@ namespace Paradise.WebApi.Filters.ExceptionHandling;
 /// </summary>
 internal sealed class ExceptionFilter : IActionFilter, IOrderedFilter
 {
-    #region Fields
-    private static ExceptionFilter? _instance;
-    #endregion
-
     #region Properties
     /// <summary>
     /// Exception filter singleton instance.
     /// </summary>
-    public static ExceptionFilter Instance
-        => _instance ??= new ExceptionFilter();
+    public static ExceptionFilter Instance { get; } = new();
 
     /// <inheritdoc/>
     public int Order { get; } = int.MaxValue - 10;
@@ -42,7 +37,7 @@ internal sealed class ExceptionFilter : IActionFilter, IOrderedFilter
             }
             else
             {
-                result = new Result();
+                result = new();
                 result.AddException(context.Exception);
             }
 

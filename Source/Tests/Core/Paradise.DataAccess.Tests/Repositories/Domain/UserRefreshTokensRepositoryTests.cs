@@ -7,8 +7,7 @@ namespace Paradise.DataAccess.Tests.Repositories.Domain;
 /// <summary>
 /// Test class for the <see cref="UserRefreshTokensRepository"/>.
 /// </summary>
-public sealed class UserRefreshTokensRepositoryTests
-    : RepositoryTests<UserRefreshTokensRepository, UserRefreshToken>
+public sealed class UserRefreshTokensRepositoryTests : RepositoryTests<UserRefreshTokensRepository, UserRefreshToken>
 {
     #region Protected methods
     /// <inheritdoc/>
