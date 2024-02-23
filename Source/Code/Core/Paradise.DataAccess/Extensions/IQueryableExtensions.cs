@@ -12,9 +12,9 @@ internal static class IQueryableExtensions
 {
     #region Constants
     /// <summary>
-    /// The number of arguments passed into <see cref="string.ToLower()"/> method.
+    /// The number of arguments passed into <see cref="string.ToUpperInvariant()"/> method.
     /// </summary>
-    private const int ToLowerMethodArgumentsNumber = 0;
+    private const int ToUpperInvariantMethodArgumentsNumber = 0;
     /// <summary>
     /// The number of arguments passed into
     /// <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource, bool}})"/> method.
@@ -189,19 +189,19 @@ internal static class IQueryableExtensions
     }
 
     /// <summary>
-    /// Gets the <see cref="string.ToLower()"/> method info.
+    /// Gets the <see cref="string.ToUpperInvariant()"/> method info.
     /// </summary>
     /// <returns>
     /// A <see cref="MethodInfo"/> instance
     /// containing information about
-    /// <see cref="string.ToLower()"/> method.
+    /// <see cref="string.ToUpperInvariant()"/> method.
     /// </returns>
-    private static MethodInfo GetToLowerMethodInfo()
+    private static MethodInfo GetToUpperInvariantMethodInfo()
     {
         return typeof(string)
             .GetMethods()
-            .Where(m => m.Name is nameof(string.ToLower))
-            .First(m => m.GetParameters().Length is ToLowerMethodArgumentsNumber);
+            .Where(m => m.Name is nameof(string.ToUpperInvariant))
+            .First(m => m.GetParameters().Length is ToUpperInvariantMethodArgumentsNumber);
     }
 
     /// <summary>
@@ -258,30 +258,30 @@ internal static class IQueryableExtensions
     {
         value = value?.ToUpperInvariant();
 
-        var toLowerMethod = GetToLowerMethodInfo();
+        var toUpperInvariantMethod = GetToUpperInvariantMethodInfo();
 
         var containsMethod = GetContainsMethodInfo();
 
         var searchValueExpression = Expression.Constant(value, typeof(string));
         var argument = Expression.Parameter(entityType, entityType.Name.ToUpperInvariant());
 
-        var loweredPropertiesContainsCalls = propertyNames
+        var uppercasePropertiesContainsCalls = propertyNames
             .Select(name => Expression.Property(argument, name))
-            .Select(propertyCall => Expression.Call(propertyCall, toLowerMethod))
-            .Select(loweredStringProperty => Expression.Call(loweredStringProperty, containsMethod, searchValueExpression))
+            .Select(propertyCall => Expression.Call(propertyCall, toUpperInvariantMethod))
+            .Select(uppercaseStringProperty => Expression.Call(uppercaseStringProperty, containsMethod, searchValueExpression))
             .ToArray();
 
         LambdaExpression? selector = null;
 
-        if (loweredPropertiesContainsCalls.Length is 1)
+        if (uppercasePropertiesContainsCalls.Length is 1)
         {
-            selector = Expression.Lambda(loweredPropertiesContainsCalls.First(), argument);
+            selector = Expression.Lambda(uppercasePropertiesContainsCalls.First(), argument);
         }
         else
         {
-            var statementsExceptFirstTwo = loweredPropertiesContainsCalls.Skip(2);
+            var statementsExceptFirstTwo = uppercasePropertiesContainsCalls.Skip(2);
 
-            var orStatement = Expression.OrElse(loweredPropertiesContainsCalls[0], loweredPropertiesContainsCalls[1]);
+            var orStatement = Expression.OrElse(uppercasePropertiesContainsCalls[0], uppercasePropertiesContainsCalls[1]);
 
             foreach (var statement in statementsExceptFirstTwo)
                 orStatement = Expression.OrElse(orStatement, statement);
