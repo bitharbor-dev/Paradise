@@ -1,7 +1,7 @@
 ﻿namespace Paradise.Domain.Base.Tests.EqualityComparers;
 
 /// <summary>
-/// Test class for the <see cref="EntityEqualityComparer{TEntity}"/>.
+/// Test class for the <see cref="EntityEqualityComparer"/>.
 /// </summary>
 public sealed class EntityEqualityComparerTests
 {
@@ -15,14 +15,14 @@ public sealed class EntityEqualityComparerTests
 
     #region Properties
     /// <summary>
-    /// A <see cref="EntityEqualityComparer{TEntity}"/> instance to be tested.
+    /// A <see cref="EntityEqualityComparer"/> instance to be tested.
     /// </summary>
-    public EntityEqualityComparer<IDatabaseRecord> Comparer { get; }
+    public EntityEqualityComparer Comparer { get; }
     #endregion
 
     #region Public methods
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.Equals"/> test method.
+    /// <see cref="EntityEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -48,7 +48,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.Equals"/> test method.
+    /// <see cref="EntityEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -76,7 +76,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.Equals"/> test method.
+    /// <see cref="EntityEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -99,7 +99,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.Equals"/> test method.
+    /// <see cref="EntityEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -127,7 +127,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.Equals"/> test method.
+    /// <see cref="EntityEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -152,7 +152,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.GetHashCode"/> test method.
+    /// <see cref="EntityEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -181,7 +181,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.GetHashCode"/> test method.
+    /// <see cref="EntityEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -208,7 +208,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.GetHashCode"/> test method.
+    /// <see cref="EntityEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -237,7 +237,7 @@ public sealed class EntityEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="EntityEqualityComparer{TEntity}.GetHashCode"/> test method.
+    /// <see cref="EntityEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// throws a <see cref="NullReferenceException"/> since the given instance

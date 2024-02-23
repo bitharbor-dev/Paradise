@@ -5,15 +5,18 @@ namespace Paradise.Domain.Base.EqualityComparers;
 /// <summary>
 /// Equality comparer for all entities.
 /// </summary>
-/// <typeparam name="TEntity">
-/// Entity type.
-/// </typeparam>
-public sealed class EntityEqualityComparer<TEntity> : IEqualityComparer<TEntity>
-    where TEntity : IDatabaseRecord
+public sealed class EntityEqualityComparer : IEqualityComparer<IEntity>
 {
+    #region Properties
+    /// <summary>
+    /// Singleton <see cref="EntityEqualityComparer"/> instance.
+    /// </summary>
+    public static EntityEqualityComparer Instance { get; } = new();
+    #endregion
+
     #region Public methods
     /// <inheritdoc/>
-    public bool Equals(TEntity? x, TEntity? y)
+    public bool Equals(IEntity? x, IEntity? y)
     {
         // Both objects are not null: compare them and return the result
         if (x is not null && y is not null)
@@ -32,7 +35,7 @@ public sealed class EntityEqualityComparer<TEntity> : IEqualityComparer<TEntity>
     }
 
     /// <inheritdoc/>
-    public int GetHashCode([DisallowNull] TEntity obj)
+    public int GetHashCode([DisallowNull] IEntity obj)
         => HashCode.Combine(obj.GetType(), obj.Id);
     #endregion
 }

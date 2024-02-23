@@ -5,15 +5,18 @@ namespace Paradise.Domain.Base.EqualityComparers;
 /// <summary>
 /// Equality comparer for all value-objects.
 /// </summary>
-/// <typeparam name="TValueObject">
-/// Value-object type.
-/// </typeparam>
-public sealed class ValueObjectEqualityComparer<TValueObject> : IEqualityComparer<TValueObject>
-    where TValueObject : ValueObject
+public sealed class ValueObjectEqualityComparer : IEqualityComparer<IValueObject>
 {
+    #region Properties
+    /// <summary>
+    /// Singleton <see cref="ValueObjectEqualityComparer"/> instance.
+    /// </summary>
+    public static ValueObjectEqualityComparer Instance { get; } = new();
+    #endregion
+
     #region Public methods
     /// <inheritdoc/>
-    public bool Equals(TValueObject? x, TValueObject? y)
+    public bool Equals(IValueObject? x, IValueObject? y)
     {
         // Both objects are not null: compare them and return the result
         if (x is not null && y is not null)
@@ -32,7 +35,7 @@ public sealed class ValueObjectEqualityComparer<TValueObject> : IEqualityCompare
     }
 
     /// <inheritdoc/>
-    public int GetHashCode([DisallowNull] TValueObject obj)
+    public int GetHashCode([DisallowNull] IValueObject obj)
     {
         ArgumentNullException.ThrowIfNull(obj);
 

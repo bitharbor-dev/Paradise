@@ -5,7 +5,7 @@ namespace Paradise.Domain.Base;
 /// <summary>
 /// Base class for all value-objects.
 /// </summary>
-public abstract class ValueObject : IDatabaseRecord, IEquatable<ValueObject>
+public abstract class ValueObject : IValueObject, IDatabaseRecord, IEquatable<ValueObject>
 {
     #region Properties
     /// <inheritdoc/>
@@ -32,17 +32,9 @@ public abstract class ValueObject : IDatabaseRecord, IEquatable<ValueObject>
 
     /// <inheritdoc/>
     public sealed override int GetHashCode()
-        => new ValueObjectEqualityComparer<ValueObject>().GetHashCode(this);
+        => ValueObjectEqualityComparer.Instance.GetHashCode(this);
 
-    /// <summary>
-    /// Gets an array of <see cref="ValueObject"/>
-    /// properties to determine its equality compared to the other objects
-    /// of the same type.
-    /// </summary>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="object"/>
-    /// to determine <see cref="ValueObject"/> equality.
-    /// </returns>
+    /// <inheritdoc/>
     public abstract IEnumerable<object?> GetEqualityComponents();
     #endregion
 
@@ -62,7 +54,7 @@ public abstract class ValueObject : IDatabaseRecord, IEquatable<ValueObject>
     /// otherwise - <see langword="false"/>.
     /// </returns>
     public static bool operator ==(ValueObject? left, ValueObject? right)
-        => new ValueObjectEqualityComparer<ValueObject>().Equals(left, right);
+        => ValueObjectEqualityComparer.Instance.Equals(left, right);
 
     /// <summary>
     /// Compares the given <paramref name="left"/> and <paramref name="right"/>

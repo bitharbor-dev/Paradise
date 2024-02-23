@@ -5,7 +5,7 @@ namespace Paradise.Domain.Base;
 /// <summary>
 /// Base class for all entities.
 /// </summary>
-public abstract class Entity : IDatabaseRecord, IEquatable<Entity>
+public abstract class Entity : IEntity, IDatabaseRecord, IEquatable<Entity>
 {
     #region Properties
     /// <inheritdoc/>
@@ -32,7 +32,7 @@ public abstract class Entity : IDatabaseRecord, IEquatable<Entity>
 
     /// <inheritdoc/>
     public sealed override int GetHashCode()
-        => new EntityEqualityComparer<Entity>().GetHashCode(this);
+        => EntityEqualityComparer.Instance.GetHashCode(this);
     #endregion
 
     #region Operators
@@ -51,7 +51,7 @@ public abstract class Entity : IDatabaseRecord, IEquatable<Entity>
     /// otherwise - <see langword="false"/>.
     /// </returns>
     public static bool operator ==(Entity? left, Entity? right)
-        => new EntityEqualityComparer<Entity>().Equals(left, right);
+        => EntityEqualityComparer.Instance.Equals(left, right);
 
     /// <summary>
     /// Compares the given <paramref name="left"/> and <paramref name="right"/>

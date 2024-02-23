@@ -1,6 +1,6 @@
 ﻿using Paradise.DataAccess.Repositories.Base.Implementation;
 using Paradise.Domain.Base;
-using Paradise.Domain.Base.EqualityComparers;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Paradise.DataAccess.Tests.Repositories.Base;
@@ -18,20 +18,13 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     where TRepository : Repository<TEntity>
     where TEntity : class, IDatabaseRecord
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RepositoryTests{TRepository, TEntity}"/> class.
-    /// </summary>
-    protected RepositoryTests()
-        => Comparer = new();
-    #endregion
 
     #region Properties
     /// <summary>
-    /// The <see cref="EntityEqualityComparer{TEntity}"/> to be used to
+    /// The <see cref="IEqualityComparer{T}"/> to be used to
     /// compare <typeparamref name="TEntity"/> instances.
     /// </summary>
-    public EntityEqualityComparer<IDatabaseRecord> Comparer { get; }
+    public IEqualityComparer<TEntity?> Comparer { get; } = TestEqualityComparer.Instance;
     #endregion
 
     #region Public methods
@@ -450,6 +443,31 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         // Assert
         Assert.All(entitiesToRemove, entity => Assert.DoesNotContain(entity, Source.GetQueryable<TEntity>(), Comparer));
         Assert.All(entitiesToKeep, entity => Assert.Contains(entity, Source.GetQueryable<TEntity>(), Comparer));
+    }
+    #endregion
+
+    #region Nested types
+    /// <summary>
+    /// Test-only equality comparer implementation.
+    /// </summary>
+    private sealed class TestEqualityComparer : IEqualityComparer<TEntity?>
+    {
+        #region Properties
+        /// <summary>
+        /// Singleton <see cref="TestEqualityComparer"/> instance.
+        /// </summary>
+        public static TestEqualityComparer Instance { get; } = new();
+        #endregion
+
+        #region Public methods
+        /// <inheritdoc/>
+        public bool Equals(TEntity? x, TEntity? y)
+            => x?.Id == y?.Id;
+
+        /// <inheritdoc/>
+        public int GetHashCode([DisallowNull] TEntity obj)
+            => obj.Id.GetHashCode();
+        #endregion
     }
     #endregion
 }

@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Paradise.Domain.Users;
 
 /// <inheritdoc/>
-public sealed class User : IdentityUser<Guid>, IDatabaseRecord, IEquatable<User>
+public sealed class User : IdentityUser<Guid>, IEntity, IDatabaseRecord, IEquatable<User>
 {
     #region Constructors
     /// <summary>
@@ -120,7 +120,7 @@ public sealed class User : IdentityUser<Guid>, IDatabaseRecord, IEquatable<User>
 
     /// <inheritdoc/>
     public sealed override int GetHashCode()
-        => new EntityEqualityComparer<User>().GetHashCode(this);
+        => EntityEqualityComparer.Instance.GetHashCode(this);
     #endregion
 
     #region Operators
@@ -139,7 +139,7 @@ public sealed class User : IdentityUser<Guid>, IDatabaseRecord, IEquatable<User>
     /// otherwise - <see langword="false"/>.
     /// </returns>
     public static bool operator ==(User? left, User? right)
-        => new EntityEqualityComparer<User>().Equals(left, right);
+        => EntityEqualityComparer.Instance.Equals(left, right);
 
     /// <summary>
     /// Compares the given <paramref name="left"/> and <paramref name="right"/>

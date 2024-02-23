@@ -18,7 +18,7 @@ namespace Paradise.Domain.Roles;
 /// Indicates whether the role is default and should be
 /// assigned automatically when a user has been created.
 /// </param>
-public sealed class Role(string name, bool isDefault) : IdentityRole<Guid>(name), IDatabaseRecord, IEquatable<Role>
+public sealed class Role(string name, bool isDefault) : IdentityRole<Guid>(name), IEntity, IDatabaseRecord, IEquatable<Role>
 {
     #region Properties
     /// <inheritdoc/>
@@ -56,7 +56,7 @@ public sealed class Role(string name, bool isDefault) : IdentityRole<Guid>(name)
 
     /// <inheritdoc/>
     public sealed override int GetHashCode()
-        => new EntityEqualityComparer<Role>().GetHashCode(this);
+        => EntityEqualityComparer.Instance.GetHashCode(this);
     #endregion
 
     #region Operators
@@ -75,7 +75,7 @@ public sealed class Role(string name, bool isDefault) : IdentityRole<Guid>(name)
     /// otherwise - <see langword="false"/>.
     /// </returns>
     public static bool operator ==(Role? left, Role? right)
-        => new EntityEqualityComparer<Role>().Equals(left, right);
+        => EntityEqualityComparer.Instance.Equals(left, right);
 
     /// <summary>
     /// Compares the given <paramref name="left"/> and <paramref name="right"/>

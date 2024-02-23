@@ -1,7 +1,7 @@
 ﻿namespace Paradise.Domain.Base.Tests.EqualityComparers;
 
 /// <summary>
-/// Test class for the <see cref="ValueObjectEqualityComparer{TValueObject}"/>.
+/// Test class for the <see cref="ValueObjectEqualityComparer"/>.
 /// </summary>
 public sealed class ValueObjectEqualityComparerTests
 {
@@ -15,14 +15,14 @@ public sealed class ValueObjectEqualityComparerTests
 
     #region Properties
     /// <summary>
-    /// A <see cref="ValueObjectEqualityComparer{TValueObject}"/> instance to be tested.
+    /// A <see cref="ValueObjectEqualityComparer"/> instance to be tested.
     /// </summary>
-    public ValueObjectEqualityComparer<ValueObject> Comparer { get; }
+    public ValueObjectEqualityComparer Comparer { get; }
     #endregion
 
     #region Public methods
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.Equals"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -48,7 +48,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.Equals"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -76,7 +76,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.Equals"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -99,7 +99,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.Equals"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -127,7 +127,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.Equals"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.Equals"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -152,7 +152,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.GetHashCode"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -181,7 +181,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.GetHashCode"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -208,7 +208,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.GetHashCode"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -237,7 +237,7 @@ public sealed class ValueObjectEqualityComparerTests
     }
 
     /// <summary>
-    /// <see cref="ValueObjectEqualityComparer{TValueObject}.GetHashCode"/> test method.
+    /// <see cref="ValueObjectEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// throws a <see cref="NullReferenceException"/> since the given instance
