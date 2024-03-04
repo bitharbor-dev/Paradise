@@ -106,6 +106,15 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The clock worker&apos;s interval can only be equal to one day..
+        /// </summary>
+        internal static string InvalidClockWorkerInterval {
+            get {
+                return ResourceManager.GetString("InvalidClockWorkerInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid email address..
         /// </summary>
         internal static string InvalidEmailAddress {

@@ -99,6 +99,15 @@ public static class ExceptionMessagesProvider
     }
 
     /// <summary>
+    /// Gets the <see cref="InvalidClockWorkerInterval"/> formatted message.
+    /// </summary>
+    /// <returns>
+    /// A formatted message using the <see cref="InvalidClockWorkerInterval"/> format string.
+    /// </returns>
+    public static string GetInvalidClockWorkerIntervalMessage()
+        => InvalidClockWorkerInterval;
+
+    /// <summary>
     /// Gets the <see cref="InvalidEntityStateAdditionalInformation"/> formatted message.
     /// </summary>
     /// <returns>

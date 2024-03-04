@@ -1,4 +1,5 @@
 ﻿using Paradise.Maintenance.Workers.Base;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Maintenance.Options.Base;
 
@@ -8,6 +9,8 @@ namespace Paradise.Maintenance.Options.Base;
 internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
 {
     #region Fields
+    private static readonly TimeSpan _oneDay = TimeSpan.FromDays(1d);
+
     private TimeSpan _executionTime;
     #endregion
 
@@ -22,6 +25,19 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
         {
             _executionTime = value.ToTimeSpan();
             CalculateDelay();
+        }
+    }
+
+    /// <inheritdoc/>
+    public override TimeSpan Interval
+    {
+        get => base.Interval;
+        set
+        {
+            if (value != _oneDay)
+                throw new InvalidOperationException(GetInvalidClockWorkerIntervalMessage());
+
+            base.Interval = value;
         }
     }
     #endregion
@@ -47,12 +63,11 @@ internal abstract class ClockWorkerOptionsBase : WorkerOptionsBase
     /// </summary>
     private void CalculateDelay()
     {
-        var oneDay = TimeSpan.FromDays(1d);
         var currentTime = DateTime.UtcNow.TimeOfDay;
 
         Delay = currentTime < _executionTime
             ? _executionTime - currentTime
-            : oneDay - currentTime + _executionTime;
+            : _oneDay - currentTime + _executionTime;
     }
     #endregion
 }

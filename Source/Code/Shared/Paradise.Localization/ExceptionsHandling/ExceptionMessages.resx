@@ -179,4 +179,7 @@
     <value>'{0}' value can not be less or equal to 0.</value>
     <comment>Pass parameter name as the argument.</comment>
   </data>
+  <data name="InvalidClockWorkerInterval" xml:space="preserve">
+    <value>The clock worker's interval can only be equal to one day.</value>
+  </data>
 </root>
