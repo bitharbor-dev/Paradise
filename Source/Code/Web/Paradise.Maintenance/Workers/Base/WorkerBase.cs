@@ -83,7 +83,7 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </param>
-    public abstract Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default);
+    public abstract Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
     public Task StartAsync(CancellationToken cancellationToken)
@@ -113,11 +113,11 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
 
     #region Private methods
     /// <summary>
-    /// Calls the <see cref="DoWorkAsync"/> method
+    /// Calls the <see cref="ExecuteAsync"/> method
     /// and logs the information about the execution.
     /// </summary>
     /// <param name="state">
-    /// An object containing information to be used by the callback method, or null.
+    /// An object containing information to be used by the callback method, or <see langword="null"/>.
     /// </param>
     private async void DoWorkInternal(object? state)
     {
@@ -126,7 +126,7 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
             _logger.LogWorkerRunning(GetType());
 
             await using var scope = _serviceProvider.CreateAsyncScope();
-            await DoWorkAsync(scope.ServiceProvider)
+            await ExecuteAsync(scope.ServiceProvider)
                 .ConfigureAwait(false);
         }
         catch (Exception e)
