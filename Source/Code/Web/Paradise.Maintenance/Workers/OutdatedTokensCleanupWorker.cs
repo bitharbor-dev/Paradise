@@ -19,14 +19,14 @@ internal sealed class OutdatedTokensCleanupWorker(IServiceProvider serviceProvid
 {
     #region Public methods
     /// <inheritdoc/>
-    public override Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
+    public override Task ExecuteAsync(IServiceProvider provider)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
         var refreshTokenLifetime = applicationOptions.Authentication.RefreshTokenLifetime;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        return databaseService.DeleteOutdatedTokensAsync(refreshTokenLifetime, cancellationToken);
+        return databaseService.DeleteOutdatedTokensAsync(refreshTokenLifetime);
     }
     #endregion
 }

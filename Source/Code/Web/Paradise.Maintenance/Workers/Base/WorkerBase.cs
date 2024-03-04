@@ -79,11 +79,7 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <param name="provider">
     /// Service provider to retrieve registered services.
     /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    public abstract Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken = default);
+    public abstract Task ExecuteAsync(IServiceProvider provider);
 
     /// <inheritdoc/>
     public Task StartAsync(CancellationToken cancellationToken)
