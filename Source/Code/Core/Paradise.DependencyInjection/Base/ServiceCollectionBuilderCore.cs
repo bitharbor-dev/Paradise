@@ -25,22 +25,17 @@ namespace Paradise.DependencyInjection.Base;
 /// <summary>
 /// Contains common application services configuration.
 /// </summary>
-public abstract class ServiceCollectionBuilderCore : ServiceCollectionBuilderBase
+/// <remarks>
+/// Initializes a new instance of the <see cref="ServiceCollectionBuilderCore"/> class.
+/// </remarks>
+/// <param name="services">
+/// The service collection the builder will operate over.
+/// </param>
+/// <param name="configurationOrigin">
+/// Configuration origin.
+/// </param>
+public abstract class ServiceCollectionBuilderCore(IServiceCollection services, IConfigurationOrigin configurationOrigin) : ServiceCollectionBuilderBase(services, configurationOrigin)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceCollectionBuilderCore"/> class.
-    /// </summary>
-    /// <param name="services">
-    /// The service collection the builder will operate over.
-    /// </param>
-    /// <param name="configurationOrigin">
-    /// Configuration origin.
-    /// </param>
-    protected ServiceCollectionBuilderCore(IServiceCollection services, IConfigurationOrigin configurationOrigin)
-        : base(services, configurationOrigin) { }
-    #endregion
-
     #region Protected methods
     /// <inheritdoc/>
     protected override void AddMiscellaneous()

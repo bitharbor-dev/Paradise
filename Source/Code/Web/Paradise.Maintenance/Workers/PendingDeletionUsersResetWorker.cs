@@ -12,19 +12,10 @@ namespace Paradise.Maintenance.Workers;
 /// <remarks>
 /// Initializes a new instance of the <see cref="PendingDeletionUsersResetWorker"/> class.
 /// </remarks>
-/// <param name="logger">
-/// Logger.
-/// </param>
 /// <param name="serviceProvider">
 /// Service provider to retrieve registered services.
 /// </param>
-/// <param name="optionsMonitor">
-/// Worker options.
-/// </param>
-internal sealed class PendingDeletionUsersResetWorker(ILogger<PendingDeletionUsersResetWorker> logger,
-                                                      IServiceProvider serviceProvider,
-                                                      IOptionsMonitor<PendingDeletionUsersResetWorkerOptions> optionsMonitor)
-    : WorkerBase<PendingDeletionUsersResetWorkerOptions>(logger, serviceProvider, optionsMonitor)
+internal sealed class PendingDeletionUsersResetWorker(IServiceProvider serviceProvider) : WorkerBase<PendingDeletionUsersResetWorkerOptions>(serviceProvider)
 {
     #region Public methods
     /// <inheritdoc/>

@@ -12,19 +12,10 @@ namespace Paradise.Maintenance.Workers;
 /// <remarks>
 /// Initializes a new instance of the <see cref="OutdatedTokensCleanupWorkerOptions"/> class.
 /// </remarks>
-/// <param name="logger">
-/// Logger.
-/// </param>
 /// <param name="serviceProvider">
 /// Service provider to retrieve registered services.
 /// </param>
-/// <param name="optionsMonitor">
-/// Worker options.
-/// </param>
-internal sealed class OutdatedTokensCleanupWorker(ILogger<OutdatedTokensCleanupWorker> logger,
-                                                  IServiceProvider serviceProvider,
-                                                  IOptionsMonitor<OutdatedTokensCleanupWorkerOptions> optionsMonitor)
-    : WorkerBase<OutdatedTokensCleanupWorkerOptions>(logger, serviceProvider, optionsMonitor)
+internal sealed class OutdatedTokensCleanupWorker(IServiceProvider serviceProvider) : WorkerBase<OutdatedTokensCleanupWorkerOptions>(serviceProvider)
 {
     #region Public methods
     /// <inheritdoc/>

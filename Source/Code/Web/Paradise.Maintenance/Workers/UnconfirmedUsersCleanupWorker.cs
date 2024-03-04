@@ -13,19 +13,10 @@ namespace Paradise.Maintenance.Workers;
 /// <remarks>
 /// Initializes a new instance of the <see cref="UnconfirmedUsersCleanupWorker"/> class.
 /// </remarks>
-/// <param name="logger">
-/// Logger.
-/// </param>
 /// <param name="serviceProvider">
 /// Service provider to retrieve registered services.
 /// </param>
-/// <param name="optionsMonitor">
-/// Worker options.
-/// </param>
-internal sealed class UnconfirmedUsersCleanupWorker(ILogger<UnconfirmedUsersCleanupWorker> logger,
-                                                    IServiceProvider serviceProvider,
-                                                    IOptionsMonitor<UnconfirmedUsersCleanupWorkerOptions> optionsMonitor)
-    : WorkerBase<UnconfirmedUsersCleanupWorkerOptions>(logger, serviceProvider, optionsMonitor)
+internal sealed class UnconfirmedUsersCleanupWorker(IServiceProvider serviceProvider) : WorkerBase<UnconfirmedUsersCleanupWorkerOptions>(serviceProvider)
 {
     #region Public methods
     /// <inheritdoc/>

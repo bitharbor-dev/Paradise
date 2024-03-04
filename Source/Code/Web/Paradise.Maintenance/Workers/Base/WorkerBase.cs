@@ -32,23 +32,21 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <param name="serviceProvider">
     /// Service provider to retrieve registered services.
     /// </param>
-    /// <param name="logger">
-    /// Logger.
-    /// </param>
-    /// <param name="optionsMonitor">
-    /// Worker options.
-    /// </param>
-    protected WorkerBase(ILogger logger, IServiceProvider serviceProvider, IOptionsMonitor<TOptions> optionsMonitor)
+    protected WorkerBase(IServiceProvider serviceProvider)
     {
-        _logger = logger;
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        _logger = loggerFactory.CreateLogger(GetType().Name);
 
         _serviceProvider = serviceProvider;
-        _optionsReloadToken = optionsMonitor.OnChange(UpdateOptions);
+
+        var monitor = serviceProvider.GetRequiredService<IOptionsMonitor<TOptions>>();
+
+        _optionsReloadToken = monitor.OnChange(UpdateOptions);
         _executionTimer = new(DoWorkInternal, null, Timeout.Infinite, Timeout.Infinite);
 
         _jsonSerializerOptions = _serviceProvider.GetService<IOptions<JsonSerializerOptions>>()?.Value;
 
-        _options = optionsMonitor.CurrentValue;
+        _options = monitor.CurrentValue;
 
         _logger.LogWorkerOptionsInitialState(Options, _jsonSerializerOptions);
     }
