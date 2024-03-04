@@ -64,9 +64,9 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
             var oldValue = _options;
             var newValue = value;
 
-            OnOptionsChanged(oldValue, newValue);
-
             _options = newValue;
+
+            OnOptionsChanged(oldValue, newValue);
         }
     }
     #endregion
