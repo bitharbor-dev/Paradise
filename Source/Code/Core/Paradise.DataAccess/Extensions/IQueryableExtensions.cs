@@ -70,7 +70,7 @@ internal static class IQueryableExtensions
 
         var whereMethod = GetWhereMethodInfo(entityType);
 
-        return InvokeStaticMethodWithCast<IQueryable<TSource>>(whereMethod, query, expression);
+        return whereMethod.Invoke<IQueryable<TSource>>(query, expression);
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ internal static class IQueryableExtensions
 
         var expression = ConstructOrderingExpression(entityType, name);
 
-        return InvokeStaticMethodWithCast<IOrderedQueryable<TSource>>(orderByMethod, query, expression);
+        return orderByMethod.Invoke<IOrderedQueryable<TSource>>(query, expression);
     }
     #endregion
 
@@ -198,7 +198,9 @@ internal static class IQueryableExtensions
     /// </returns>
     private static MethodInfo GetToUpperInvariantMethodInfo()
     {
-        return typeof(string)
+        var stringType = typeof(string);
+
+        return stringType
             .GetMethods()
             .Where(m => m.Name is nameof(string.ToUpperInvariant))
             .First(m => m.GetParameters().Length is ToUpperInvariantMethodArgumentsNumber);
@@ -372,7 +374,7 @@ internal static class IQueryableExtensions
     /// <exception cref="InvalidCastException">
     /// Thrown if the invocation result does not have a type of <typeparamref name="T"/>.
     /// </exception>
-    private static T InvokeStaticMethodWithCast<T>(MethodInfo method, params object?[] args)
+    private static T Invoke<T>(this MethodInfo method, params object?[] args)
     {
         var boxedResult = method.Invoke(null, args);
 

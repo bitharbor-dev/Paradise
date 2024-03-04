@@ -31,10 +31,11 @@ internal sealed class OutdatedTokensCleanupWorker(ILogger<OutdatedTokensCleanupW
     public override Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
+        var refreshTokenLifetime = applicationOptions.Authentication.RefreshTokenLifetime;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        return databaseService.DeleteOutdatedTokensAsync(applicationOptions.Authentication.RefreshTokenLifetime, cancellationToken);
+        return databaseService.DeleteOutdatedTokensAsync(refreshTokenLifetime, cancellationToken);
     }
     #endregion
 }

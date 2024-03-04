@@ -17,7 +17,7 @@ namespace Paradise.Maintenance.Workers.Base;
 /// <param name="newValue">
 /// New value.
 /// </param>
-internal sealed class WorkerOptionsChangedEventArgs<TOptions>(TOptions oldValue, TOptions newValue)
+internal sealed class WorkerOptionsChangedEventArgs<TOptions>(TOptions oldValue, TOptions newValue) : EventArgs
     where TOptions : WorkerOptionsBase
 {
     #region Properties

@@ -119,7 +119,9 @@ public abstract class ReadOnlyRepository<TEntity>(IDataSource source) : IReadOnl
 
         var total = set.Count();
 
-        set = set.Skip(query.PageSkip).Take(query.PageSize);
+        set = set
+            .Skip(query.PageSkip)
+            .Take(query.PageSize);
 
         var data = set.ToList();
 
@@ -139,7 +141,9 @@ public abstract class ReadOnlyRepository<TEntity>(IDataSource source) : IReadOnl
             .CountAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        set = set.Skip(query.PageSkip).Take(query.PageSize);
+        set = set
+            .Skip(query.PageSkip)
+            .Take(query.PageSize);
 
         var data = await set
             .ToListAsync(cancellationToken)

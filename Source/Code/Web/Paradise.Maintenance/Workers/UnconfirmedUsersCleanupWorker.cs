@@ -32,10 +32,11 @@ internal sealed class UnconfirmedUsersCleanupWorker(ILogger<UnconfirmedUsersClea
     public override Task DoWorkAsync(IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
+        var emailConfirmationTokenLifetime = applicationOptions.Tokens.EmailConfirmationTokenLifetime;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        return databaseService.DeleteUnconfirmedUsersAsync(applicationOptions.Tokens.EmailConfirmationTokenLifetime, cancellationToken);
+        return databaseService.DeleteUnconfirmedUsersAsync(emailConfirmationTokenLifetime, cancellationToken);
     }
     #endregion
 }
