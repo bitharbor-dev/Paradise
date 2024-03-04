@@ -143,7 +143,7 @@ public static class UserRoutes
 {
     #region Constants
     /// <summary>
-    /// "Roles" route prefix.
+    /// "Users" route prefix.
     /// </summary>
     private const string UsersPrefix = $"Users{Routes.Slash}";
 
