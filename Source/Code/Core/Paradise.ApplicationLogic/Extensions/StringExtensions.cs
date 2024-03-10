@@ -59,7 +59,7 @@ public static class StringExtensions
 
         var allowedCharacters = options.User.AllowedUserNameCharacters;
 
-        return string.IsNullOrWhiteSpace(allowedCharacters) || userName.All(allowedCharacters.Contains);
+        return allowedCharacters.IsNullOrWhiteSpace() || userName.All(allowedCharacters.Contains);
     }
     #endregion
 }

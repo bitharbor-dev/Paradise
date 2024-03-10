@@ -17,7 +17,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Shared\Paradise.Common\Paradise.Common.csproj" />
 		<ProjectReference Include="..\Paradise.Domain.Base\Paradise.Domain.Base.csproj" />
 	</ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Paradise.Common.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
@@ -77,7 +78,7 @@ public sealed class InvalidEntityStateException : Exception
 
         var message = GetInvalidEntityStateMessage(entityType, propertyName, value);
 
-        if (!string.IsNullOrWhiteSpace(additionalInformation))
+        if (additionalInformation.IsNotNullOrWhiteSpace())
             message = string.Concat(message, exceptionMessageSeparator, additionalInformation);
 
         return message;
