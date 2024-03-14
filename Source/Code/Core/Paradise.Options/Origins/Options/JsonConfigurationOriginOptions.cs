@@ -12,6 +12,11 @@ public sealed class JsonConfigurationOriginOptions
     /// JSON file extension.
     /// </summary>
     private const string JsonFileExtension = "json";
+
+    /// <summary>
+    /// Default options file name.
+    /// </summary>
+    private const string DefaultOptionsFileName = "options";
     #endregion
 
     #region Properties
@@ -36,7 +41,7 @@ public sealed class JsonConfigurationOriginOptions
     /// <remarks>
     /// Specify it without extension - ".json".
     /// </remarks>
-    public string FileName { get; set; } = "options";
+    public string FileName { get; set; } = DefaultOptionsFileName;
 
     /// <summary>
     /// Indicates whether the environment variables should be included

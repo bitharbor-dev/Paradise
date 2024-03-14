@@ -7,7 +7,7 @@ namespace Paradise.ApplicationLogic.Tests.Services.Application;
 /// Test class for the <see cref="DataProtectionService"/> methods.
 /// </summary>
 /// <remarks>
-/// <see cref="DataProtectionService.ProtectAsJson{T}(T)"/> test methods are not available
+/// <see cref="DataProtectionService.Protect{T}(T)"/> test methods are not available
 /// since the <see cref="IDataProtector"/> is providing different output strings each time
 /// when protecting the same <see cref="string"/> values, yet being able to unprotect them all.
 /// Unfortunately, this means that test data arrangement is not possible.
@@ -71,7 +71,7 @@ public sealed class DataProtectionServiceTests
     }
 
     /// <summary>
-    /// <see cref="DataProtectionService.TryUnprotectJson"/> test method.
+    /// <see cref="DataProtectionService.TryUnprotect"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -90,7 +90,7 @@ public sealed class DataProtectionServiceTests
         var token = Protector.Protect(json);
 
         // Act
-        var result = Service.TryUnprotectJson(token, out string? value);
+        var result = Service.TryUnprotect(token, out string? value);
 
         // Assert
         Assert.True(result);
@@ -98,7 +98,7 @@ public sealed class DataProtectionServiceTests
     }
 
     /// <summary>
-    /// <see cref="DataProtectionService.TryUnprotectJson"/> test method.
+    /// <see cref="DataProtectionService.TryUnprotect"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -115,7 +115,7 @@ public sealed class DataProtectionServiceTests
         // Arrange
 
         // Act
-        var result = Service.TryUnprotectJson(string.Empty, out object? value);
+        var result = Service.TryUnprotect(string.Empty, out object? value);
 
         // Assert
         Assert.False(result);
@@ -123,7 +123,7 @@ public sealed class DataProtectionServiceTests
     }
 
     /// <summary>
-    /// <see cref="DataProtectionService.TryUnprotectJson"/> test method.
+    /// <see cref="DataProtectionService.TryUnprotect"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -142,7 +142,7 @@ public sealed class DataProtectionServiceTests
         var token = Protector.Protect(data);
 
         // Act
-        var result = Service.TryUnprotectJson(token, out object? value);
+        var result = Service.TryUnprotect(token, out object? value);
 
         // Assert
         Assert.False(result);
@@ -150,7 +150,7 @@ public sealed class DataProtectionServiceTests
     }
 
     /// <summary>
-    /// <see cref="DataProtectionService.TryUnprotectJson"/> test method.
+    /// <see cref="DataProtectionService.TryUnprotect"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -167,7 +167,7 @@ public sealed class DataProtectionServiceTests
         // Arrange
 
         // Act
-        var result = Service.TryUnprotectJson(null, out object? value);
+        var result = Service.TryUnprotect(null, out object? value);
 
         // Assert
         Assert.False(result);

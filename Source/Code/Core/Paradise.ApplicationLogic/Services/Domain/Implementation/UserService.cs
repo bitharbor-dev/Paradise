@@ -142,7 +142,7 @@ public sealed class UserService(ILogger<UserService> logger,
     public async Task<Result<UserModel>> ConfirmEmailAsync(string identityToken, CancellationToken cancellationToken = default)
     {
         dataProtectionService
-            .TryUnprotectJson<IdentityToken>(identityToken, out var identityTokenModel)
+            .TryUnprotect<IdentityToken>(identityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
         identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
@@ -186,17 +186,29 @@ public sealed class UserService(ILogger<UserService> logger,
         var user = await FindUserByLoginModelAsync(model)
             .ConfigureAwait(false);
 
+        // Step 1: Check if the used is locked out.
         await ValidateUserLockoutAsync(user)
             .ConfigureAwait(false);
 
+        // Step 2: Check the user's password and increment failed access attempts number
+        // if the password is incorrect.
         await ValidateUserPasswordAsync(user, model.Password)
             .ConfigureAwait(false);
 
+        // Step 3: Reaching this line means the user is not locked out
+        // and the password is correct -
+        // reset failed access attempts number.
         await ResetUserLockoutStateAsync(user)
             .ConfigureAwait(false);
 
-        user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
+        // Step 4: Check if email confirmation is required
+        // and if it does and the user did not confirm the email yet -
+        // throw an exception.
+        if (_identityOptions.SignIn.RequireConfirmedEmail)
+            user.EmailConfirmed.ThrowIfFalse(Forbidden, UserEmailNotConfirmed, user.Email);
 
+        // Step 5: Either provide the two-factor authorization token or just the access token
+        // depending on "User.TwoFactorEnabled" value.
         if (user.TwoFactorEnabled)
         {
             var tokenModel = GenerateTwoFactorToken(user, out var verificationCode);
@@ -236,7 +248,7 @@ public sealed class UserService(ILogger<UserService> logger,
         ArgumentNullException.ThrowIfNull(model);
 
         dataProtectionService
-            .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
+            .TryUnprotect<IdentityToken>(model.IdentityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
         identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
@@ -359,7 +371,7 @@ public sealed class UserService(ILogger<UserService> logger,
         ArgumentNullException.ThrowIfNull(model);
 
         dataProtectionService
-            .TryUnprotectJson<IdentityToken>(model.IdentityToken, out var identityTokenModel)
+            .TryUnprotect<IdentityToken>(model.IdentityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
         identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
@@ -455,7 +467,7 @@ public sealed class UserService(ILogger<UserService> logger,
     public async Task<Result> ResetEmailAsync(string identityToken, CancellationToken cancellationToken = default)
     {
         dataProtectionService
-            .TryUnprotectJson<IdentityToken>(identityToken, out var identityTokenModel)
+            .TryUnprotect<IdentityToken>(identityToken, out var identityTokenModel)
             .ThrowIfFalse(BadRequest, InvalidToken);
 
         identityTokenModel.IsOutdated().ThrowIfTrue(UnprocessableEntity, OutdatedToken);
@@ -679,7 +691,7 @@ public sealed class UserService(ILogger<UserService> logger,
             _applicationOptions.Authentication.TwoFactorVerificationCodeLength);
 
         var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Authentication.TwoFactorTokenLifetime);
-        var identityToken = dataProtectionService.ProtectAsJson(
+        var identityToken = dataProtectionService.Protect(
             new IdentityToken(user.Email, verificationCode, expiryDate: expiryDate));
 
         return new(user.Email, expiryDate, identityToken);
@@ -770,7 +782,7 @@ public sealed class UserService(ILogger<UserService> logger,
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
 
-        var identityToken = dataProtectionService.ProtectAsJson(
+        var identityToken = dataProtectionService.Protect(
             new IdentityToken(user.Email, innerToken, value, expiryDate));
 
         // Since the scope of the current method is very concrete,
@@ -801,7 +813,9 @@ public sealed class UserService(ILogger<UserService> logger,
 
         if (model.Email.IsNotNullOrWhiteSpace())
         {
-            model.Email.IsValidEmailAddress().ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
+            model.Email
+                .IsValidEmailAddress()
+                .ThrowIfFalse(BadRequest, InvalidEmail, model.Email);
 
             user = await userManager
                 .FindByEmailAsync(model.Email)
@@ -809,7 +823,9 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         else if (model.UserName.IsNotNullOrWhiteSpace())
         {
-            model.UserName.IsValidUserName(_identityOptions).ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
+            model.UserName
+                .IsValidUserName(_identityOptions)
+                .ThrowIfFalse(BadRequest, InvalidUserName, model.UserName);
 
             user = await userManager
                 .FindByNameAsync(model.UserName)
@@ -817,7 +833,9 @@ public sealed class UserService(ILogger<UserService> logger,
         }
         else if (model.Phone.IsNotNullOrWhiteSpace())
         {
-            model.Phone.IsValidPhoneNumber().ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
+            model.Phone
+                .IsValidPhoneNumber()
+                .ThrowIfFalse(BadRequest, InvalidPhoneNumber, model.Phone);
 
             user = await userManager
                 .FindByPhoneNumberAsync(model.Phone)
@@ -1087,6 +1105,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<bool> CheckIfEmailAddressIsInUseAsync(string email)
     {
+        // "userManager.Users.AnyAsync()" is not used here
+        // because "FindByEmailAsync" method takes into account
+        // that user's email address might be stored as protected data.
         var user = await userManager
             .FindByEmailAsync(email)
             .ConfigureAwait(false);
@@ -1106,6 +1127,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<bool> CheckIfPhoneNumberIsInUseAsync(string phone)
     {
+        // "userManager.Users.AnyAsync()" is not used here
+        // because "FindByPhoneNumberAsync" method takes into account
+        // that user's phone number might be stored as protected data.
         var user = await userManager
             .FindByPhoneNumberAsync(phone)
             .ConfigureAwait(false);
@@ -1125,6 +1149,9 @@ public sealed class UserService(ILogger<UserService> logger,
     /// </returns>
     private async Task<bool> CheckIfUserNameIsInUseAsync(string userName)
     {
+        // "userManager.Users.AnyAsync()" is not used here
+        // because "FindByNameAsync" method takes into account
+        // that user's name might be stored as protected data.
         var user = await userManager
             .FindByNameAsync(userName)
             .ConfigureAwait(false);
@@ -1235,7 +1262,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
 
-        var identityToken = dataProtectionService.ProtectAsJson(
+        var identityToken = dataProtectionService.Protect(
             new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
 
         var template = _emailTemplateOptions.PasswordResetTemplateName;

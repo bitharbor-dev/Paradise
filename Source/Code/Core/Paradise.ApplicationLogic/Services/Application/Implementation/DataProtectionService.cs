@@ -32,7 +32,7 @@ public sealed class DataProtectionService(IDataProtectionProvider dataProtection
 
     #region Public methods
     /// <inheritdoc/>
-    public string ProtectAsJson<T>(T value)
+    public string Protect<T>(T value)
     {
         var json = JsonSerializer.Serialize(value, _jsonSerializerOptions);
 
@@ -40,7 +40,7 @@ public sealed class DataProtectionService(IDataProtectionProvider dataProtection
     }
 
     /// <inheritdoc/>
-    public bool TryUnprotectJson<T>(string? token, [NotNullWhen(true)] out T? value)
+    public bool TryUnprotect<T>(string? token, [NotNullWhen(true)] out T? value)
     {
         value = default;
 

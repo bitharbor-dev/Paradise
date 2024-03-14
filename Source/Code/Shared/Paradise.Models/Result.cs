@@ -279,20 +279,12 @@ public class Result : IActionResult
     /// </returns>
     public static Result FromModelState(ModelStateDictionary modelState)
     {
-        var result = new Result();
-
         var errors = modelState
             .Where(state => state.Value is not null)
-            .SelectMany(state => state.Value!.Errors.Select(error => error.ErrorMessage));
+            .SelectMany(state => state.Value!.Errors.Select(error => error.ErrorMessage))
+            .Select(error => new ApplicationError(ErrorCode.InvalidModel, error));
 
-        foreach (var error in errors)
-        {
-            result.AddError(HttpStatusCode.BadRequest,
-                            ErrorCode.InvalidModel,
-                            error);
-        }
-
-        return result;
+        return new(errors, HttpStatusCode.BadRequest);
     }
 
     /// <summary>

@@ -20,7 +20,7 @@ public interface IDataProtectionService
     /// <returns>
     /// Encrypted token that contains the given <paramref name="value"/>.
     /// </returns>
-    string ProtectAsJson<T>(T value);
+    string Protect<T>(T value);
 
     /// <summary>
     /// Parses the given <paramref name="token"/> back into original value.
@@ -35,7 +35,7 @@ public interface IDataProtectionService
     /// <see langword="true"/> if <paramref name="token"/> was parsed successfully,
     /// otherwise - <see langword="false"/>.
     /// </returns>
-    bool TryUnprotectJson<T>(string? token, [NotNullWhen(true)] out T? value);
+    bool TryUnprotect<T>(string? token, [NotNullWhen(true)] out T? value);
 
     /// <summary>
     /// Generates a <see cref="string"/> containing
