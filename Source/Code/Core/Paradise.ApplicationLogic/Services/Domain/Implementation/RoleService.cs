@@ -172,16 +172,18 @@ public sealed class RoleService(UserManager userManager,
         var role = await FindRoleByIdAsync(roleId, cancellationToken)
             .ConfigureAwait(false);
 
+        role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
+
         var user = await FindUserByIdAsync(userId, cancellationToken)
             .ConfigureAwait(false);
 
-        role.ThrowIfNull(NotFound, RoleIdNotFound, roleId);
         user.ThrowIfNull(NotFound, UserIdNotFound, userId);
 
-        var identityResult = await (assign
-            ? userManager.AddToRoleAsync(user, role.Name)
-            : userManager.RemoveFromRoleAsync(user, role.Name))
-            .ConfigureAwait(false);
+        var identityResult = assign
+            ? await userManager.AddToRoleAsync(user, role.Name)
+                .ConfigureAwait(false)
+            : await userManager.RemoveFromRoleAsync(user, role.Name)
+                .ConfigureAwait(false);
 
         identityResult.ThrowIfUnsuccessfulIdentityResult();
 
