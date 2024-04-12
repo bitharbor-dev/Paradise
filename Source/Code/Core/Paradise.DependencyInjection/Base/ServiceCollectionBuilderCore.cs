@@ -42,8 +42,15 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
     {
         base.AddMiscellaneous();
 
-        AddOptions<ApplicationOptions>(null, true, true);
-        AddOptions<JsonSerializerOptions>(null, true, true);
+        AddOptions<ApplicationOptions>(
+            postConfigure: null,
+            validateOnStartup: true,
+            validateDataAnnotations: true);
+
+        AddOptions<JsonSerializerOptions>(
+            postConfigure: null,
+            validateOnStartup: true,
+            validateDataAnnotations: true);
 
         AddIdentity();
 
@@ -83,7 +90,10 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
     /// </summary>
     private void AddIdentity()
     {
-        AddOptions<IdentityOptions>(null, true, true);
+        AddOptions<IdentityOptions>(
+            postConfigure: null,
+            validateOnStartup: true,
+            validateDataAnnotations: true);
 
         void SetUpIdentity(IdentityOptions options)
             => Configuration.GetRequiredSection(nameof(IdentityOptions)).Bind(options);

@@ -70,6 +70,15 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timer change failed..
+        /// </summary>
+        internal static string ChangeTimerFailed {
+            get {
+                return ResourceManager.GetString("ChangeTimerFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email template subject is in invalid state. Subject placeholder is &apos;null&apos;, but text placeholders number is greater than 0, which leads to impossibility of subject formatting..
         /// </summary>
         internal static string EmailTemplateSubjectInInvalidState {

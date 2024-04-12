@@ -15,7 +15,7 @@ namespace Paradise.Options.Attributes;
 /// <param name="values">
 /// Allowed values array.
 /// </param>
-internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationAttribute
+internal sealed class AllowedValuesAttribute<T>(params T?[] values) : ValidationAttribute
 {
     #region Fields
     private Type? _equalityComparerType;
@@ -25,7 +25,7 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
     /// <summary>
     /// Allowed values array.
     /// </summary>
-    public T[] Values { get; } = values ?? [];
+    public IEnumerable<T?> Values { get; } = values ?? [];
 
     /// <summary>
     /// Equality comparer type.
@@ -76,23 +76,23 @@ internal sealed class AllowedValuesAttribute<T>(params T[] values) : ValidationA
             throw new InvalidCastException(message);
         }
 
-        IEqualityComparer<T>? equalityComparer = null;
+        IEqualityComparer<T?>? equalityComparer = null;
 
         if (_equalityComparerType is not null)
         {
-            if (Activator.CreateInstance(_equalityComparerType) is IEqualityComparer<T> comparer)
+            if (Activator.CreateInstance(_equalityComparerType) is IEqualityComparer<T?> comparer)
             {
                 equalityComparer = comparer;
             }
             else
             {
-                var message = GetFailedToCreateInstanceOfTypeMessage(typeof(IEqualityComparer<T>));
+                var message = GetFailedToCreateInstanceOfTypeMessage(typeof(IEqualityComparer<T?>));
 
                 throw new InvalidOperationException(message);
             }
         }
 
-        equalityComparer ??= EqualityComparer<T>.Default;
+        equalityComparer ??= EqualityComparer<T?>.Default;
 
         return Values.Contains(castedValue, equalityComparer);
     }

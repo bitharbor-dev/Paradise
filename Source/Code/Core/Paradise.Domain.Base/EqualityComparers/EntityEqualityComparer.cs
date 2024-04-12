@@ -36,6 +36,10 @@ public sealed class EntityEqualityComparer : IEqualityComparer<IEntity>
 
     /// <inheritdoc/>
     public int GetHashCode([DisallowNull] IEntity obj)
-        => HashCode.Combine(obj.GetType(), obj.Id);
+    {
+        ArgumentNullException.ThrowIfNull(obj);
+
+        return HashCode.Combine(obj.GetType(), obj.Id);
+    }
     #endregion
 }

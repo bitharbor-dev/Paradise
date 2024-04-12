@@ -41,9 +41,20 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
     {
         base.AddMiscellaneous();
 
-        AddOptions<EmailTemplateOptions>(null, true, true);
-        AddOptions<SmtpOptions>(null, true, true);
-        AddOptions<JwtBearerOptions>(SetJwtIssuerSigningKey, true, true);
+        AddOptions<EmailTemplateOptions>(
+            postConfigure: null,
+            validateOnStartup: true,
+            validateDataAnnotations: true);
+
+        AddOptions<SmtpOptions>(
+            postConfigure: null,
+            validateOnStartup: true,
+            validateDataAnnotations: true);
+
+        AddOptions<JwtBearerOptions>(
+            postConfigure: SetJwtIssuerSigningKey,
+            validateOnStartup: true,
+            validateDataAnnotations: true);
 
         Services.AddScoped<ISmtpClient, AzureSmtpClient>();
 

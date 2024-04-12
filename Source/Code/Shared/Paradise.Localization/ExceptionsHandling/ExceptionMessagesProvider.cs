@@ -351,5 +351,14 @@ public static class ExceptionMessagesProvider
                              messageFormat,
                              propertyName);
     }
+
+    /// <summary>
+    /// Gets the <see cref="ChangeTimerFailed"/> formatted message.
+    /// </summary>
+    /// <returns>
+    /// A formatted message using the <see cref="ChangeTimerFailed"/> format string.
+    /// </returns>
+    public static string GetChangeTimerFailedMessage()
+        => ChangeTimerFailed;
     #endregion
 }

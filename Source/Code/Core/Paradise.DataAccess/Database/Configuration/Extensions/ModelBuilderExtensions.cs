@@ -25,10 +25,16 @@ internal static class ModelBuilderExtensions
     /// </param>
     public static void MarkColumnAsReadOnly(this ModelBuilder builder, string columnName, bool throwError = false)
     {
+        var behavior = throwError ? Throw : Ignore;
+
         var entities = builder.Model.GetEntityTypes();
 
         foreach (var entity in entities)
-            entity.FindProperty(columnName)?.SetAfterSaveBehavior(throwError ? Throw : Ignore);
+        {
+            var property = entity.FindProperty(columnName);
+
+            property?.SetAfterSaveBehavior(behavior);
+        }
     }
     #endregion
 }

@@ -182,4 +182,7 @@
   <data name="InvalidClockWorkerInterval" xml:space="preserve">
     <value>The clock worker's interval can only be equal to one day.</value>
   </data>
+  <data name="ChangeTimerFailed" xml:space="preserve">
+    <value>Timer change failed.</value>
+  </data>
 </root>

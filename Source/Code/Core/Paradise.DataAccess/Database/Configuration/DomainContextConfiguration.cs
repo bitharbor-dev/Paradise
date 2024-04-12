@@ -22,7 +22,8 @@ internal static class DomainContextConfiguration
     {
         modelBuilder.Entity<UserRefreshToken>(entity =>
         {
-            entity.ToTable(UserRefreshTokens).HasKey(nameof(UserRefreshToken.Id));
+            entity.ToTable(UserRefreshTokens);
+            entity.HasKey(nameof(UserRefreshToken.Id));
 
             entity.HasOne(userRefreshToken => userRefreshToken.Owner)
                   .WithMany(user => user.RefreshTokens)

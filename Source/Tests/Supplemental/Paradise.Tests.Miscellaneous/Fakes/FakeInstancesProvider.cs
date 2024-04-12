@@ -264,10 +264,10 @@ public static class FakeInstancesProvider
         var passwordValidators = new[] { new PasswordValidator<User>(errorDescriber) };
         var lookupNormalizer = new UpperInvariantLookupNormalizer();
 
-        var services = new ServiceCollection();
-        services.AddSingleton<IPersonalDataProtector, DefaultPersonalDataProtector>();
-        services.AddSingleton<ILookupProtector, FakeLookupProtector>();
-        services.AddSingleton<ILookupProtectorKeyRing, FakeLookupProtectorKeyRing>();
+        var services = new ServiceCollection()
+            .AddSingleton<IPersonalDataProtector, DefaultPersonalDataProtector>()
+            .AddSingleton<ILookupProtector, FakeLookupProtector>()
+            .AddSingleton<ILookupProtectorKeyRing, FakeLookupProtectorKeyRing>();
 
         var provider = services.BuildServiceProvider();
 

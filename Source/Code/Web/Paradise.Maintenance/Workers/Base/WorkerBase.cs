@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.ApplicationLogic.Extensions;
+using Paradise.Localization.ExceptionsHandling;
 using Paradise.Maintenance.Options.Base;
 using System.Text.Json;
 
@@ -84,7 +85,7 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <inheritdoc/>
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _executionTimer.Change(Options.Delay, Options.Interval);
+        ChangeTimer(Options.Delay, Options.Interval);
 
         return Task.CompletedTask;
     }
@@ -92,7 +93,7 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <inheritdoc/>
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _executionTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        ChangeTimer(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 
         return Task.CompletedTask;
     }
@@ -154,11 +155,33 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// </param>
     private void OnOptionsChanged(TOptions oldValue, TOptions newValue)
     {
-        _executionTimer.Change(newValue.Delay, newValue.Interval);
+        ChangeTimer(newValue.Delay, newValue.Interval);
 
         OptionsChanged?.Invoke(this, new(oldValue, newValue));
 
         _logger.LogWorkerOptionsChangedState(newValue, _jsonSerializerOptions);
+    }
+
+    /// <summary>
+    /// Changes the <see cref="_executionTimer"/> delay and interval values.
+    /// </summary>
+    /// <param name="delay">
+    /// Timer delay.
+    /// </param>
+    /// <param name="interval">
+    /// Timer interval.
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// Occurs when timer update operation fails.
+    /// </exception>
+    private void ChangeTimer(TimeSpan delay, TimeSpan interval)
+    {
+        if (!_executionTimer.Change(delay, interval))
+        {
+            var message = ExceptionMessagesProvider.GetChangeTimerFailedMessage();
+
+            throw new InvalidOperationException(message);
+        }
     }
     #endregion
 

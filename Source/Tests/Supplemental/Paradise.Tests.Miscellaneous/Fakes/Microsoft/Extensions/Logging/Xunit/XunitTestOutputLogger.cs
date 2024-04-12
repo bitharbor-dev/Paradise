@@ -172,6 +172,7 @@ internal sealed class XunitTestOutputLogger<T>(ITestOutputHelper output) : ILogg
         LogLevel.Warning => WarningLogLevel,
         LogLevel.Error => ErrorLogLevel,
         LogLevel.Critical => CriticalLogLevel,
+        LogLevel.None => string.Empty,
         _ => throw new ArgumentOutOfRangeException(nameof(logLevel))
     };
     #endregion
