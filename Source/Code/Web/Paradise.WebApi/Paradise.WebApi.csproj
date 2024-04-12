@@ -13,7 +13,7 @@
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
-		<AssemblyVersion>7.0.0.0</AssemblyVersion>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
 
 		<UserSecretsId>WebApi-C13617A9-FD80-4960-89BF-00B45766F7B6</UserSecretsId>
 
