@@ -66,21 +66,33 @@ public static class EnvironmentNames
     {
         get
         {
-            if (_current is null)
-            {
-                _current = GetEnvironmentVariable(DotNetCoreEnvironmentVariableName)
-                        ?? GetEnvironmentVariable(AspNetCoreEnvironmentVariableName);
-
-                if (_current.IsNullOrWhiteSpace() || !_allowedEnvironments.Contains(_current))
-                {
-                    var message = ExceptionMessagesProvider.GetInvalidEnvironmentNameMessage(_allowedEnvironments, _current);
-
-                    throw new InvalidOperationException(message);
-                }
-            }
+            _current ??= GetCurrentEnvironmentName();
 
             return _current;
         }
+    }
+    #endregion
+
+    #region Private methods
+    /// <summary>
+    /// Gets the current environment name.
+    /// </summary>
+    /// <returns>
+    /// A <see langword="string"/> value containing environment name.
+    /// </returns>
+    private static string GetCurrentEnvironmentName()
+    {
+        var result = GetEnvironmentVariable(DotNetCoreEnvironmentVariableName)
+                  ?? GetEnvironmentVariable(AspNetCoreEnvironmentVariableName);
+
+        if (result.IsNullOrWhiteSpace() || !_allowedEnvironments.Contains(result))
+        {
+            var message = ExceptionMessagesProvider.GetInvalidEnvironmentNameMessage(_allowedEnvironments, _current);
+
+            throw new InvalidOperationException(message);
+        }
+
+        return result;
     }
     #endregion
 }
