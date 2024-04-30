@@ -1,7 +1,9 @@
 ﻿using Paradise.Common.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Text;
 using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
+using static System.Environment;
 
 namespace Paradise.Domain.Base.Exceptions;
 
@@ -27,7 +29,7 @@ public sealed class InvalidEntityStateException : Exception
     /// Property name.
     /// </param>
     private InvalidEntityStateException(Type entityType, object? value, string? additionalInformation, string? propertyName)
-        : base(CreateExceptionMessage(entityType, value, additionalInformation, propertyName)) { }
+        : base(CreateExceptionMessage(entityType, value, propertyName, additionalInformation)) { }
     #endregion
 
     #region Public methods
@@ -62,24 +64,26 @@ public sealed class InvalidEntityStateException : Exception
     /// <param name="value">
     /// Entity's property value.
     /// </param>
-    /// <param name="additionalInformation">
-    /// Optional additional information.
-    /// </param>
     /// <param name="propertyName">
     /// Entity's property name.
+    /// </param>
+    /// <param name="additionalInformation">
+    /// Optional additional information.
     /// </param>
     /// <returns>
     /// A <see cref="string"/> value containing exception
     /// message based on the input arguments.
     /// </returns>
-    private static string CreateExceptionMessage(Type entityType, object? value, string? additionalInformation, string? propertyName)
+    private static string CreateExceptionMessage(Type entityType, object? value, string? propertyName, string? additionalInformation)
     {
-        var exceptionMessageSeparator = $"{Environment.NewLine}{GetInvalidEntityStateAdditionalInformationMessage()}";
-
         var message = GetInvalidEntityStateMessage(entityType, propertyName, value);
 
         if (additionalInformation.IsNotNullOrWhiteSpace())
-            message = string.Concat(message, exceptionMessageSeparator, additionalInformation);
+        {
+            var additionalInformationHeader = GetInvalidEntityStateAdditionalInformationMessage();
+
+            return string.Concat(message, NewLine, additionalInformationHeader, additionalInformation);
+        }
 
         return message;
     }

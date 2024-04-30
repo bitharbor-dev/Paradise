@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Paradise.Common.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Base.EqualityComparers;
 
@@ -53,8 +54,7 @@ public sealed class ValueObjectEqualityComparer : IEqualityComparer<IValueObject
         var hash = new HashCode();
         hash.Add(obj.GetType());
 
-        foreach (var item in obj.GetEqualityComponents())
-            hash.Add(item);
+        obj.GetEqualityComponents().ForEach(hash.Add);
 
         return hash.ToHashCode();
     }
