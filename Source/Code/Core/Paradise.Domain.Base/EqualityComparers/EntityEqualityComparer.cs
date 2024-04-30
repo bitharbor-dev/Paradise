@@ -7,6 +7,17 @@ namespace Paradise.Domain.Base.EqualityComparers;
 /// </summary>
 public sealed class EntityEqualityComparer : IEqualityComparer<IEntity>
 {
+    #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EntityEqualityComparer"/> class.
+    /// </summary>
+    /// <remarks>
+    /// Private constructor is required to restrict the usage
+    /// to a single static <see cref="Instance"/>.
+    /// </remarks>
+    private EntityEqualityComparer() { }
+    #endregion
+
     #region Properties
     /// <summary>
     /// Singleton <see cref="EntityEqualityComparer"/> instance.
