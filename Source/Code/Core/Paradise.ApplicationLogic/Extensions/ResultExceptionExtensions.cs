@@ -8,7 +8,7 @@ using System.Net;
 namespace Paradise.ApplicationLogic.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="ResultException"/> class.
+/// Contains extension methods for the <see cref="ResultException"/> <see langword="class"/>.
 /// </summary>
 internal static class ResultExceptionExtensions
 {

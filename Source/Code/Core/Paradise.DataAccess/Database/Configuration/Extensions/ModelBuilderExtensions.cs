@@ -4,7 +4,7 @@ using static Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior;
 namespace Paradise.DataAccess.Database.Configuration.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="ModelBuilder"/> class.
+/// Contains extension methods for the <see cref="ModelBuilder"/> <see langword="class"/>.
 /// </summary>
 internal static class ModelBuilderExtensions
 {

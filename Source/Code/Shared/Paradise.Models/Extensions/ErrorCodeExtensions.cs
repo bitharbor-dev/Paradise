@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Paradise.Models.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="ErrorCode"/> enumeration.
+/// Contains extension methods for the <see cref="ErrorCode"/> <see langword="enum"/>.
 /// </summary>
 public static class ErrorCodeExtensions
 {

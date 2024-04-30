@@ -3,7 +3,7 @@
 namespace Paradise.Maintenance.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="IServiceCollection"/> interface.
+/// Contains extension methods for the <see cref="IServiceCollection"/> <see langword="interface"/>.
 /// </summary>
 internal static class IServiceCollectionExtensions
 {

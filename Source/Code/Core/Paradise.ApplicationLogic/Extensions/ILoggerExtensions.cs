@@ -10,7 +10,7 @@ using static System.Environment;
 namespace Paradise.ApplicationLogic.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="ILogger"/> interface.
+/// Contains extension methods for the <see cref="ILogger"/> <see langword="interface"/>.
 /// </summary>
 public static class ILoggerExtensions
 {

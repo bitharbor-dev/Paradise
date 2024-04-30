@@ -4,7 +4,7 @@ using System.Security.Claims;
 namespace Paradise.ApplicationLogic.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="ClaimsPrincipal"/> class.
+/// Contains extension methods for the <see cref="ClaimsPrincipal"/> <see langword="class"/>.
 /// </summary>
 public static class ClaimsPrincipalExtensions
 {

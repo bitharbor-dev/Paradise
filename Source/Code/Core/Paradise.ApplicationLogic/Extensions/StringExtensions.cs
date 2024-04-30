@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Paradise.ApplicationLogic.Extensions;
 
 /// <summary>
-/// Contains extension methods for the <see cref="string"/> class.
+/// Contains extension methods for the <see cref="string"/> <see langword="class"/>.
 /// </summary>
 public static class StringExtensions
 {
