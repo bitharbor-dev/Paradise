@@ -12,10 +12,10 @@ public sealed class EntityEqualityComparer : IEqualityComparer<IEntity>
     /// Initializes a new instance of the <see cref="EntityEqualityComparer"/> class.
     /// </summary>
     /// <remarks>
-    /// Private constructor is required to restrict the usage
+    /// Internal constructor is required to restrict the usage
     /// to a single static <see cref="Instance"/>.
     /// </remarks>
-    private EntityEqualityComparer() { }
+    internal EntityEqualityComparer() { }
     #endregion
 
     #region Properties

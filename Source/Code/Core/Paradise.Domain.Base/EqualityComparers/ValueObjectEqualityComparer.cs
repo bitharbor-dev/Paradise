@@ -13,10 +13,10 @@ public sealed class ValueObjectEqualityComparer : IEqualityComparer<IValueObject
     /// Initializes a new instance of the <see cref="ValueObjectEqualityComparer"/> class.
     /// </summary>
     /// <remarks>
-    /// Private constructor is required to restrict the usage
+    /// Internal constructor is required to restrict the usage
     /// to a single static <see cref="Instance"/>.
     /// </remarks>
-    private ValueObjectEqualityComparer() { }
+    internal ValueObjectEqualityComparer() { }
     #endregion
 
     #region Properties
