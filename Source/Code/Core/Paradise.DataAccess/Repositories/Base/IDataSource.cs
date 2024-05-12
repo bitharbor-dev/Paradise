@@ -61,7 +61,7 @@ public interface IDataSource
     /// <param name="entities">
     /// The <see cref="IEnumerable{T}"/> of <typeparamref name="TEntity"/> to be marked.
     /// </param>
-    void AddRange<TEntity>(params IEnumerable<TEntity> entities) where TEntity : class, IDatabaseRecord;
+    void AddRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IDatabaseRecord;
 
     /// <summary>
     /// Marks the given <paramref name="entity"/> as removed,
@@ -89,7 +89,7 @@ public interface IDataSource
     /// <param name="entities">
     /// The <see cref="IEnumerable{T}"/> of <typeparamref name="TEntity"/> to be marked.
     /// </param>
-    void RemoveRange<TEntity>(params IEnumerable<TEntity> entities) where TEntity : class, IDatabaseRecord;
+    void RemoveRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IDatabaseRecord;
 
     /// <summary>
     /// Saves all changes into the persistence storage.

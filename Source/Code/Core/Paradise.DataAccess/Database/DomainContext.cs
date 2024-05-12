@@ -63,13 +63,13 @@ public sealed class DomainContext : IdentityDbContext<User, Role, Guid>, IDomain
     void IDataSource.Add<TEntity>(TEntity entity)
         => Set<TEntity>().Add(entity);
 
-    void IDataSource.AddRange<TEntity>(params IEnumerable<TEntity> entities)
+    void IDataSource.AddRange<TEntity>(IEnumerable<TEntity> entities)
         => Set<TEntity>().AddRange(entities);
 
     void IDataSource.Remove<TEntity>(TEntity entity)
         => Set<TEntity>().Remove(entity);
 
-    void IDataSource.RemoveRange<TEntity>(params IEnumerable<TEntity> entities)
+    void IDataSource.RemoveRange<TEntity>(IEnumerable<TEntity> entities)
         => Set<TEntity>().RemoveRange(entities);
 
     int IDataSource.SaveChanges()
