@@ -25,7 +25,7 @@ public sealed class EmailTemplatesRepositoryTests : RepositoryTests<EmailTemplat
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByNameAndCultureAsync()
+    public async Task GetByNameAndCultureAsync()
     {
         // Arrange
         var culture = CultureInfo.GetCultureInfo(1);
@@ -58,7 +58,7 @@ public sealed class EmailTemplatesRepositoryTests : RepositoryTests<EmailTemplat
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByNameAndCultureAsync_ReturnsNullOnNonExistingTemplateNameAndCulture()
+    public async Task GetByNameAndCultureAsync_ReturnsNullOnNonExistingTemplateNameAndCulture()
     {
         // Arrange
         var culture = CultureInfo.GetCultureInfo(1);

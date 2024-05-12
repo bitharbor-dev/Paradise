@@ -68,7 +68,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void AssignAsync()
+    public async Task AssignAsync()
     {
         // Arrange
         var user = new User("test@email.com", "TestUser0");
@@ -96,7 +96,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void AssignAsync_ThrowsOnNonExistingRole()
+    public async Task AssignAsync_ThrowsOnNonExistingRole()
     {
         // Arrange
         var user = new User("test@email.com", "TestUser0");
@@ -122,7 +122,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void AssignAsync_ThrowsOnNonExistingUser()
+    public async Task AssignAsync_ThrowsOnNonExistingUser()
     {
         // Arrange
         var role = new Role("TestRole0", false);
@@ -150,7 +150,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync()
+    public async Task CreateAsync()
     {
         // Arrange
         var creationModel = new RoleCreationModel("TestRole0");
@@ -173,7 +173,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync_ThrowsOnEmptyName()
+    public async Task CreateAsync_ThrowsOnEmptyName()
     {
         // Arrange
 
@@ -196,7 +196,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync_ThrowsOnTakenName()
+    public async Task CreateAsync_ThrowsOnTakenName()
     {
         // Arrange
         var roleName = "TestRole0";
@@ -229,7 +229,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void DeleteAsync()
+    public async Task DeleteAsync()
     {
         // Arrange
         var role = new Role("TestRole0", false);
@@ -253,7 +253,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void DeleteAsync_ThrowsOnNonExistingRole()
+    public async Task DeleteAsync_ThrowsOnNonExistingRole()
     {
         // Arrange
 
@@ -278,7 +278,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetAllAsync()
+    public async Task GetAllAsync()
     {
         // Arrange
         var role1 = new Role("TestRole0", true);
@@ -311,7 +311,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Theory, InlineData(true), InlineData(false)]
-    public async void GetAllAsync_ReturnsDefault(bool isDefault)
+    public async Task GetAllAsync_ReturnsDefault(bool isDefault)
     {
         // Arrange
         var role1 = new Role("TestRole0", isDefault);
@@ -341,7 +341,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByIdAsync()
+    public async Task GetByIdAsync()
     {
         // Arrange
         var role = new Role("TestRole0", true);
@@ -366,7 +366,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByIdAsync_ThrowsOnNonExistingRole()
+    public async Task GetByIdAsync_ThrowsOnNonExistingRole()
     {
         // Arrange
 
@@ -392,7 +392,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetUserRolesAsync()
+    public async Task GetUserRolesAsync()
     {
         // Arrange
         var user = new User("test@email.com", "TestUser0");
@@ -426,7 +426,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetUserRolesAsync_ThrowsOnNonExistingUser()
+    public async Task GetUserRolesAsync_ThrowsOnNonExistingUser()
     {
         // Arrange
 
@@ -452,7 +452,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UnassignAsync()
+    public async Task UnassignAsync()
     {
         // Arrange
         var user = new User("test@email.com", "TestUser0");
@@ -487,7 +487,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UnassignAsync_ThrowsOnNonExistingRole()
+    public async Task UnassignAsync_ThrowsOnNonExistingRole()
     {
         // Arrange
         var user = new User("test@email.com", "TestUser0");
@@ -513,7 +513,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UnassignAsync_ThrowsOnNonExistingUser()
+    public async Task UnassignAsync_ThrowsOnNonExistingUser()
     {
         // Arrange
         var role = new Role("TestRole0", false);
@@ -541,7 +541,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UpdateAsync()
+    public async Task UpdateAsync()
     {
         // Arrange
         var isDefault = true;
@@ -575,7 +575,7 @@ public sealed class RoleServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UpdateAsync_ThrowsOnNonExistingRole()
+    public async Task UpdateAsync_ThrowsOnNonExistingRole()
     {
         // Arrange
 

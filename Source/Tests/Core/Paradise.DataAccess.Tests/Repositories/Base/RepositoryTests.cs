@@ -176,7 +176,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     /// </para>
     /// </summary>
     [Fact]
-    public async void CommitAsync()
+    public async Task CommitAsync()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -268,7 +268,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     /// </para>
     /// </summary>
     [Fact]
-    public async void ForEachAsync()
+    public async Task ForEachAsync()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -300,7 +300,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
     /// </para>
     /// </summary>
     [Fact]
-    public async void ForEachAsync_WithCondition()
+    public async Task ForEachAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();

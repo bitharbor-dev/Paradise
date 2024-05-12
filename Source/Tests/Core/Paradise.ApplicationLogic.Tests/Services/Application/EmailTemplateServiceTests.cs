@@ -50,7 +50,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync()
+    public async Task CreateAsync()
     {
         // Arrange
         var creationModel = new EmailTemplateCreationModel("Test", "Test", "Test")
@@ -79,7 +79,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync_ThrowsOnEmptyText()
+    public async Task CreateAsync_ThrowsOnEmptyText()
     {
         // Arrange
         var creationModel = new EmailTemplateCreationModel("Test", "Test", string.Empty)
@@ -109,7 +109,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync_ThrowsOnMissingPlaceholder()
+    public async Task CreateAsync_ThrowsOnMissingPlaceholder()
     {
         // Arrange
         var creationModel = new EmailTemplateCreationModel("Test", "Test", "Test")
@@ -140,7 +140,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void CreateAsync_ThrowsOnTakenNameAndCulture()
+    public async Task CreateAsync_ThrowsOnTakenNameAndCulture()
     {
         // Arrange
         var cultureId = 1;
@@ -184,7 +184,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void DeleteAsync()
+    public async Task DeleteAsync()
     {
         // Arrange
         var template = new EmailTemplate("Test", "Test", "Test")
@@ -215,7 +215,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetAllAsync()
+    public async Task GetAllAsync()
     {
         // Arrange
         var template = new EmailTemplate("Test", "Test", "Test")
@@ -248,7 +248,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByIdAsync()
+    public async Task GetByIdAsync()
     {
         // Arrange
         var template = new EmailTemplate("Test", "Test", "Test")
@@ -281,7 +281,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByIdAsync_ThrowsOnNonExistingEmailTemplate()
+    public async Task GetByIdAsync_ThrowsOnNonExistingEmailTemplate()
     {
         // Arrange
 
@@ -305,7 +305,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UpdateTemplateAsync()
+    public async Task UpdateTemplateAsync()
     {
         // Arrange
         const ushort PlaceholdersNumber = 1;
@@ -359,7 +359,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UpdateTemplateAsync_ThrowsOnBodyMissingPlaceholder()
+    public async Task UpdateTemplateAsync_ThrowsOnBodyMissingPlaceholder()
     {
         // Arrange
         var updateModel = new EmailTemplateUpdateModel
@@ -406,7 +406,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UpdateTemplateAsync_ThrowsOnNonExistingEmailTemplate()
+    public async Task UpdateTemplateAsync_ThrowsOnNonExistingEmailTemplate()
     {
         // Arrange
 
@@ -429,7 +429,7 @@ public sealed class EmailTemplateServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void UpdateTemplateAsync_ThrowsOnSubjectMissingPlaceholder()
+    public async Task UpdateTemplateAsync_ThrowsOnSubjectMissingPlaceholder()
     {
         // Arrange
         var updateModel = new EmailTemplateUpdateModel

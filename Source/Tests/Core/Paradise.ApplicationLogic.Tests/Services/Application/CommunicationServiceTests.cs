@@ -80,7 +80,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Theory, MemberData(nameof(SendEmailAsync_MemberData))]
-    public async void SendEmailAsync(BaseEmailModel baseEmailModel)
+    public async Task SendEmailAsync(BaseEmailModel baseEmailModel)
     {
         ArgumentNullException.ThrowIfNull(baseEmailModel);
 
@@ -130,7 +130,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnEmptyRecipientsList()
+    public async Task SendEmailAsync_ThrowsOnEmptyRecipientsList()
     {
         // Arrange
         var templateName = "Test";
@@ -164,7 +164,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnInvalidBlindCopyRecipientEmailFormat()
+    public async Task SendEmailAsync_ThrowsOnInvalidBlindCopyRecipientEmailFormat()
     {
         // Arrange
         var templateName = "Test";
@@ -196,7 +196,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnInvalidBodyPlaceholdersNumber()
+    public async Task SendEmailAsync_ThrowsOnInvalidBodyPlaceholdersNumber()
     {
         // Arrange
         var templateName = "Test";
@@ -229,7 +229,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnInvalidCopyRecipientEmailFormat()
+    public async Task SendEmailAsync_ThrowsOnInvalidCopyRecipientEmailFormat()
     {
         // Arrange
         var templateName = "Test";
@@ -261,7 +261,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnInvalidRecipientEmailFormat()
+    public async Task SendEmailAsync_ThrowsOnInvalidRecipientEmailFormat()
     {
         // Arrange
         var templateName = "Test";
@@ -293,7 +293,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnInvalidSubjectPlaceholdersNumber()
+    public async Task SendEmailAsync_ThrowsOnInvalidSubjectPlaceholdersNumber()
     {
         // Arrange
         var templateName = "Test";
@@ -327,7 +327,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnMissingBodyPlaceholder()
+    public async Task SendEmailAsync_ThrowsOnMissingBodyPlaceholder()
     {
         // Arrange
         var templateName = "Test";
@@ -363,7 +363,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnMissingSubjectPlaceholder()
+    public async Task SendEmailAsync_ThrowsOnMissingSubjectPlaceholder()
     {
         // Arrange
         var templateName = "Test";
@@ -400,7 +400,7 @@ public sealed class CommunicationServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SendEmailAsync_ThrowsOnNonExistingEmailTemplate()
+    public async Task SendEmailAsync_ThrowsOnNonExistingEmailTemplate()
     {
         // Arrange
         var request = new EmailSendRequestModel(new([TestEmail]),

@@ -165,7 +165,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void AnyAsync_ReturnsFalseOnEmptyRepository()
+    public async Task AnyAsync_ReturnsFalseOnEmptyRepository()
     {
         // Arrange
 
@@ -188,7 +188,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void AnyAsync_ReturnsTrueOnNonEmptyRepository()
+    public async Task AnyAsync_ReturnsTrueOnNonEmptyRepository()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -215,7 +215,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void AnyAsync_WithCondition_ReturnsFalse()
+    public async Task AnyAsync_WithCondition_ReturnsFalse()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -242,7 +242,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void AnyAsync_WithCondition_ReturnsTrue()
+    public async Task AnyAsync_WithCondition_ReturnsTrue()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -319,7 +319,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void CountAsync()
+    public async Task CountAsync()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -345,7 +345,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void CountAsync_WithCondition()
+    public async Task CountAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -492,7 +492,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstAsync()
+    public async Task FirstAsync()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -517,7 +517,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstAsync_ThrowsOnEmptyRepository()
+    public async Task FirstAsync_ThrowsOnEmptyRepository()
     {
         // Arrange
 
@@ -540,7 +540,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstAsync_WithCondition()
+    public async Task FirstAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -565,7 +565,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstAsync_WithCondition_ThrowsOnEmptyRepository()
+    public async Task FirstAsync_WithCondition_ThrowsOnEmptyRepository()
     {
         // Arrange
         var entityId = Guid.NewGuid();
@@ -587,7 +587,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstAsync_WithCondition_ThrowsOnNonMatchingCondition()
+    public async Task FirstAsync_WithCondition_ThrowsOnNonMatchingCondition()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -742,7 +742,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstOrDefaultAsync()
+    public async Task FirstOrDefaultAsync()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -770,7 +770,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstOrDefaultAsync_ReturnsNullOnEmptyRepository()
+    public async Task FirstOrDefaultAsync_ReturnsNullOnEmptyRepository()
     {
         // Arrange
 
@@ -793,7 +793,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstOrDefaultAsync_WithCondition()
+    public async Task FirstOrDefaultAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -821,7 +821,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstOrDefaultAsync_WithCondition_ReturnsNullOnEmptyRepository()
+    public async Task FirstOrDefaultAsync_WithCondition_ReturnsNullOnEmptyRepository()
     {
         // Arrange
         var entityId = Guid.NewGuid();
@@ -846,7 +846,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void FirstOrDefaultAsync_WithCondition_ReturnsNullOnNonMatchingCondition()
+    public async Task FirstOrDefaultAsync_WithCondition_ReturnsNullOnNonMatchingCondition()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -895,7 +895,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetAllAsync()
+    public async Task GetAllAsync()
     {
         // Arrange
         Source.Add(GetTestEntity());
@@ -975,7 +975,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByIdAsync()
+    public async Task GetByIdAsync()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -1003,7 +1003,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetByIdAsync_ReturnsNullOnNonMatchingId()
+    public async Task GetByIdAsync_ReturnsNullOnNonMatchingId()
     {
         // Arrange
         var entityId = Guid.Empty;
@@ -1198,7 +1198,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetPagedListAsync()
+    public async Task GetPagedListAsync()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1234,7 +1234,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetPagedListAsync_WithFilter()
+    public async Task GetPagedListAsync_WithFilter()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1272,7 +1272,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetPagedListAsync_WithOrderingProperty()
+    public async Task GetPagedListAsync_WithOrderingProperty()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1313,7 +1313,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void GetPagedListAsync_WithPageNumber()
+    public async Task GetPagedListAsync_WithPageNumber()
     {
         // Arrange
         const int PageSize = 3;
@@ -1482,7 +1482,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastAsync()
+    public async Task LastAsync()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1507,7 +1507,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastAsync_ThrowsOnEmptyRepository()
+    public async Task LastAsync_ThrowsOnEmptyRepository()
     {
         // Arrange
 
@@ -1530,7 +1530,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastAsync_WithCondition()
+    public async Task LastAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1555,7 +1555,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastAsync_WithCondition_ThrowsOnEmptyRepository()
+    public async Task LastAsync_WithCondition_ThrowsOnEmptyRepository()
     {
         // Arrange
         var entityId = Guid.NewGuid();
@@ -1577,7 +1577,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastAsync_WithCondition_ThrowsOnNonMatchingCondition()
+    public async Task LastAsync_WithCondition_ThrowsOnNonMatchingCondition()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -1733,7 +1733,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastOrDefaultAsync()
+    public async Task LastOrDefaultAsync()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1761,7 +1761,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastOrDefaultAsync_ReturnsNullOnEmptyRepository()
+    public async Task LastOrDefaultAsync_ReturnsNullOnEmptyRepository()
     {
         // Arrange
 
@@ -1784,7 +1784,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastOrDefaultAsync_WithCondition()
+    public async Task LastOrDefaultAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -1812,7 +1812,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastOrDefaultAsync_WithCondition_ReturnsNullOnEmptyRepository()
+    public async Task LastOrDefaultAsync_WithCondition_ReturnsNullOnEmptyRepository()
     {
         // Arrange
         var entityId = Guid.NewGuid();
@@ -1837,7 +1837,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void LastOrDefaultAsync_WithCondition_ReturnsNullOnNonMatchingCondition()
+    public async Task LastOrDefaultAsync_WithCondition_ReturnsNullOnNonMatchingCondition()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -2033,7 +2033,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync()
+    public async Task SingleAsync()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -2057,7 +2057,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync_ThrowsOnEmptyRepository()
+    public async Task SingleAsync_ThrowsOnEmptyRepository()
     {
         // Arrange
 
@@ -2077,7 +2077,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync_ThrowsOnMultiple()
+    public async Task SingleAsync_ThrowsOnMultiple()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -2105,7 +2105,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync_WithCondition()
+    public async Task SingleAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -2130,7 +2130,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync_WithCondition_ThrowsOnEmptyRepository()
+    public async Task SingleAsync_WithCondition_ThrowsOnEmptyRepository()
     {
         // Arrange
         var entityId = Guid.NewGuid();
@@ -2152,7 +2152,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync_WithCondition_ThrowsOnMultiple()
+    public async Task SingleAsync_WithCondition_ThrowsOnMultiple()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -2178,7 +2178,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleAsync_WithCondition_ThrowsOnNonMatchingCondition()
+    public async Task SingleAsync_WithCondition_ThrowsOnNonMatchingCondition()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -2429,7 +2429,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleOrDefaultAsync_ThrowsOnMultiple()
+    public async Task SingleOrDefaultAsync_ThrowsOnMultiple()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -2457,7 +2457,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleOrDefaultAsync_WithCondition()
+    public async Task SingleOrDefaultAsync_WithCondition()
     {
         // Arrange
         var entity1 = GetTestEntity();
@@ -2485,7 +2485,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleOrDefaultAsync_WithCondition_ReturnsNullOnEmptyRepository()
+    public async Task SingleOrDefaultAsync_WithCondition_ReturnsNullOnEmptyRepository()
     {
         // Arrange
         var entityId = Guid.NewGuid();
@@ -2510,7 +2510,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleOrDefaultAsync_WithCondition_ReturnsNullOnNonMatchingCondition()
+    public async Task SingleOrDefaultAsync_WithCondition_ReturnsNullOnNonMatchingCondition()
     {
         // Arrange
         var entity = GetTestEntity();
@@ -2534,7 +2534,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public async void SingleOrDefaultAsync_WithCondition_ThrowsOnMultiple()
+    public async Task SingleOrDefaultAsync_WithCondition_ThrowsOnMultiple()
     {
         // Arrange
         var entity1 = GetTestEntity();

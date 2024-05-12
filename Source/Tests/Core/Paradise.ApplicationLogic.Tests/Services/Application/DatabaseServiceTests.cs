@@ -75,7 +75,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void DeleteUnconfirmedUsersAsync()
+    public async Task DeleteUnconfirmedUsersAsync()
     {
         // Arrange
         var confirmationPeriod = TimeSpan.FromDays(1);
@@ -108,7 +108,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void DeleteUnconfirmedUsersAsync_AffectsNone()
+    public async Task DeleteUnconfirmedUsersAsync_AffectsNone()
     {
         // Arrange
         var confirmationPeriod = TimeSpan.FromDays(1);
@@ -139,7 +139,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void ResetUsersPendingDeletionAsync()
+    public async Task ResetUsersPendingDeletionAsync()
     {
         // Arrange
         var requestLifetime = TimeSpan.FromDays(1);
@@ -172,7 +172,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void ResetUsersPendingDeletionAsync_AffectsNone()
+    public async Task ResetUsersPendingDeletionAsync_AffectsNone()
     {
         // Arrange
         var requestLifetime = TimeSpan.FromDays(1);
@@ -203,7 +203,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SeedEmailTemplatesAsync()
+    public async Task SeedEmailTemplatesAsync()
     {
         // Arrange
         var emailTemplates = new SeedEmailTemplateModel[]
@@ -246,7 +246,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SeedEmailTemplatesAsync_DoesNotAddDuplicates()
+    public async Task SeedEmailTemplatesAsync_DoesNotAddDuplicates()
     {
         // Arrange
         var emailTemplate = new SeedEmailTemplateModel("TestTemplate0", "Test", "Test")
@@ -279,7 +279,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SeedRolesAsync()
+    public async Task SeedRolesAsync()
     {
         // Arrange
         var roles = new SeedRoleModel[]
@@ -306,7 +306,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SeedRolesAsync_DoesNotAddDuplicates()
+    public async Task SeedRolesAsync_DoesNotAddDuplicates()
     {
         // Arrange
         var role = new SeedRoleModel("TestRole0");
@@ -331,7 +331,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SeedUsersAsync()
+    public async Task SeedUsersAsync()
     {
         // Arrange
         var users = new SeedUserModel[]
@@ -364,7 +364,7 @@ public sealed class DatabaseServiceTests
     /// </para>
     /// </summary>
     [Fact]
-    public async void SeedUsersAsync_DoesNotAddDuplicates()
+    public async Task SeedUsersAsync_DoesNotAddDuplicates()
     {
         // Arrange
         var user = new SeedUserModel("TestUser0", "test@email.com", "TestPassword123!")
