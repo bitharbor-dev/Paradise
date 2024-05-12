@@ -54,7 +54,8 @@ public sealed class ValueObjectEqualityComparer : IEqualityComparer<IValueObject
         var hash = new HashCode();
         hash.Add(obj.GetType());
 
-        obj.GetEqualityComponents().ForEach(hash.Add);
+        foreach (var item in obj.GetEqualityComponents())
+            hash.Add(item);
 
         return hash.ToHashCode();
     }

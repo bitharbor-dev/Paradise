@@ -240,7 +240,7 @@ public sealed class EntityEqualityComparerTests
     /// <see cref="EntityEqualityComparer.GetHashCode"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="NullReferenceException"/> since the given instance
+    /// throws a <see cref="ArgumentNullException"/> since the given instance
     /// equals <see langword="null"/>.
     /// </para>
     /// </summary>
@@ -253,7 +253,7 @@ public sealed class EntityEqualityComparerTests
         // Act
 
         // Assert
-        Assert.Throws<NullReferenceException>(()
+        Assert.Throws<ArgumentNullException>(()
             => Comparer.GetHashCode(firstEntity!));
     }
     #endregion
