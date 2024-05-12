@@ -18,6 +18,8 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     #region Fields
     private protected readonly ILogger _logger;
 
+    private CancellationTokenSource? _cancellationTokenSource;
+
     private readonly IServiceProvider _serviceProvider;
     private readonly IDisposable? _optionsReloadToken;
     private readonly Timer _executionTimer;
@@ -80,11 +82,17 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     /// <param name="provider">
     /// Service provider to retrieve registered services.
     /// </param>
-    public abstract Task ExecuteAsync(IServiceProvider provider);
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    public abstract Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken);
 
     /// <inheritdoc/>
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
         ChangeTimer(Options.Delay, Options.Interval);
 
         return Task.CompletedTask;
@@ -120,10 +128,12 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
     {
         try
         {
+            var cancellationToken = _cancellationTokenSource?.Token ?? default;
+
             _logger.LogWorkerRunning(GetType());
 
             await using var scope = _serviceProvider.CreateAsyncScope();
-            await ExecuteAsync(scope.ServiceProvider)
+            await ExecuteAsync(scope.ServiceProvider, cancellationToken)
                 .ConfigureAwait(false);
         }
         catch (Exception e)

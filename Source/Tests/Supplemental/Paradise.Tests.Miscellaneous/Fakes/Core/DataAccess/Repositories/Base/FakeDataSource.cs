@@ -131,7 +131,7 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
         /// A <see cref="List{T}"/> of <see cref="Entry{TEntity}"/> of <see cref="IDatabaseRecord"/>.
         /// </returns>
         public List<List<Entry<IDatabaseRecord>>> GetDataSets()
-            => _dataSets.Values.ToList();
+            => [.. _dataSets.Values];
 
         /// <summary>
         /// Get the queryable set of <typeparamref name="TEntity"/> records.

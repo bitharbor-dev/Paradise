@@ -63,5 +63,6 @@ var host = Host
 await SeedDatabasesAsync(host.Services)
     .ConfigureAwait(false);
 
+// Note: use "RunAsync(CancellationToken)" for proper workers stopping.
 await host.RunAsync()
     .ConfigureAwait(false);

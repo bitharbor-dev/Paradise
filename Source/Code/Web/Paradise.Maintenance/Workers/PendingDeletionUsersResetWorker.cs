@@ -19,14 +19,14 @@ internal sealed class PendingDeletionUsersResetWorker(IServiceProvider servicePr
 {
     #region Public methods
     /// <inheritdoc/>
-    public override Task ExecuteAsync(IServiceProvider provider)
+    public override Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
         var userDeletionRequestLifetime = applicationOptions.Tokens.UserDeletionRequestLifetime;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        return databaseService.ResetUsersPendingDeletionAsync(userDeletionRequestLifetime);
+        return databaseService.ResetUsersPendingDeletionAsync(userDeletionRequestLifetime, cancellationToken);
     }
     #endregion
 }
