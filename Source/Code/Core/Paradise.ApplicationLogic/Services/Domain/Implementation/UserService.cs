@@ -559,11 +559,11 @@ public sealed class UserService(ILogger<UserService> logger,
         var user = await GetUserByIdAsync(userId, cancellationToken)
             .ConfigureAwait(false);
 
-        var requestLifetime = _applicationOptions.Tokens.UserDeletionRequestLifetime;
+        var timeout = _applicationOptions.Timeout.UserDeletionRequestTimeout;
 
         user.DeletionRequestSubmitted.HasValue.ThrowIfFalse(BadRequest, UserNotPendingDeletion, user.Email);
 
-        if (user.IsDeletionRequestOutdated(requestLifetime))
+        if (user.IsDeletionRequestOutdated(timeout))
         {
             user.CancelDeletionRequest();
 
@@ -573,7 +573,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
             updateResult.ThrowIfUnsuccessfulIdentityResult();
 
-            Throw(BadRequest, UserDeletionRequestExpired, requestLifetime);
+            Throw(BadRequest, UserDeletionRequestExpired, timeout);
         }
 
         var deletionResult = await userManager
@@ -1184,7 +1184,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var url = _applicationOptions.ApiUrl;
         var route = UserRoutes.ConfirmEmail;
-        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Tokens.EmailConfirmationTokenLifetime);
+        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Timeout.EmailConfirmationTimeout);
 
         var link = CreateIdentityTokenLink(url, route, user, token, expiryDate);
 
@@ -1260,10 +1260,10 @@ public sealed class UserService(ILogger<UserService> logger,
             .GeneratePasswordResetTokenAsync(user)
             .ConfigureAwait(false);
 
-        var tokenLifetime = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetPasswordTokenLifetime);
+        var expriryDate = DateTime.UtcNow.Add(_applicationOptions.Timeout.ResetPasswordTimeout);
 
         var identityToken = dataProtectionService.Protect(
-            new IdentityToken(user.Email, token, expiryDate: tokenLifetime));
+            new IdentityToken(user.Email, token, expiryDate: expriryDate));
 
         var template = _emailTemplateOptions.PasswordResetTemplateName;
 
@@ -1374,7 +1374,7 @@ public sealed class UserService(ILogger<UserService> logger,
 
         var url = _applicationOptions.ApiUrl;
         var route = UserRoutes.ResetEmail;
-        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Tokens.ResetEmailAddressTokenLifetime);
+        var expiryDate = DateTime.UtcNow.Add(_applicationOptions.Timeout.ResetEmailAddressTimeout);
 
         var link = CreateIdentityTokenLink(url, route, user, token, expiryDate, newEmail);
 

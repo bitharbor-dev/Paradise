@@ -27,8 +27,8 @@ public sealed class ApplicationOptions
     public string? Secret { get; set; }
 
     /// <summary>
-    /// Application tokens options.
+    /// Tokens and operations timeout options.
     /// </summary>
-    public TokenOptions Tokens { get; set; } = TokenOptions.Default;
+    public TimeoutOptions Timeout { get; set; } = TimeoutOptions.Default;
     #endregion
 }

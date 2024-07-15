@@ -14,11 +14,6 @@ internal static class Routes
     public const string Slash = "/";
 
     /// <summary>
-    /// Default API endpoint prefix.
-    /// </summary>
-    public const string Prefix = $"api{Slash}";
-
-    /// <summary>
     /// API version.
     /// </summary>
     public const string Version = $"v1{Slash}";
@@ -26,7 +21,7 @@ internal static class Routes
     /// <summary>
     /// Base API endpoint route (without domain).
     /// </summary>
-    public const string Base = $"{Prefix}{Version}";
+    public const string Base = Version;
     #endregion
 }
 
@@ -54,7 +49,7 @@ public static class EmailTemplateRoutes
     /// <summary>
     /// Getting an email template by Id.
     /// </summary>
-    public const string GetById = $"{Controller}{{{EmailTemplateIdParameter}}}";
+    public const string GetById = $"{Controller}{{{IdParameter}}}";
 
     /// <summary>
     /// Creating a new email template.
@@ -64,12 +59,12 @@ public static class EmailTemplateRoutes
     /// <summary>
     /// Updating an email template.
     /// </summary>
-    public const string Update = $"{Controller}{{{EmailTemplateIdParameter}}}";
+    public const string Update = $"{Controller}{{{IdParameter}}}";
 
     /// <summary>
     /// Deleting an email template.
     /// </summary>
-    public const string Delete = $"{Controller}{{{EmailTemplateIdParameter}}}";
+    public const string Delete = $"{Controller}{{{IdParameter}}}";
     #endregion
 }
 
@@ -102,12 +97,12 @@ public static class RoleRoutes
     /// <summary>
     /// Getting a role by Id.
     /// </summary>
-    public const string GetById = $"{Controller}{{{RoleIdParameter}}}";
+    public const string GetById = $"{Controller}{{{IdParameter}}}";
 
     /// <summary>
     /// Getting user roles.
     /// </summary>
-    public const string GetUserRoles = $"{Controller}{UserPrefix}{{{UserIdParameter}}}";
+    public const string GetUserRoles = $"{Controller}{UserPrefix}{{{IdParameter}}}";
 
     /// <summary>
     /// Creating a new role.
@@ -117,12 +112,12 @@ public static class RoleRoutes
     /// <summary>
     /// Updating a role.
     /// </summary>
-    public const string Update = $"{Controller}{{{RoleIdParameter}}}";
+    public const string Update = $"{Controller}{{{IdParameter}}}";
 
     /// <summary>
     /// Deleting a role.
     /// </summary>
-    public const string Delete = $"{Controller}{{{RoleIdParameter}}}";
+    public const string Delete = $"{Controller}{{{IdParameter}}}";
 
     /// <summary>
     /// Assigning role to a user.
@@ -175,7 +170,7 @@ public static class UserRoutes
     /// <summary>
     /// Getting a user by Id.
     /// </summary>
-    public const string GetById = $"{Controller}{{{UserIdParameter}}}";
+    public const string GetById = $"{Controller}{{{IdParameter}}}";
 
     /// <summary>
     /// Creating a new user.

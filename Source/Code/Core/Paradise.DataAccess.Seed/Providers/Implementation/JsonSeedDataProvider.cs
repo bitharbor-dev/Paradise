@@ -75,7 +75,7 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
 
         var normalizedSeedFolderPath = seedFolder is null
             ? string.Empty
-            : seedFolder.Replace('\\', DirectorySeparatorChar);
+            : seedFolder.Replace('\\', DirectorySeparatorChar).Replace('/', DirectorySeparatorChar);
 
         var applicationFilePath = Combine(root, normalizedSeedFolderPath, ApplicationDataFileName);
         var domainFilePath = Combine(root, normalizedSeedFolderPath, DomainDataFileName);

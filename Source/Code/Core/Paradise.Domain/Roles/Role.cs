@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Paradise.Common.Extensions;
 using Paradise.Domain.Base;
 using Paradise.Domain.Base.EqualityComparers;
+using Paradise.Domain.Base.Exceptions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Roles;
@@ -44,7 +46,12 @@ public sealed class Role(string name, bool isDefault) : IdentityRole<Guid>(name)
 
     #region Public methods
     /// <inheritdoc/>
-    public void ValidateState() { }
+    [MemberNotNull(nameof(Name))]
+    public void ValidateState()
+    {
+        if (Name.IsNullOrWhiteSpace())
+            InvalidEntityStateException.Throw<Role>(Name);
+    }
 
     /// <inheritdoc/>
     public bool Equals(Role? other)

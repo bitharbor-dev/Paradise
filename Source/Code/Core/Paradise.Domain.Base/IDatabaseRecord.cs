@@ -1,4 +1,6 @@
-﻿namespace Paradise.Domain.Base;
+﻿using Paradise.Domain.Base.Exceptions;
+
+namespace Paradise.Domain.Base;
 
 /// <summary>
 /// Provides default properties for all records
@@ -29,6 +31,10 @@ public interface IDatabaseRecord
     /// <para>
     /// Automatically called during create/update operations
     /// in case record is being tracked by ORM.
+    /// </para>
+    /// <para>
+    /// Should throw a <see cref="InvalidEntityStateException"/>
+    /// in case of state validation errors.
     /// </para>
     /// </summary>
     void ValidateState();

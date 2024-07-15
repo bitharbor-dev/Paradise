@@ -25,7 +25,7 @@ public sealed class EmailTemplatesRepository(IApplicationDataSource source) : Re
         Expression<Func<EmailTemplate, bool>> predicate =
             template => template.TemplateName == templateName && template.Culture == culture;
 
-        return Source.GetQueryable<EmailTemplate>().SingleOrDefaultAsync(predicate, cancellationToken);
+        return GetQueryableEntities().SingleOrDefaultAsync(predicate, cancellationToken);
     }
     #endregion
 }

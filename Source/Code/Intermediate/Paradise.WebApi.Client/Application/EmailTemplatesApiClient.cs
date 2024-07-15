@@ -84,7 +84,7 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     {
         var uri = CreateUri(GetById, routeParameters: new()
         {
-            { EmailTemplateIdParameter, emailTemplateId }
+            { IdParameter, emailTemplateId }
         });
 
         return GetAsync<EmailTemplateModel>(uri, accessToken, cancellationToken);
@@ -142,7 +142,7 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     {
         var uri = CreateUri(Update, routeParameters: new()
         {
-            { EmailTemplateIdParameter, emailTemplateId }
+            { IdParameter, emailTemplateId }
         });
 
         return PatchAsync<EmailTemplateModel>(uri, model, accessToken, cancellationToken);
@@ -168,7 +168,7 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<ApplicationOptions> 
     {
         var uri = CreateUri(Delete, routeParameters: new()
         {
-            { EmailTemplateIdParameter, emailTemplateId }
+            { IdParameter, emailTemplateId }
         });
 
         return DeleteAsync(uri, accessToken, cancellationToken);

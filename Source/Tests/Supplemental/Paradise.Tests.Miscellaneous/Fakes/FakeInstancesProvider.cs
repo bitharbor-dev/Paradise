@@ -125,12 +125,12 @@ public static class FakeInstancesProvider
                 TwoFactorVerificationCodeLength = 6
             },
             Secret = secret,
-            Tokens = new()
+            Timeout = new()
             {
-                EmailConfirmationTokenLifetime = TimeSpan.FromSeconds(0.5),
-                ResetEmailAddressTokenLifetime = TimeSpan.FromSeconds(0.5),
-                ResetPasswordTokenLifetime = TimeSpan.FromSeconds(0.5),
-                UserDeletionRequestLifetime = TimeSpan.FromSeconds(0.5)
+                EmailConfirmationTimeout = TimeSpan.FromSeconds(0.5),
+                ResetEmailAddressTimeout = TimeSpan.FromSeconds(0.5),
+                ResetPasswordTimeout = TimeSpan.FromSeconds(0.5),
+                UserDeletionRequestTimeout = TimeSpan.FromSeconds(0.5)
             }
         };
 

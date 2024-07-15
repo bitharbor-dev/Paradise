@@ -57,7 +57,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetById([FromRoute(Name = EmailTemplateIdParameter)] Guid emailTemplateId)
+    public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid emailTemplateId)
         => await emailTemplateService.GetByIdAsync(emailTemplateId).ConfigureAwait(false);
 
     /// <summary>
@@ -102,7 +102,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Update([FromRoute(Name = EmailTemplateIdParameter)] Guid emailTemplateId, [FromBody, Required] EmailTemplateUpdateModel model)
+    public async Task<IActionResult> Update([FromRoute(Name = IdParameter)] Guid emailTemplateId, [FromBody, Required] EmailTemplateUpdateModel model)
         => await emailTemplateService.UpdateAsync(emailTemplateId, model).ConfigureAwait(false);
 
     /// <summary>
@@ -118,7 +118,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.OK)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
-    public async Task<IActionResult> Delete([FromRoute(Name = EmailTemplateIdParameter)] Guid emailTemplateId)
+    public async Task<IActionResult> Delete([FromRoute(Name = IdParameter)] Guid emailTemplateId)
         => await emailTemplateService.DeleteAsync(emailTemplateId).ConfigureAwait(false);
     #endregion
 }

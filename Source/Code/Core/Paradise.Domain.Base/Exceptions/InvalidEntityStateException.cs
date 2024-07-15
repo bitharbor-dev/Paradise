@@ -1,7 +1,6 @@
 ﻿using Paradise.Common.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Text;
 using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 using static System.Environment;
 
@@ -82,7 +81,7 @@ public sealed class InvalidEntityStateException : Exception
         {
             var additionalInformationHeader = GetInvalidEntityStateAdditionalInformationMessage();
 
-            return string.Concat(message, NewLine, additionalInformationHeader, additionalInformation);
+            message = string.Concat(message, NewLine, additionalInformationHeader, additionalInformation);
         }
 
         return message;

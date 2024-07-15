@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Paradise.Common.Extensions;
 using Paradise.Domain.Base;
 using Paradise.Domain.Base.EqualityComparers;
+using Paradise.Domain.Base.Exceptions;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
@@ -69,7 +71,16 @@ public sealed class User : IdentityUser<Guid>, IEntity, IDatabaseRecord, IEquata
 
     #region Public methods
     /// <inheritdoc/>
-    public void ValidateState() { }
+    [MemberNotNull(nameof(Email))]
+    [MemberNotNull(nameof(UserName))]
+    public void ValidateState()
+    {
+        if (Email.IsNullOrWhiteSpace())
+            InvalidEntityStateException.Throw<User>(Email);
+
+        if (UserName.IsNullOrWhiteSpace())
+            InvalidEntityStateException.Throw<User>(UserName);
+    }
 
     /// <summary>
     /// Cancels the user's deletion request by

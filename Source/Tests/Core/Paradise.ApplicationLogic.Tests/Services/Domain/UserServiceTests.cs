@@ -273,7 +273,7 @@ public sealed class UserServiceTests
         var identityToken = confirmationUri.Segments.Last();
 
         // Act
-        await Task.Delay(Options.Tokens.EmailConfirmationTokenLifetime + TimeSpan.FromSeconds(0.5));
+        await Task.Delay(Options.Timeout.EmailConfirmationTimeout + TimeSpan.FromSeconds(0.5));
 
         var exception = await Assert.ThrowsAsync<ResultException>(()
             => Service.ConfirmEmailAsync(identityToken));
@@ -877,7 +877,7 @@ public sealed class UserServiceTests
         var user = await CreateUserAsync(deletionRequestSubmitted: DateTime.UtcNow);
 
         // Act
-        await Task.Delay(Options.Tokens.UserDeletionRequestLifetime + TimeSpan.FromSeconds(0.5));
+        await Task.Delay(Options.Timeout.UserDeletionRequestTimeout + TimeSpan.FromSeconds(0.5));
 
         var exception = await Assert.ThrowsAsync<ResultException>(()
             => Service.DeleteAsync(user.Id));
@@ -2182,7 +2182,7 @@ public sealed class UserServiceTests
 
         var identityToken = identityTokenLink.Segments.Last();
 
-        await Task.Delay(Options.Tokens.ResetEmailAddressTokenLifetime + TimeSpan.FromSeconds(0.5));
+        await Task.Delay(Options.Timeout.ResetEmailAddressTimeout + TimeSpan.FromSeconds(0.5));
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()
@@ -2398,7 +2398,7 @@ public sealed class UserServiceTests
 
         await Service.CreatePasswordResetRequestAsync(new(Email));
 
-        await Task.Delay(Options.Tokens.ResetPasswordTokenLifetime + TimeSpan.FromSeconds(0.5));
+        await Task.Delay(Options.Timeout.ResetPasswordTimeout + TimeSpan.FromSeconds(0.5));
 
         var identityToken = GetEmailBodyParameterOfType<string>();
 

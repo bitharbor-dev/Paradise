@@ -23,11 +23,11 @@ internal sealed class UnconfirmedUsersCleanupWorker(IServiceProvider serviceProv
     public override Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
-        var emailConfirmationTokenLifetime = applicationOptions.Tokens.EmailConfirmationTokenLifetime;
+        var timeout = applicationOptions.Timeout.EmailConfirmationTimeout;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        return databaseService.DeleteUnconfirmedUsersAsync(emailConfirmationTokenLifetime, cancellationToken);
+        return databaseService.DeleteUnconfirmedUsersAsync(timeout, cancellationToken);
     }
     #endregion
 }

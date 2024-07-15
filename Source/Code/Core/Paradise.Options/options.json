@@ -1,17 +1,17 @@
 {
   "ApplicationOptions": {
     "Authentication": {
-      "JsonWebTokenLifetime": "00.00:05:00",
+      "AccessTokenLifetime": "00.00:05:00",
       "RefreshTokenLifetime": "90.00:00:00",
       "TwoFactorTokenLifetime": "00.01:00:00",
       "TwoFactorVerificationCodeLength": 6
     },
     "Secret": "Ug5xCXJaNaxfx78KdQxQZDAmniAbZw6V",
-    "Tokens": {
-      "EmailConfirmationTokenLifetime": "01.00:00:00",
-      "ResetEmailAddressTokenLifetime": "01.00:00:00",
-      "ResetPasswordTokenLifetime": "01.00:00:00",
-      "UserDeletionRequestLifetime": "0.12:00:00"
+    "Timeout": {
+      "EmailConfirmationTimeout": "01.00:00:00",
+      "ResetEmailAddressTimeout": "01.00:00:00",
+      "ResetPasswordTimeout": "01.00:00:00",
+      "UserDeletionRequestTimeout": "0.12:00:00"
     }
   },
   "EmailTemplateOptions": {

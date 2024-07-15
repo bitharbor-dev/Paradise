@@ -6,13 +6,13 @@ namespace Paradise.Options.Origins.Base;
 /// An <see cref="IConfiguration"/> origin abstraction.
 /// </summary>
 /// <typeparam name="TOptions">
-/// Source options type.
+/// Origin options type.
 /// </typeparam>
 public interface IConfigurationOrigin<TOptions> : IConfigurationOrigin
 {
     #region Properties
     /// <summary>
-    /// Configuration source options.
+    /// Configuration origin options.
     /// </summary>
     TOptions Options { get; }
     #endregion

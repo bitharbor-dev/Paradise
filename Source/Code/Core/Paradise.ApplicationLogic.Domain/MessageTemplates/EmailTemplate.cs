@@ -58,6 +58,24 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
 
     #region Public methods
     /// <inheritdoc/>
+    public override void ValidateState()
+    {
+        base.ValidateState();
+
+        if (SubjectPlaceholderName is null)
+        {
+            // If placeholder name is not set, but placeholders number is not 0
+            // - an exception to be thrown.
+            if (SubjectPlaceholdersNumber is not 0)
+            {
+                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
+
+                InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber, message);
+            }
+        }
+    }
+
+    /// <inheritdoc/>
     public override IEnumerable<object?> GetEqualityComponents()
     {
         yield return TemplateName;
@@ -95,30 +113,10 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        if (SubjectPlaceholderName is null)
-        {
-            if (SubjectPlaceholdersNumber is not 0)
-            {
-                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
+        ValidateSubjectBeforeFormatting(parameters);
 
-                InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber, message);
-            }
-
-            if (parameters.Count is not 0)
-            {
-                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
-
-                throw new ArgumentException(message);
-            }
-        }
-
-        if (parameters.Count != SubjectPlaceholdersNumber)
-        {
-            var message = ExceptionMessagesProvider.GetInvalidParametersNumberMessage();
-
-            throw new IndexOutOfRangeException(message);
-        }
-
+        // If validation passed and the input parameters number is 0
+        // - just return the initial subject text.
         if (parameters.Count is 0)
             return Subject;
 
@@ -144,7 +142,7 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
     }
 
     /// <summary>
-    /// Preforms the partial update of the current <see cref="EmailTemplate"/>
+    /// Preforms the partial update of the current <see cref="EmailTemplate"/> instance
     /// using the 'not-null' data from the input parameters.
     /// </summary>
     /// <param name="isBodyHtml">
@@ -208,7 +206,7 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
             }
         }
 
-        if (PlaceholderName != placeholderName)
+        if (!string.Equals(PlaceholderName, placeholderName, StringComparison.Ordinal))
         {
             changesExists = true;
             PlaceholderName = placeholderName;
@@ -225,14 +223,14 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
 
         if (subject.IsNotNullOrWhiteSpace())
         {
-            if (Subject != subject)
+            if (!string.Equals(Subject, subject, StringComparison.Ordinal))
             {
                 changesExists = true;
                 Subject = subject;
             }
         }
 
-        if (SubjectPlaceholderName != subjectPlaceholderName)
+        if (!string.Equals(SubjectPlaceholderName, subjectPlaceholderName, StringComparison.Ordinal))
         {
             changesExists = true;
             SubjectPlaceholderName = subjectPlaceholderName;
@@ -249,7 +247,7 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
 
         if (templateText.IsNotNullOrWhiteSpace())
         {
-            if (TemplateText != templateText)
+            if (!string.Equals(TemplateText, templateText, StringComparison.Ordinal))
             {
                 TemplateText = templateText;
                 changesExists = true;
@@ -258,21 +256,48 @@ public sealed class EmailTemplate(string templateName, string templateText, stri
 
         return changesExists;
     }
+    #endregion
 
-    /// <inheritdoc/>
-    public override void ValidateState()
+    #region Private methods
+    /// <summary>
+    /// Validates the subject placeholders number and
+    /// <paramref name="parameters"/> number before
+    /// performing the subject formatting.
+    /// </summary>
+    /// <param name="parameters">
+    /// <see cref="Subject"/> formatting values.
+    /// </param>
+    private void ValidateSubjectBeforeFormatting(IList<object?> parameters)
     {
         if (SubjectPlaceholderName is null)
         {
+            // If placeholder name is not set, but placeholders number is not 0
+            // - an exception to be thrown.
             if (SubjectPlaceholdersNumber is not 0)
             {
                 var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
 
                 InvalidEntityStateException.Throw<EmailTemplate>(SubjectPlaceholdersNumber, message);
             }
+
+            // If placeholder name is not set, but input parameters number is not 0
+            // - an exception to be thrown.
+            if (parameters.Count is not 0)
+            {
+                var message = ExceptionMessagesProvider.GetEmailTemplateSubjectInInvalidStateMessage();
+
+                throw new InvalidOperationException(message);
+            }
         }
 
-        base.ValidateState();
+        // If the input parameters number is not equal to defined placeholders number
+        // - an exception to be thrown.
+        if (parameters.Count != SubjectPlaceholdersNumber)
+        {
+            var message = ExceptionMessagesProvider.GetInvalidParametersNumberMessage();
+
+            throw new InvalidOperationException(message);
+        }
     }
     #endregion
 }

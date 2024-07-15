@@ -30,90 +30,90 @@ public abstract class ReadOnlyRepository<TEntity>(IDataSource source) : IReadOnl
     #region Public methods
     /// <inheritdoc/>
     public bool Any()
-        => Source.GetQueryable<TEntity>().Any();
+        => GetQueryableEntities().Any();
 
     /// <inheritdoc/>
     public bool Any(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().Any(predicate);
+        => GetQueryableEntities().Any(predicate);
 
     /// <inheritdoc/>
     public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().AnyAsync(cancellationToken);
+        => GetQueryableEntities().AnyAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().AnyAsync(predicate, cancellationToken);
+        => GetQueryableEntities().AnyAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public int Count()
-        => Source.GetQueryable<TEntity>().Count();
+        => GetQueryableEntities().Count();
 
     /// <inheritdoc/>
     public int Count(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().Count(predicate);
+        => GetQueryableEntities().Count(predicate);
 
     /// <inheritdoc/>
     public Task<int> CountAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().CountAsync(cancellationToken);
+        => GetQueryableEntities().CountAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().CountAsync(predicate, cancellationToken);
+        => GetQueryableEntities().CountAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public TEntity First()
-        => Source.GetQueryable<TEntity>().First();
+        => GetQueryableEntities().First();
 
     /// <inheritdoc/>
     public TEntity First(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().First(predicate);
+        => GetQueryableEntities().First(predicate);
 
     /// <inheritdoc/>
     public Task<TEntity> FirstAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().FirstAsync(cancellationToken);
+        => GetQueryableEntities().FirstAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().FirstAsync(predicate, cancellationToken);
+        => GetQueryableEntities().FirstAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public TEntity? FirstOrDefault()
-        => Source.GetQueryable<TEntity>().FirstOrDefault();
+        => GetQueryableEntities().FirstOrDefault();
 
     /// <inheritdoc/>
     public TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().FirstOrDefault(predicate);
+        => GetQueryableEntities().FirstOrDefault(predicate);
 
     /// <inheritdoc/>
     public Task<TEntity?> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().FirstOrDefaultAsync(cancellationToken);
+        => GetQueryableEntities().FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().FirstOrDefaultAsync(predicate, cancellationToken);
+        => GetQueryableEntities().FirstOrDefaultAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public IReadOnlyCollection<TEntity> GetAll()
-        => Source.GetQueryable<TEntity>().ToList().AsReadOnly();
+        => GetQueryableEntities().ToList().AsReadOnly();
 
     /// <inheritdoc/>
     public async Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-        => (await Source.GetQueryable<TEntity>().ToListAsync(cancellationToken).ConfigureAwait(false)).AsReadOnly();
+        => (await GetQueryableEntities().ToListAsync(cancellationToken).ConfigureAwait(false)).AsReadOnly();
 
     /// <inheritdoc/>
     public TEntity? GetById(Guid id)
-        => Source.GetQueryable<TEntity>().SingleOrDefault(entity => entity.Id == id);
+        => GetQueryableEntities().SingleOrDefault(entity => entity.Id == id);
 
     /// <inheritdoc/>
     public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().SingleOrDefaultAsync(entity => entity.Id == id, cancellationToken);
+        => GetQueryableEntities().SingleOrDefaultAsync(entity => entity.Id == id, cancellationToken);
 
     /// <inheritdoc/>
     public PagedListQueryResult<TEntity> GetPagedList(PagedListQuery<TEntity> query)
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        var set = Source.GetQueryable<TEntity>();
+        var set = GetQueryableEntities();
 
         query.Apply(ref set);
 
@@ -133,7 +133,7 @@ public abstract class ReadOnlyRepository<TEntity>(IDataSource source) : IReadOnl
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        var set = Source.GetQueryable<TEntity>();
+        var set = GetQueryableEntities();
 
         query.Apply(ref set);
 
@@ -154,70 +154,81 @@ public abstract class ReadOnlyRepository<TEntity>(IDataSource source) : IReadOnl
 
     /// <inheritdoc/>
     public IQueryable<TEntity> GetQueryable()
-        => Source.GetQueryable<TEntity>();
+        => GetQueryableEntities();
 
     /// <inheritdoc/>
     public TEntity Last()
-        => Source.GetQueryable<TEntity>().Last();
+        => GetQueryableEntities().Last();
 
     /// <inheritdoc/>
     public TEntity Last(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().Last(predicate);
+        => GetQueryableEntities().Last(predicate);
 
     /// <inheritdoc/>
     public Task<TEntity> LastAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().LastAsync(cancellationToken);
+        => GetQueryableEntities().LastAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<TEntity> LastAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().LastAsync(predicate, cancellationToken);
+        => GetQueryableEntities().LastAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public TEntity? LastOrDefault()
-        => Source.GetQueryable<TEntity>().LastOrDefault();
+        => GetQueryableEntities().LastOrDefault();
 
     /// <inheritdoc/>
     public TEntity? LastOrDefault(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().LastOrDefault(predicate);
+        => GetQueryableEntities().LastOrDefault(predicate);
 
     /// <inheritdoc/>
     public Task<TEntity?> LastOrDefaultAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().LastOrDefaultAsync(cancellationToken);
+        => GetQueryableEntities().LastOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<TEntity?> LastOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().LastOrDefaultAsync(predicate, cancellationToken);
+        => GetQueryableEntities().LastOrDefaultAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public TEntity Single()
-        => Source.GetQueryable<TEntity>().Single();
+        => GetQueryableEntities().Single();
 
     /// <inheritdoc/>
     public TEntity Single(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().Single(predicate);
+        => GetQueryableEntities().Single(predicate);
 
     /// <inheritdoc/>
     public Task<TEntity> SingleAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().SingleAsync(cancellationToken);
+        => GetQueryableEntities().SingleAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().SingleAsync(predicate, cancellationToken);
+        => GetQueryableEntities().SingleAsync(predicate, cancellationToken);
 
     /// <inheritdoc/>
     public TEntity? SingleOrDefault()
-        => Source.GetQueryable<TEntity>().SingleOrDefault();
+        => GetQueryableEntities().SingleOrDefault();
 
     /// <inheritdoc/>
     public TEntity? SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
-        => Source.GetQueryable<TEntity>().SingleOrDefault(predicate);
+        => GetQueryableEntities().SingleOrDefault(predicate);
 
     /// <inheritdoc/>
     public Task<TEntity?> SingleOrDefaultAsync(CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().SingleOrDefaultAsync(cancellationToken);
+        => GetQueryableEntities().SingleOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc/>
     public Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().SingleOrDefaultAsync(predicate, cancellationToken);
+        => GetQueryableEntities().SingleOrDefaultAsync(predicate, cancellationToken);
+    #endregion
+
+    #region Private protected methods
+    /// <summary>
+    /// Gets the queryable entities set.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="IQueryable{T}"/> of <typeparamref name="TEntity"/>.
+    /// </returns>
+    private protected IQueryable<TEntity> GetQueryableEntities()
+        => Source.GetQueryable<TEntity>();
     #endregion
 }

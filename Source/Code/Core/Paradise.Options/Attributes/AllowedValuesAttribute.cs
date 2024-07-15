@@ -76,7 +76,7 @@ internal sealed class AllowedValuesAttribute<T>(params T?[] values) : Validation
             throw new InvalidCastException(message);
         }
 
-        IEqualityComparer<T?>? equalityComparer = null;
+        IEqualityComparer<T?>? equalityComparer;
 
         if (_equalityComparerType is not null)
         {
@@ -91,8 +91,10 @@ internal sealed class AllowedValuesAttribute<T>(params T?[] values) : Validation
                 throw new InvalidOperationException(message);
             }
         }
-
-        equalityComparer ??= EqualityComparer<T?>.Default;
+        else
+        {
+            equalityComparer = EqualityComparer<T?>.Default;
+        }
 
         return Values.Contains(castedValue, equalityComparer);
     }

@@ -59,6 +59,24 @@ public abstract class MessageTemplate(string templateName, string templateText) 
     #endregion
 
     #region Public methods
+    /// <inheritdoc/>
+    public override void ValidateState()
+    {
+        base.ValidateState();
+
+        if (PlaceholderName is null)
+        {
+            // If placeholder name is not set, but placeholders number is not 0
+            // - an exception to be thrown.
+            if (PlaceholdersNumber is not 0)
+            {
+                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
+
+                InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber, message);
+            }
+        }
+    }
+
     /// <summary>
     /// Gets the formatted template text with the given <paramref name="parameters"/>.
     /// </summary>
@@ -81,30 +99,10 @@ public abstract class MessageTemplate(string templateName, string templateText) 
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        if (PlaceholderName is null)
-        {
-            if (PlaceholdersNumber is not 0)
-            {
-                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
+        ValidateTextBeforeFormatting(parameters);
 
-                InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber, message);
-            }
-
-            if (parameters.Count is not 0)
-            {
-                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
-
-                throw new ArgumentException(message);
-            }
-        }
-
-        if (parameters.Count != PlaceholdersNumber)
-        {
-            var message = ExceptionMessagesProvider.GetInvalidParametersNumberMessage();
-
-            throw new IndexOutOfRangeException(message);
-        }
-
+        // If all previous validations passed and the input parameters number is 0
+        // - just return the initial template text.
         if (parameters.Count is 0)
             return TemplateText;
 
@@ -128,21 +126,48 @@ public abstract class MessageTemplate(string templateName, string templateText) 
 
         return builder.ToString();
     }
+    #endregion
 
-    /// <inheritdoc/>
-    public override void ValidateState()
+    #region Private methods
+    /// <summary>
+    /// Validates the placeholders number and
+    /// <paramref name="parameters"/> number before
+    /// performing the subject formatting.
+    /// </summary>
+    /// <param name="parameters">
+    /// <see cref="TemplateText"/> formatting values.
+    /// </param>
+    private void ValidateTextBeforeFormatting(IList<object?> parameters)
     {
         if (PlaceholderName is null)
         {
+            // If placeholder name is not set, but placeholders number is not 0
+            // - an exception to be thrown.
             if (PlaceholdersNumber is not 0)
             {
                 var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
 
                 InvalidEntityStateException.Throw<MessageTemplate>(PlaceholdersNumber, message);
             }
+
+            // If placeholder name is not set, but input parameters number is not 0
+            // - an exception to be thrown.
+            if (parameters.Count is not 0)
+            {
+                var message = ExceptionMessagesProvider.GetMessageTemplateTextInInvalidStateMessage();
+
+                throw new InvalidOperationException(message);
+            }
         }
 
-        base.ValidateState();
+        // If the input parameters number is not equal to defined placeholders number
+        // - an exception to be thrown.
+        if (parameters.Count != PlaceholdersNumber)
+        {
+            var message = ExceptionMessagesProvider.GetInvalidParametersNumberMessage();
+
+            throw new InvalidOperationException(message);
+        }
     }
     #endregion
 }

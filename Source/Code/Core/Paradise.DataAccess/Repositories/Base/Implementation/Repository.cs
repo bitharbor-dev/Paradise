@@ -42,7 +42,7 @@ public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyReposito
     {
         ArgumentNullException.ThrowIfNull(action);
 
-        foreach (var entity in Source.GetQueryable<TEntity>())
+        foreach (var entity in GetQueryableEntities())
             action(entity);
     }
 
@@ -51,17 +51,17 @@ public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyReposito
     {
         ArgumentNullException.ThrowIfNull(action);
 
-        foreach (var entity in Source.GetQueryable<TEntity>().Where(predicate))
+        foreach (var entity in GetQueryableEntities().Where(predicate))
             action(entity);
     }
 
     /// <inheritdoc/>
     public Task ForEachAsync(Action<TEntity> action, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().ForEachAsync(action, cancellationToken);
+        => GetQueryableEntities().ForEachAsync(action, cancellationToken);
 
     /// <inheritdoc/>
     public Task ForEachAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action, CancellationToken cancellationToken = default)
-        => Source.GetQueryable<TEntity>().Where(predicate).ForEachAsync(action, cancellationToken);
+        => GetQueryableEntities().Where(predicate).ForEachAsync(action, cancellationToken);
 
     /// <inheritdoc/>
     public void Remove(TEntity entity)
@@ -70,7 +70,7 @@ public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyReposito
     /// <inheritdoc/>
     public void RemoveById(Guid id)
     {
-        var entity = Source.GetQueryable<TEntity>().SingleOrDefault(e => e.Id == id);
+        var entity = GetQueryableEntities().SingleOrDefault(e => e.Id == id);
         if (entity is not null)
             Source.Remove(entity);
     }
@@ -81,6 +81,6 @@ public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyReposito
 
     /// <inheritdoc/>
     public void RemoveWhere(Expression<Func<TEntity, bool>> predicate)
-        => Source.RemoveRange(Source.GetQueryable<TEntity>().Where(predicate));
+        => Source.RemoveRange(GetQueryableEntities().Where(predicate));
     #endregion
 }

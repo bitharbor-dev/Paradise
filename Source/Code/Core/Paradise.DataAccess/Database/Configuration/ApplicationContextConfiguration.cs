@@ -24,7 +24,7 @@ internal static class ApplicationContextConfiguration
         modelBuilder.Entity<EmailTemplate>(entity =>
         {
             entity.ToTable(EmailTemplates);
-            entity.HasKey(nameof(EmailTemplate.Id));
+            entity.HasKey(emailTemplate => emailTemplate.Id);
 
             entity.HasIndex(nameof(EmailTemplate.TemplateName),
                             nameof(EmailTemplate.Culture)).IsUnique();

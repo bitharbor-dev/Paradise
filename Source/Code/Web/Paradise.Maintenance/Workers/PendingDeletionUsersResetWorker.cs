@@ -22,11 +22,11 @@ internal sealed class PendingDeletionUsersResetWorker(IServiceProvider servicePr
     public override Task ExecuteAsync(IServiceProvider provider, CancellationToken cancellationToken)
     {
         var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
-        var userDeletionRequestLifetime = applicationOptions.Tokens.UserDeletionRequestLifetime;
+        var timeout = applicationOptions.Timeout.UserDeletionRequestTimeout;
 
         var databaseService = provider.GetRequiredService<IDatabaseService>();
 
-        return databaseService.ResetUsersPendingDeletionAsync(userDeletionRequestLifetime, cancellationToken);
+        return databaseService.ResetUsersPendingDeletionAsync(timeout, cancellationToken);
     }
     #endregion
 }

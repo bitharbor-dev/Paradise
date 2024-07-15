@@ -1,5 +1,4 @@
-﻿using Paradise.Common.Extensions;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Base.EqualityComparers;
 

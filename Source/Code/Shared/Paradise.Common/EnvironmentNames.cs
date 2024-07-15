@@ -54,23 +54,13 @@ public static class EnvironmentNames
     #region Fields
     private static readonly IEnumerable<string> _allowedEnvironments =
         [Development, Staging, Production, DockerDevelopment, DockerStaging, DockerProduction];
-
-    private static string? _current;
     #endregion
 
     #region Properties
     /// <summary>
     /// Gets the current environment name.
     /// </summary>
-    public static string Current
-    {
-        get
-        {
-            _current ??= GetCurrentEnvironmentName();
-
-            return _current;
-        }
-    }
+    public static string Current { get; } = GetCurrentEnvironmentName();
     #endregion
 
     #region Private methods
@@ -87,7 +77,7 @@ public static class EnvironmentNames
 
         if (result.IsNullOrWhiteSpace() || !_allowedEnvironments.Contains(result))
         {
-            var message = ExceptionMessagesProvider.GetInvalidEnvironmentNameMessage(_allowedEnvironments, _current);
+            var message = ExceptionMessagesProvider.GetInvalidEnvironmentNameMessage(_allowedEnvironments, result);
 
             throw new InvalidOperationException(message);
         }

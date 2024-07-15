@@ -7,9 +7,9 @@ public static class ParameterNames
 {
     #region Constants
     /// <summary>
-    /// Email template Id parameter name.
+    /// General Id parameter name.
     /// </summary>
-    public const string EmailTemplateIdParameter = "emailTemplateId";
+    public const string IdParameter = "id";
 
     /// <summary>
     /// User Id parameter name.

@@ -1,4 +1,5 @@
 ﻿using Paradise.Domain.Base;
+using Paradise.Domain.Base.Exceptions;
 
 namespace Paradise.Domain.Users;
 
@@ -26,6 +27,15 @@ public sealed class UserRefreshToken(Guid ownerId) : ValueObject
     #endregion
 
     #region Public methods
+    /// <inheritdoc/>
+    public override void ValidateState()
+    {
+        base.ValidateState();
+
+        if (OwnerId == Guid.Empty)
+            InvalidEntityStateException.Throw<UserRefreshToken>(OwnerId);
+    }
+
     /// <summary>
     /// Gets the <see cref="bool"/> value
     /// indicating whether the current refresh token
