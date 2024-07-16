@@ -67,7 +67,7 @@ public sealed class MessageTemplateTests
     /// <see cref="MessageTemplate.GetFormattedText"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws an <see cref="IndexOutOfRangeException"/> since the parameters number
+    /// throws an <see cref="InvalidOperationException"/> since the parameters number
     /// is not equal to <see cref="MessageTemplate.PlaceholdersNumber"/>.
     /// </para>
     /// </summary>
@@ -86,7 +86,7 @@ public sealed class MessageTemplateTests
         // Act
 
         // Assert
-        Assert.Throws<IndexOutOfRangeException>(()
+        Assert.Throws<InvalidOperationException>(()
             => messageTemplate.GetFormattedText(parameters));
     }
 
@@ -121,7 +121,7 @@ public sealed class MessageTemplateTests
     /// <see cref="MessageTemplate.GetFormattedText"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ArgumentException"/> since the
+    /// throws a <see cref="InvalidOperationException"/> since the
     /// <see cref="MessageTemplate.PlaceholderName"/> is <see langword="null"/>,
     /// <see cref="MessageTemplate.PlaceholdersNumber"/> equals to 0,
     /// but input parameters number is not equal to 0.
@@ -142,7 +142,7 @@ public sealed class MessageTemplateTests
         // Act
 
         // Assert
-        Assert.Throws<ArgumentException>(()
+        Assert.Throws<InvalidOperationException>(()
             => messageTemplate.GetFormattedText(parameters));
     }
 

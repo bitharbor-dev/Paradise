@@ -174,7 +174,7 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
             body = template.GetFormattedText(request.BodyArgs ?? []);
             subject = template.GetFormattedSubject(request.SubjectArgs ?? []);
         }
-        catch (IndexOutOfRangeException e)
+        catch (InvalidOperationException e)
         {
             Throw(ServiceUnavailable, MessageTemplateInvalidPlaceholdersNumber, e.Message);
         }

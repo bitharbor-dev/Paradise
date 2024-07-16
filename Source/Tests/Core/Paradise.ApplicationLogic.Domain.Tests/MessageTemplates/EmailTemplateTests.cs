@@ -99,7 +99,7 @@ public sealed class EmailTemplateTests
     /// <see cref="EmailTemplate.GetFormattedSubject"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws an <see cref="IndexOutOfRangeException"/> since the parameters number
+    /// throws an <see cref="InvalidOperationException"/> since the parameters number
     /// is not equal to <see cref="EmailTemplate.SubjectPlaceholdersNumber"/>.
     /// </para>
     /// </summary>
@@ -118,7 +118,7 @@ public sealed class EmailTemplateTests
         // Act
 
         // Assert
-        Assert.Throws<IndexOutOfRangeException>(()
+        Assert.Throws<InvalidOperationException>(()
             => emailTemplate.GetFormattedSubject(parameters));
     }
 
@@ -153,7 +153,7 @@ public sealed class EmailTemplateTests
     /// <see cref="EmailTemplate.GetFormattedSubject"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
-    /// throws a <see cref="ArgumentException"/> since the
+    /// throws a <see cref="InvalidOperationException"/> since the
     /// <see cref="EmailTemplate.SubjectPlaceholderName"/> is <see langword="null"/>,
     /// <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> equals to 0,
     /// but input parameters number is not equal to 0.
@@ -174,7 +174,7 @@ public sealed class EmailTemplateTests
         // Act
 
         // Assert
-        Assert.Throws<ArgumentException>(()
+        Assert.Throws<InvalidOperationException>(()
             => emailTemplate.GetFormattedSubject(parameters));
     }
 

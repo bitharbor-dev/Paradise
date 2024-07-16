@@ -13,7 +13,8 @@ public sealed class UserRefreshTokensRepositoryTests : RepositoryTests<UserRefre
     /// <inheritdoc/>
     protected override UserRefreshToken GetTestEntity(Guid? id = null, DateTime? created = null, DateTime? modified = null)
     {
-        var userRefreshToken = new UserRefreshToken(Guid.Empty);
+        var ownerId = Guid.NewGuid();
+        var userRefreshToken = new UserRefreshToken(ownerId);
 
         if (id.HasValue)
             userRefreshToken.Id = id.Value;
