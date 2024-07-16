@@ -36,7 +36,7 @@ public sealed class EmailTemplatesRepositoryTests : RepositoryTests<EmailTemplat
         };
 
         Source.Add(template);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.GetByNameAndCultureAsync(template.TemplateName, template.Culture);
@@ -69,7 +69,7 @@ public sealed class EmailTemplatesRepositoryTests : RepositoryTests<EmailTemplat
         };
 
         Source.Add(template);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.GetByNameAndCultureAsync(string.Empty, null);

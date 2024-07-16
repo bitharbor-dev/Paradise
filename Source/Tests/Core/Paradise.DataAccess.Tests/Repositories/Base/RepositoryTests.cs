@@ -275,13 +275,13 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var created = DateTime.UtcNow;
 
         // Act
         await Repository.ForEachAsync(entry => entry.Created = created);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Assert
         Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Created == created));
@@ -307,7 +307,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var id = entity1.Id;
         var created = DateTime.UtcNow;
@@ -317,7 +317,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
 
         // Act
         await Repository.ForEachAsync(predicate, entry => entry.Created = created);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Assert
         Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));

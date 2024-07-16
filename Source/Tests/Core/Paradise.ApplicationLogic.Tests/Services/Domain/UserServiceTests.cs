@@ -2748,10 +2748,9 @@ public sealed class UserServiceTests
     {
         var firstEmail = SentEmailsCache.First();
 
-        return firstEmail.BodyArgs is not null
-            && firstEmail.BodyArgs.ElementAt(index) is T castedParameter
-            ? castedParameter
-            : throw new NullReferenceException();
+        var result = (T)firstEmail.BodyArgs!.ElementAt(index)!;
+
+        return result;
     }
     #endregion
 }

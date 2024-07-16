@@ -92,9 +92,9 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
                         }
                     case DataSetCache.EntryState.Removed:
                         {
-                            set.Remove(entry);
+                            if (set.Remove(entry))
+                                counter++;
 
-                            counter++;
                             break;
                         }
                     case DataSetCache.EntryState.Persisted:

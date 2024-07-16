@@ -193,7 +193,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         // Arrange
         var entity = GetTestEntity();
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.AnyAsync();
@@ -220,7 +220,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         // Arrange
         var entity = GetTestEntity();
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.AnyAsync(e => e.Id == Guid.Empty);
@@ -247,7 +247,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         // Arrange
         var entity = GetTestEntity();
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.AnyAsync(e => e.Id == entity.Id);
@@ -324,7 +324,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         // Arrange
         var entity = GetTestEntity();
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.CountAsync();
@@ -351,7 +351,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.CountAsync(e => e.Id == entity1.Id);
@@ -499,7 +499,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.FirstAsync();
@@ -547,7 +547,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.FirstAsync(e => e.Id == entity1.Id);
@@ -593,7 +593,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 
@@ -749,7 +749,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.FirstOrDefaultAsync();
@@ -800,7 +800,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.FirstOrDefaultAsync(e => e.Id == entity1.Id);
@@ -851,7 +851,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         // Arrange
         var entity = GetTestEntity();
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.FirstOrDefaultAsync(e => e.Id != entity.Id);
@@ -899,7 +899,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     {
         // Arrange
         Source.Add(GetTestEntity());
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = (await Repository.GetAllAsync()).Count;
@@ -981,7 +981,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.GetByIdAsync(entity.Id);
@@ -1009,7 +1009,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entityId = Guid.Empty;
 
         Source.Add(GetTestEntity());
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.GetByIdAsync(entityId);
@@ -1204,7 +1204,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var query = new PagedListQuery<TEntity>
         {
@@ -1240,7 +1240,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity1 = GetTestEntity();
         var entity2 = GetTestEntity();
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var query = new PagedListQuery<TEntity>
         {
@@ -1280,7 +1280,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
 
         var set = new[] { entity1, entity2 };
         Source.AddRange(set);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var query = new PagedListQuery<TEntity>
         {
@@ -1334,7 +1334,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
 
         Source.AddRange(firstPage);
         Source.AddRange(secondPage);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var query = new PagedListQuery<TEntity>
         {
@@ -1489,7 +1489,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.LastAsync();
@@ -1537,7 +1537,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.LastAsync(e => e.Id == entity2.Id);
@@ -1583,7 +1583,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 
@@ -1740,7 +1740,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.LastOrDefaultAsync();
@@ -1791,7 +1791,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.LastOrDefaultAsync(e => e.Id == entity2.Id);
@@ -1843,7 +1843,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.LastOrDefaultAsync(e => e.Id != entity.Id);
@@ -2039,7 +2039,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.SingleAsync();
@@ -2084,7 +2084,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 
@@ -2112,7 +2112,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.SingleAsync(e => e.Id == entity1.Id);
@@ -2159,7 +2159,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 
@@ -2184,7 +2184,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 
@@ -2436,7 +2436,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 
@@ -2464,7 +2464,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.SingleOrDefaultAsync(e => e.Id == entity1.Id);
@@ -2515,7 +2515,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         // Arrange
         var entity = GetTestEntity();
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
         var result = await Repository.SingleOrDefaultAsync(e => e.Id != entity.Id);
@@ -2541,7 +2541,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
         var entity2 = GetTestEntity();
 
         Source.AddRange([entity1, entity2]);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
 

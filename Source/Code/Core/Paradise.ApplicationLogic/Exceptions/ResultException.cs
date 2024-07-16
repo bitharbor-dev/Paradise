@@ -20,6 +20,28 @@ public sealed class ResultException : Exception
     internal ResultException() { }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="ResultException"/> class
+    /// with a specified error message.
+    /// </summary>
+    /// <param name="message">
+    /// <inheritdoc/>
+    /// </param>
+    internal ResultException(string message) : base(message) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ResultException"/> class
+    /// with a specified error message and a reference to the inner exception that is the
+    /// cause of this exception.
+    /// </summary>
+    /// <param name="message">
+    /// <inheritdoc/>
+    /// </param>
+    /// <param name="innerException">
+    /// <inheritdoc/>
+    /// </param>
+    internal ResultException(string message, Exception innerException) : base(message, innerException) { }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ResultException"/> class.
     /// </summary>
     /// <param name="statusCode">

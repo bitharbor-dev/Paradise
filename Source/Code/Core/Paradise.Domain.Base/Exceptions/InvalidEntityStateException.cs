@@ -15,6 +15,33 @@ public sealed class InvalidEntityStateException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="InvalidEntityStateException"/> class.
     /// </summary>
+    internal InvalidEntityStateException() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InvalidEntityStateException"/> class
+    /// with a specified error message.
+    /// </summary>
+    /// <param name="message">
+    /// <inheritdoc/>
+    /// </param>
+    internal InvalidEntityStateException(string? message) : base(message) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InvalidEntityStateException"/> class
+    /// with a specified error message and a reference to the inner exception that is the
+    /// cause of this exception.
+    /// </summary>
+    /// <param name="message">
+    /// <inheritdoc/>
+    /// </param>
+    /// <param name="innerException">
+    /// <inheritdoc/>
+    /// </param>
+    internal InvalidEntityStateException(string? message, Exception? innerException) : base(message, innerException) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InvalidEntityStateException"/> class.
+    /// </summary>
     /// <param name="entityType">
     /// Entity type.
     /// </param>
@@ -28,7 +55,7 @@ public sealed class InvalidEntityStateException : Exception
     /// Property name.
     /// </param>
     private InvalidEntityStateException(Type entityType, object? value, string? additionalInformation, string? propertyName)
-        : base(CreateExceptionMessage(entityType, value, propertyName, additionalInformation)) { }
+        : this(CreateExceptionMessage(entityType, value, propertyName, additionalInformation)) { }
     #endregion
 
     #region Public methods

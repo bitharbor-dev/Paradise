@@ -112,6 +112,8 @@ internal abstract class WorkerBase<TOptions> : IHostedService, IDisposable
         _optionsReloadToken?.Dispose();
         _executionTimer.Dispose();
 
+        _cancellationTokenSource?.Dispose();
+
         GC.SuppressFinalize(this);
     }
     #endregion

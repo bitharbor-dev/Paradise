@@ -152,7 +152,7 @@ public sealed class EmailTemplateServiceTests
         };
 
         Source.Add(template);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         var creationModel = new EmailTemplateCreationModel("Test", templateName, "Test")
         {
