@@ -29,10 +29,10 @@ public static class JwtEvents
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var authorizationService = GetAuthorizationService(context.HttpContext);
+        var authorizationService = context.HttpContext.GetAuthorizationService();
 
-        var wrapper = CreateWrapper(context);
-        var delegates = CreateDelegates(context);
+        var wrapper = context.CreateWrapper();
+        var delegates = context.CreateDelegates();
 
         return authorizationService.OnAuthenticationFailedAsync(wrapper, delegates);
     }
@@ -50,7 +50,7 @@ public static class JwtEvents
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var authorizationService = GetAuthorizationService(context.HttpContext);
+        var authorizationService = context.HttpContext.GetAuthorizationService();
 
         var wrapper = CreateWrapper(context);
 
@@ -70,10 +70,10 @@ public static class JwtEvents
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var authorizationService = GetAuthorizationService(context.HttpContext);
+        var authorizationService = context.HttpContext.GetAuthorizationService();
 
-        var wrapper = CreateWrapper(context);
-        var delegates = CreateDelegates(context);
+        var wrapper = context.CreateWrapper();
+        var delegates = context.CreateDelegates();
 
         return authorizationService.OnForbiddenAsync(wrapper, delegates);
     }
@@ -91,10 +91,10 @@ public static class JwtEvents
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var authorizationService = GetAuthorizationService(context.HttpContext);
+        var authorizationService = context.HttpContext.GetAuthorizationService();
 
-        var wrapper = CreateWrapper(context);
-        var delegates = CreateDelegates(context);
+        var wrapper = context.CreateWrapper();
+        var delegates = context.CreateDelegates();
 
         return authorizationService.OnMessageReceivedAsync(wrapper,
                                                            delegates,
@@ -115,10 +115,10 @@ public static class JwtEvents
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var authorizationService = GetAuthorizationService(context.HttpContext);
+        var authorizationService = context.HttpContext.GetAuthorizationService();
 
-        var wrapper = CreateWrapper(context);
-        var delegates = CreateDelegates(context);
+        var wrapper = context.CreateWrapper();
+        var delegates = context.CreateDelegates();
 
         return authorizationService.OnTokenValidatedAsync(wrapper,
                                                           context.Principal,
@@ -139,7 +139,7 @@ public static class JwtEvents
     /// <returns>
     /// A new <see cref="IAuthorizationService"/> instance.
     /// </returns>
-    private static IAuthorizationService GetAuthorizationService(HttpContext httpContext)
+    private static IAuthorizationService GetAuthorizationService(this HttpContext httpContext)
     {
         var serviceProvider = httpContext.RequestServices;
 
@@ -157,7 +157,7 @@ public static class JwtEvents
     /// <returns>
     /// A new <see cref="HttpResponseWrapper"/> instance.
     /// </returns>
-    private static HttpResponseWrapper CreateWrapper(BaseContext<JwtBearerOptions> context)
+    private static HttpResponseWrapper CreateWrapper(this BaseContext<JwtBearerOptions> context)
         => new(context.Response);
 
     /// <summary>
@@ -171,7 +171,7 @@ public static class JwtEvents
     /// <returns>
     /// A new <see cref="ResultContextDelegates"/> instance.
     /// </returns>
-    private static ResultContextDelegates CreateDelegates(ResultContext<JwtBearerOptions> context)
+    private static ResultContextDelegates CreateDelegates(this ResultContext<JwtBearerOptions> context)
         => new(context.Success, context.NoResult, context.Fail, context.Fail);
     #endregion
 }

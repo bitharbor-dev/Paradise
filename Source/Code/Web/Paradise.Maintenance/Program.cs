@@ -8,7 +8,7 @@ using Paradise.Options.Origins;
 
 static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
 {
-    var servicesBuilder = new WorkerServiceCollectionBuilder(services, JsonConfigurationOrigin.Default);
+    var servicesBuilder = new WorkerServiceCollectionBuilder(services, ConfigurationOrigin.Default);
 
     servicesBuilder.ConfigureRequiredServices();
 

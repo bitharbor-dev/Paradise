@@ -12,7 +12,7 @@ static WebApplication CreateApp(string[] args, out IConfiguration appSettings)
     var builder = WebApplication.CreateBuilder(args);
     builder.Configuration.AddEnvironmentVariables();
 
-    var configurationOrigin = JsonConfigurationOrigin.Default;
+    var configurationOrigin = ConfigurationOrigin.Default;
     var signingKeyProvider = new SecretBasedSigningKeyProvider(configurationOrigin.GetConfiguration());
     var servicesBuilder = new ApiServiceCollectionBuilder(builder.Services, configurationOrigin, signingKeyProvider);
 

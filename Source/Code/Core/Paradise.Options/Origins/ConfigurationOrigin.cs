@@ -5,15 +5,15 @@ using Paradise.Options.Origins.Options;
 namespace Paradise.Options.Origins;
 
 /// <summary>
-/// A JSON file configuration origin implementation.
+/// Default <see cref="IConfigurationOrigin{TOptions}"/> implementation.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="JsonConfigurationOrigin"/> class.
+/// Initializes a new instance of the <see cref="ConfigurationOrigin"/> class.
 /// </remarks>
 /// <param name="options">
 /// Configuration origin options.
 /// </param>
-public sealed class JsonConfigurationOrigin(JsonConfigurationOriginOptions? options = null) : IConfigurationOrigin<JsonConfigurationOriginOptions>
+public sealed class ConfigurationOrigin(ConfigurationOriginOptions? options = null) : IConfigurationOrigin<ConfigurationOriginOptions>
 {
     #region Fields
     private IConfiguration? _configuration;
@@ -21,12 +21,12 @@ public sealed class JsonConfigurationOrigin(JsonConfigurationOriginOptions? opti
 
     #region Properties
     /// <summary>
-    /// Default <see cref="JsonConfigurationOrigin"/> instance.
+    /// Default <see cref="ConfigurationOrigin"/> instance.
     /// </summary>
-    public static JsonConfigurationOrigin Default { get; } = new(JsonConfigurationOriginOptions.Default);
+    public static ConfigurationOrigin Default { get; } = new(ConfigurationOriginOptions.Default);
 
     /// <inheritdoc/>
-    public JsonConfigurationOriginOptions Options { get; } = options ?? JsonConfigurationOriginOptions.Default;
+    public ConfigurationOriginOptions Options { get; } = options ?? ConfigurationOriginOptions.Default;
     #endregion
 
     #region Public methods
@@ -37,13 +37,16 @@ public sealed class JsonConfigurationOrigin(JsonConfigurationOriginOptions? opti
             return _configuration;
 
         var builder = new ConfigurationBuilder()
-            .SetBasePath(Options.FilePath);
+            .SetBasePath(Options.JsonFilePath);
 
         if (Options.AddEnvironmentVariables)
             builder.AddEnvironmentVariables();
 
-        builder.AddJsonFile(Options.DefaultConfigurationName, false, true);
-        builder.AddJsonFile(Options.EnvironmentConfigurationName, true, true);
+        if (Options.AddCmmandLineArguments)
+            builder.AddCommandLine(Environment.GetCommandLineArgs());
+
+        builder.AddJsonFile(Options.DefaultJsonConfigurationName, false, true);
+        builder.AddJsonFile(Options.EnvironmentJsonConfigurationName, true, true);
 
         _configuration = builder.Build();
 

@@ -3,9 +3,9 @@
 namespace Paradise.Options.Origins.Options;
 
 /// <summary>
-/// JSON configuration origin options.
+/// Configuration origin options.
 /// </summary>
-public sealed class JsonConfigurationOriginOptions
+public sealed class ConfigurationOriginOptions
 {
     #region Constants
     /// <summary>
@@ -21,9 +21,9 @@ public sealed class JsonConfigurationOriginOptions
 
     #region Properties
     /// <summary>
-    /// Default <see cref="JsonConfigurationOriginOptions"/> instance.
+    /// Default <see cref="ConfigurationOriginOptions"/> instance.
     /// </summary>
-    public static JsonConfigurationOriginOptions Default { get; } = new();
+    public static ConfigurationOriginOptions Default { get; } = new();
 
     /// <summary>
     /// Environment name.
@@ -31,17 +31,17 @@ public sealed class JsonConfigurationOriginOptions
     public string EnvironmentName { get; set; } = EnvironmentNames.Current;
 
     /// <summary>
-    /// Configuration file path.
+    /// JSON configuration file path.
     /// </summary>
-    public string FilePath { get; set; } = AppContext.BaseDirectory;
+    public string JsonFilePath { get; set; } = AppContext.BaseDirectory;
 
     /// <summary>
-    /// Configuration file name.
+    /// JSON configuration file name.
     /// </summary>
     /// <remarks>
     /// Specify it without extension - ".json".
     /// </remarks>
-    public string FileName { get; set; } = DefaultOptionsFileName;
+    public string JsonFileName { get; set; } = DefaultOptionsFileName;
 
     /// <summary>
     /// Indicates whether the environment variables should be included
@@ -50,15 +50,21 @@ public sealed class JsonConfigurationOriginOptions
     public bool AddEnvironmentVariables { get; set; } = true;
 
     /// <summary>
-    /// Default configuration file name.
+    /// Indicates whether the CLI arguments should be included
+    /// into configuration.
     /// </summary>
-    public string DefaultConfigurationName
-        => $"{FileName}.{JsonFileExtension}";
+    public bool AddCmmandLineArguments { get; set; } = true;
 
     /// <summary>
-    /// Environment-specific configuration file name.
+    /// Default JSON configuration file name.
     /// </summary>
-    public string EnvironmentConfigurationName
-        => $"{FileName}.{EnvironmentName}.{JsonFileExtension}";
+    public string DefaultJsonConfigurationName
+        => $"{JsonFileName}.{JsonFileExtension}";
+
+    /// <summary>
+    /// Environment-specific JSON configuration file name.
+    /// </summary>
+    public string EnvironmentJsonConfigurationName
+        => $"{JsonFileName}.{EnvironmentName}.{JsonFileExtension}";
     #endregion
 }

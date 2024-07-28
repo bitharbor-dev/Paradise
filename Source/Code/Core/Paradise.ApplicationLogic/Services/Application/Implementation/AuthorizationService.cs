@@ -54,8 +54,12 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     : IAuthorizationService
 {
     #region Fields
+    private readonly ILogger<AuthorizationService> _logger = logger;
     private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
     private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
+    private readonly UserManager _userManager = userManager;
+    private readonly IUserRefreshTokensRepository _userRefreshTokensRepository = userRefreshTokensRepository;
+    private readonly IJsonWebTokenService _jsonWebTokenService = jsonWebTokenService;
     #endregion
 
     #region Public methods
@@ -101,7 +105,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 handleResponseDelegate();
             }
 
-            if (!jsonWebTokenService.ValidateFormat(token))
+            if (!_jsonWebTokenService.ValidateFormat(token))
             {
                 await WriteErrorResultAsync(response, Unauthorized, InvalidToken)
                     .ConfigureAwait(false);
@@ -158,13 +162,14 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var refreshToken = await userRefreshTokensRepository
+            var refreshToken = await _userRefreshTokensRepository
                 .GetByIdAsync(refreshTokenId)
                 .ConfigureAwait(false);
 
-            var tokenIsOutdated = refreshToken?.IsOutdated(_applicationOptions.Authentication.RefreshTokenLifetime) ?? true;
+            var tokenLifetime = _applicationOptions.Authentication.RefreshTokenLifetime;
+            var tokenIsOutdatedOrDoesNotExist = refreshToken?.IsOutdated(tokenLifetime) ?? true;
 
-            if (tokenIsOutdated)
+            if (tokenIsOutdatedOrDoesNotExist)
             {
                 var error = OutdatedToken;
                 var errorDescription = error.GetFormattedErrorDescription();
@@ -188,10 +193,9 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var user = await userManager
+            var user = await _userManager
                 .GetUserAsync(principal)
                 .ConfigureAwait(false);
-
             if (user is null)
             {
                 var error = TokenOwnerNotExists;
@@ -204,7 +208,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var roles = await userManager
+            var roles = await _userManager
                 .GetRolesAsync(user)
                 .ConfigureAwait(false);
 
@@ -276,7 +280,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// </param>
     private async Task WriteExceptionResultAsync(IHttpResponseWrapper response, Exception exception)
     {
-        logger.LogUnhandledException(exception);
+        _logger.LogUnhandledException(exception);
 
         if (response.HasStarted)
             return;
