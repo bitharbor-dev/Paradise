@@ -11,7 +11,7 @@ public sealed class AuthenticationOptions
     /// </summary>
     public static AuthenticationOptions Default { get; } = new()
     {
-        JsonWebTokenLifetime = TimeSpan.FromMinutes(5),
+        AccessTokenLifetime = TimeSpan.FromMinutes(5),
         RefreshTokenLifetime = TimeSpan.FromDays(90),
         TwoFactorTokenLifetime = TimeSpan.FromMinutes(30),
         TwoFactorVerificationCodeLength = 6
@@ -20,7 +20,7 @@ public sealed class AuthenticationOptions
     /// <summary>
     /// Authorization token lifetime.
     /// </summary>
-    public TimeSpan JsonWebTokenLifetime { get; set; }
+    public TimeSpan AccessTokenLifetime { get; set; }
 
     /// <summary>
     /// User refresh token lifetime.

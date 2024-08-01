@@ -42,7 +42,9 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
         overwrittenClaims.Add(new(JwtRegisteredClaimNames.Jti, refreshTokenId.ToString()));
 
         var creationTime = DateTime.UtcNow;
-        expiryDate = creationTime.Add(_applicationOptions.Authentication.JsonWebTokenLifetime);
+        var accessTokenLifetime = _applicationOptions.Authentication.AccessTokenLifetime;
+
+        expiryDate = creationTime.Add(accessTokenLifetime);
 
         var tokenParameters = _jwtBearerOptions.TokenValidationParameters;
 

@@ -119,7 +119,7 @@ public static class FakeInstancesProvider
             ApiUrl = new Uri("https://localhost:5001"),
             Authentication = new()
             {
-                JsonWebTokenLifetime = TimeSpan.FromSeconds(0.5),
+                AccessTokenLifetime = TimeSpan.FromSeconds(0.5),
                 RefreshTokenLifetime = TimeSpan.FromSeconds(0.5),
                 TwoFactorTokenLifetime = TimeSpan.FromSeconds(0.5),
                 TwoFactorVerificationCodeLength = 6
