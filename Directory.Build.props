@@ -1,0 +1,13 @@
+<Project>
+
+	<PropertyGroup Condition="'$(MSBuildProjectName)' != 'Paradise.Docker'">
+		<BaseIntermediateOutputPath>..\..\..\..\.obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+		<BaseOutputPath>..\..\..\..\.bin\$(MSBuildProjectName)</BaseOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Paradise.Docker'">
+		<BaseIntermediateOutputPath>..\..\..\.obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+		<BaseOutputPath>..\..\..\.bin\$(MSBuildProjectName)</BaseOutputPath>
+	</PropertyGroup>
+
+</Project>
