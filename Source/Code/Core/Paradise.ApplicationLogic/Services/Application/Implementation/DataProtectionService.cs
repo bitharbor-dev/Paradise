@@ -2,7 +2,6 @@
 using Paradise.Common.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 
 namespace Paradise.ApplicationLogic.Services.Application.Implementation;
@@ -24,6 +23,11 @@ public sealed class DataProtectionService(IDataProtectionProvider dataProtection
     /// Default data protection purpose.
     /// </summary>
     public const string DataProtectionPurpose = "DataProtection";
+
+    /// <summary>
+    /// The "All digit" string used to generate random digit codes.
+    /// </summary>
+    private const string Digits = "0123456789";
     #endregion
 
     #region Fields
@@ -63,13 +67,6 @@ public sealed class DataProtectionService(IDataProtectionProvider dataProtection
 
     /// <inheritdoc/>
     public string GenerateRandomDigitCode(ushort length)
-    {
-        var builder = new StringBuilder();
-
-        for (var index = 0; index < length; index++)
-            builder.Append(RandomNumberGenerator.GetInt32(0, 10));
-
-        return builder.ToString();
-    }
+        => RandomNumberGenerator.GetString(Digits, length);
     #endregion
 }
