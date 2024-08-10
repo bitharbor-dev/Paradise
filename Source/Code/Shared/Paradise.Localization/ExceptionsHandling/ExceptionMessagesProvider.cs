@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using System.Text;
+using static System.Text.CompositeFormat;
 using static Paradise.Localization.ExceptionsHandling.ExceptionMessages;
 
 namespace Paradise.Localization.ExceptionsHandling;
@@ -15,6 +17,31 @@ public static class ExceptionMessagesProvider
     private const string EnvironmentNamesSeparator = ", ";
     #endregion
 
+    #region Fields
+    private static readonly CompositeFormat _applicationSecretMissing                   = Parse(ApplicationSecretMissing);
+    private static readonly CompositeFormat _changeTimerFailed                          = Parse(ChangeTimerFailed);
+    private static readonly CompositeFormat _emailTemplateSubjectInInvalidState         = Parse(EmailTemplateSubjectInInvalidState);
+    private static readonly CompositeFormat _failedToCast                               = Parse(FailedToCast);
+    private static readonly CompositeFormat _failedToCreateInstanceOfType               = Parse(FailedToCreateInstanceOfType);
+    private static readonly CompositeFormat _failedToDeserialize                        = Parse(FailedToDeserialize);
+    private static readonly CompositeFormat _invalidClockWorkerInterval                 = Parse(InvalidClockWorkerInterval);
+    private static readonly CompositeFormat _invalidEntityStateAdditionalInformation    = Parse(InvalidEntityStateAdditionalInformation);
+    private static readonly CompositeFormat _invalidEmailAddress                        = Parse(InvalidEmailAddress);
+    private static readonly CompositeFormat _invalidEntityState                         = Parse(InvalidEntityState);
+    private static readonly CompositeFormat _invalidEnvironmentName                     = Parse(InvalidEnvironmentName);
+    private static readonly CompositeFormat _invalidEqualityComparerConstructor         = Parse(InvalidEqualityComparerConstructor);
+    private static readonly CompositeFormat _invalidEqualityComparerType                = Parse(InvalidEqualityComparerType);
+    private static readonly CompositeFormat _invalidParametersNumber                    = Parse(InvalidParametersNumber);
+    private static readonly CompositeFormat _invalidPropertyType                        = Parse(InvalidPropertyType);
+    private static readonly CompositeFormat _ivalidSeedData                             = Parse(IvalidSeedData);
+    private static readonly CompositeFormat _invalidSwaggerConfiguration                = Parse(InvalidSwaggerConfiguration);
+    private static readonly CompositeFormat _messageTemplateTextInInvalidState          = Parse(MessageTemplateTextInInvalidState);
+    private static readonly CompositeFormat _placeholderNotExists                       = Parse(PlaceholderNotExists);
+    private static readonly CompositeFormat _propertyNotDeclared                        = Parse(PropertyNotDeclared);
+    private static readonly CompositeFormat _templateTextOrSourcePathIsRequired         = Parse(TemplateTextOrSourcePathIsRequired);
+    private static readonly CompositeFormat _valueCanNotBeLessOrEqualToZero             = Parse(ValueCanNotBeLessOrEqualToZero);
+    #endregion
+
     #region Public methods
     /// <summary>
     /// Gets the <see cref="ApplicationSecretMissing"/> formatted message.
@@ -23,7 +50,16 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="ApplicationSecretMissing"/> format string.
     /// </returns>
     public static string GetApplicationSecretMissingMessage()
-        => ApplicationSecretMissing;
+        => _applicationSecretMissing.Format;
+
+    /// <summary>
+    /// Gets the <see cref="ChangeTimerFailed"/> formatted message.
+    /// </summary>
+    /// <returns>
+    /// A formatted message using the <see cref="ChangeTimerFailed"/> format string.
+    /// </returns>
+    public static string GetChangeTimerFailedMessage()
+        => _changeTimerFailed.Format;
 
     /// <summary>
     /// Gets the <see cref="EmailTemplateSubjectInInvalidState"/> formatted message.
@@ -32,7 +68,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="EmailTemplateSubjectInInvalidState"/> format string.
     /// </returns>
     public static string GetEmailTemplateSubjectInInvalidStateMessage()
-        => EmailTemplateSubjectInInvalidState;
+        => _emailTemplateSubjectInInvalidState.Format;
 
     /// <summary>
     /// Gets the <see cref="FailedToCast"/> formatted message.
@@ -50,7 +86,7 @@ public static class ExceptionMessagesProvider
     {
         ArgumentNullException.ThrowIfNull(expectedType);
 
-        var messageFormat = FailedToCast;
+        var messageFormat = _failedToCast;
         var actualTypeName = actualType?.Name;
         var expectedTypeName = expectedType.Name;
 
@@ -71,7 +107,7 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetFailedToCreateInstanceOfTypeMessage(Type type)
     {
-        var messageFormat = FailedToCreateInstanceOfType;
+        var messageFormat = _failedToCreateInstanceOfType;
         var typeName = type?.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -90,7 +126,7 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetFailedToDeserializeMessage(Type type)
     {
-        var messageFormat = FailedToDeserialize;
+        var messageFormat = _failedToDeserialize;
         var typeName = type?.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -105,7 +141,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="InvalidClockWorkerInterval"/> format string.
     /// </returns>
     public static string GetInvalidClockWorkerIntervalMessage()
-        => InvalidClockWorkerInterval;
+        => _invalidClockWorkerInterval.Format;
 
     /// <summary>
     /// Gets the <see cref="InvalidEntityStateAdditionalInformation"/> formatted message.
@@ -114,7 +150,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="InvalidEntityStateAdditionalInformation"/> format string.
     /// </returns>
     public static string GetInvalidEntityStateAdditionalInformationMessage()
-        => InvalidEntityStateAdditionalInformation;
+        => _invalidEntityStateAdditionalInformation.Format;
 
     /// <summary>
     /// Gets the <see cref="InvalidEmailAddress"/> formatted message.
@@ -127,7 +163,7 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetInvalidEmailAddressMessage(string email)
     {
-        var messageFromat = InvalidEmailAddress;
+        var messageFromat = _invalidEmailAddress;
 
         return string.Format(CultureInfo.CurrentCulture,
                              messageFromat,
@@ -153,7 +189,7 @@ public static class ExceptionMessagesProvider
     {
         ArgumentNullException.ThrowIfNull(entityType);
 
-        var messageFormat = InvalidEntityState;
+        var messageFormat = _invalidEntityState;
         var entityTypeName = entityType.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -177,7 +213,7 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetInvalidEnvironmentNameMessage(IEnumerable<string> allowedEnvironments, string? currentEnvironment)
     {
-        var messageFormat = InvalidEnvironmentName;
+        var messageFormat = _invalidEnvironmentName;
         var environments = string.Join(EnvironmentNamesSeparator, allowedEnvironments);
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -199,7 +235,7 @@ public static class ExceptionMessagesProvider
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        var messageFormat = InvalidEqualityComparerConstructor;
+        var messageFormat = _invalidEqualityComparerConstructor;
         var typeName = type.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -220,7 +256,7 @@ public static class ExceptionMessagesProvider
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        var messageFormat = InvalidEqualityComparerType;
+        var messageFormat = _invalidEqualityComparerType;
         var typeName = type.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -235,7 +271,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="InvalidParametersNumber"/> format string.
     /// </returns>
     public static string GetInvalidParametersNumberMessage()
-        => InvalidParametersNumber;
+        => _invalidParametersNumber.Format;
 
     /// <summary>
     /// Gets the <see cref="InvalidPropertyType"/> formatted message.
@@ -244,7 +280,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="InvalidPropertyType"/> format string.
     /// </returns>
     public static string GetInvalidPropertyTypeMessage()
-        => InvalidPropertyType;
+        => _invalidPropertyType.Format;
 
     /// <summary>
     /// Gets the <see cref="IvalidSeedData"/> formatted message.
@@ -253,7 +289,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="IvalidSeedData"/> format string.
     /// </returns>
     public static string GetIvalidSeedDataMessage()
-        => IvalidSeedData;
+        => _ivalidSeedData.Format;
 
     /// <summary>
     /// Gets the <see cref="InvalidSwaggerConfiguration"/> formatted message.
@@ -262,7 +298,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="InvalidSwaggerConfiguration"/> format string.
     /// </returns>
     public static string GetInvalidSwaggerConfigurationMessage()
-        => InvalidSwaggerConfiguration;
+        => _invalidSwaggerConfiguration.Format;
 
     /// <summary>
     /// Gets the <see cref="MessageTemplateTextInInvalidState"/> formatted message.
@@ -271,7 +307,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="MessageTemplateTextInInvalidState"/> format string.
     /// </returns>
     public static string GetMessageTemplateTextInInvalidStateMessage()
-        => MessageTemplateTextInInvalidState;
+        => _messageTemplateTextInInvalidState.Format;
 
     /// <summary>
     /// Gets the <see cref="PlaceholderNotExists"/> formatted message.
@@ -290,7 +326,7 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetPlaceholderNotExistsMessage(string templateName, CultureInfo? culture, string? placeholder)
     {
-        var messageFormat = PlaceholderNotExists;
+        var messageFormat = _placeholderNotExists;
         var cultureName = culture?.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -316,7 +352,7 @@ public static class ExceptionMessagesProvider
     {
         ArgumentNullException.ThrowIfNull(entityType);
 
-        var messageFormat = PropertyNotDeclared;
+        var messageFormat = _propertyNotDeclared;
         var entityTypeName = entityType.Name;
 
         return string.Format(CultureInfo.CurrentCulture,
@@ -332,7 +368,7 @@ public static class ExceptionMessagesProvider
     /// A formatted message using the <see cref="TemplateTextOrSourcePathIsRequired"/> format string.
     /// </returns>
     public static string GetTemplateTextOrSourcePathIsRequiredMessage()
-        => TemplateTextOrSourcePathIsRequired;
+        => _templateTextOrSourcePathIsRequired.Format;
 
     /// <summary>
     /// Gets the <see cref="ValueCanNotBeLessOrEqualToZero"/> formatted message.
@@ -345,20 +381,11 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetValueCanNotBeLessOrEqualToZeroMessage(string? propertyName)
     {
-        var messageFormat = ValueCanNotBeLessOrEqualToZero;
+        var messageFormat = _valueCanNotBeLessOrEqualToZero;
 
         return string.Format(CultureInfo.CurrentCulture,
                              messageFormat,
                              propertyName);
     }
-
-    /// <summary>
-    /// Gets the <see cref="ChangeTimerFailed"/> formatted message.
-    /// </summary>
-    /// <returns>
-    /// A formatted message using the <see cref="ChangeTimerFailed"/> format string.
-    /// </returns>
-    public static string GetChangeTimerFailedMessage()
-        => ChangeTimerFailed;
     #endregion
 }

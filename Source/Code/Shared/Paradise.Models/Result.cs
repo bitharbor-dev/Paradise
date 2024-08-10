@@ -91,6 +91,9 @@ public class Result : IActionResult
     /// <summary>
     /// Gets or sets the HTTP status code.
     /// </summary>
+    /// <remarks>
+    /// Cannot be set back to <see langword="null"/> once retrieved the actual value.
+    /// </remarks>
     public HttpStatusCode? StatusCode
     {
         get => _statusCode;

@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using System.Text;
+using static System.Text.CompositeFormat;
 using static Paradise.Localization.DataValidation.ValidationMessages;
 
 namespace Paradise.Localization.DataValidation;
@@ -15,6 +17,11 @@ public static class ValidationMessagesProvider
     private const string PropertyNamesSeparator = ", ";
     #endregion
 
+    #region Fields
+    private static readonly CompositeFormat _objectIsNull       = Parse(ObjectIsNull);
+    private static readonly CompositeFormat _requiredAtLeastOne = Parse(RequiredAtLeastOne);
+    #endregion
+
     #region Public methods
     /// <summary>
     /// Gets the <see cref="ObjectIsNull"/> formatted message.
@@ -27,7 +34,7 @@ public static class ValidationMessagesProvider
     /// </returns>
     public static string GetObjectIsNullMessage(string parameterName)
     {
-        var messageFormat = ObjectIsNull;
+        var messageFormat = _objectIsNull;
 
         return string.Format(CultureInfo.CurrentCulture,
                              messageFormat,
@@ -45,7 +52,7 @@ public static class ValidationMessagesProvider
     /// </returns>
     public static string GetRequiredAtLeastOneMessage(params string[] propertyNames)
     {
-        var messageFormat = RequiredAtLeastOne;
+        var messageFormat = _requiredAtLeastOne;
         var properties = string.Join(PropertyNamesSeparator, propertyNames);
 
         return string.Format(CultureInfo.CurrentCulture,
