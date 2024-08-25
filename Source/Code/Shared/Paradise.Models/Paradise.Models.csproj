@@ -10,6 +10,7 @@
 
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
@@ -21,7 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.8" />
 	</ItemGroup>
 
 	<ItemGroup>
