@@ -1,16 +1,17 @@
 trigger:
 - main
+- staging
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-
-  - group: 'maintenance-main'
-
   - name: 'buildConfiguration'
-    value: 'Debug'
     readonly: true
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: 'Release'
+    ${{ else }}:
+      value: 'Debug'
 
 steps:
 
@@ -32,29 +33,36 @@ steps:
     command: 'test'
     arguments: --collect:"Code Coverage"
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Publish Web API project'
-#   inputs:
-#     command: 'publish'
-#     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-#     modifyOutputPath: true
-#     zipAfterPublish: true
-#     publishWebProjects: false
-#     projects: '**/*.WebApi.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Web API project'
+  inputs:
+    command: 'publish'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/WebApi'
+    modifyOutputPath: true
+    zipAfterPublish: true
+    publishWebProjects: false
+    projects: '**/*.WebApi.csproj'
 
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Upload Web API build'
-#   inputs:
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#     ArtifactName: 'WebApi'
-#     publishLocation: 'Container'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Worker Service project'
+  inputs:
+    command: 'publish'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/Maintenance'
+    modifyOutputPath: true
+    zipAfterPublish: true
+    publishWebProjects: false
+    projects: '**/*.Maintenance.csproj'
 
-# - task: Docker@2
-#   displayName: 'Build and upload Maintenance project'
-#   inputs:
-#     containerRegistry: '$(containerRegistry_ConnecitonName)'
-#     repository: '$(containerRegistry_RepositoryName)'
-#     command: 'buildAndPush'
-#     Dockerfile: '**/*.Maintenance/Dockerfile'
-#     buildContext: '.'
-#     tags:
+- task: PublishBuildArtifacts@1
+  displayName: 'Upload Web API build'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/WebApi'
+    ArtifactName: 'WebApi'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Upload Worker Service build'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Maintenance'
+    ArtifactName: 'Maintenance'
+    publishLocation: 'Container'
