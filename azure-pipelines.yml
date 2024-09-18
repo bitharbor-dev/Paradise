@@ -16,7 +16,7 @@ variables:
 steps:
 
 - task: UseDotNet@2
-  displayName: 'Download .NET 8 SDK'
+  displayName: 'Download .NET SDK'
   inputs:
     packageType: 'sdk'
     version: '9.x'
