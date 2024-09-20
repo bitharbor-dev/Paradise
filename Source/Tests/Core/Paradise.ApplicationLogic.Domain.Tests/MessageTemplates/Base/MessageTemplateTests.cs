@@ -1,4 +1,6 @@
-﻿namespace Paradise.ApplicationLogic.Domain.Tests.MessageTemplates.Base;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Paradise.ApplicationLogic.Domain.Tests.MessageTemplates.Base;
 
 /// <summary>
 /// Test class for the <see cref="MessageTemplate"/>.
@@ -18,6 +20,7 @@ public sealed class MessageTemplateTests
     /// </para>
     /// </para>
     /// </summary>
+    [SuppressMessage("Usage", "xUnit1045:Avoid using TheoryData type arguments that might not be serializable")]
     [Theory, MemberData(nameof(GetFormattedText_MemberData))]
     public void GetFormattedText(string templateText, string? placeholderName, ushort placeholdersNumber, IList<object?> parameters)
     {

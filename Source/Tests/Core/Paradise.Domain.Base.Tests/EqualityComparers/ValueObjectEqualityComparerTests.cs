@@ -1,4 +1,6 @@
-﻿namespace Paradise.Domain.Base.Tests.EqualityComparers;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Paradise.Domain.Base.Tests.EqualityComparers;
 
 /// <summary>
 /// Test class for the <see cref="ValueObjectEqualityComparer"/>.
@@ -86,6 +88,7 @@ public sealed class ValueObjectEqualityComparerTests
     /// </para>
     /// </para>
     /// </summary>
+    [SuppressMessage("Usage", "xUnit1044:Avoid using TheoryData type arguments that are not serializable")]
     [Theory, MemberData(nameof(Equals_ReturnsFalseOnNullArgument_MemberData))]
     public void Equals_ReturnsFalseOnNullArgument(FakeValueObject1? a, FakeValueObject1? b)
     {
