@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Identity;
 using Paradise.ApplicationLogic.Services.Application;
 using Paradise.ApplicationLogic.Services.Application.Implementation;
+using Paradise.Common.Extensions;
 using Paradise.DataAccess.Database;
 using Paradise.DataAccess.Repositories;
 using Paradise.DataAccess.Repositories.Application;
@@ -36,6 +37,13 @@ namespace Paradise.DependencyInjection.Base;
 /// </param>
 public abstract class ServiceCollectionBuilderCore(IServiceCollection services, IConfigurationOrigin configurationOrigin) : ServiceCollectionBuilderBase(services, configurationOrigin)
 {
+    #region Constants
+    /// <summary>
+    /// The application name.
+    /// </summary>
+    private const string ApplicationName = "Paradise";
+    #endregion
+
     #region Protected methods
     /// <inheritdoc/>
     protected override void AddMiscellaneous()
@@ -57,7 +65,7 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
         Services.AddScoped<ISeedDataProvider, JsonSeedDataProvider>();
 
         Services.AddDataProtection()
-                .SetApplicationName(nameof(Paradise))
+                .SetApplicationName(ApplicationName)
                 .PersistKeysToDbContext<ApplicationContext>();
 
         Services.AddLogging();
@@ -96,7 +104,7 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
             validateDataAnnotations: true);
 
         void SetUpIdentity(IdentityOptions options)
-            => Configuration.GetRequiredSection(nameof(IdentityOptions)).Bind(options);
+            => Configuration.BindSection(options);
 
         Services.AddIdentity<User, Role>(SetUpIdentity)
             .AddEntityFrameworkStores<DomainContext>()

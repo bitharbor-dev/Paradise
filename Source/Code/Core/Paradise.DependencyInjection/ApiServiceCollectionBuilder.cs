@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Authorization.JwtBearer;
 using Paradise.ApplicationLogic.Authorization.JwtBearer.Keys;
@@ -9,6 +8,7 @@ using Paradise.ApplicationLogic.Services.Application;
 using Paradise.ApplicationLogic.Services.Application.Implementation;
 using Paradise.ApplicationLogic.Services.Domain;
 using Paradise.ApplicationLogic.Services.Domain.Implementation;
+using Paradise.Common.Extensions;
 using Paradise.DependencyInjection.Base;
 using Paradise.Options.Models.Communication;
 using Paradise.Options.Origins.Base;
@@ -86,7 +86,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                Configuration.GetRequiredSection(nameof(JwtBearerOptions)).Bind(options);
+                Configuration.BindSection(options);
                 SetJwtIssuerSigningKey(options);
 
                 options.Events = new()

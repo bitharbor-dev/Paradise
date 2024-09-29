@@ -68,7 +68,7 @@ internal static class SwaggerConfigurator
     /// </param>
     public static void Configure(this SwaggerUIOptions options, IConfiguration configuration)
     {
-        configuration.GetRequiredSection(nameof(SwaggerUIOptions)).Bind(options);
+        configuration.BindSection(options);
 
         var name = configuration.GetValue<string>(SwaggerEndpointName);
         var url = configuration.GetValue<string>(SwaggerEndpointUrl);
