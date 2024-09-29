@@ -1,0 +1,7 @@
+# Integration with Issue Tracker
+#
+# (note that '\' need to be escaped).
+
+[issuetracker "Azure Boards"]
+  regex = "#(\\d+)"
+  url = "https://dev.azure.com/bitharbor-rnd/Paradise/_workitems/edit/$1"
