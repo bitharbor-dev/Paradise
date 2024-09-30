@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Paradise.DataAccess.Database.ChangeTracking;
 using Paradise.DataAccess.Database.Configuration;
 using Paradise.DataAccess.Repositories;
 using Paradise.DataAccess.Repositories.Base;
@@ -20,10 +19,6 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDat
     public const string ConnectionStringName = "ApplicationConnectionString";
     #endregion
 
-    #region Fields
-    private bool _disposed;
-    #endregion
-
     #region Constructors
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationContext"/> class
@@ -33,12 +28,7 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDat
     /// The options to be used by an <see cref="ApplicationContext"/>.
     /// </param>
     public ApplicationContext([NotNull] DbContextOptions<ApplicationContext> options) : base(options)
-    {
-        ChangeTracker.Tracked += ChangeTrackerEvents.OnTracked;
-        ChangeTracker.StateChanged += ChangeTrackerEvents.OnStateChanged;
-
-        DataProtectionKeys = Set<DataProtectionKey>();
-    }
+        => DataProtectionKeys = Set<DataProtectionKey>();
     #endregion
 
     #region Properties
@@ -47,30 +37,6 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDat
     #endregion
 
     #region Public methods
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    /// <remarks>
-    /// <inheritdoc/>
-    /// <para>
-    /// Using "disposed" flag provides temporary fix for GitHub issue
-    /// <see href="https://github.com/dotnet/runtime/issues/91179">#91179</see>
-    /// </para>
-    /// </remarks>
-    public override void Dispose()
-    {
-        if (_disposed)
-            return;
-
-        ChangeTracker.Tracked -= ChangeTrackerEvents.OnTracked;
-        ChangeTracker.StateChanged -= ChangeTrackerEvents.OnStateChanged;
-
-        base.Dispose();
-
-        GC.SuppressFinalize(this);
-
-        _disposed = true;
-    }
 
     #region IDataSource
     /// <inheritdoc/>

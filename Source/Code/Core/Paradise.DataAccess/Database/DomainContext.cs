@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Paradise.DataAccess.Database.ChangeTracking;
 using Paradise.DataAccess.Database.Configuration;
 using Paradise.DataAccess.Repositories;
 using Paradise.DataAccess.Repositories.Base;
@@ -13,7 +12,13 @@ namespace Paradise.DataAccess.Database;
 /// <summary>
 /// Manages all domain entities.
 /// </summary>
-public sealed class DomainContext : IdentityDbContext<User, Role, Guid>, IDomainDataSource
+/// <remarks>
+/// Initializes a new instance of the <see cref="DomainContext"/> class.
+/// </remarks>
+/// <param name="options">
+/// The options to be used by a <see cref="DomainContext"/>.
+/// </param>
+public sealed class DomainContext([NotNull] DbContextOptions<DomainContext> options) : IdentityDbContext<User, Role, Guid>(options), IDomainDataSource
 {
     #region Constants
     /// <summary>
@@ -22,31 +27,7 @@ public sealed class DomainContext : IdentityDbContext<User, Role, Guid>, IDomain
     public const string ConnectionStringName = "DomainConnectionString";
     #endregion
 
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DomainContext"/> class.
-    /// </summary>
-    /// <param name="options">
-    /// The options to be used by a <see cref="DomainContext"/>.
-    /// </param>
-    public DomainContext([NotNull] DbContextOptions<DomainContext> options) : base(options)
-    {
-        ChangeTracker.Tracked += ChangeTrackerEvents.OnTracked;
-        ChangeTracker.StateChanged += ChangeTrackerEvents.OnStateChanged;
-    }
-    #endregion
-
     #region Public methods
-    /// <inheritdoc/>
-    public override void Dispose()
-    {
-        ChangeTracker.Tracked -= ChangeTrackerEvents.OnTracked;
-        ChangeTracker.StateChanged -= ChangeTrackerEvents.OnStateChanged;
-
-        base.Dispose();
-
-        GC.SuppressFinalize(this);
-    }
 
     #region IDataSource
     /// <inheritdoc/>

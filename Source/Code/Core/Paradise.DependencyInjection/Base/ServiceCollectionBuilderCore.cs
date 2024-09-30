@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Identity;
@@ -8,6 +9,8 @@ using Paradise.ApplicationLogic.Services.Application;
 using Paradise.ApplicationLogic.Services.Application.Implementation;
 using Paradise.Common.Extensions;
 using Paradise.DataAccess.Database;
+using Paradise.DataAccess.Database.Interceptors;
+using Paradise.DataAccess.Database.Interceptors.Base;
 using Paradise.DataAccess.Repositories;
 using Paradise.DataAccess.Repositories.Application;
 using Paradise.DataAccess.Repositories.Application.Implementation;
@@ -118,6 +121,10 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
     /// </summary>
     private void AddDbContexts()
     {
+        Services.AddSingleton<IInterceptor, ValidateStateInterceptor>();
+        Services.AddSingleton<IInterceptor, SetCreatedInterceptor>();
+        Services.AddSingleton<IInterceptor, SetModifiedInterceptor>();
+
         AddDbContext<IApplicationDataSource, ApplicationContext>(ApplicationContext.ConnectionStringName);
         AddDbContext<IDomainDataSource, DomainContext>(DomainContext.ConnectionStringName);
     }
@@ -138,10 +145,25 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
     private void AddDbContext<TContextService, TContextImplementation>(string connectionStringName)
         where TContextImplementation : DbContext, TContextService
     {
-        var connectionString = Configuration.GetConnectionString(connectionStringName);
+        void ConfigureDbContextOptions(IServiceProvider serviceProvider, DbContextOptionsBuilder builder)
+        {
+            var connectionString = Configuration.GetConnectionString(connectionStringName);
+            var interceptors = serviceProvider.GetService<IEnumerable<IInterceptor>>();
 
-        Services.AddDbContext<TContextService, TContextImplementation>(
-            options => options.UseSqlServer(connectionString));
+            builder.UseSqlServer(connectionString);
+
+            if (interceptors is not null)
+            {
+                var interceptorsToAdd = interceptors
+                    .Where(interceptor => interceptor is not IDbContextSpecificInterceptor specificInterceptor
+                                       || specificInterceptor.DbContextType == typeof(TContextService)
+                                       || specificInterceptor.DbContextType == typeof(TContextImplementation));
+
+                builder.AddInterceptors(interceptorsToAdd);
+            }
+        }
+
+        Services.AddDbContext<TContextService, TContextImplementation>(ConfigureDbContextOptions);
     }
     #endregion
 }

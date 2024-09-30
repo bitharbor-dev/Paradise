@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
-using static System.Text.CompositeFormat;
 using static Paradise.Localization.DataValidation.ValidationMessages;
+using static System.Text.CompositeFormat;
 
 namespace Paradise.Localization.DataValidation;
 
