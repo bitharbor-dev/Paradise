@@ -52,7 +52,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
             validateDataAnnotations: true);
 
         AddOptions<JwtBearerOptions>(
-            postConfigure: SetJwtIssuerSigningKey,
+            postConfigure: SetSigningKeyAndAlgorithm,
             validateOnStartup: true,
             validateDataAnnotations: true);
 
@@ -87,7 +87,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
             .AddJwtBearer(options =>
             {
                 Configuration.BindSection(options);
-                SetJwtIssuerSigningKey(options);
+                SetSigningKeyAndAlgorithm(options);
 
                 options.Events = new()
                 {
@@ -104,7 +104,19 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
         Services.AddScoped<IAuthorizationService, AuthorizationService>();
     }
 
-    private void SetJwtIssuerSigningKey(JwtBearerOptions options)
-        => options.TokenValidationParameters.IssuerSigningKey = signingKeyProvider.GetSigningKey();
+    private void SetSigningKeyAndAlgorithm(JwtBearerOptions options)
+    {
+        var algorithmPropertyName = nameof(IJwtSigningKeyProvider.JwtAlgorithm);
+        var algorithmPropertyValue = signingKeyProvider.JwtAlgorithm;
+
+        var parameters = options.TokenValidationParameters;
+
+        parameters.PropertyBag = new Dictionary<string, object?>
+        {
+            { algorithmPropertyName, algorithmPropertyValue }
+        };
+
+        parameters.IssuerSigningKey = signingKeyProvider.GetSigningKey();
+    }
     #endregion
 }

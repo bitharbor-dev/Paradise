@@ -40,4 +40,9 @@ public sealed class SecretBasedSigningKeyProvider(IConfiguration configuration) 
         return key;
     }
     #endregion
+
+    #region Properties
+    /// <inheritdoc/>
+    public string JwtAlgorithm { get; } = SecurityAlgorithms.HmacSha256;
+    #endregion
 }

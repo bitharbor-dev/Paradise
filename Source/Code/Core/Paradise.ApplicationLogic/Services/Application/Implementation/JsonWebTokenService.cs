@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Paradise.ApplicationLogic.Authorization.JwtBearer.Keys;
 using Paradise.Common.Extensions;
 using Paradise.Options.Models;
 using System.Diagnostics.CodeAnalysis;
@@ -57,7 +58,7 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
             NotBefore = creationTime,
             Expires = expiryDate,
             Issuer = tokenParameters.ValidIssuer,
-            SigningCredentials = new(tokenParameters.IssuerSigningKey, SecurityAlgorithms.HmacSha256)
+            SigningCredentials = new(tokenParameters.IssuerSigningKey, GetAlgorithm(tokenParameters))
         });
 
         return handler.WriteToken(token);
@@ -103,6 +104,17 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
         {
             return false;
         }
+    }
+    #endregion
+
+    #region Private methods
+    private static string GetAlgorithm(TokenValidationParameters parameters)
+    {
+        var algorithm = parameters.PropertyBag[nameof(IJwtSigningKeyProvider.JwtAlgorithm)]?.ToString();
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(algorithm);
+
+        return algorithm;
     }
     #endregion
 }

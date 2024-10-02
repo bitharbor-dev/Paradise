@@ -17,8 +17,8 @@
     "Host": "smtp",
     "Port": 25,
     "StoreEmailsInsteadOfSending": true // With this setting set to 'true' no real credentials are required for application
-                                        // to be working properly, since all emails would be stored in the application
-                                        // directory, instead of actual sending over the Internet. Yet, a dummy email address
-                                        // is required to be set into SmtpOptions:Credentials:UserName.
+    //                                     to be working properly, since all emails would be stored in the application
+    //                                     directory, instead of actual sending over the Internet. Yet, a dummy email address
+    //                                     is required to be set into SmtpOptions:Credentials:UserName.
   }
 }

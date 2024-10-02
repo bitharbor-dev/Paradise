@@ -17,4 +17,11 @@ public interface IJwtSigningKeyProvider
     /// </returns>
     SecurityKey GetSigningKey();
     #endregion
+
+    #region Properties
+    /// <summary>
+    /// The signature algorithm to apply.
+    /// </summary>
+    public string JwtAlgorithm { get; }
+    #endregion
 }

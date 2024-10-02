@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Common.Extensions;
 
@@ -28,6 +29,36 @@ public static class IConfigurationExtensions
         var section = configuration.GetRequiredSection(sectionName);
 
         section.Bind(instance);
+    }
+
+    /// <summary>
+    /// Gets the value of type <typeparamref name="T"/>
+    /// from the input <paramref name="configuration"/>.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Value type.
+    /// </typeparam>
+    /// <param name="configuration">
+    /// The configuration in which to look for a value.
+    /// </param>
+    /// <returns>
+    /// The value of type <typeparamref name="T"/>,
+    /// retrieved from the input <paramref name="configuration"/>.
+    /// </returns>
+    public static T GetRequiredInstance<T>(this IConfiguration configuration)
+    {
+        var instanceType = typeof(T);
+
+        var instance = configuration.GetRequiredSection(instanceType.Name).Get<T>();
+
+        if (instance is null)
+        {
+            var message = GetFailedToCreateInstanceOfTypeMessage(instanceType);
+
+            throw new InvalidOperationException(message);
+        }
+
+        return instance;
     }
     #endregion
 }

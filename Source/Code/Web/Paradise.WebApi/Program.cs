@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Paradise.ApplicationLogic.Authorization.JwtBearer.Keys.Implementation;
+using Paradise.ApplicationLogic.Authorization.JwtBearer.Keys;
 using Paradise.ApplicationLogic.Services.Application;
 using Paradise.DataAccess.Seed.Providers;
 using Paradise.DependencyInjection;
@@ -13,7 +13,8 @@ static WebApplication CreateApp(string[] args, out IConfiguration appSettings)
     builder.Configuration.AddEnvironmentVariables();
 
     var configurationOrigin = ConfigurationOrigin.Default;
-    var signingKeyProvider = new SecretBasedSigningKeyProvider(configurationOrigin.GetConfiguration());
+    var signingKeyProvider = JwtSigningKeyProviderFactory.CreateProvider(configurationOrigin.GetConfiguration());
+
     var servicesBuilder = new ApiServiceCollectionBuilder(builder.Services, configurationOrigin, signingKeyProvider);
 
     servicesBuilder.ConfigureRequiredServices();
@@ -55,20 +56,24 @@ static async Task SeedDatabasesAsync(IServiceProvider serviceProvider)
     var dbService = scope.ServiceProvider.GetRequiredService<IDatabaseService>();
     var dataProvider = scope.ServiceProvider.GetRequiredService<ISeedDataProvider>();
 
+    var seedRoles = dataProvider.GetSeedRoles();
+    var seedUsers = dataProvider.GetSeedUsers();
+    var seedEmailTemplates = dataProvider.GetSeedEmailTemplates();
+
     await dbService
         .EnsureDatabasesCreatedAsync()
         .ConfigureAwait(false);
 
     await dbService
-        .SeedRolesAsync(dataProvider.GetSeedRoles())
+        .SeedRolesAsync(seedRoles)
         .ConfigureAwait(false);
 
     await dbService
-        .SeedUsersAsync(dataProvider.GetSeedUsers())
+        .SeedUsersAsync(seedUsers)
         .ConfigureAwait(false);
 
     await dbService
-        .SeedEmailTemplatesAsync(dataProvider.GetSeedEmailTemplates())
+        .SeedEmailTemplatesAsync(seedEmailTemplates)
         .ConfigureAwait(false);
 
     await scope

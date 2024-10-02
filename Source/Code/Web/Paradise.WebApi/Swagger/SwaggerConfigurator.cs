@@ -101,33 +101,5 @@ internal static class SwaggerConfigurator
         foreach (var file in xmlFiles)
             options.IncludeXmlComments(file.FullName, true);
     }
-
-    /// <summary>
-    /// Gets the value of type <typeparamref name="T"/>
-    /// from the input <paramref name="configuration"/>.
-    /// </summary>
-    /// <typeparam name="T">
-    /// Value type.
-    /// </typeparam>
-    /// <param name="configuration">
-    /// The configuration in which to look for a value.
-    /// </param>
-    /// <returns>
-    /// The value of type <typeparamref name="T"/>,
-    /// retrieved from the input <paramref name="configuration"/>.
-    /// </returns>
-    private static T GetRequiredInstance<T>(this IConfiguration configuration)
-    {
-        var instance = configuration.GetRequiredSection(typeof(T).Name).Get<T>();
-
-        if (instance is null)
-        {
-            var message = GetInvalidSwaggerConfigurationMessage();
-
-            throw new InvalidOperationException(message);
-        }
-
-        return instance;
-    }
     #endregion
 }

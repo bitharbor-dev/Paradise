@@ -26,7 +26,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
             TransactionTime = DateTime.UtcNow
         });
 
-        return result;
+        return base.SavingChanges(eventData, result);
     }
 
     /// <inheritdoc/>
@@ -37,7 +37,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
             TransactionTime = DateTime.UtcNow
         });
 
-        return ValueTask.FromResult(result);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
     #endregion
 

@@ -31,20 +31,24 @@ static async Task SeedDatabasesAsync(IServiceProvider serviceProvider)
     var dbService = scope.ServiceProvider.GetRequiredService<IDatabaseService>();
     var dataProvider = scope.ServiceProvider.GetRequiredService<ISeedDataProvider>();
 
+    var seedRoles = dataProvider.GetSeedRoles();
+    var seedUsers = dataProvider.GetSeedUsers();
+    var seedEmailTemplates = dataProvider.GetSeedEmailTemplates();
+
     await dbService
         .EnsureDatabasesCreatedAsync()
         .ConfigureAwait(false);
 
     await dbService
-        .SeedRolesAsync(dataProvider.GetSeedRoles())
+        .SeedRolesAsync(seedRoles)
         .ConfigureAwait(false);
 
     await dbService
-        .SeedUsersAsync(dataProvider.GetSeedUsers())
+        .SeedUsersAsync(seedUsers)
         .ConfigureAwait(false);
 
     await dbService
-        .SeedEmailTemplatesAsync(dataProvider.GetSeedEmailTemplates())
+        .SeedEmailTemplatesAsync(seedEmailTemplates)
         .ConfigureAwait(false);
 
     await scope
