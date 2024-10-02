@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Paradise.ApplicationLogic.Authorization.JwtBearer.Keys;
 using Paradise.ApplicationLogic.Identity;
 using Paradise.DataAccess.Repositories;
 using Paradise.Domain.Roles;
@@ -208,7 +209,11 @@ public static class FakeInstancesProvider
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
                 ValidAudience = "ValidAudience",
                 ValidIssuer = "ValidIssuer",
-                NameClaimType = ClaimTypes.Name
+                NameClaimType = ClaimTypes.Name,
+                PropertyBag = new Dictionary<string, object?>
+                {
+                    { nameof(IJwtSigningKeyProvider.JwtAlgorithm), SecurityAlgorithms.HmacSha256 }
+                }
             }
         };
 
