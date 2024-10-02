@@ -23,7 +23,6 @@ public sealed class ApplicationOptions
     /// <summary>
     /// Value to be used during data encryption.
     /// </summary>
-    [Required, NotNull]
     public string? Secret { get; set; }
 
     /// <summary>

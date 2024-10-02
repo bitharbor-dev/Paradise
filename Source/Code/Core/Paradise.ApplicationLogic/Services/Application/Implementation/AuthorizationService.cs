@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Paradise.ApplicationLogic.Authorization.Models;
@@ -13,7 +14,6 @@ using Paradise.Models;
 using Paradise.Models.Extensions;
 using Paradise.Options.Models;
 using System.Diagnostics.CodeAnalysis;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using static Paradise.Models.ErrorCode;
@@ -337,13 +337,13 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// </returns>
     private static bool TryGetRefreshTokenId(SecurityToken securityToken, out Guid tokenId)
     {
-        if (securityToken is not JwtSecurityToken jwtSecurityToken)
+        if (securityToken is not JsonWebToken jsonWebToken)
         {
             tokenId = default;
             return false;
         }
 
-        return Guid.TryParse(jwtSecurityToken.Id, out tokenId);
+        return Guid.TryParse(jsonWebToken.Id, out tokenId);
     }
 
     /// <summary>

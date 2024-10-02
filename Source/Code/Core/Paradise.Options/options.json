@@ -6,7 +6,6 @@
       "TwoFactorTokenLifetime": "00.01:00:00",
       "TwoFactorVerificationCodeLength": 6
     },
-    "Secret": "Ug5xCXJaNaxfx78KdQxQZDAmniAbZw6V",
     "Timeout": {
       "EmailConfirmationTimeout": "01.00:00:00",
       "ResetEmailAddressTimeout": "01.00:00:00",

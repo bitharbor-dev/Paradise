@@ -108,6 +108,16 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
     #endregion
 
     #region Private methods
+    /// <summary>
+    /// Gets the signing algorithm form the given <paramref name="parameters"/>.
+    /// </summary>
+    /// <param name="parameters">
+    /// The <see cref="TokenValidationParameters"/> instance from which the
+    /// signing algorithm to be retrieved.
+    /// </param>
+    /// <returns>
+    /// A <see cref="string"/> value containing the signing algorithm name.
+    /// </returns>
     private static string GetAlgorithm(TokenValidationParameters parameters)
     {
         var algorithm = parameters.PropertyBag[nameof(IJwtSigningKeyProvider.JwtAlgorithm)]?.ToString();

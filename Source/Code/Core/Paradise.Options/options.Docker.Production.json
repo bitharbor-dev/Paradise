@@ -8,6 +8,13 @@
     //                           here is how environment variable name should look like
     //                           to be bound properly in the application - 'ConnectionStrings__DomainConnectionString'."
   },
+  "JwtKeyVaultOptions": {
+    //"VaultUrl": "These values are meant to be set on environment variables level.",
+    //"KeyName": "Azure Key Vault is used to generate JWTs only in non-development environments.",
+    //"TenantId": "For development purposes use regular secret-based JWT generation.",
+    //"ClientId": "Do not expose these property values in the repository.",
+    //"ClientSecret": "Environment variable example: 'JwtKeyVaultOptions__ClientSecret'."
+  },
   "SmtpOptions": {
     "Credentials": {
       //"Password": "You are required to provide your mailbox credentials in order to use the application.",

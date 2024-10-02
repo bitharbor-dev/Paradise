@@ -15,10 +15,10 @@ public static class JwtSigningKeyProviderFactory
     {
         { EnvironmentNames.Development,         CreateSecretBasedProvider },
         { EnvironmentNames.DockerDevelopment,   CreateSecretBasedProvider },
-        { EnvironmentNames.Staging,             CreateSecretBasedProvider },
-        { EnvironmentNames.DockerStaging,       CreateSecretBasedProvider },
-        { EnvironmentNames.Production,          CreateSecretBasedProvider },
-        { EnvironmentNames.DockerProduction,    CreateSecretBasedProvider },
+        { EnvironmentNames.Staging,             CreateKeyVaultProvider },
+        { EnvironmentNames.DockerStaging,       CreateKeyVaultProvider },
+        { EnvironmentNames.Production,          CreateKeyVaultProvider },
+        { EnvironmentNames.DockerProduction,    CreateKeyVaultProvider },
     };
     #endregion
 
@@ -55,5 +55,20 @@ public static class JwtSigningKeyProviderFactory
     /// </returns>
     private static IJwtSigningKeyProvider CreateSecretBasedProvider(IConfiguration configuration)
         => new SecretBasedSigningKeyProvider(configuration);
+
+    /// <summary>
+    /// Creates a new <see cref="KeyVaultSigningKeyProvider"/> instance
+    /// based on the given <paramref name="configuration"/>.
+    /// </summary>
+    /// <param name="configuration">
+    /// The <see cref="IConfiguration"/> instance to get
+    /// the Azure Key Vault credentials from.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="KeyVaultSigningKeyProvider"/> instance
+    /// based on the given <paramref name="configuration"/>.
+    /// </returns>
+    private static IJwtSigningKeyProvider CreateKeyVaultProvider(IConfiguration configuration)
+        => new KeyVaultSigningKeyProvider(configuration);
     #endregion
 }

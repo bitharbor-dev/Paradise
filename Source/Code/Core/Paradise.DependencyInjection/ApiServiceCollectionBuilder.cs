@@ -104,6 +104,13 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
         Services.AddScoped<IAuthorizationService, AuthorizationService>();
     }
 
+    /// <summary>
+    /// Sets the JWT signing key and algorithm to the given
+    /// <paramref name="options"/> instance.
+    /// </summary>
+    /// <param name="options">
+    /// The <see cref="JwtBearerOptions"/> to update with key and algorithm.
+    /// </param>
     private void SetSigningKeyAndAlgorithm(JwtBearerOptions options)
     {
         var algorithmPropertyName = nameof(IJwtSigningKeyProvider.JwtAlgorithm);
