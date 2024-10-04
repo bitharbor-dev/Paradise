@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Paradise.ApplicationLogic.Services.Domain;
+using Paradise.ApplicationLogic.Services.Domain.Roles;
 using Paradise.Common.Web;
 using Paradise.Models;
 using Paradise.Models.Domain.RoleModels;

@@ -1,7 +1,7 @@
 ﻿using Paradise.Models;
 using Paradise.Models.Domain.RoleModels;
 
-namespace Paradise.ApplicationLogic.Services.Domain;
+namespace Paradise.ApplicationLogic.Services.Domain.Roles;
 
 /// <summary>
 /// Provides roles management functionalities.

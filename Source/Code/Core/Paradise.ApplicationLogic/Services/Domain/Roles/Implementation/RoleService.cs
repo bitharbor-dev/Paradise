@@ -10,7 +10,7 @@ using Paradise.Models.Domain.RoleModels;
 using static Paradise.Models.ErrorCode;
 using static System.Net.HttpStatusCode;
 
-namespace Paradise.ApplicationLogic.Services.Domain.Implementation;
+namespace Paradise.ApplicationLogic.Services.Domain.Roles.Implementation;
 
 /// <summary>
 /// Provides roles management functionalities.

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Paradise.ApplicationLogic.Extensions;
-using Paradise.ApplicationLogic.Services.Domain;
+using Paradise.ApplicationLogic.Services.Domain.Users;
 using Paradise.Common.Web;
 using Paradise.Models;
 using Paradise.Models.Domain.UserModels;

@@ -1,7 +1,7 @@
 ﻿using Paradise.Models;
 using Paradise.Models.Domain.UserModels;
 
-namespace Paradise.ApplicationLogic.Services.Domain;
+namespace Paradise.ApplicationLogic.Services.Domain.Users;
 
 /// <summary>
 /// Provides users management functionalities.

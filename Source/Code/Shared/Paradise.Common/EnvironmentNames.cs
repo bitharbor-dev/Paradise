@@ -36,24 +36,24 @@ public static class EnvironmentNames
     public const string Production = "Production";
 
     /// <summary>
-    /// "Docker.Development" environment name.
+    /// "Development.Docker" environment name.
     /// </summary>
-    public const string DockerDevelopment = "Docker.Development";
+    public const string DevelopmentDocker = "Development.Docker";
 
     /// <summary>
-    /// "Docker.Staging" environment name.
+    /// "Staging.Docker" environment name.
     /// </summary>
-    public const string DockerStaging = "Docker.Staging";
+    public const string StagingDocker = "Staging.Docker";
 
     /// <summary>
-    /// "Docker.Production" environment name.
+    /// "Production.Docker" environment name.
     /// </summary>
-    public const string DockerProduction = "Docker.Production";
+    public const string ProductionDocker = "Production.Docker";
     #endregion
 
     #region Fields
     private static readonly IEnumerable<string> _allowedEnvironments =
-        [Development, Staging, Production, DockerDevelopment, DockerStaging, DockerProduction];
+        [Development, Staging, Production, DevelopmentDocker, StagingDocker, ProductionDocker];
     #endregion
 
     #region Properties

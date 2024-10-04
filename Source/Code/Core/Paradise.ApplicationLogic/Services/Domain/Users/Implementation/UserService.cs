@@ -8,6 +8,7 @@ using Paradise.ApplicationLogic.Extensions;
 using Paradise.ApplicationLogic.Identity;
 using Paradise.ApplicationLogic.InternalModels;
 using Paradise.ApplicationLogic.Services.Application;
+using Paradise.ApplicationLogic.Services.Domain.Roles;
 using Paradise.Common.Extensions;
 using Paradise.Common.Web;
 using Paradise.DataAccess.Repositories.Domain;
@@ -25,7 +26,7 @@ using static Paradise.Common.Web.ParameterNames;
 using static Paradise.Models.ErrorCode;
 using static System.Net.HttpStatusCode;
 
-namespace Paradise.ApplicationLogic.Services.Domain.Implementation;
+namespace Paradise.ApplicationLogic.Services.Domain.Users.Implementation;
 
 /// <summary>
 /// Provides users management functionalities.

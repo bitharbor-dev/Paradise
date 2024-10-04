@@ -14,11 +14,11 @@ public static class JwtSigningKeyProviderFactory
     private static readonly Dictionary<string, Func<IConfiguration, IJwtSigningKeyProvider>> _providerMap = new()
     {
         { EnvironmentNames.Development,         CreateSecretBasedProvider },
-        { EnvironmentNames.DockerDevelopment,   CreateSecretBasedProvider },
+        { EnvironmentNames.DevelopmentDocker,   CreateSecretBasedProvider },
         { EnvironmentNames.Staging,             CreateKeyVaultProvider },
-        { EnvironmentNames.DockerStaging,       CreateKeyVaultProvider },
+        { EnvironmentNames.StagingDocker,       CreateKeyVaultProvider },
         { EnvironmentNames.Production,          CreateKeyVaultProvider },
-        { EnvironmentNames.DockerProduction,    CreateKeyVaultProvider },
+        { EnvironmentNames.ProductionDocker,    CreateKeyVaultProvider },
     };
     #endregion
 

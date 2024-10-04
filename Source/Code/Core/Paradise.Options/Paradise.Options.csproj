@@ -23,38 +23,38 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="options.Development.Docker.json" />
 		<None Remove="options.Development.json" />
-		<None Remove="options.Docker.Development.json" />
-		<None Remove="options.Docker.Production.json" />
-		<None Remove="options.Docker.Staging.json" />
 		<None Remove="options.json" />
+		<None Remove="options.Production.Docker.json" />
 		<None Remove="options.Production.json" />
+		<None Remove="options.Staging.Docker.json" />
 		<None Remove="options.Staging.json" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="options.Development.Docker.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.Development.json</DependentUpon>
+		</Content>
 		<Content Include="options.Development.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<DependentUpon>options.json</DependentUpon>
-		</Content>
-		<Content Include="options.Docker.Development.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<DependentUpon>options.json</DependentUpon>
-		</Content>
-		<Content Include="options.Docker.Production.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<DependentUpon>options.json</DependentUpon>
-		</Content>
-		<Content Include="options.Docker.Staging.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<DependentUpon>options.json</DependentUpon>
 		</Content>
 		<Content Include="options.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="options.Production.Docker.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.Production.json</DependentUpon>
+		</Content>
 		<Content Include="options.Production.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<DependentUpon>options.json</DependentUpon>
+		</Content>
+		<Content Include="options.Staging.Docker.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>options.Staging.json</DependentUpon>
 		</Content>
 		<Content Include="options.Staging.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
