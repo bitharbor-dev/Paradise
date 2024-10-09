@@ -320,7 +320,7 @@ public abstract class ApiClientBase : IDisposable
 
     /// <summary>
     /// Creates a <see cref="Uri"/> based on the <see cref="ApplicationOptions.ApiUrl"/>,
-    /// <paramref name="route"/>? <paramref name="routeParameters"/> and <paramref name="queryParameters"/>.
+    /// <paramref name="route"/>, <paramref name="routeParameters"/> and <paramref name="queryParameters"/>.
     /// </summary>
     /// <param name="route">
     /// API action route.
@@ -333,7 +333,7 @@ public abstract class ApiClientBase : IDisposable
     /// </param>
     /// <returns>
     /// The <see cref="Uri"/> created from the <see cref="ApplicationOptions.ApiUrl"/>,
-    /// <paramref name="route"/>? <paramref name="routeParameters"/> and <paramref name="queryParameters"/>.
+    /// <paramref name="route"/>, <paramref name="routeParameters"/> and <paramref name="queryParameters"/>.
     /// </returns>
     private protected Uri CreateUri(string route, Dictionary<string, object?>? queryParameters = null, Dictionary<string, object?>? routeParameters = null)
     {
