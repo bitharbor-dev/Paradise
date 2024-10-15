@@ -17,6 +17,11 @@ public sealed class ApplicationContext : DbContext, IApplicationDataSource, IDat
     /// Application database connection string name.
     /// </summary>
     public const string ConnectionStringName = "ApplicationConnectionString";
+
+    /// <summary>
+    /// The name of a scheme tied to this database context.
+    /// </summary>
+    public const string SchemeName = "application";
     #endregion
 
     #region Constructors

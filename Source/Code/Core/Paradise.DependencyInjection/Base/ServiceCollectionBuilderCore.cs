@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Identity;
@@ -125,8 +126,11 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
         Services.AddSingleton<IInterceptor, SetCreatedInterceptor>();
         Services.AddSingleton<IInterceptor, SetModifiedInterceptor>();
 
-        AddDbContext<IApplicationDataSource, ApplicationContext>(ApplicationContext.ConnectionStringName);
-        AddDbContext<IDomainDataSource, DomainContext>(DomainContext.ConnectionStringName);
+        AddDbContext<IApplicationDataSource, ApplicationContext>(ApplicationContext.ConnectionStringName,
+                                                                 ApplicationContext.SchemeName);
+
+        AddDbContext<IDomainDataSource, DomainContext>(DomainContext.ConnectionStringName,
+                                                       DomainContext.SchemeName);
     }
 
     /// <summary>
@@ -142,7 +146,10 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
     /// The name of the configuration value,
     /// which contains the connection string.
     /// </param>
-    private void AddDbContext<TContextService, TContextImplementation>(string connectionStringName)
+    /// /// <param name="schemeName">
+    /// Database scheme name.
+    /// </param>
+    private void AddDbContext<TContextService, TContextImplementation>(string connectionStringName, string schemeName)
         where TContextImplementation : DbContext, TContextService
     {
         void ConfigureDbContextOptions(IServiceProvider serviceProvider, DbContextOptionsBuilder builder)
@@ -150,7 +157,11 @@ public abstract class ServiceCollectionBuilderCore(IServiceCollection services, 
             var connectionString = Configuration.GetConnectionString(connectionStringName);
             var interceptors = serviceProvider.GetService<IEnumerable<IInterceptor>>();
 
-            builder.UseSqlServer(connectionString);
+            builder.UseSqlServer(connectionString, options =>
+            {
+                options.MigrationsHistoryTable(HistoryRepository.DefaultTableName, schemeName);
+                options.EnableRetryOnFailure();
+            });
 
             if (interceptors is not null)
             {

@@ -33,6 +33,8 @@ internal static class ApplicationContextConfiguration
                   .HasConversion<CultureInfoConverter>();
         });
 
+        modelBuilder.HasDefaultSchema(ApplicationContext.SchemeName);
+
         modelBuilder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
     }
     #endregion

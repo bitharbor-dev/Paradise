@@ -17,7 +17,8 @@ partial class InitialState
     {
 #pragma warning disable 612, 618
         modelBuilder
-            .HasAnnotation("ProductVersion", "7.0.8")
+            .HasDefaultSchema("domain")
+            .HasAnnotation("ProductVersion", "8.0.10")
             .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
         SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -43,7 +44,7 @@ partial class InitialState
 
             b.HasIndex("RoleId");
 
-            b.ToTable("AspNetRoleClaims", (string)null);
+            b.ToTable("AspNetRoleClaims", "domain");
         });
 
         modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -67,7 +68,7 @@ partial class InitialState
 
             b.HasIndex("UserId");
 
-            b.ToTable("AspNetUserClaims", (string)null);
+            b.ToTable("AspNetUserClaims", "domain");
         });
 
         modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -88,7 +89,7 @@ partial class InitialState
 
             b.HasIndex("UserId");
 
-            b.ToTable("AspNetUserLogins", (string)null);
+            b.ToTable("AspNetUserLogins", "domain");
         });
 
         modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -103,7 +104,7 @@ partial class InitialState
 
             b.HasIndex("RoleId");
 
-            b.ToTable("AspNetUserRoles", (string)null);
+            b.ToTable("AspNetUserRoles", "domain");
         });
 
         modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -122,7 +123,7 @@ partial class InitialState
 
             b.HasKey("UserId", "LoginProvider", "Name");
 
-            b.ToTable("AspNetUserTokens", (string)null);
+            b.ToTable("AspNetUserTokens", "domain");
         });
 
         modelBuilder.Entity("Paradise.Domain.Roles.Role", b =>
@@ -160,7 +161,7 @@ partial class InitialState
                 .HasDatabaseName("RoleNameIndex")
                 .HasFilter("[NormalizedName] IS NOT NULL");
 
-            b.ToTable("AspNetRoles", (string)null);
+            b.ToTable("AspNetRoles", "domain");
         });
 
         modelBuilder.Entity("Paradise.Domain.Users.User", b =>
@@ -237,7 +238,7 @@ partial class InitialState
                 .HasDatabaseName("UserNameIndex")
                 .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-            b.ToTable("AspNetUsers", (string)null);
+            b.ToTable("AspNetUsers", "domain");
         });
 
         modelBuilder.Entity("Paradise.Domain.Users.UserRefreshToken", b =>
@@ -259,7 +260,7 @@ partial class InitialState
 
             b.HasIndex("OwnerId");
 
-            b.ToTable("UserRefreshTokens", (string)null);
+            b.ToTable("UserRefreshTokens", "domain");
         });
 
         modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -3,8 +3,8 @@
     "Docker": {
       "commandName": "Docker",
       "environmentVariables": {
-        "ConnectionStrings__ApplicationConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise-application;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
-        "ConnectionStrings__DomainConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise-domain;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
+        "ConnectionStrings__ApplicationConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
+        "ConnectionStrings__DomainConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
         "DOTNET_ENVIRONMENT": "Docker.Development",
         "SmtpOptions__Credentials__Password": "",
         "SmtpOptions__Credentials__UserName": "no-reply@paradise.com"
@@ -13,8 +13,8 @@
     "Maintenance": {
       "commandName": "Project",
       "environmentVariables": {
-        "ConnectionStrings__ApplicationConnectionString": "Data Source=localhost;Initial Catalog=paradise-application;Integrated Security=true;Trust Server Certificate=true",
-        "ConnectionStrings__DomainConnectionString": "Data Source=localhost;Initial Catalog=paradise-domain;Integrated Security=true;Trust Server Certificate=true",
+        "ConnectionStrings__ApplicationConnectionString": "Data Source=localhost;Initial Catalog=paradise;Integrated Security=true;Trust Server Certificate=true",
+        "ConnectionStrings__DomainConnectionString": "Data Source=localhost;Initial Catalog=paradise;Integrated Security=true;Trust Server Certificate=true",
         "DOTNET_ENVIRONMENT": "Development",
         "SmtpOptions__Credentials__Password": "",
         "SmtpOptions__Credentials__UserName": "no-reply@paradise.com"

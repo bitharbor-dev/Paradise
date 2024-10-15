@@ -30,6 +30,8 @@ internal static class DomainContextConfiguration
                   .HasForeignKey(userRefreshToken => userRefreshToken.OwnerId);
         });
 
+        modelBuilder.HasDefaultSchema(DomainContext.SchemeName);
+
         modelBuilder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
     }
     #endregion

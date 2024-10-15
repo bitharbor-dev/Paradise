@@ -25,6 +25,11 @@ public sealed class DomainContext([NotNull] DbContextOptions<DomainContext> opti
     /// Domain database connection string name.
     /// </summary>
     public const string ConnectionStringName = "DomainConnectionString";
+
+    /// <summary>
+    /// The name of a scheme tied to this database context.
+    /// </summary>
+    public const string SchemeName = "domain";
     #endregion
 
     #region Public methods

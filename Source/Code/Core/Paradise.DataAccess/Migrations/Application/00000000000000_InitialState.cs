@@ -12,8 +12,12 @@ public partial class InitialState : Migration
     {
         ArgumentNullException.ThrowIfNull(migrationBuilder);
 
+        migrationBuilder.EnsureSchema(
+            name: "application");
+
         migrationBuilder.CreateTable(
             name: "DataProtectionKeys",
+            schema: "application",
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
@@ -25,6 +29,7 @@ public partial class InitialState : Migration
 
         migrationBuilder.CreateTable(
             name: "EmailTemplates",
+            schema: "application",
             columns: table => new
             {
                 Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -44,6 +49,7 @@ public partial class InitialState : Migration
 
         migrationBuilder.CreateIndex(
             name: "IX_EmailTemplates_TemplateName_Culture",
+            schema: "application",
             table: "EmailTemplates",
             columns: ["TemplateName", "Culture"],
             unique: true,
@@ -56,9 +62,11 @@ public partial class InitialState : Migration
         ArgumentNullException.ThrowIfNull(migrationBuilder);
 
         migrationBuilder.DropTable(
-            name: "DataProtectionKeys");
+            name: "DataProtectionKeys",
+            schema: "application");
 
         migrationBuilder.DropTable(
-            name: "EmailTemplates");
+            name: "EmailTemplates",
+            schema: "application");
     }
 }

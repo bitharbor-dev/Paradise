@@ -17,7 +17,8 @@ partial class InitialState
     {
 #pragma warning disable 612, 618
         modelBuilder
-            .HasAnnotation("ProductVersion", "7.0.10")
+            .HasDefaultSchema("application")
+            .HasAnnotation("ProductVersion", "8.0.10")
             .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
         SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -38,7 +39,7 @@ partial class InitialState
 
             b.HasKey("Id");
 
-            b.ToTable("DataProtectionKeys");
+            b.ToTable("DataProtectionKeys", "application");
         });
 
         modelBuilder.Entity("Paradise.ApplicationLogic.Domain.MessageTemplates.EmailTemplate", b =>
@@ -89,7 +90,7 @@ partial class InitialState
                 .IsUnique()
                 .HasFilter("[Culture] IS NOT NULL");
 
-            b.ToTable("EmailTemplates", (string)null);
+            b.ToTable("EmailTemplates", "application");
         });
 #pragma warning restore 612, 618
     }
