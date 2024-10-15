@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Paradise.Models;
 using Paradise.Models.Domain.UserModels;
-using Paradise.Options.Models;
 using Paradise.WebApi.Client.Application;
 using Paradise.WebApi.Client.Base;
 using System.Text.Json;
@@ -17,9 +15,6 @@ namespace Paradise.WebApi.Client.Domain;
 /// <remarks>
 /// Initializes a new instance of the <see cref="UsersApiClient"/> class.
 /// </remarks>
-/// <param name="applicationOptions">
-/// The accessor used to access the <see cref="ApplicationOptions"/>.
-/// </param>
 /// <param name="jsonSerializerOptions">
 /// The accessor used to access the <see cref="JsonSerializerOptions"/>.
 /// </param>
@@ -27,25 +22,13 @@ namespace Paradise.WebApi.Client.Domain;
 /// <see cref="HttpClient"/> instance the <see cref="EmailTemplatesApiClient"/>
 /// will operate over.
 /// </param>
-/// <param name="schemeName">
-/// The authentication scheme name for this client.
-/// <para>
-/// The default is <see cref="JwtBearerDefaults.AuthenticationScheme"/>.
-/// </para>
-/// </param>
-public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicationOptions,
-                                   IOptionsMonitor<JsonSerializerOptions> jsonSerializerOptions,
-                                   HttpClient httpClient,
-                                   string schemeName = JwtBearerDefaults.AuthenticationScheme)
-    : ApiClientBase(applicationOptions, jsonSerializerOptions, httpClient, schemeName)
+public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSerializerOptions, HttpClient httpClient)
+    : ApiClientBase(jsonSerializerOptions, httpClient)
 {
     #region Public methods
     /// <summary>
     /// Gets the list of application users.
     /// </summary>
-    /// <param name="accessToken">
-    /// Authorization token.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -56,11 +39,11 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// of <see cref="UserModel"/>
     /// containing information about the application users.
     /// </returns>
-    public Task<Result<IEnumerable<UserModel>>> GetAllAsync(string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result<IEnumerable<UserModel>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(GetAll);
+        var route = CreateRoute(GetAll);
 
-        return GetAsync<IEnumerable<UserModel>>(uri, accessToken, cancellationToken);
+        return GetAsync<IEnumerable<UserModel>>(route, cancellationToken);
     }
 
     /// <summary>
@@ -68,9 +51,6 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </summary>
     /// <param name="userId">
     /// The Id of the user to be found.
-    /// </param>
-    /// <param name="accessToken">
-    /// Authorization token.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
@@ -81,14 +61,14 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserModel"/>
     /// containing information about the user found.
     /// </returns>
-    public Task<Result<UserModel>> GetByIdAsync(Guid userId, string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result<UserModel>> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(GetById, routeParameters: new()
+        var route = CreateRoute(GetById, routeParameters: new()
         {
             { UserIdParameter, userId }
         });
 
-        return GetAsync<UserModel>(uri, accessToken, cancellationToken);
+        return GetAsync<UserModel>(route, cancellationToken);
     }
 
     /// <summary>
@@ -109,9 +89,9 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </returns>
     public Task<Result<UserModel>> RegisterAsync(UserRegistrationModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(Register);
+        var route = CreateRoute(Register);
 
-        return PostAsync<UserModel>(uri, model, cancellationToken: cancellationToken);
+        return PostAsync<UserModel>(route, model, cancellationToken);
     }
 
     /// <summary>
@@ -132,12 +112,12 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </returns>
     public Task<Result<UserModel>> ConfirmEmailAsync(string identityToken, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(ConfirmEmail, routeParameters: new()
+        var route = CreateRoute(ConfirmEmail, routeParameters: new()
         {
             { IdentityTokenParameter, identityToken }
         });
 
-        return GetAsync<UserModel>(uri, cancellationToken: cancellationToken);
+        return GetAsync<UserModel>(route, cancellationToken);
     }
 
     /// <summary>
@@ -160,9 +140,9 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </returns>
     public Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(Login);
+        var route = CreateRoute(Login);
 
-        return PostAsync<UserAuthorizationTokenModel>(uri, model, cancellationToken: cancellationToken);
+        return PostAsync<UserAuthorizationTokenModel>(route, model, cancellationToken);
     }
 
     /// <summary>
@@ -184,18 +164,15 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </returns>
     public Task<Result<UserAuthorizationTokenModel>> ConfirmLoginAsync(UserTwoFactorAuthenticationModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(ConfirmLogin);
+        var route = CreateRoute(ConfirmLogin);
 
-        return PutAsync<UserAuthorizationTokenModel>(uri, model, cancellationToken: cancellationToken);
+        return PutAsync<UserAuthorizationTokenModel>(route, model, cancellationToken);
     }
 
     /// <summary>
     /// Generates a new user authorization token
-    /// using the given <paramref name="accessToken"/>.
+    /// using the access token.
     /// </summary>
-    /// <param name="accessToken">
-    /// User authorization token.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -205,23 +182,17 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
     /// containing information about the user authorization token.
     /// </returns>
-    public Task<Result<UserAuthorizationTokenModel>> RenewTokenAsync(string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result<UserAuthorizationTokenModel>> RenewTokenAsync(CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(RenewToken, routeParameters: new()
-        {
-            { AccessTokenParameter, accessToken }
-        });
+        var route = CreateRoute(RenewToken);
 
-        return GetAsync<UserAuthorizationTokenModel>(uri, cancellationToken: cancellationToken);
+        return GetAsync<UserAuthorizationTokenModel>(route, cancellationToken);
     }
 
     /// <summary>
-    /// Invalidates the given <paramref name="accessToken"/>
+    /// Invalidates the access token
     /// to make it unusable during the authentication process.
     /// </summary>
-    /// <param name="accessToken">
-    /// Authorization token to be invalidated.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -229,20 +200,17 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> LogoutAsync(string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result> LogoutAsync(CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(Logout);
+        var route = CreateRoute(Logout);
 
-        return DeleteAsync(uri, accessToken, cancellationToken);
+        return DeleteAsync(route, cancellationToken);
     }
 
     /// <summary>
     /// Invalidates all user's refresh tokens
     /// to make them all unusable during the authentication process.
     /// </summary>
-    /// <param name="accessToken">
-    /// Authorization token to be invalidated.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -250,11 +218,11 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> LogoutEverywhereAsync(string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result> LogoutEverywhereAsync(CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(LogoutEverywhere);
+        var route = CreateRoute(LogoutEverywhere);
 
-        return DeleteAsync(uri, accessToken, cancellationToken);
+        return DeleteAsync(route, cancellationToken);
     }
 
     /// <summary>
@@ -273,9 +241,9 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </returns>
     public Task<Result> CreatePasswordResetRequestAsync(UserResetPasswordRequestModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(CreatePasswordResetRequest);
+        var route = CreateRoute(CreatePasswordResetRequest);
 
-        return PostAsync(uri, model, cancellationToken: cancellationToken);
+        return PostAsync(route, model, cancellationToken);
     }
 
     /// <summary>
@@ -294,9 +262,9 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// </returns>
     public Task<Result> ResetPasswordAsync(UserResetPasswordModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(ResetPassword);
+        var route = CreateRoute(ResetPassword);
 
-        return PatchAsync(uri, model, cancellationToken: cancellationToken);
+        return PatchAsync(route, model, cancellationToken);
     }
 
     /// <summary>
@@ -306,9 +274,6 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// The <see cref="UserResetEmailRequestModel"/> to be used to
     /// create an email address reset request.
     /// </param>
-    /// <param name="accessToken">
-    /// Authorization token.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -316,11 +281,11 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> CreateEmailResetRequestAsync(UserResetEmailRequestModel model, string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result> CreateEmailResetRequestAsync(UserResetEmailRequestModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(CreateEmailResetRequest);
+        var route = CreateRoute(CreateEmailResetRequest);
 
-        return PutAsync(uri, model, cancellationToken: cancellationToken);
+        return PutAsync(route, model, cancellationToken);
     }
 
     /// <summary>
@@ -330,9 +295,6 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// An encrypted string value to be used to
     /// reset the user's email address.
     /// </param>
-    /// <param name="accessToken">
-    /// Authorization token.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -340,14 +302,14 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> ResetEmailAsync(string identityToken, string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result> ResetEmailAsync(string identityToken, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(ResetEmail, routeParameters: new()
+        var route = CreateRoute(ResetEmail, routeParameters: new()
         {
             { IdentityTokenParameter, identityToken }
         });
 
-        return GetAsync(uri, accessToken, cancellationToken);
+        return GetAsync(route, cancellationToken);
     }
 
     /// <summary>
@@ -356,9 +318,6 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <param name="model">
     /// The <see cref="UserUpdateModel"/> to be used to
     /// update the user.
-    /// </param>
-    /// <param name="accessToken">
-    /// Authorization token.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
@@ -369,19 +328,16 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserModel"/>
     /// containing information about the updated user.
     /// </returns>
-    public Task<Result<UserModel>> UpdateAsync(UserUpdateModel model, string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result<UserModel>> UpdateAsync(UserUpdateModel model, CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(Update);
+        var route = CreateRoute(Update);
 
-        return PatchAsync<UserModel>(uri, model, accessToken, cancellationToken);
+        return PatchAsync<UserModel>(route, model, cancellationToken);
     }
 
     /// <summary>
     /// Deletes the user.
     /// </summary>
-    /// <param name="accessToken">
-    /// Authorization token.
-    /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
@@ -389,11 +345,11 @@ public sealed class UsersApiClient(IOptionsMonitor<ApplicationOptions> applicati
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> DeleteAsync(string accessToken, CancellationToken cancellationToken = default)
+    public Task<Result> DeleteAsync(CancellationToken cancellationToken = default)
     {
-        var uri = CreateUri(Delete);
+        var route = CreateRoute(Delete);
 
-        return DeleteAsync(uri, accessToken, cancellationToken);
+        return DeleteAsync(route, cancellationToken);
     }
     #endregion
 }
