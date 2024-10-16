@@ -17,10 +17,6 @@ namespace Paradise.Options.Attributes;
 /// </param>
 internal sealed class AllowedValuesAttribute<T>(params T?[] values) : ValidationAttribute
 {
-    #region Fields
-    private Type? _equalityComparerType;
-    #endregion
-
     #region Properties
     /// <summary>
     /// Allowed values array.
@@ -37,7 +33,7 @@ internal sealed class AllowedValuesAttribute<T>(params T?[] values) : Validation
     /// </remarks>
     public Type? EqualityComparerType
     {
-        get => _equalityComparerType;
+        get;
         set
         {
             if (value is not null)
@@ -57,7 +53,7 @@ internal sealed class AllowedValuesAttribute<T>(params T?[] values) : Validation
                 }
             }
 
-            _equalityComparerType = value;
+            field = value;
         }
     }
     #endregion
@@ -78,9 +74,9 @@ internal sealed class AllowedValuesAttribute<T>(params T?[] values) : Validation
 
         IEqualityComparer<T?>? equalityComparer;
 
-        if (_equalityComparerType is not null)
+        if (EqualityComparerType is not null)
         {
-            if (Activator.CreateInstance(_equalityComparerType) is IEqualityComparer<T?> comparer)
+            if (Activator.CreateInstance(EqualityComparerType) is IEqualityComparer<T?> comparer)
             {
                 equalityComparer = comparer;
             }

@@ -26,7 +26,6 @@ public class Result : IActionResult
 
     #region Fields
     private protected readonly List<ApplicationError> _errors = [];
-    private HttpStatusCode? _statusCode;
     #endregion
 
     #region Constructors
@@ -96,11 +95,11 @@ public class Result : IActionResult
     /// </remarks>
     public HttpStatusCode? StatusCode
     {
-        get => _statusCode;
+        get;
         set
         {
             if (value.HasValue)
-                _statusCode = value.Value;
+                field = value.Value;
         }
     }
 

@@ -25,39 +25,34 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     public const int DefaultPageSize = 10;
     #endregion
 
-    #region Fields
-    private int _pageNumber = DefaultPageNumber;
-    private int _pageSize = DefaultPageSize;
-    #endregion
-
     #region Properties
     /// <summary>
     /// Page size.
     /// </summary>
     public int PageSize
     {
-        get => _pageSize;
+        get;
         set
         {
             ThrowIfValueIsLessOrEqualToZero(value);
 
-            _pageSize = value;
+            field = value;
         }
-    }
+    } = DefaultPageSize;
 
     /// <summary>
     /// Page number.
     /// </summary>
     public int PageNumber
     {
-        get => _pageNumber;
+        get;
         set
         {
             ThrowIfValueIsLessOrEqualToZero(value);
 
-            _pageNumber = value;
+            field = value;
         }
-    }
+    } = DefaultPageNumber;
 
     /// <summary>
     /// Indicates whether the output list should be ordered
@@ -100,7 +95,7 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     /// Calculates the page skip to be used in the query.
     /// </summary>
     internal int PageSkip
-        => _pageNumber > 1 ? (_pageNumber - 1) * _pageSize : 0;
+        => PageNumber > 1 ? (PageNumber - 1) * PageSize : 0;
     #endregion
 
     #region Internal methods
