@@ -94,32 +94,32 @@ internal static class LogMessagesEventIds
     /// <summary>
     /// Event id for <see cref="InformationAddedSeedItem"/>.
     /// </summary>
-    public static EventId LogEventAddedSeedItem { get; } = new(52001, nameof(InformationAddedSeedItem));
+    public static EventId LogEventAddedSeedItem { get; } = new(52002, nameof(InformationAddedSeedItem));
 
     /// <summary>
     /// Event id for <see cref="InformationUpdatedSeedItem"/>.
     /// </summary>
-    public static EventId LogEventUpdatedSeedItem { get; } = new(52002, nameof(InformationUpdatedSeedItem));
+    public static EventId LogEventUpdatedSeedItem { get; } = new(52003, nameof(InformationUpdatedSeedItem));
 
     /// <summary>
     /// Event id for <see cref="InformationPendingDeletionUsersNumber"/>.
     /// </summary>
-    public static EventId LogEventPendingDeletionUsersNumber { get; } = new(52003, nameof(InformationPendingDeletionUsersNumber));
+    public static EventId LogEventPendingDeletionUsersNumber { get; } = new(52004, nameof(InformationPendingDeletionUsersNumber));
 
     /// <summary>
     /// Event id for <see cref="InformationOutdatedTokensNumber"/>.
     /// </summary>
-    public static EventId LogEventOutdatedTokensNumber { get; } = new(52004, nameof(InformationOutdatedTokensNumber));
+    public static EventId LogEventOutdatedTokensNumber { get; } = new(52005, nameof(InformationOutdatedTokensNumber));
 
     /// <summary>
     /// Event id for <see cref="InformationUnconfirmedUsersNumber"/>.
     /// </summary>
-    public static EventId LogEventUnconfirmedUsersNumber { get; } = new(52005, nameof(InformationUnconfirmedUsersNumber));
+    public static EventId LogEventUnconfirmedUsersNumber { get; } = new(52006, nameof(InformationUnconfirmedUsersNumber));
 
     /// <summary>
     /// Event id for <see cref="InformationWorkerRunning"/>.
     /// </summary>
-    public static EventId LogEventWorkerRunning { get; } = new(52006, nameof(InformationWorkerRunning));
+    public static EventId LogEventWorkerRunning { get; } = new(52007, nameof(InformationWorkerRunning));
 
     /// <summary>
     /// Event id for <see cref="WarningDatabaseEntrySeedFailure"/>.
