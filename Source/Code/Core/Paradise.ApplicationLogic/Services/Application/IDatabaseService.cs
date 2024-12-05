@@ -67,7 +67,7 @@ public interface IDatabaseService
     Task<ushort> SeedEmailTemplatesAsync(IEnumerable<SeedEmailTemplateModel> seedEmailTemplates, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deletes the users who have exceeded the email confirmation period.
+    /// Deletes users who have exceeded the email confirmation period.
     /// <para>
     /// <code>
     /// <see cref="IDatabaseRecord.Created"/> + <paramref name="confirmationPeriod"/> &lt; <see cref="DateTime.UtcNow"/>
@@ -103,7 +103,7 @@ public interface IDatabaseService
     Task<int> ResetUsersPendingDeletionAsync(TimeSpan requestLifetime, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deletes the outdated <see cref="UserRefreshToken"/> entries
+    /// Deletes outdated <see cref="UserRefreshToken"/> entries
     /// from the database.
     /// </summary>
     /// <param name="refreshTokenLifetime">
