@@ -19,13 +19,13 @@
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<AssemblyVersion>9.0.0.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
 		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.7.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

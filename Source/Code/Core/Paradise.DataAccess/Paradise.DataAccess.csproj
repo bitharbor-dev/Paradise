@@ -19,13 +19,13 @@
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<AssemblyVersion>9.0.0.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

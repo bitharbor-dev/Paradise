@@ -19,7 +19,7 @@
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<AssemblyVersion>9.0.0.0</AssemblyVersion>
 
 		<UserSecretsId>Maintenance-BDBFAFF6-581D-48A7-9FB1-FF4C55065A90</UserSecretsId>
 
@@ -29,7 +29,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
 	</ItemGroup>
 

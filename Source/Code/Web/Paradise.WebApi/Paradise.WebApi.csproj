@@ -19,7 +19,7 @@
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<AssemblyVersion>9.0.0.0</AssemblyVersion>
 
 		<UserSecretsId>WebApi-C13617A9-FD80-4960-89BF-00B45766F7B6</UserSecretsId>
 
@@ -29,12 +29,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

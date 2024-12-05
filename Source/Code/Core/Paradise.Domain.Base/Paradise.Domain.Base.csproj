@@ -19,7 +19,7 @@
 
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<DebugType>embedded</DebugType>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<AssemblyVersion>9.0.0.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
