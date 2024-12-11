@@ -20,7 +20,6 @@ public sealed class MessageTemplateTests
     /// </para>
     /// </para>
     /// </summary>
-    [SuppressMessage("Usage", "xUnit1045:Avoid using TheoryData type arguments that might not be serializable")]
     [Theory, MemberData(nameof(GetFormattedText_MemberData))]
     public void GetFormattedText(string templateText, string? placeholderName, ushort placeholdersNumber, IList<object?> parameters)
     {

@@ -52,7 +52,6 @@ public sealed class EmailTemplateTests
     /// </para>
     /// </para>
     /// </summary>
-    [SuppressMessage("Usage", "xUnit1045:Avoid using TheoryData type arguments that might not be serializable")]
     [Theory, MemberData(nameof(GetFormattedSubject_MemberData))]
     public void GetFormattedSubject(string subject, string? subjectPlaceholderName, ushort subjectPlaceholdersNumber, IList<object?> parameters)
     {
