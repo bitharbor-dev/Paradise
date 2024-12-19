@@ -12,9 +12,9 @@ namespace Paradise.DataAccess.Seed.Models.Application.MessageTemplates;
 public sealed partial class SeedEmailTemplateModel
 {
     #region Fields
-    private static readonly Regex RegexBetweenTags = GetRegexBetweenTags();
-    private static readonly Regex RegexLineBreaks = GetRegexLineBreaks();
-    private static readonly Regex RegexCaretBreaks = GetRegexCaretBreaks();
+    private static readonly Regex _regexBetweenTags = GetRegexBetweenTags();
+    private static readonly Regex _regexLineBreaks = GetRegexLineBreaks();
+    private static readonly Regex _regexCaretBreaks = GetRegexCaretBreaks();
     #endregion
 
     #region Constructors
@@ -201,9 +201,9 @@ public sealed partial class SeedEmailTemplateModel
         var fullPath = Path.Combine(AppContext.BaseDirectory, relativeHtmlPath.SanitizePathSeparators());
         var html = File.ReadAllText(fullPath);
 
-        html = RegexBetweenTags.Replace(html, string.Empty);
-        html = RegexLineBreaks.Replace(html, string.Empty);
-        html = RegexCaretBreaks.Replace(html, string.Empty);
+        html = _regexBetweenTags.Replace(html, string.Empty);
+        html = _regexLineBreaks.Replace(html, string.Empty);
+        html = _regexCaretBreaks.Replace(html, string.Empty);
 
         return html;
     }
