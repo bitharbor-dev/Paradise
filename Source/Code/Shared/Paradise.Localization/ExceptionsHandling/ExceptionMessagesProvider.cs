@@ -33,7 +33,7 @@ public static class ExceptionMessagesProvider
     private static readonly CompositeFormat _invalidEqualityComparerType                = Parse(InvalidEqualityComparerType);
     private static readonly CompositeFormat _invalidParametersNumber                    = Parse(InvalidParametersNumber);
     private static readonly CompositeFormat _invalidPropertyType                        = Parse(InvalidPropertyType);
-    private static readonly CompositeFormat _ivalidSeedData                             = Parse(IvalidSeedData);
+    private static readonly CompositeFormat _invalidSeedData                            = Parse(InvalidSeedData);
     private static readonly CompositeFormat _invalidSwaggerConfiguration                = Parse(InvalidSwaggerConfiguration);
     private static readonly CompositeFormat _messageTemplateTextInInvalidState          = Parse(MessageTemplateTextInInvalidState);
     private static readonly CompositeFormat _placeholderNotExists                       = Parse(PlaceholderNotExists);
@@ -283,13 +283,13 @@ public static class ExceptionMessagesProvider
         => _invalidPropertyType.Format;
 
     /// <summary>
-    /// Gets the <see cref="IvalidSeedData"/> formatted message.
+    /// Gets the <see cref="InvalidSeedData"/> formatted message.
     /// </summary>
     /// <returns>
-    /// A formatted message using the <see cref="IvalidSeedData"/> format string.
+    /// A formatted message using the <see cref="InvalidSeedData"/> format string.
     /// </returns>
-    public static string GetIvalidSeedDataMessage()
-        => _ivalidSeedData.Format;
+    public static string GetInvalidSeedDataMessage()
+        => _invalidSeedData.Format;
 
     /// <summary>
     /// Gets the <see cref="InvalidSwaggerConfiguration"/> formatted message.

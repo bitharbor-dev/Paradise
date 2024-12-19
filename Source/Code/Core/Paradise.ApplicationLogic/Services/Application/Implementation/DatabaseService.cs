@@ -287,7 +287,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger,
 
         if (model.Password.IsNullOrWhiteSpace())
         {
-            var message = ExceptionMessagesProvider.GetIvalidSeedDataMessage();
+            var message = ExceptionMessagesProvider.GetInvalidSeedDataMessage();
 
             throw new InvalidOperationException(message, new ArgumentException(nameof(model.Password)));
         }

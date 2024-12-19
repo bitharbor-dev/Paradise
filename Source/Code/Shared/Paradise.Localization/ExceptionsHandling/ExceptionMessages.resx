@@ -159,7 +159,7 @@
   <data name="InvalidSwaggerConfiguration" xml:space="preserve">
     <value>Swagger configuration is not valid.</value>
   </data>
-  <data name="IvalidSeedData" xml:space="preserve">
+  <data name="InvalidSeedData" xml:space="preserve">
     <value>Invalid seed data.</value>
   </data>
   <data name="MessageTemplateTextInInvalidState" xml:space="preserve">

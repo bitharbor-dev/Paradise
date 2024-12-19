@@ -196,20 +196,20 @@ namespace Paradise.Localization.ExceptionsHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid seed data..
+        /// </summary>
+        internal static string InvalidSeedData {
+            get {
+                return ResourceManager.GetString("InvalidSeedData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Swagger configuration is not valid..
         /// </summary>
         internal static string InvalidSwaggerConfiguration {
             get {
                 return ResourceManager.GetString("InvalidSwaggerConfiguration", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid seed data..
-        /// </summary>
-        internal static string IvalidSeedData {
-            get {
-                return ResourceManager.GetString("IvalidSeedData", resourceCulture);
             }
         }
         
