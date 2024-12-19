@@ -208,18 +208,17 @@ public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomai
         /// </returns>
         private List<Entry<TEntity>> GetOrAdd<TEntity>() where TEntity : class, IDatabaseRecord
         {
-            if (_dataSets.TryGetValue(typeof(TEntity), out var set))
-            {
-                return set.Select(entry => new Entry<TEntity>((TEntity)entry.Entity, entry.State)).ToList();
-            }
-            else
+            static Entry<TEntity> Selector(Entry<IDatabaseRecord> entry)
+                => new((TEntity)entry.Entity, entry.State);
+
+            if (!_dataSets.TryGetValue(typeof(TEntity), out var set))
             {
                 set = [];
 
                 _dataSets.Add(typeof(TEntity), set);
-
-                return set.Select(entry => new Entry<TEntity>((TEntity)entry.Entity, entry.State)).ToList();
             }
+
+            return [.. set.Select(Selector)];
         }
         #endregion
 
