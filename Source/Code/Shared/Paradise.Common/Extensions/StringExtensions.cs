@@ -26,5 +26,19 @@ public static class StringExtensions
     /// </returns>
     public static bool IsNotNullOrWhiteSpace([NotNullWhen(true)] this string? value)
         => !string.IsNullOrWhiteSpace(value);
+
+    /// <summary>
+    /// Replaces all '/' and '\' characters with <see cref="Path.DirectorySeparatorChar"/>.
+    /// </summary>
+    /// <param name="value">
+    /// The <see cref="string"/> to be sanitized.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="string"/> value equivalent to the given <paramref name="value"/>,
+    /// except that all instances of '/' and '\' are replaced with <see cref="Path.DirectorySeparatorChar"/>.
+    /// </returns>
+    [return: NotNullIfNotNull(nameof(value))]
+    public static string? SanitizePathSeparators(this string? value)
+        => value?.Replace('\\', Path.DirectorySeparatorChar)?.Replace('/', Path.DirectorySeparatorChar);
     #endregion
 }

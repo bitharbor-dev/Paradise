@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Paradise.Common.Extensions;
 using Paradise.DataAccess.Seed.Models.Application;
 using Paradise.DataAccess.Seed.Models.Application.MessageTemplates;
 using Paradise.DataAccess.Seed.Models.Domain;
@@ -75,7 +76,7 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
 
         var normalizedSeedFolderPath = seedFolder is null
             ? string.Empty
-            : seedFolder.Replace('\\', DirectorySeparatorChar).Replace('/', DirectorySeparatorChar);
+            : seedFolder.SanitizePathSeparators();
 
         var applicationFilePath = Combine(root, normalizedSeedFolderPath, ApplicationDataFileName);
         var domainFilePath = Combine(root, normalizedSeedFolderPath, DomainDataFileName);

@@ -1,4 +1,5 @@
-﻿using Paradise.Localization.ExceptionsHandling;
+﻿using Paradise.Common.Extensions;
+using Paradise.Localization.ExceptionsHandling;
 using System.Security;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -197,14 +198,7 @@ public sealed partial class SeedEmailTemplateModel
     /// </exception>
     private static string GetMinifiedHtml(string relativeHtmlPath)
     {
-        // Since the app can be ran on different OS,
-        // we need to replace all directory separator occurrences, whatever they are,
-        // with the default ones for the current environment.
-        var preparedPath = relativeHtmlPath
-            .Replace('\\', Path.DirectorySeparatorChar)
-            .Replace('/', Path.DirectorySeparatorChar);
-
-        var fullPath = Path.Combine(AppContext.BaseDirectory, preparedPath);
+        var fullPath = Path.Combine(AppContext.BaseDirectory, relativeHtmlPath.SanitizePathSeparators());
         var html = File.ReadAllText(fullPath);
 
         html = RegexBetweenTags.Replace(html, string.Empty);
