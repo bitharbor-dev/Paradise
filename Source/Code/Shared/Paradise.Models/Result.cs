@@ -191,12 +191,7 @@ public class Result : IActionResult
         ArgumentNullException.ThrowIfNull(identityResult);
 
         StatusCode = statusCode;
-
-        foreach (var error in identityResult.Errors)
-        {
-            if (Enum.TryParse(error.Code, out ErrorCode errorCode))
-                _errors.Add(new(errorCode, error.Description));
-        }
+        _errors.AddRange(identityResult.AsErrors());
     }
 
     /// <summary>

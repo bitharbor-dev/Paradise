@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Paradise.Models;
+using Paradise.Models.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Text;
 
 namespace Paradise.ApplicationLogic.Exceptions;
 
@@ -9,8 +11,8 @@ namespace Paradise.ApplicationLogic.Exceptions;
 public sealed class ResultException : Exception
 {
     #region Fields
-    private readonly List<Tuple<ErrorCode, object?[]>> _errorData = [];
-    private readonly List<IdentityResult> _identityErrors = [];
+    private readonly List<ApplicationError> _errors = [];
+    private readonly StringBuilder _exceptionMessageBuilder = new();
     #endregion
 
     #region Constructors
@@ -80,7 +82,11 @@ public sealed class ResultException : Exception
     /// Indicates whether the current instance has any errors.
     /// </summary>
     public bool HaveErrors
-        => _errorData.Count is not 0 || _identityErrors.Count is not 0;
+        => _errors.Count is not 0;
+
+    /// <inheritdoc/>
+    public override string Message
+        => _exceptionMessageBuilder.ToString();
     #endregion
 
     #region Public methods
@@ -96,11 +102,7 @@ public sealed class ResultException : Exception
     {
         var result = new Result();
 
-        foreach (var identityResult in _identityErrors)
-            result.AddIdentityResult(identityResult, StatusCode);
-
-        foreach (var error in _errorData)
-            result.AddError(StatusCode, error.Item1, error.Item2);
+        result.AddErrors(_errors, StatusCode);
 
         if (InnerException is not null)
             result.AddException(InnerException, StatusCode);
@@ -121,7 +123,12 @@ public sealed class ResultException : Exception
     /// </param>
     internal void AddError(IdentityResult identityResult, HttpStatusCode statusCode = HttpStatusCode.ServiceUnavailable)
     {
-        _identityErrors.Add(identityResult);
+        foreach (var error in identityResult.AsErrors())
+        {
+            _exceptionMessageBuilder.AppendLine(error);
+            _errors.Add(error);
+        }
+
         StatusCode = statusCode;
     }
 
@@ -140,7 +147,11 @@ public sealed class ResultException : Exception
     /// </param>
     internal void AddError(HttpStatusCode statusCode, ErrorCode errorCode, params object?[] args)
     {
-        _errorData.Add(new(errorCode, args));
+        var error = new ApplicationError(errorCode, errorCode.GetFormattedErrorDescription(args));
+
+        _exceptionMessageBuilder.AppendLine(error);
+        _errors.Add(error);
+
         StatusCode = statusCode;
     }
 
