@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.Models;
 using Paradise.Models.Domain.UserModels;
-using Paradise.WebApi.Client.Application;
 using Paradise.WebApi.Client.Base;
 using System.Text.Json;
 using static Paradise.Common.Web.ParameterNames;
@@ -19,7 +18,7 @@ namespace Paradise.WebApi.Client.Domain;
 /// The accessor used to access the <see cref="JsonSerializerOptions"/>.
 /// </param>
 /// <param name="httpClient">
-/// <see cref="HttpClient"/> instance the <see cref="EmailTemplatesApiClient"/>
+/// <see cref="HttpClient"/> instance the <see cref="UsersApiClient"/>
 /// will operate over.
 /// </param>
 public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSerializerOptions, HttpClient httpClient)

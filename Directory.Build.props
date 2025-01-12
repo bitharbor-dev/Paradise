@@ -1,5 +1,27 @@
 <Project>
 
+	<PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+
+		<!--TODO: Remove in the future.
+				  This suppression was added to remove error appeared
+				  in the new Visual Studio version.-->
+		<NoWarn>AD0001</NoWarn>
+
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<DebugType>embedded</DebugType>
+		<AssemblyVersion>9.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(MSBuildProjectName)' != 'Paradise.Docker'">
 		<BaseIntermediateOutputPath>..\..\..\..\.obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
 		<BaseOutputPath>..\..\..\..\.bin\$(MSBuildProjectName)</BaseOutputPath>
