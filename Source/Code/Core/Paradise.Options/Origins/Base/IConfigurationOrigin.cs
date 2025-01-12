@@ -8,7 +8,7 @@ namespace Paradise.Options.Origins.Base;
 /// <typeparam name="TOptions">
 /// Origin options type.
 /// </typeparam>
-public interface IConfigurationOrigin<TOptions> : IConfigurationOrigin
+public interface IConfigurationOrigin<out TOptions> : IConfigurationOrigin
 {
     #region Properties
     /// <summary>

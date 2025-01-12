@@ -52,11 +52,11 @@ public readonly struct ApplicationError(ErrorCode code, string description) : IE
     public override string ToString()
     {
         var messageFormat = ModelsLocalizationMessages.ErrorToStringFormat;
-        var code = (int)Code;
+        var codeNumber = (int)Code;
 
         return string.Format(CultureInfo.CurrentCulture,
                              messageFormat,
-                             code,
+                             codeNumber,
                              Description);
     }
 

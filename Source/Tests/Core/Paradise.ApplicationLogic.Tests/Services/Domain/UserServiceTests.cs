@@ -154,7 +154,7 @@ public sealed class UserServiceTests
 
         var confirmationUri = GetEmailBodyParameterOfType<Uri>();
 
-        var identityToken = confirmationUri.Segments.Last();
+        var identityToken = confirmationUri.Segments[^1];
 
         // Act
         var result = await Service.ConfirmEmailAsync(identityToken);
@@ -181,7 +181,7 @@ public sealed class UserServiceTests
 
         var confirmationUri = GetEmailBodyParameterOfType<Uri>();
 
-        var identityToken = confirmationUri.Segments.Last();
+        var identityToken = confirmationUri.Segments[^1];
 
         await Service.ConfirmEmailAsync(identityToken);
 
@@ -240,7 +240,7 @@ public sealed class UserServiceTests
 
         var confirmationUri = GetEmailBodyParameterOfType<Uri>();
 
-        var identityToken = confirmationUri.Segments.Last();
+        var identityToken = confirmationUri.Segments[^1];
 
         // Act
         var exception = await Assert.ThrowsAsync<ResultException>(()
@@ -270,7 +270,7 @@ public sealed class UserServiceTests
 
         var confirmationUri = GetEmailBodyParameterOfType<Uri>();
 
-        var identityToken = confirmationUri.Segments.Last();
+        var identityToken = confirmationUri.Segments[^1];
 
         // Act
         await Task.Delay(Options.Timeout.EmailConfirmationTimeout + TimeSpan.FromSeconds(0.5));
@@ -979,7 +979,7 @@ public sealed class UserServiceTests
         const string Email = "test@email.com";
         const string Password = "123Qwe!@";
 
-        var user = await CreateUserAsync(email: Email, password: Password);
+        await CreateUserAsync(email: Email, password: Password);
 
         var loginModel = new UserLoginModel(Password + Password) { Email = Email };
 
@@ -2083,7 +2083,7 @@ public sealed class UserServiceTests
 
         var identityTokenLink = GetEmailBodyParameterOfType<Uri>(1);
 
-        var identityToken = identityTokenLink.Segments.Last();
+        var identityToken = identityTokenLink.Segments[^1];
 
         // Act
         var result = await Service.ResetEmailAsync(identityToken);
@@ -2141,7 +2141,7 @@ public sealed class UserServiceTests
 
         var identityTokenLink = GetEmailBodyParameterOfType<Uri>(1);
 
-        var identityToken = identityTokenLink.Segments.Last();
+        var identityToken = identityTokenLink.Segments[^1];
 
         await DeleteUserAsync(user);
 
@@ -2180,7 +2180,7 @@ public sealed class UserServiceTests
 
         var identityTokenLink = GetEmailBodyParameterOfType<Uri>(1);
 
-        var identityToken = identityTokenLink.Segments.Last();
+        var identityToken = identityTokenLink.Segments[^1];
 
         await Task.Delay(Options.Timeout.ResetEmailAddressTimeout + TimeSpan.FromSeconds(0.5));
 
@@ -2222,7 +2222,7 @@ public sealed class UserServiceTests
 
         var identityTokenLink = GetEmailBodyParameterOfType<Uri>(1);
 
-        var identityToken = identityTokenLink.Segments.Last();
+        var identityToken = identityTokenLink.Segments[^1];
 
         await CreateUserAsync(email: NewEmail, userName: SecondUserName);
 
@@ -2394,7 +2394,7 @@ public sealed class UserServiceTests
 
         await CreatePasswordResetTemplateAsync();
 
-        var user = await CreateUserAsync(email: Email, password: Password);
+        await CreateUserAsync(email: Email, password: Password);
 
         await Service.CreatePasswordResetRequestAsync(new(Email));
 
@@ -2746,7 +2746,7 @@ public sealed class UserServiceTests
     /// </returns>
     private T GetEmailBodyParameterOfType<T>(int index = 0)
     {
-        var firstEmail = SentEmailsCache.First();
+        var firstEmail = SentEmailsCache[0];
 
         var result = (T)firstEmail.BodyArgs!.ElementAt(index)!;
 

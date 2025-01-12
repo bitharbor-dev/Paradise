@@ -24,6 +24,19 @@ internal static class RoleDataConverter
         => new(seedRole.Name, seedRole.IsDefault);
 
     /// <summary>
+    /// Converts the <see cref="RoleCreationModel"/> into the <see cref="Role"/>.
+    /// </summary>
+    /// <param name="creationModel">
+    /// The input <see cref="RoleCreationModel"/> to be converted.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="Role"/> instance
+    /// converted from the input <paramref name="creationModel"/>.
+    /// </returns>
+    public static Role ToEntity(this RoleCreationModel creationModel)
+        => new(creationModel.Name, creationModel.IsDefault);
+
+    /// <summary>
     /// Converts the <see cref="Role"/> into the <see cref="RoleModel"/>.
     /// </summary>
     /// <param name="role">
@@ -41,18 +54,5 @@ internal static class RoleDataConverter
             IsDefault = role.IsDefault,
             Modified = role.Modified
         };
-
-    /// <summary>
-    /// Converts the <see cref="RoleCreationModel"/> into the <see cref="Role"/>.
-    /// </summary>
-    /// <param name="creationModel">
-    /// The input <see cref="RoleCreationModel"/> to be converted.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="Role"/> instance
-    /// converted from the input <paramref name="creationModel"/>.
-    /// </returns>
-    public static Role ToEntity(this RoleCreationModel creationModel)
-        => new(creationModel.Name, creationModel.IsDefault);
     #endregion
 }

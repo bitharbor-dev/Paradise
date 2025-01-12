@@ -15,6 +15,7 @@ namespace Paradise.Options.Attributes;
 /// <param name="values">
 /// Allowed values array.
 /// </param>
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 internal sealed class AllowedValuesAttribute<T>(params T?[] values) : ValidationAttribute
 {
     #region Properties

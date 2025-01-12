@@ -16,7 +16,8 @@ namespace Paradise.WebApi.Filters.Annotation;
 /// <param name="statusCode">
 /// Response status code.
 /// </param>
-public sealed class ResultResponseAttribute<TValue>(HttpStatusCode statusCode) : ProducesResponseTypeAttribute(typeof(Result<TValue>), (int)statusCode)
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+internal sealed class ResultResponseAttribute<TValue>(HttpStatusCode statusCode) : ProducesResponseTypeAttribute(typeof(Result<TValue>), (int)statusCode)
 {
     #region Properties
     /// <summary>
@@ -35,7 +36,8 @@ public sealed class ResultResponseAttribute<TValue>(HttpStatusCode statusCode) :
 /// <param name="statusCode">
 /// Response status code.
 /// </param>
-public sealed class ResultResponseAttribute(HttpStatusCode statusCode) : ProducesResponseTypeAttribute(typeof(Result), (int)statusCode)
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+internal sealed class ResultResponseAttribute(HttpStatusCode statusCode) : ProducesResponseTypeAttribute(typeof(Result), (int)statusCode)
 {
     #region Properties
     /// <summary>

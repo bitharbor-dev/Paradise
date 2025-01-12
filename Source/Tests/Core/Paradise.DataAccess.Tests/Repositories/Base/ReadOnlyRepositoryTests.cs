@@ -2372,7 +2372,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     }
 
     /// <summary>
-    /// <see cref="ReadOnlyRepository{TEntity}.SingleOrDefault()"/> test method.
+    /// <see cref="ReadOnlyRepository{TEntity}.SingleOrDefaultAsync(CancellationToken)"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -2382,23 +2382,23 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public void SingleOrDefaultAsync()
+    public async Task SingleOrDefaultAsync()
     {
         // Arrange
         var entity = GetTestEntity();
 
         Source.Add(entity);
-        Source.SaveChanges();
+        await Source.SaveChangesAsync();
 
         // Act
-        var result = Repository.SingleOrDefault();
+        var result = await Repository.SingleOrDefaultAsync();
 
         // Assert
         Assert.NotNull(result);
     }
 
     /// <summary>
-    /// <see cref="ReadOnlyRepository{TEntity}.SingleOrDefault()"/> test method.
+    /// <see cref="ReadOnlyRepository{TEntity}.SingleOrDefaultAsync(CancellationToken)"/> test method.
     /// <para>
     /// <strong>Expected result:</strong>
     /// successful execution.
@@ -2409,12 +2409,12 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// </para>
     /// </summary>
     [Fact]
-    public void SingleOrDefaultAsync_ReturnsNullOnEmptyRepository()
+    public async Task SingleOrDefaultAsync_ReturnsNullOnEmptyRepository()
     {
         // Arrange
 
         // Act
-        var result = Repository.SingleOrDefault();
+        var result = await Repository.SingleOrDefaultAsync();
 
         // Assert
         Assert.Null(result);

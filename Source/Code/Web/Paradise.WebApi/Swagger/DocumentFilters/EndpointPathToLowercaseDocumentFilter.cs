@@ -7,7 +7,7 @@ namespace Paradise.WebApi.Swagger.DocumentFilters;
 /// <summary>
 /// Lowers all endpoints paths.
 /// </summary>
-public sealed class EndpointPathToLowercaseDocumentFilter : IDocumentFilter
+internal sealed class EndpointPathToLowercaseDocumentFilter : IDocumentFilter
 {
     #region Constants
     /// <summary>

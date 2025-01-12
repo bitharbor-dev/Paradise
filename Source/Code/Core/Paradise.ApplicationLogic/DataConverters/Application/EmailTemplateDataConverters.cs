@@ -12,6 +12,27 @@ internal static class EmailTemplateDataConverters
 {
     #region Public methods
     /// <summary>
+    /// Converts the <see cref="EmailTemplateCreationModel"/> into the <see cref="EmailTemplate"/>.
+    /// </summary>
+    /// <param name="creationModel">
+    /// The input <see cref="EmailTemplateCreationModel"/> to be converted.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="EmailTemplate"/> instance
+    /// converted from the input <paramref name="creationModel"/>.
+    /// </returns>
+    public static EmailTemplate ToEntity(this EmailTemplateCreationModel creationModel)
+        => new(creationModel.TemplateName, creationModel.TemplateText, creationModel.Subject)
+        {
+            Culture = creationModel.CultureId.HasValue ? CultureInfo.GetCultureInfo(creationModel.CultureId.Value) : null,
+            IsBodyHtml = creationModel.IsBodyHtml,
+            PlaceholderName = creationModel.PlaceholderName,
+            PlaceholdersNumber = creationModel.PlaceholdersNumber,
+            SubjectPlaceholderName = creationModel.SubjectPlaceholderName,
+            SubjectPlaceholdersNumber = creationModel.SubjectPlaceholdersNumber
+        };
+
+    /// <summary>
     /// Converts the <see cref="EmailTemplate"/> into the <see cref="EmailTemplateModel"/>.
     /// </summary>
     /// <param name="template">
@@ -33,27 +54,6 @@ internal static class EmailTemplateDataConverters
             PlaceholdersNumber = template.PlaceholdersNumber,
             SubjectPlaceholderName = template.SubjectPlaceholderName,
             SubjectPlaceholdersNumber = template.SubjectPlaceholdersNumber
-        };
-
-    /// <summary>
-    /// Converts the <see cref="EmailTemplateCreationModel"/> into the <see cref="EmailTemplate"/>.
-    /// </summary>
-    /// <param name="creationModel">
-    /// The input <see cref="EmailTemplateCreationModel"/> to be converted.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="EmailTemplate"/> instance
-    /// converted from the input <paramref name="creationModel"/>.
-    /// </returns>
-    public static EmailTemplate ToEntity(this EmailTemplateCreationModel creationModel)
-        => new(creationModel.TemplateName, creationModel.TemplateText, creationModel.Subject)
-        {
-            Culture = creationModel.CultureId.HasValue ? CultureInfo.GetCultureInfo(creationModel.CultureId.Value) : null,
-            IsBodyHtml = creationModel.IsBodyHtml,
-            PlaceholderName = creationModel.PlaceholderName,
-            PlaceholdersNumber = creationModel.PlaceholdersNumber,
-            SubjectPlaceholderName = creationModel.SubjectPlaceholderName,
-            SubjectPlaceholdersNumber = creationModel.SubjectPlaceholdersNumber
         };
 
     /// <summary>

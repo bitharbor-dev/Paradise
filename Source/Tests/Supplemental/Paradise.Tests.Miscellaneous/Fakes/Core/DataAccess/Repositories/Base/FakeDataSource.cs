@@ -8,7 +8,7 @@ namespace Paradise.Tests.Miscellaneous.Fakes.Core.DataAccess.Repositories.Base;
 /// <summary>
 /// Fake <see cref="IDataSource"/> implementation.
 /// </summary>
-public sealed class FakeDataSource : IDataSource, IApplicationDataSource, IDomainDataSource
+public sealed class FakeDataSource : IApplicationDataSource, IDomainDataSource
 {
     #region Fields
     private readonly DataSetCache _cache = new();

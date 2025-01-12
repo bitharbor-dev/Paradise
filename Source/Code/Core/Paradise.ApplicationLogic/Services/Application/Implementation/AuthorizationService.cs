@@ -339,7 +339,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     {
         if (securityToken is not JsonWebToken jsonWebToken)
         {
-            tokenId = default;
+            tokenId = Guid.Empty;
             return false;
         }
 

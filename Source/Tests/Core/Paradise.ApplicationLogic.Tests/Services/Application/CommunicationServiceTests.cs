@@ -108,7 +108,7 @@ public sealed class CommunicationServiceTests
         // Assert
         result.AssertSuccess(OK);
 
-        var message = SentEmailsCache.First().Message;
+        var message = SentEmailsCache[0].Message;
 
         Assert.True(message.To.SequenceEqual(baseEmailModel.To));
 

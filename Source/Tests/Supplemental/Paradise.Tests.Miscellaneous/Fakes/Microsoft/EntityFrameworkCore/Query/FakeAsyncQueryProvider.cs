@@ -64,8 +64,7 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
             var elementType = methodCallExpression
                 .Method
                 .ReturnType
-                .GetGenericArguments()
-                .First();
+                .GetGenericArguments()[0];
 
             return CreateQueryable(elementType, expression);
         }
@@ -112,7 +111,7 @@ public sealed class FakeAsyncQueryProvider<TEntity> : IOrderedQueryable<TEntity>
             // Need to catch the TargetInvocationException
             // and re-throw its inner exception to
             // satisfy asynchronous test assertions,
-            // e.g.: Assert.ThrowsAsync<InvalidOperationException>(MethodWhichThrows);
+            // e.g.: "Assert.ThrowsAsync<InvalidOperationException>(MethodWhichThrows);"
             if (e.InnerException is not null)
                 throw e.InnerException;
 

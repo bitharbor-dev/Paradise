@@ -6,6 +6,7 @@ namespace Paradise.WebApi.Filters.Validation;
 /// <summary>
 /// Validates the model's state.
 /// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 internal sealed class ValidateModelAttribute : ActionFilterAttribute
 {
     #region Public methods

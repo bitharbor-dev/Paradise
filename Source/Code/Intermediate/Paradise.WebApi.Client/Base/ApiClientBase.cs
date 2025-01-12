@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.Models;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -310,7 +311,7 @@ public abstract class ApiClientBase : IDisposable
                 .Select(Selector);
 
             if (notNullParameters.Any())
-                routeBuilder.Append($"?{string.Join('&', notNullParameters)}");
+                routeBuilder.Append(CultureInfo.InvariantCulture, $"?{string.Join('&', notNullParameters)}");
         }
 
         return routeBuilder.ToString();

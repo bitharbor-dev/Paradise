@@ -35,7 +35,6 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     #endregion
 
     #region Fields
-    private readonly JsonSerializerOptions? _jsonSerializerOptions;
     private readonly ApplicationDataSeedModel _applicationData;
     private readonly DomainDataSeedModel _domainData;
     #endregion
@@ -55,10 +54,8 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     /// </param>
     public JsonSeedDataProvider(IOptions<JsonSerializerOptions>? jsonSerializerOptions, Stream applicationData, Stream domainData)
     {
-        _jsonSerializerOptions = jsonSerializerOptions?.Value;
-
-        _applicationData = Deserialize<ApplicationDataSeedModel>(applicationData, _jsonSerializerOptions)!;
-        _domainData = Deserialize<DomainDataSeedModel>(domainData, _jsonSerializerOptions)!;
+        _applicationData = Deserialize<ApplicationDataSeedModel>(applicationData, jsonSerializerOptions?.Value)!;
+        _domainData = Deserialize<DomainDataSeedModel>(domainData, jsonSerializerOptions?.Value)!;
     }
 
     /// <summary>
@@ -84,10 +81,8 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
         var applicationJson = ReadAllText(applicationFilePath);
         var domainJson = ReadAllText(domainFilePath);
 
-        _jsonSerializerOptions = jsonSerializerOptions?.Value;
-
-        _applicationData = Deserialize<ApplicationDataSeedModel>(applicationJson, _jsonSerializerOptions)!;
-        _domainData = Deserialize<DomainDataSeedModel>(domainJson, _jsonSerializerOptions)!;
+        _applicationData = Deserialize<ApplicationDataSeedModel>(applicationJson, jsonSerializerOptions?.Value)!;
+        _domainData = Deserialize<DomainDataSeedModel>(domainJson, jsonSerializerOptions?.Value)!;
     }
     #endregion
 

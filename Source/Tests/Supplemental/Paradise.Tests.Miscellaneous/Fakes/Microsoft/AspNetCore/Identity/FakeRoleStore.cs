@@ -13,7 +13,7 @@ namespace Paradise.Tests.Miscellaneous.Fakes.Microsoft.AspNetCore.Identity;
 /// <param name="domainDataSource">
 /// Domain data source.
 /// </param>
-public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IRoleStore<Role>, IQueryableRoleStore<Role>
+public sealed class FakeRoleStore(IDomainDataSource domainDataSource) : IQueryableRoleStore<Role>
 {
     #region Fields
     private readonly IDomainDataSource _domainDataSource = domainDataSource;

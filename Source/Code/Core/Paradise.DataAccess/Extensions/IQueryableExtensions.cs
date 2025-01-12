@@ -277,7 +277,7 @@ internal static class IQueryableExtensions
 
         if (uppercasePropertiesContainsCalls.Length is 1)
         {
-            selector = Expression.Lambda(uppercasePropertiesContainsCalls.First(), argument);
+            selector = Expression.Lambda(uppercasePropertiesContainsCalls[0], argument);
         }
         else
         {
