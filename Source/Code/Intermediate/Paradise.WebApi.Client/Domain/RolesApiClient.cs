@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Server.IISIntegration;
+using Microsoft.Extensions.Options;
 using Paradise.Models;
 using Paradise.Models.Domain.RoleModels;
 using Paradise.WebApi.Client.Base;
@@ -58,7 +59,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
         var queryParameters = isDefault.HasValue
             ? new Dictionary<string, object?>
             {
-                { IsDefaultParameter, isDefault.Value }
+                [IsDefaultParameter] = isDefault.Value
             }
             : null;
 
@@ -86,7 +87,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetById, routeParameters: new()
         {
-            { RoleIdParameter, roleId }
+            [RoleIdParameter] = roleId
         });
 
         return GetAsync<RoleModel>(route, cancellationToken);
@@ -116,7 +117,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetUserRoles, routeParameters: new()
         {
-            { UserIdParameter, userId }
+            [UserIdParameter] = userId
         });
 
         return GetAsync<IEnumerable<RoleModel>>(route, cancellationToken);
@@ -168,7 +169,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Update, routeParameters: new()
         {
-            { RoleIdParameter, roleId }
+            [RoleIdParameter] = roleId
         });
 
         return PatchAsync<RoleModel>(route, model, cancellationToken);
@@ -194,7 +195,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Delete, routeParameters: new()
         {
-            { RoleIdParameter, roleId }
+            [RoleIdParameter] = roleId
         });
 
         return DeleteAsync<IEnumerable<RoleModel>>(route, cancellationToken);
@@ -224,8 +225,8 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Assign, routeParameters: new()
         {
-            { RoleIdParameter, roleId },
-            { UserIdParameter, userId }
+            [RoleIdParameter] = roleId,
+            [UserIdParameter] = userId
         });
 
         return PatchAsync<IEnumerable<RoleModel>>(route, null, cancellationToken);
@@ -255,8 +256,8 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Unassign, routeParameters: new()
         {
-            { RoleIdParameter, roleId },
-            { UserIdParameter, userId }
+            [RoleIdParameter] = roleId,
+            [UserIdParameter] = userId
         });
 
         return DeleteAsync<IEnumerable<RoleModel>>(route, cancellationToken);

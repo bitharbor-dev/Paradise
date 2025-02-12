@@ -10,7 +10,7 @@ internal sealed class FakeLookupProtectorKeyRing : ILookupProtectorKeyRing
     #region Fields
     private readonly IDictionary<string, string> _keys = new Dictionary<string, string>
     {
-        { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() }
+        [Guid.NewGuid().ToString()] = Guid.NewGuid().ToString()
     };
     #endregion
 

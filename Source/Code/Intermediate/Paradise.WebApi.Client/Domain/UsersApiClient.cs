@@ -64,7 +64,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetById, routeParameters: new()
         {
-            { UserIdParameter, userId }
+            [UserIdParameter] = userId
         });
 
         return GetAsync<UserModel>(route, cancellationToken);
@@ -113,7 +113,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(ConfirmEmail, routeParameters: new()
         {
-            { IdentityTokenParameter, identityToken }
+            [IdentityTokenParameter] = identityToken
         });
 
         return GetAsync<UserModel>(route, cancellationToken);
@@ -305,7 +305,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(ResetEmail, routeParameters: new()
         {
-            { IdentityTokenParameter, identityToken }
+            [IdentityTokenParameter] = identityToken
         });
 
         return GetAsync(route, cancellationToken);

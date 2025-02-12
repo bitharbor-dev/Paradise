@@ -212,7 +212,7 @@ public static class FakeInstancesProvider
                 NameClaimType = ClaimTypes.Name,
                 PropertyBag = new Dictionary<string, object?>
                 {
-                    { nameof(IJwtSigningKeyProvider.JwtAlgorithm), SecurityAlgorithms.HmacSha256 }
+                    [nameof(IJwtSigningKeyProvider.JwtAlgorithm)] = SecurityAlgorithms.HmacSha256
                 }
             }
         };

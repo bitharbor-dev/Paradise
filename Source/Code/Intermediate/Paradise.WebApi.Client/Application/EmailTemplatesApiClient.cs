@@ -64,7 +64,7 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     {
         var route = CreateRoute(GetById, routeParameters: new()
         {
-            { IdParameter, emailTemplateId }
+            [IdParameter] = emailTemplateId
         });
 
         return GetAsync<EmailTemplateModel>(route, cancellationToken);
@@ -116,7 +116,7 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     {
         var route = CreateRoute(Update, routeParameters: new()
         {
-            { IdParameter, emailTemplateId }
+            [IdParameter] = emailTemplateId
         });
 
         return PatchAsync<EmailTemplateModel>(route, model, cancellationToken);
@@ -139,7 +139,7 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     {
         var route = CreateRoute(Delete, routeParameters: new()
         {
-            { IdParameter, emailTemplateId }
+            [IdParameter] = emailTemplateId
         });
 
         return DeleteAsync(route, cancellationToken);

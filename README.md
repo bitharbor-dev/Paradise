@@ -1,5 +1,5 @@
 # Paradise - .NET Back-End Template with 3 Layer Architecture and DDD "Lite" Pattern
-This is a template for creating .NET back-end solutions using a 3-layer architecture and Domain-Driven Design (DDD) pattern. The template is built with Visual Studio and targets .NET 7.
+This is a template for creating .NET back-end solutions using a 3-layer architecture and Domain-Driven Design (DDD) pattern. The template is built with Visual Studio and targets .NET 9.
 
 ## Getting Started
 To use this template, you can either download the source code or create a new project based on this template using Visual Studio.

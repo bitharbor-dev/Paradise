@@ -122,7 +122,7 @@ public sealed class ApiServiceCollectionBuilder(IServiceCollection services,
 
         parameters.PropertyBag = new Dictionary<string, object?>
         {
-            { algorithmPropertyName, algorithmPropertyValue }
+            [algorithmPropertyName] = algorithmPropertyValue
         };
 
         parameters.IssuerSigningKey = signingKeyProvider.GetSigningKey();

@@ -13,12 +13,12 @@ public static class JwtSigningKeyProviderFactory
     #region Fields
     private static readonly Dictionary<string, Func<IConfiguration, IJwtSigningKeyProvider>> _providerMap = new()
     {
-        { EnvironmentNames.Development,         CreateSecretBasedProvider },
-        { EnvironmentNames.DevelopmentDocker,   CreateSecretBasedProvider },
-        { EnvironmentNames.Staging,             CreateKeyVaultProvider },
-        { EnvironmentNames.StagingDocker,       CreateKeyVaultProvider },
-        { EnvironmentNames.Production,          CreateKeyVaultProvider },
-        { EnvironmentNames.ProductionDocker,    CreateKeyVaultProvider },
+        [EnvironmentNames.Development]          = CreateSecretBasedProvider,
+        [EnvironmentNames.DevelopmentDocker]    = CreateSecretBasedProvider,
+        [EnvironmentNames.Staging]              = CreateKeyVaultProvider,
+        [EnvironmentNames.StagingDocker]        = CreateKeyVaultProvider,
+        [EnvironmentNames.Production]           = CreateKeyVaultProvider,
+        [EnvironmentNames.ProductionDocker]     = CreateKeyVaultProvider
     };
     #endregion
 
@@ -53,8 +53,8 @@ public static class JwtSigningKeyProviderFactory
     /// A new <see cref="SecretBasedSigningKeyProvider"/> instance
     /// based on the given <paramref name="configuration"/>.
     /// </returns>
-    private static IJwtSigningKeyProvider CreateSecretBasedProvider(IConfiguration configuration)
-        => new SecretBasedSigningKeyProvider(configuration);
+    private static SecretBasedSigningKeyProvider CreateSecretBasedProvider(IConfiguration configuration)
+        => new(configuration);
 
     /// <summary>
     /// Creates a new <see cref="KeyVaultSigningKeyProvider"/> instance
@@ -68,7 +68,7 @@ public static class JwtSigningKeyProviderFactory
     /// A new <see cref="KeyVaultSigningKeyProvider"/> instance
     /// based on the given <paramref name="configuration"/>.
     /// </returns>
-    private static IJwtSigningKeyProvider CreateKeyVaultProvider(IConfiguration configuration)
-        => new KeyVaultSigningKeyProvider(configuration);
+    private static KeyVaultSigningKeyProvider CreateKeyVaultProvider(IConfiguration configuration)
+        => new(configuration);
     #endregion
 }
