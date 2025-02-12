@@ -18,28 +18,28 @@ public static class ExceptionMessagesProvider
     #endregion
 
     #region Fields
-    private static readonly CompositeFormat _applicationSecretMissing                   = Parse(ApplicationSecretMissing);
-    private static readonly CompositeFormat _changeTimerFailed                          = Parse(ChangeTimerFailed);
-    private static readonly CompositeFormat _emailTemplateSubjectInInvalidState         = Parse(EmailTemplateSubjectInInvalidState);
-    private static readonly CompositeFormat _failedToCast                               = Parse(FailedToCast);
-    private static readonly CompositeFormat _failedToCreateInstanceOfType               = Parse(FailedToCreateInstanceOfType);
-    private static readonly CompositeFormat _failedToDeserialize                        = Parse(FailedToDeserialize);
-    private static readonly CompositeFormat _invalidClockWorkerInterval                 = Parse(InvalidClockWorkerInterval);
-    private static readonly CompositeFormat _invalidEntityStateAdditionalInformation    = Parse(InvalidEntityStateAdditionalInformation);
-    private static readonly CompositeFormat _invalidEmailAddress                        = Parse(InvalidEmailAddress);
-    private static readonly CompositeFormat _invalidEntityState                         = Parse(InvalidEntityState);
-    private static readonly CompositeFormat _invalidEnvironmentName                     = Parse(InvalidEnvironmentName);
-    private static readonly CompositeFormat _invalidEqualityComparerConstructor         = Parse(InvalidEqualityComparerConstructor);
-    private static readonly CompositeFormat _invalidEqualityComparerType                = Parse(InvalidEqualityComparerType);
-    private static readonly CompositeFormat _invalidParametersNumber                    = Parse(InvalidParametersNumber);
-    private static readonly CompositeFormat _invalidPropertyType                        = Parse(InvalidPropertyType);
-    private static readonly CompositeFormat _invalidSeedData                            = Parse(InvalidSeedData);
-    private static readonly CompositeFormat _invalidSwaggerConfiguration                = Parse(InvalidSwaggerConfiguration);
-    private static readonly CompositeFormat _messageTemplateTextInInvalidState          = Parse(MessageTemplateTextInInvalidState);
-    private static readonly CompositeFormat _placeholderNotExists                       = Parse(PlaceholderNotExists);
-    private static readonly CompositeFormat _propertyNotDeclared                        = Parse(PropertyNotDeclared);
-    private static readonly CompositeFormat _templateTextOrSourcePathIsRequired         = Parse(TemplateTextOrSourcePathIsRequired);
-    private static readonly CompositeFormat _valueCanNotBeLessOrEqualToZero             = Parse(ValueCanNotBeLessOrEqualToZero);
+    private static readonly CompositeFormat _applicationSecretMissing = Parse(ApplicationSecretMissing);
+    private static readonly CompositeFormat _changeTimerFailed = Parse(ChangeTimerFailed);
+    private static readonly CompositeFormat _emailTemplateSubjectInInvalidState = Parse(EmailTemplateSubjectInInvalidState);
+    private static readonly CompositeFormat _failedToCast = Parse(FailedToCast);
+    private static readonly CompositeFormat _failedToCreateInstanceOfType = Parse(FailedToCreateInstanceOfType);
+    private static readonly CompositeFormat _failedToDeserialize = Parse(FailedToDeserialize);
+    private static readonly CompositeFormat _invalidClockWorkerInterval = Parse(InvalidClockWorkerInterval);
+    private static readonly CompositeFormat _invalidEntityStateAdditionalInformation = Parse(InvalidEntityStateAdditionalInformation);
+    private static readonly CompositeFormat _invalidEmailAddress = Parse(InvalidEmailAddress);
+    private static readonly CompositeFormat _invalidEntityState = Parse(InvalidEntityState);
+    private static readonly CompositeFormat _invalidEnvironmentName = Parse(InvalidEnvironmentName);
+    private static readonly CompositeFormat _invalidEqualityComparerConstructor = Parse(InvalidEqualityComparerConstructor);
+    private static readonly CompositeFormat _invalidEqualityComparerType = Parse(InvalidEqualityComparerType);
+    private static readonly CompositeFormat _invalidParametersNumber = Parse(InvalidParametersNumber);
+    private static readonly CompositeFormat _invalidPropertyType = Parse(InvalidPropertyType);
+    private static readonly CompositeFormat _invalidSeedData = Parse(InvalidSeedData);
+    private static readonly CompositeFormat _invalidSwaggerConfiguration = Parse(InvalidSwaggerConfiguration);
+    private static readonly CompositeFormat _messageTemplateTextInInvalidState = Parse(MessageTemplateTextInInvalidState);
+    private static readonly CompositeFormat _placeholderNotExists = Parse(PlaceholderNotExists);
+    private static readonly CompositeFormat _propertyNotDeclared = Parse(PropertyNotDeclared);
+    private static readonly CompositeFormat _templateTextOrSourcePathIsRequired = Parse(TemplateTextOrSourcePathIsRequired);
+    private static readonly CompositeFormat _valueCanNotBeLessOrEqualToZero = Parse(ValueCanNotBeLessOrEqualToZero);
     #endregion
 
     #region Public methods

@@ -11,7 +11,7 @@ public interface IAuthenticationHeaderProvider
     /// <summary>
     /// Default authentication scheme.
     /// </summary>
-    public string DefaultScheme { get; }
+    string DefaultScheme { get; }
     #endregion
 
     #region Methods

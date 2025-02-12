@@ -23,6 +23,9 @@ public class SetCreatedInterceptor : BaseSaveChangesInterceptor, ISingletonInter
     /// <inheritdoc/>
     protected override void Intercept(EntityEntry entry, DbContextEventProperties properties)
     {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(properties);
+
         if (entry.Entity is IDatabaseRecord record)
             record.Created = properties.TransactionTime;
     }

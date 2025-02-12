@@ -22,6 +22,9 @@ public class ValidateStateInterceptor : BaseSaveChangesInterceptor, ISingletonIn
     /// <inheritdoc/>
     protected override void Intercept(EntityEntry entry, DbContextEventProperties properties)
     {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(properties);
+
         if (entry.Entity is IDatabaseRecord record)
             record.ValidateState();
     }

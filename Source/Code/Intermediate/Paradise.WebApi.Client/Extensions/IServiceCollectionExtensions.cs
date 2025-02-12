@@ -25,6 +25,8 @@ public static class IServiceCollectionExtensions
     public static IHttpClientBuilder AddAuthenticationHeaderProvider<TProvider>(this IHttpClientBuilder builder)
         where TProvider : class, IAuthenticationHeaderProvider
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.AddHttpMessageHandler<AuthenticationHeaderHandler>();
 
         builder.Services.TryAddScoped<AuthenticationHeaderHandler>();

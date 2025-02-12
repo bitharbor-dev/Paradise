@@ -18,7 +18,7 @@ public static class ValidationMessagesProvider
     #endregion
 
     #region Fields
-    private static readonly CompositeFormat _objectIsNull       = Parse(ObjectIsNull);
+    private static readonly CompositeFormat _objectIsNull = Parse(ObjectIsNull);
     private static readonly CompositeFormat _requiredAtLeastOne = Parse(RequiredAtLeastOne);
     #endregion
 

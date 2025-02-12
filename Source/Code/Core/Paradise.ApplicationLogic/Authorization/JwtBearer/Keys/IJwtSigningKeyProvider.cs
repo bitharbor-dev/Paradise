@@ -22,6 +22,6 @@ public interface IJwtSigningKeyProvider
     /// <summary>
     /// The signature algorithm to apply.
     /// </summary>
-    public string JwtAlgorithm { get; }
+    string JwtAlgorithm { get; }
     #endregion
 }

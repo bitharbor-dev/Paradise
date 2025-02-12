@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Paradise.Domain.Base.Tests.EqualityComparers;
+﻿namespace Paradise.Domain.Base.Tests.EqualityComparers;
 
 /// <summary>
 /// Test class for the <see cref="ValueObjectEqualityComparer"/>.

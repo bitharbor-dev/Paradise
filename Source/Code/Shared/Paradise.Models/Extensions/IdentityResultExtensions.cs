@@ -21,6 +21,8 @@ public static class IdentityResultExtensions
     /// </returns>
     public static IEnumerable<ApplicationError> AsErrors(this IdentityResult result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         foreach (var error in result.Errors)
         {
             if (Enum.TryParse(error.Code, out ErrorCode errorCode))

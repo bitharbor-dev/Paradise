@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Paradise.ApplicationLogic.Domain.Tests.MessageTemplates;
+﻿namespace Paradise.ApplicationLogic.Domain.Tests.MessageTemplates;
 
 /// <summary>
 /// Test class for the <see cref="EmailTemplate"/>.

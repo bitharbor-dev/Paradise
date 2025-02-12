@@ -21,6 +21,8 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     /// <inheritdoc/>
     public sealed override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
+        ArgumentNullException.ThrowIfNull(eventData);
+
         OnSavingChanges(eventData, new()
         {
             TransactionTime = DateTime.UtcNow
@@ -32,6 +34,8 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     /// <inheritdoc/>
     public sealed override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(eventData);
+
         OnSavingChanges(eventData, new()
         {
             TransactionTime = DateTime.UtcNow

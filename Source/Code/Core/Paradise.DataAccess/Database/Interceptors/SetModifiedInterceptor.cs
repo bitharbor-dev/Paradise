@@ -23,6 +23,9 @@ public class SetModifiedInterceptor : BaseSaveChangesInterceptor, ISingletonInte
     /// <inheritdoc/>
     protected override void Intercept(EntityEntry entry, DbContextEventProperties properties)
     {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(properties);
+
         if (entry.Entity is IDatabaseRecord record)
             record.Modified = properties.TransactionTime;
     }

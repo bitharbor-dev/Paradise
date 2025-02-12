@@ -3,7 +3,6 @@ using Paradise.ApplicationLogic.Services.Application;
 using Paradise.DataAccess.Repositories.Application.Implementation;
 using Paradise.DataAccess.Repositories.Base;
 using Paradise.Models.Application.CommunicationModels;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Paradise.ApplicationLogic.Tests.Services.Application;

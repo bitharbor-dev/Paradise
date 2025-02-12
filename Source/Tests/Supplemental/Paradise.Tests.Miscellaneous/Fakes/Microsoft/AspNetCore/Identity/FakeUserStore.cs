@@ -152,7 +152,7 @@ public sealed class FakeUserStore(IDomainDataSource domainDataSource)
         if (_userClaims.TryGetValue(user.Id, out var storedClaims))
             storedClaims.AddRange(claims);
         else
-            _userClaims.Add(user.Id, claims.ToList());
+            _userClaims.Add(user.Id, [.. claims]);
 
         return Task.CompletedTask;
     }

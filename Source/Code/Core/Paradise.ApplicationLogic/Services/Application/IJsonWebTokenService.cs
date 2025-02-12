@@ -80,7 +80,7 @@ public interface IJsonWebTokenService
     /// <param name="token">
     /// The token to be formatted.
     /// </param>
-    public static void RemoveTokenPrefixIfExists(ref string token)
+    static void RemoveTokenPrefixIfExists(ref string token)
     {
         ArgumentNullException.ThrowIfNull(token);
 

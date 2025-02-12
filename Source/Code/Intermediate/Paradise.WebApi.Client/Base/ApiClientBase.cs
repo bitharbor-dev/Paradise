@@ -284,7 +284,7 @@ public abstract class ApiClientBase : IDisposable
     /// A route based on the given <paramref name="routeTemplate"/>,
     /// <paramref name="routeParameters"/> and <paramref name="queryParameters"/>.
     /// </returns>
-    private static protected string CreateRoute(string routeTemplate,
+    private protected static string CreateRoute(string routeTemplate,
                                                 Dictionary<string, object?>? queryParameters = null,
                                                 Dictionary<string, object?>? routeParameters = null)
     {
