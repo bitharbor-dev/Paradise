@@ -50,9 +50,9 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
         => await userService.GetAllAsync().ConfigureAwait(false);
 
     /// <summary>
-    /// Gets the user with the given <paramref name="userId"/>.
+    /// Gets the user with the given <paramref name="id"/>.
     /// </summary>
-    /// <param name="userId">
+    /// <param name="id">
     /// The Id of the user to be found.
     /// </param>
     /// <returns>
@@ -64,8 +64,8 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     [ResultResponse<UserModel>(HttpStatusCode.OK)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetById([FromRoute(Name = UserIdParameter)] Guid userId)
-        => await userService.GetByIdAsync(userId).ConfigureAwait(false);
+    public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid id)
+        => await userService.GetByIdAsync(id).ConfigureAwait(false);
 
     /// <summary>
     /// Registers a new user.

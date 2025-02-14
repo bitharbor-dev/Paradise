@@ -57,9 +57,9 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
         => await roleService.GetAllAsync(isDefault).ConfigureAwait(false);
 
     /// <summary>
-    /// Gets the role with the given <paramref name="roleId"/>.
+    /// Gets the role with the given <paramref name="id"/>.
     /// </summary>
-    /// <param name="roleId">
+    /// <param name="id">
     /// The Id of the role to be found.
     /// </param>
     /// <returns>
@@ -72,14 +72,14 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetById([FromRoute(Name = RoleIdParameter)] Guid roleId)
-        => await roleService.GetByIdAsync(roleId).ConfigureAwait(false);
+    public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid id)
+        => await roleService.GetByIdAsync(id).ConfigureAwait(false);
 
     /// <summary>
     /// Gets the list of application roles, which belongs
-    /// to the user with the given <paramref name="userId"/>.
+    /// to the user with the given <paramref name="id"/>.
     /// </summary>
-    /// <param name="userId">
+    /// <param name="id">
     /// The Id of the user whose roles to be found.
     /// </param>
     /// <returns>
@@ -87,15 +87,15 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// <see cref="Result{TValue}.Value"/> is an <see cref="IEnumerable{T}"/>
     /// of <see cref="RoleModel"/>
     /// containing information about the application roles, which belong
-    /// to the user with the given <paramref name="userId"/>.
+    /// to the user with the given <paramref name="id"/>.
     /// </returns>
     [HttpGet(RoleRoutes.GetUserRoles)]
     [ResultResponse<IEnumerable<RoleModel>>(HttpStatusCode.OK)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetUserRoles([FromRoute(Name = UserIdParameter)] Guid userId)
-        => await roleService.GetUserRolesAsync(userId).ConfigureAwait(false);
+    public async Task<IActionResult> GetUserRoles([FromRoute(Name = IdParameter)] Guid id)
+        => await roleService.GetUserRolesAsync(id).ConfigureAwait(false);
 
     /// <summary>
     /// Creates a new application role.
@@ -120,7 +120,7 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     /// <summary>
     /// Updates an application role.
     /// </summary>
-    /// <param name="roleId">
+    /// <param name="id">
     /// The Id of the role to be updated.
     /// </param>
     /// <param name="model">
@@ -137,13 +137,13 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Update([FromRoute(Name = RoleIdParameter)] Guid roleId, [FromBody, Required] RoleUpdateModel model)
-        => await roleService.UpdateAsync(roleId, model).ConfigureAwait(false);
+    public async Task<IActionResult> Update([FromRoute(Name = IdParameter)] Guid id, [FromBody, Required] RoleUpdateModel model)
+        => await roleService.UpdateAsync(id, model).ConfigureAwait(false);
 
     /// <summary>
     /// Deletes an application role.
     /// </summary>
-    /// <param name="roleId">
+    /// <param name="id">
     /// The Id of the role to be deleted.
     /// </param>
     /// <returns>
@@ -157,8 +157,8 @@ public sealed class RolesController(IRoleService roleService) : ApiControllerBas
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Delete([FromRoute(Name = RoleIdParameter)] Guid roleId)
-        => await roleService.DeleteAsync(roleId).ConfigureAwait(false);
+    public async Task<IActionResult> Delete([FromRoute(Name = IdParameter)] Guid id)
+        => await roleService.DeleteAsync(id).ConfigureAwait(false);
 
     /// <summary>
     /// Assigns an application role to a user.

@@ -42,9 +42,9 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
         => await emailTemplateService.GetAllAsync().ConfigureAwait(false);
 
     /// <summary>
-    /// Gets the email template with the given <paramref name="emailTemplateId"/>.
+    /// Gets the email template with the given <paramref name="id"/>.
     /// </summary>
-    /// <param name="emailTemplateId">
+    /// <param name="id">
     /// The Id of the email template to be found.
     /// </param>
     /// <returns>
@@ -57,8 +57,8 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid emailTemplateId)
-        => await emailTemplateService.GetByIdAsync(emailTemplateId).ConfigureAwait(false);
+    public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid id)
+        => await emailTemplateService.GetByIdAsync(id).ConfigureAwait(false);
 
     /// <summary>
     /// Creates a new email template.
@@ -84,7 +84,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// <summary>
     /// Updates an email template.
     /// </summary>
-    /// <param name="emailTemplateId">
+    /// <param name="id">
     /// The Id of the email template to be updated.
     /// </param>
     /// <param name="model">
@@ -102,13 +102,13 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
     [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Update([FromRoute(Name = IdParameter)] Guid emailTemplateId, [FromBody, Required] EmailTemplateUpdateModel model)
-        => await emailTemplateService.UpdateAsync(emailTemplateId, model).ConfigureAwait(false);
+    public async Task<IActionResult> Update([FromRoute(Name = IdParameter)] Guid id, [FromBody, Required] EmailTemplateUpdateModel model)
+        => await emailTemplateService.UpdateAsync(id, model).ConfigureAwait(false);
 
     /// <summary>
     /// Deletes an email template.
     /// </summary>
-    /// <param name="emailTemplateId">
+    /// <param name="id">
     /// The Id of the email template to be deleted.
     /// </param>
     /// <returns>
@@ -118,7 +118,7 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     [ResultResponse(HttpStatusCode.OK)]
     [ResultResponse(HttpStatusCode.Unauthorized)]
     [ResultResponse(HttpStatusCode.Forbidden)]
-    public async Task<IActionResult> Delete([FromRoute(Name = IdParameter)] Guid emailTemplateId)
-        => await emailTemplateService.DeleteAsync(emailTemplateId).ConfigureAwait(false);
+    public async Task<IActionResult> Delete([FromRoute(Name = IdParameter)] Guid id)
+        => await emailTemplateService.DeleteAsync(id).ConfigureAwait(false);
     #endregion
 }
