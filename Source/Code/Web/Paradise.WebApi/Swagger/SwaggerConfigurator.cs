@@ -1,7 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
 using Paradise.Common.Extensions;
-using Paradise.WebApi.Swagger.DocumentFilters;
-using Paradise.WebApi.Swagger.OperationFilters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
@@ -49,9 +47,8 @@ internal static class SwaggerConfigurator
         options.SwaggerDoc(apiInfo.Version, apiInfo);
 
         options.AddSecurityDefinition(scheme.Reference.Id, scheme);
-        options.DocumentFilter<EndpointPathToLowercaseDocumentFilter>();
-        options.DocumentFilter<SummaryDocumentFilter>();
-        options.OperationFilter<OpenApiSecuritySchemeOperationFilter>(scheme);
+        options.DocumentFilter<DefaultDocumentFilter>();
+        options.OperationFilter<DefaultOperationFilter>(scheme);
 
         options.AddXmlComments();
     }

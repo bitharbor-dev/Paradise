@@ -1,15 +1,15 @@
 ﻿using Microsoft.OpenApi.Models;
 using Paradise.Common.Extensions;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Paradise.WebApi.Swagger.DocumentFilters;
+namespace Paradise.WebApi.OpenApi.Extensions;
 
 /// <summary>
-/// Formats operations summaries.
+/// Contains extension methods for the <see cref="OpenApiDocument"/> <see langword="class"/>.
 /// </summary>
-internal sealed partial class SummaryDocumentFilter : IDocumentFilter
+internal static partial class OpenApiDocumentExtensions
 {
     #region Constants
     /// <summary>
@@ -20,37 +20,33 @@ internal sealed partial class SummaryDocumentFilter : IDocumentFilter
     /// Second part of "langword" tag.
     /// </summary>
     private const string LangwordTagEnd = "\" />";
+    /// <summary>
+    /// URI segments separator.
+    /// </summary>
+    private const char PathSeparator = '/';
     #endregion
 
     #region Public methods
-    /// <inheritdoc/>
-    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+    /// <summary>
+    /// Trims namespaces names in the given <paramref name="document"/>.
+    /// </summary>
+    /// <param name="document">
+    /// The <see cref="OpenApiDocument"/>, which operation summaries to be formatted.
+    /// </param>
+    public static void TrimNamespaces(this OpenApiDocument document)
     {
+        ArgumentNullException.ThrowIfNull(document);
+
         static OpenApiOperation Selector(KeyValuePair<OperationType, OpenApiOperation> keyValuePair)
             => keyValuePair.Value;
 
-        var operations = swaggerDoc
-            .Paths
-            .SelectMany(path => path.Value.Operations.Select(Selector));
-
-        TrimNamespaces(operations);
-
-        TrimLangwordTags(operations);
-    }
-    #endregion
-
-    #region Private methods
-    /// <summary>
-    /// Trims namespaces names in the given <paramref name="operations"/> sequence.
-    /// </summary>
-    /// <param name="operations">
-    /// Operations, which summaries to be formatted.
-    /// </param>
-    private static void TrimNamespaces(IEnumerable<OpenApiOperation> operations)
-    {
         const string Replacement = "";
 
         var namespaces = GetApplicationNamespaces();
+
+        var operations = document
+            .Paths
+            .SelectMany(path => path.Value.Operations.Select(Selector));
 
         foreach (var operation in operations)
         {
@@ -75,20 +71,63 @@ internal sealed partial class SummaryDocumentFilter : IDocumentFilter
     }
 
     /// <summary>
-    /// Removes all "langword" tags in the given <paramref name="operations"/> sequence.
+    /// Removes all "langword" tags in the given <paramref name="document"/>.
     /// </summary>
-    /// <param name="operations">
-    /// Operations, which summaries to be cleared of "langword" tags.
+    /// <param name="document">
+    /// The <see cref="OpenApiDocument"/>, which operation summaries to be cleared of "langword" tags.
     /// </param>
-    private static void TrimLangwordTags(IEnumerable<OpenApiOperation> operations)
+    public static void TrimLangwordTags(this OpenApiDocument document)
     {
+        ArgumentNullException.ThrowIfNull(document);
+
+        static OpenApiOperation Selector(KeyValuePair<OperationType, OpenApiOperation> keyValuePair)
+            => keyValuePair.Value;
+
         static bool Predicate(OpenApiOperation operation)
             => operation.Summary is not null;
+
+        var operations = document
+            .Paths
+            .SelectMany(path => path.Value.Operations.Select(Selector));
 
         foreach (var operation in operations.Where(Predicate))
             operation.Summary = TrimLangwordTag(operation.Summary);
     }
 
+    /// <summary>
+    /// Formats all paths to the camel case in the given <paramref name="document"/>.
+    /// </summary>
+    /// <param name="document">
+    /// The <see cref="OpenApiDocument"/>, which paths to be formatted.
+    /// </param>
+    public static void FormatPathsToCamelCase(this OpenApiDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+
+        var paths = new OpenApiPaths();
+
+        document
+            .Paths
+            .Select(item =>
+            {
+                var decomposedKey = item
+                    .Key
+                    .Split(PathSeparator)
+                    .Where(segment => !string.IsNullOrEmpty(segment))
+                    .Select(segment => char.ToLower(segment.First(), CultureInfo.InvariantCulture) + segment[1..]);
+
+                var camelCaseKey = PathSeparator + string.Join(PathSeparator, decomposedKey);
+
+                return new KeyValuePair<string, OpenApiPathItem>(camelCaseKey, item.Value);
+            })
+            .ToList()
+            .ForEach(item => paths.Add(item.Key, item.Value));
+
+        document.Paths = paths;
+    }
+    #endregion
+
+    #region Private methods
     /// <summary>
     /// Removes all "langword" tag occurrences and leaves only inner values.
     /// </summary>
