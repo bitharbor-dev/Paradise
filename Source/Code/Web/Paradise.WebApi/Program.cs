@@ -15,9 +15,10 @@ static WebApplication CreateApp(string[] args, out IConfiguration appSettings)
     var configurationOrigin = ConfigurationOrigin.Default;
     var signingKeyProvider = JwtSigningKeyProviderFactory.CreateProvider(configurationOrigin.GetConfiguration());
 
-    var servicesBuilder = new ApiServiceCollectionBuilder(builder.Services, configurationOrigin, signingKeyProvider);
+    new ApiServiceCollectionBuilder(builder.Services, configurationOrigin, signingKeyProvider)
+        .ConfigureRequiredServices();
 
-    servicesBuilder.ConfigureRequiredServices();
+
 
     builder.Services.AddApplicationInsightsTelemetry();
 

@@ -40,13 +40,24 @@ internal static class OpenApiOperationExtensions
         if (methodInfo is null)
             return;
 
-        var authRequired = !methodInfo.GetCustomAttributes(true)
-            .Union(methodInfo.DeclaringType?.GetCustomAttributes(true) ?? [])
+        var actionAttributes = methodInfo.GetCustomAttributes(true);
+        var controllerAttributes = methodInfo.DeclaringType?.GetCustomAttributes(true) ?? [];
+
+        var attributes = actionAttributes.Union(controllerAttributes);
+
+        var authRequired = !attributes
             .OfType<AllowAnonymousAttribute>()
             .Any();
 
         if (authRequired)
-            operation.Security.Add(new() { { scheme, [] } });
+        {
+            var authRequirement = new OpenApiSecurityRequirement
+            {
+                [scheme] = []
+            };
+
+            operation.Security.Add(authRequirement);
+        }
     }
     #endregion
 }
