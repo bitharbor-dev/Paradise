@@ -47,8 +47,8 @@ internal static class SwaggerConfigurator
         options.SwaggerDoc(apiInfo.Version, apiInfo);
 
         options.AddSecurityDefinition(scheme.Reference.Id, scheme);
-        options.DocumentFilter<DefaultDocumentFilter>();
-        options.OperationFilter<DefaultOperationFilter>(scheme);
+        options.AddDocumentFilterInstance(new DefaultDocumentFilter());
+        options.AddOperationFilterInstance(new DefaultOperationFilter(scheme));
 
         options.AddXmlComments();
     }

@@ -26,7 +26,13 @@ internal static class OpenApiOperationExtensions
     /// <param name="scheme">
     /// The <see cref="OpenApiSecurityScheme"/> to be added.
     /// </param>
-    public static void AddSecurityScheme(this OpenApiOperation operation, ActionDescriptor operationDescriptor, OpenApiSecurityScheme scheme)
+    /// <param name="scopes">
+    /// The list of scope names required for scheme execution.
+    /// <para>
+    /// If security scheme is not "<c>oauth2</c>" or "<c>openIdConnect</c>" - the array MUST be empty.
+    /// </para>
+    /// </param>
+    public static void AddSecurityScheme(this OpenApiOperation operation, ActionDescriptor operationDescriptor, OpenApiSecurityScheme scheme, params IList<string> scopes)
     {
         MethodInfo? methodInfo = null;
 
@@ -53,7 +59,7 @@ internal static class OpenApiOperationExtensions
         {
             var authRequirement = new OpenApiSecurityRequirement
             {
-                [scheme] = []
+                [scheme] = scopes
             };
 
             operation.Security.Add(authRequirement);

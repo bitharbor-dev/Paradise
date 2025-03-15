@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace Paradise.WebApi.Swagger;
 
 /// <summary>
-/// Default Swagger document filter.
+/// Default <see cref="OpenApiDocument"/> filter.
 /// </summary>
 internal sealed class DefaultDocumentFilter : IDocumentFilter
 {
