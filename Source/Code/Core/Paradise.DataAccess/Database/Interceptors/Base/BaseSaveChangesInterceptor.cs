@@ -23,10 +23,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     {
         ArgumentNullException.ThrowIfNull(eventData);
 
-        OnSavingChanges(eventData, new()
-        {
-            TransactionTime = DateTime.UtcNow
-        });
+        OnSavingChanges(eventData);
 
         return base.SavingChanges(eventData, result);
     }
@@ -36,10 +33,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     {
         ArgumentNullException.ThrowIfNull(eventData);
 
-        OnSavingChanges(eventData, new()
-        {
-            TransactionTime = DateTime.UtcNow
-        });
+        OnSavingChanges(eventData);
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
@@ -65,10 +59,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     /// <param name="eventData">
     /// Contextual information about the <see cref="DbContext" /> being used.
     /// </param>
-    /// <param name="properties">
-    /// Contains additional transaction information.
-    /// </param>
-    private void OnSavingChanges(DbContextEventData eventData, DbContextEventProperties properties)
+    private void OnSavingChanges(DbContextEventData eventData)
     {
         var context = eventData.Context;
 
@@ -78,6 +69,11 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
         var entries = EntityFilter is not null
             ? context.ChangeTracker.Entries().Where(EntityFilter)
             : context.ChangeTracker.Entries();
+
+        var properties = new DbContextEventProperties
+        {
+            TransactionTime = DateTime.UtcNow
+        };
 
         foreach (var entry in entries)
             Intercept(entry, properties);
