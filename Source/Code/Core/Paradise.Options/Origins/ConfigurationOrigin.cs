@@ -42,7 +42,7 @@ public sealed class ConfigurationOrigin(ConfigurationOriginOptions? options = nu
         if (Options.AddEnvironmentVariables)
             builder.AddEnvironmentVariables();
 
-        if (Options.AddCmmandLineArguments)
+        if (Options.AddCommandLineArguments)
             builder.AddCommandLine(Environment.GetCommandLineArgs());
 
         builder.AddJsonFile(Options.DefaultJsonConfigurationName, false, true);

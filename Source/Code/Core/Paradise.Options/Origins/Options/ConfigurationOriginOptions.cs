@@ -53,7 +53,7 @@ public sealed class ConfigurationOriginOptions
     /// Indicates whether the CLI arguments should be included
     /// into configuration.
     /// </summary>
-    public bool AddCmmandLineArguments { get; set; } = true;
+    public bool AddCommandLineArguments { get; set; } = true;
 
     /// <summary>
     /// Default JSON configuration file name.

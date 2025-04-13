@@ -18,8 +18,6 @@ static WebApplication CreateApp(string[] args, out IConfiguration appSettings)
     new ApiServiceCollectionBuilder(builder.Services, configurationOrigin, signingKeyProvider)
         .ConfigureRequiredServices();
 
-
-
     builder.Services.AddApplicationInsightsTelemetry();
 
     builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
