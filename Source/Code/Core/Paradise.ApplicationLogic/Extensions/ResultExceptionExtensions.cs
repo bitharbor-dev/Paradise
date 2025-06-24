@@ -226,5 +226,77 @@ internal static class ResultExceptionExtensions
     /// </param>
     public static void ThrowIfNotNull<T>(this T? value, HttpStatusCode statusCode, ErrorCode errorCode, params object?[] args)
         => ThrowIfTrue(value is not null, statusCode, errorCode, args);
+
+    /// <summary>
+    /// Throws a <see cref="ResultException"/> if the given <paramref name="value"/>
+    /// is equal to <paramref name="comparisonValue"/>.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Value type.
+    /// </typeparam>
+    /// <param name="value">
+    /// The <typeparamref name="T"/> value to be tested.
+    /// </param>
+    /// <param name="comparisonValue">
+    /// The <typeparamref name="T"/> value to be compared with.
+    /// </param>
+    /// <param name="statusCode">
+    /// The <see cref="HttpStatusCode"/> value to be set.
+    /// </param>
+    /// <param name="errorCode">
+    /// <see cref="ErrorCode"/> that references
+    /// the corresponding error description.
+    /// </param>
+    /// <param name="equalityComparer">
+    /// The <see cref="IEqualityComparer{T}"/> to use.
+    /// Leave <see langword="null"/> to use <see cref="EqualityComparer{T}.Default"/>.
+    /// </param>
+    /// <param name="args">
+    /// An object array that contains zero or more objects to format.
+    /// </param>
+    public static void ThrowIfEqual<T>(this T? value, T? comparisonValue, HttpStatusCode statusCode, ErrorCode errorCode, IEqualityComparer<T>? equalityComparer = null, params object?[] args)
+    {
+        equalityComparer ??= EqualityComparer<T>.Default;
+
+        var valuesAreEqual = equalityComparer.Equals(comparisonValue, value);
+
+        ThrowIfTrue(valuesAreEqual, statusCode, errorCode, args);
+    }
+
+    /// <summary>
+    /// Throws a <see cref="ResultException"/> if the given <paramref name="value"/>
+    /// is not equal to <paramref name="comparisonValue"/>.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Value type.
+    /// </typeparam>
+    /// <param name="value">
+    /// The <typeparamref name="T"/> value to be tested.
+    /// </param>
+    /// <param name="comparisonValue">
+    /// The <typeparamref name="T"/> value to be compared with.
+    /// </param>
+    /// <param name="statusCode">
+    /// The <see cref="HttpStatusCode"/> value to be set.
+    /// </param>
+    /// <param name="errorCode">
+    /// <see cref="ErrorCode"/> that references
+    /// the corresponding error description.
+    /// </param>
+    /// <param name="equalityComparer">
+    /// The <see cref="IEqualityComparer{T}"/> to use.
+    /// Leave <see langword="null"/> to use <see cref="EqualityComparer{T}.Default"/>.
+    /// </param>
+    /// <param name="args">
+    /// An object array that contains zero or more objects to format.
+    /// </param>
+    public static void ThrowIfNotEqual<T>(this T? value, T? comparisonValue, HttpStatusCode statusCode, ErrorCode errorCode, IEqualityComparer<T>? equalityComparer = null, params object?[] args)
+    {
+        equalityComparer ??= EqualityComparer<T>.Default;
+
+        var valuesAreEqual = equalityComparer.Equals(comparisonValue, value);
+
+        ThrowIfFalse(valuesAreEqual, statusCode, errorCode, args);
+    }
     #endregion
 }

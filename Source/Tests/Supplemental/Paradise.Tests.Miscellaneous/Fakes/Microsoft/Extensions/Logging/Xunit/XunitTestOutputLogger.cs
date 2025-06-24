@@ -21,39 +21,50 @@ internal sealed class XunitTestOutputLogger<T>(ITestOutputHelper output) : ILogg
     /// Trace log level prefix.
     /// </summary>
     private const string TraceLogLevel = "trce";
+
     /// <summary>
     /// Debug log level prefix.
     /// </summary>
     private const string DebugLogLevel = "dbug";
+
     /// <summary>
     /// Information log level prefix.
     /// </summary>
     private const string InformationLogLevel = "info";
+
     /// <summary>
     /// Warning log level prefix.
     /// </summary>
     private const string WarningLogLevel = "warn";
+
     /// <summary>
     /// Error log level prefix.
     /// </summary>
     private const string ErrorLogLevel = "fail";
+
     /// <summary>
     /// Critical log level prefix.
     /// </summary>
     private const string CriticalLogLevel = "crit";
+
     /// <summary>
     /// Default log level padding.
     /// </summary>
     private const string LogLevelPadding = ": ";
+
     /// <summary>
     /// Opening brace to wrap log event id.
     /// </summary>
     private const char OpenBrace = '[';
+
     /// <summary>
     /// Closing brace to wrap log event id.
     /// </summary>
     private const char CloseBrace = ']';
 
+    /// <summary>
+    /// The default <see cref="StringBuilder.Capacity"/> value.
+    /// </summary>
     private const ushort DefaultStringBuilderCapacity = 1024;
     #endregion
 
@@ -183,16 +194,16 @@ internal sealed class XunitTestOutputLogger<T>(ITestOutputHelper output) : ILogg
     /// </summary>
     private sealed class Scope : IDisposable
     {
-        #region Public methods
-        /// <inheritdoc/>
-        public void Dispose() { }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Singleton <see cref="Scope"/> instance.
         /// </summary>
         public static Scope Instance { get; } = new();
+        #endregion
+
+        #region Public methods
+        /// <inheritdoc/>
+        public void Dispose() { }
         #endregion
     }
     #endregion

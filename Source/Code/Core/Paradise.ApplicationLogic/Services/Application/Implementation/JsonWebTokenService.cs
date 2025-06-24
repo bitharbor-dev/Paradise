@@ -27,11 +27,6 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
                                         IOptions<JwtBearerOptions> jwtBearerOptions)
     : IJsonWebTokenService
 {
-    #region Fields
-    private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
-    private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public string GenerateToken(IEnumerable<Claim> claims, Guid refreshTokenId, out DateTime expiryDate)
@@ -43,11 +38,11 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
         overwrittenClaims.Add(new(JwtRegisteredClaimNames.Jti, refreshTokenId.ToString()));
 
         var creationTime = DateTime.UtcNow;
-        var accessTokenLifetime = _applicationOptions.Authentication.AccessTokenLifetime;
+        var accessTokenLifetime = applicationOptions.Value.Authentication.AccessTokenLifetime;
 
         expiryDate = creationTime.Add(accessTokenLifetime);
 
-        var tokenParameters = _jwtBearerOptions.TokenValidationParameters;
+        var tokenParameters = jwtBearerOptions.Value.TokenValidationParameters;
 
         var handler = new JwtSecurityTokenHandler();
         var token = handler.CreateJwtSecurityToken(new()
@@ -87,7 +82,7 @@ public sealed class JsonWebTokenService(IOptions<ApplicationOptions> application
 
         try
         {
-            var tokenParameters = _jwtBearerOptions.TokenValidationParameters;
+            var tokenParameters = jwtBearerOptions.Value.TokenValidationParameters;
 
             tokenParameters.ValidateLifetime = checkExpiry;
 

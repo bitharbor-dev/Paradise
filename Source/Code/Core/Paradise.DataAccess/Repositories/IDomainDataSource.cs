@@ -7,7 +7,4 @@ namespace Paradise.DataAccess.Repositories;
 /// An <see cref="IDataSource"/> interface segregation
 /// to be used by the <see cref="DomainContext"/> class.
 /// </summary>
-public interface IDomainDataSource : IDataSource
-{
-
-}
+public interface IDomainDataSource : IDataSource;

@@ -53,15 +53,6 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                                          IJsonWebTokenService jsonWebTokenService)
     : IAuthorizationService
 {
-    #region Fields
-    private readonly ILogger<AuthorizationService> _logger = logger;
-    private readonly ApplicationOptions _applicationOptions = applicationOptions.Value;
-    private readonly JwtBearerOptions _jwtBearerOptions = jwtBearerOptions.Value;
-    private readonly UserManager _userManager = userManager;
-    private readonly IUserRefreshTokensRepository _userRefreshTokensRepository = userRefreshTokensRepository;
-    private readonly IJsonWebTokenService _jsonWebTokenService = jsonWebTokenService;
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public async Task OnAuthenticationFailedAsync(IHttpResponseWrapper response, ResultContextDelegates delegates)
@@ -105,7 +96,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 handleResponseDelegate();
             }
 
-            if (!_jsonWebTokenService.ValidateFormat(token))
+            if (!jsonWebTokenService.ValidateFormat(token))
             {
                 await WriteErrorResultAsync(response, Unauthorized, InvalidToken)
                     .ConfigureAwait(false);
@@ -162,11 +153,11 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var refreshToken = await _userRefreshTokensRepository
+            var refreshToken = await userRefreshTokensRepository
                 .GetByIdAsync(refreshTokenId)
                 .ConfigureAwait(false);
 
-            var tokenLifetime = _applicationOptions.Authentication.RefreshTokenLifetime;
+            var tokenLifetime = applicationOptions.Value.Authentication.RefreshTokenLifetime;
             var tokenIsOutdatedOrDoesNotExist = refreshToken?.IsOutdated(tokenLifetime) ?? true;
 
             if (tokenIsOutdatedOrDoesNotExist)
@@ -193,7 +184,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var user = await _userManager
+            var user = await userManager
                 .GetUserAsync(principal)
                 .ConfigureAwait(false);
             if (user is null)
@@ -208,7 +199,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
                 return;
             }
 
-            var roles = await _userManager
+            var roles = await userManager
                 .GetRolesAsync(user)
                 .ConfigureAwait(false);
 
@@ -280,7 +271,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// </param>
     private async Task WriteExceptionResultAsync(IHttpResponseWrapper response, Exception exception)
     {
-        _logger.LogUnhandledException(exception);
+        logger.LogUnhandledException(exception);
 
         if (response.HasStarted)
             return;
@@ -314,7 +305,7 @@ public sealed class AuthorizationService(ILogger<AuthorizationService> logger,
     /// </returns>
     private bool PrincipalRolesAreMatching(ClaimsPrincipal principal, IEnumerable<string> roles)
     {
-        var roleClaimType = _jwtBearerOptions.TokenValidationParameters.RoleClaimType;
+        var roleClaimType = jwtBearerOptions.Value.TokenValidationParameters.RoleClaimType;
         var principalRoles = principal.FindValues(roleClaimType).Order();
 
         return principalRoles.SequenceEqual(roles.Order());

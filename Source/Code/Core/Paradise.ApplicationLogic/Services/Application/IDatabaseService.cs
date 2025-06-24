@@ -68,11 +68,6 @@ public interface IDatabaseService
 
     /// <summary>
     /// Deletes users who have exceeded the email confirmation period.
-    /// <para>
-    /// <code>
-    /// <see cref="IDatabaseRecord.Created"/> + <paramref name="confirmationPeriod"/> &lt; <see cref="DateTime.UtcNow"/>
-    /// </code>
-    /// </para>
     /// </summary>
     /// <param name="confirmationPeriod">
     /// Email confirmation period.

@@ -35,19 +35,15 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
                                          IEmailTemplatesRepository emailTemplatesRepository)
     : ICommunicationService
 {
-    #region Fields
-    private readonly SmtpOptions _smtpOptions = smtpOptions.Value;
-    #endregion
-
     #region Public methods
     /// <inheritdoc/>
     public async Task<Result<EmailModel>> SendEmailAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        _smtpOptions.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
+        smtpOptions.Value.Credentials.ThrowIfNull(ServiceUnavailable, InvalidSmtpConfiguration);
 
-        _smtpOptions.Credentials.UserName.ThrowIfNullOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration, SenderEmailIsMissing);
+        smtpOptions.Value.Credentials.UserName.ThrowIfNullOrWhiteSpace(ServiceUnavailable, InvalidSmtpConfiguration, SenderEmailIsMissing);
 
         request.BasicData.To.ThrowIfEmpty(BadRequest, EmptyRecipientsList);
 
@@ -64,7 +60,7 @@ public sealed class CommunicationService(IOptions<SmtpOptions> smtpOptions,
 
         template.ThrowIfNull(NotFound, MessageTemplateNotFound, request.TemplateName, request.Culture?.Name);
 
-        var message = CreateMessage(template, request, _smtpOptions.Credentials.UserName);
+        var message = CreateMessage(template, request, smtpOptions.Value.Credentials.UserName);
 
         await smtpClient.SendAsync(message, cancellationToken)
             .ConfigureAwait(false);

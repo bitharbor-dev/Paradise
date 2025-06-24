@@ -4,16 +4,14 @@ using System.Linq.Expressions;
 
 namespace Paradise.DataAccess.Database.Converters;
 
+/// <summary>
 /// <inheritdoc/>
-internal sealed class CultureInfoConverter : ValueConverter<CultureInfo?, int?>
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="CultureInfoConverter"/> class.
+/// </remarks>
+internal sealed class CultureInfoConverter() : ValueConverter<CultureInfo?, int?>(ConvertTo, ConvertFrom)
 {
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CultureInfoConverter"/> class.
-    /// </summary>
-    public CultureInfoConverter() : base(ConvertTo, ConvertFrom) { }
-    #endregion
-
     #region Properties
     /// <summary>
     /// <see cref="CultureInfo"/> into a <see cref="int"/> conversion expression.
