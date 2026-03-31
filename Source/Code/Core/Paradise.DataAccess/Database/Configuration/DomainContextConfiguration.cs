@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paradise.DataAccess.Database.Configuration.Extensions;
 using Paradise.Domain.Base;
-using Paradise.Domain.Users;
-using static Paradise.DataAccess.Database.Tables.DomainContextTables;
+using Paradise.Domain.Identity.Roles;
+using Paradise.Domain.Identity.Users;
+using static Paradise.DataAccess.Database.Configuration.Tables.DomainContextTables;
 
 namespace Paradise.DataAccess.Database.Configuration;
 
@@ -20,19 +21,40 @@ internal static class DomainContextConfiguration
     /// </param>
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserRefreshToken>(entity =>
+        modelBuilder.Entity<User>(builder =>
         {
-            entity.ToTable(UserRefreshTokens);
-            entity.HasKey(userRefreshToken => userRefreshToken.Id);
+            builder.Property(entity => entity.Id)
+                   .ValueGeneratedNever();
+        });
 
-            entity.HasOne(userRefreshToken => userRefreshToken.Owner)
-                  .WithMany(user => user.RefreshTokens)
-                  .HasForeignKey(userRefreshToken => userRefreshToken.OwnerId);
+        modelBuilder.Entity<Role>(builder =>
+        {
+            builder.Property(entity => entity.Id)
+                   .ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<UserRefreshToken>(builder =>
+        {
+            builder.ToTable(UserRefreshTokens);
+            builder.HasKey(entity => entity.Id);
+
+            builder.Property(entity => entity.Id)
+                   .ValueGeneratedNever();
+
+            builder.HasOne<User>()
+                   .WithMany()
+                   .HasForeignKey(entity => entity.OwnerId);
+
+            builder.Property(entity => entity.OwnerId)
+                   .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Property(entity => entity.ExpiryDateUtc)
+                   .UsePropertyAccessMode(PropertyAccessMode.Field);
         });
 
         modelBuilder.HasDefaultSchema(DomainContext.SchemeName);
 
-        modelBuilder.MarkColumnAsReadOnly(nameof(IDatabaseRecord.Created));
+        modelBuilder.Model.MarkColumnAsReadOnly(nameof(IDomainObject.Created));
     }
     #endregion
 }

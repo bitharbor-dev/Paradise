@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pr:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: windows-latest
+
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+jobs:
+- job: BuildAndTest
+  displayName: 'Build & test'
+  steps:
+  - checkout: self
+    displayName: Checkout
+    fetchDepth: '0'
+
+  - template: Templates/build-flow.yml
+    parameters:
+      verbosity: '${{ parameters.verbosity }}'
+      configuration: '${{ parameters.configuration }}'

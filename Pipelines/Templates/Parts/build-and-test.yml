@@ -1,0 +1,54 @@
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+steps:
+
+- task: UseDotNet@2
+  displayName: 'Download .NET SDK'
+  inputs:
+    version: '10.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore solution dependencies'
+  inputs:
+    command: 'restore'
+    verbosityRestore: '${{ parameters.verbosity }}'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build solution'
+  inputs:
+    command: 'build'
+    arguments: >
+        --configuration ${{ parameters.configuration }}
+        --verbosity ${{ parameters.verbosity }}
+        --no-restore
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run tests'
+  continueOnError: true
+  inputs:
+    command: 'test'
+    arguments: >
+        --configuration ${{ parameters.configuration }}
+        --verbosity ${{ parameters.verbosity }}
+        --no-restore
+        --no-build
+        --coverage
+        --coverage-settings coverage-settings.xml

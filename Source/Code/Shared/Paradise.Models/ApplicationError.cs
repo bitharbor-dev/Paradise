@@ -1,7 +1,9 @@
-﻿using Paradise.Localization.ModelsLocalization;
-using Paradise.Models.Extensions;
+﻿using Paradise.Models.Extensions;
 using System.Globalization;
+using System.Text;
 using System.Text.Json.Serialization;
+using static Paradise.Localization.DataRepresentation.RepresentationMessages;
+using static System.Text.CompositeFormat;
 
 namespace Paradise.Models;
 
@@ -9,8 +11,7 @@ namespace Paradise.Models;
 /// Represents an application error.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="ApplicationError"/> structure
-/// with the specified error code and description.
+/// Initializes a new instance of the <see cref="ApplicationError"/> structure.
 /// </remarks>
 /// <param name="code">
 /// Error code.
@@ -21,6 +22,24 @@ namespace Paradise.Models;
 [method: JsonConstructor]
 public readonly struct ApplicationError(ErrorCode code, string description) : IEquatable<ApplicationError>
 {
+    #region Fields
+    private static readonly CompositeFormat _toStringFormat = Parse(ApplicationErrorToStringFormat);
+    #endregion
+
+    #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApplicationError"/> structure.
+    /// </summary>
+    /// <param name="description">
+    /// Error description.
+    /// </param>
+    /// <param name="isCritical">
+    /// Indicates whether the error is critical.
+    /// </param>
+    internal ApplicationError(string description, bool isCritical) : this(default, description)
+        => IsCritical = isCritical;
+    #endregion
+
     #region Properties
     /// <summary>
     /// Error code.
@@ -51,11 +70,10 @@ public readonly struct ApplicationError(ErrorCode code, string description) : IE
     /// </returns>
     public override string ToString()
     {
-        var messageFormat = ModelsLocalizationMessages.ErrorToStringFormat;
         var codeNumber = (int)Code;
 
         return string.Format(CultureInfo.CurrentCulture,
-                             messageFormat,
+                             _toStringFormat,
                              codeNumber,
                              Description);
     }

@@ -1,0 +1,9 @@
+<Project>
+
+	<ItemGroup>
+		<Compile Update="**\*.TestEnvironment.cs">
+			<DependentUpon>$([System.IO.Path]::GetFileName("%(Identity)").Replace(".TestEnvironment", ""))</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+</Project>

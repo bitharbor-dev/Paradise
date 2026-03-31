@@ -1,45 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-		<None Remove="SeedData\Html\EmailAddressConfirmation.html" />
-		<None Remove="SeedData\Html\EmailAddressReset.html" />
-		<None Remove="SeedData\Html\EmailAddressResetCompleted.html" />
-		<None Remove="SeedData\Html\EmailAddressResetNotification.html" />
-		<None Remove="SeedData\Html\PasswordReset.html" />
-		<None Remove="SeedData\Html\PasswordResetCompleted.html" />
-		<None Remove="SeedData\Html\TwoFactorVerification.html" />
-		<None Remove="SeedData\Json\ApplicationData.json" />
-		<None Remove="SeedData\Json\DomainData.json" />
+		<None Remove="Data\HTML\EmailAddressChangedNotification.html" />
+		<None Remove="Data\HTML\EmailAddressChangeLink.html" />
+		<None Remove="Data\HTML\EmailAddressChangingNotification.html" />
+		<None Remove="Data\HTML\EmailAddressConfirmationLink.html" />
+		<None Remove="Data\HTML\PasswordChangedNotification.html" />
+		<None Remove="Data\HTML\PasswordChangeLink.html" />
+		<None Remove="Data\HTML\TwoFactorVerification.html" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="SeedData\Html\EmailAddressConfirmation.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Html\EmailAddressReset.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Html\EmailAddressResetCompleted.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Html\EmailAddressResetNotification.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Html\PasswordReset.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Html\PasswordResetCompleted.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Html\TwoFactorVerification.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Json\ApplicationData.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="SeedData\Json\DomainData.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
+		<None Remove="Data\JSON\ApplicationData.json" />
+		<None Remove="Data\JSON\DomainData.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Data\HTML\EmailAddressChangedNotification.html" CopyToOutputDirectory="Always" />
+		<Content Include="Data\HTML\EmailAddressChangeLink.html" CopyToOutputDirectory="Always" />
+		<Content Include="Data\HTML\EmailAddressChangingNotification.html" CopyToOutputDirectory="Always" />
+		<Content Include="Data\HTML\EmailAddressConfirmationLink.html" CopyToOutputDirectory="Always" />
+		<Content Include="Data\HTML\PasswordChangedNotification.html" CopyToOutputDirectory="Always" />
+		<Content Include="Data\HTML\PasswordChangeLink.html" CopyToOutputDirectory="Always" />
+		<Content Include="Data\HTML\TwoFactorVerification.html" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Data\JSON\ApplicationData.json" CopyToOutputDirectory="Always" />
+		<Content Include="Data\JSON\DomainData.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -48,7 +36,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Shared\Paradise.Common\Paradise.Common.csproj" />
-		<ProjectReference Include="..\..\Shared\Paradise.Localization\Paradise.Localization.csproj" />
 	</ItemGroup>
 
 </Project>

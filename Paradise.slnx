@@ -1,0 +1,104 @@
+<Solution>
+
+	<Folder Name="/Documents/">
+		<File Path="Documents/.order" />
+		<File Path="Documents/Contacts.md" />
+		<File Path="Documents/Introduction.md" />
+	</Folder>
+
+	<Folder Name="/Pipelines/">
+		<File Path="Pipelines/build-pipeline.yml" />
+		<File Path="Pipelines/publish-pipeline.all.yml" />
+		<File Path="Pipelines/publish-pipeline.maintenance.yml" />
+		<File Path="Pipelines/publish-pipeline.web-api.yml" />
+	</Folder>
+
+	<Folder Name="/Pipelines/Scripts/">
+		<File Path="Pipelines/Scripts/UpdatePropsFileVersionInfo.ps1" />
+	</Folder>
+
+	<Folder Name="/Pipelines/Templates/">
+		<File Path="Pipelines/Templates/build-flow.yml" />
+		<File Path="Pipelines/Templates/publish-flow.yml" />
+	</Folder>
+
+	<Folder Name="/Pipelines/Templates/Parts/">
+		<File Path="Pipelines/Templates/Parts/build-and-test.yml" />
+		<File Path="Pipelines/Templates/Parts/execute-git-version-tool.yml" />
+		<File Path="Pipelines/Templates/Parts/publish-artifact.yml" />
+		<File Path="Pipelines/Templates/Parts/publish-project.yml" />
+	</Folder>
+
+	<Folder Name="/Solution Items/">
+		<File Path=".editorconfig" />
+		<File Path=".gitattributes" />
+		<File Path=".gitignore" />
+		<File Path="coverage-settings.xml" />
+		<File Path="Directory.Build.props" />
+		<File Path="Directory.Packages.props" />
+		<File Path="global.json" />
+		<File Path="LICENSE.txt" />
+	</Folder>
+
+	<Folder Name="/Source/Code/Core/">
+		<Project Path="Source/Code/Core/Paradise.ApplicationLogic.DataConverters/Paradise.ApplicationLogic.DataConverters.csproj" />
+		<Project Path="Source/Code/Core/Paradise.ApplicationLogic.Infrastructure.Domain/Paradise.ApplicationLogic.Infrastructure.Domain.csproj" />
+		<Project Path="Source/Code/Core/Paradise.ApplicationLogic.Infrastructure/Paradise.ApplicationLogic.Infrastructure.csproj" />
+		<Project Path="Source/Code/Core/Paradise.ApplicationLogic.Options/Paradise.ApplicationLogic.Options.csproj" />
+		<Project Path="Source/Code/Core/Paradise.ApplicationLogic/Paradise.ApplicationLogic.csproj" />
+		<Project Path="Source/Code/Core/Paradise.DataAccess.Seed/Paradise.DataAccess.Seed.csproj" />
+		<Project Path="Source/Code/Core/Paradise.DataAccess/Paradise.DataAccess.csproj" />
+		<Project Path="Source/Code/Core/Paradise.Domain.Base/Paradise.Domain.Base.csproj" />
+		<Project Path="Source/Code/Core/Paradise.Domain/Paradise.Domain.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Code/Intermediate/">
+		<Project Path="Source/Code/Intermediate/Paradise.WebApi.Client/Paradise.WebApi.Client.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Code/Shared/">
+		<Project Path="Source/Code/Shared/Paradise.Common/Paradise.Common.csproj" />
+		<Project Path="Source/Code/Shared/Paradise.Localization/Paradise.Localization.csproj" />
+		<Project Path="Source/Code/Shared/Paradise.Models/Paradise.Models.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Code/Web/">
+		<Project Path="Source/Code/Web/Paradise.Maintenance/Paradise.Maintenance.csproj" />
+		<Project Path="Source/Code/Web/Paradise.WebApi.Infrastructure/Paradise.WebApi.Infrastructure.csproj" />
+		<Project Path="Source/Code/Web/Paradise.WebApi/Paradise.WebApi.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Tests/">
+		<File Path="Source/Tests/Directory.Build.props" />
+		<File Path="Source/Tests/Directory.Build.targets" />
+		<File Path="Source/Tests/Directory.Build.Tests.props" />
+		<File Path="Source/Tests/Directory.Build.Tests.targets" />
+	</Folder>
+
+	<Folder Name="/Source/Tests/Supplemental/">
+		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Miscellaneous/Paradise.Tests.Miscellaneous.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Tests/Unit/Core/">
+		<Project Path="Source/Tests/Unit/Core/Paradise.ApplicationLogic.DataConverters.Tests.Unit/Paradise.ApplicationLogic.DataConverters.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit/Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.ApplicationLogic.Infrastructure.Tests.Unit/Paradise.ApplicationLogic.Infrastructure.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.ApplicationLogic.Options.Tests.Unit/Paradise.ApplicationLogic.Options.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.ApplicationLogic.Tests.Unit/Paradise.ApplicationLogic.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.DataAccess.Seed.Tests.Unit/Paradise.DataAccess.Seed.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.DataAccess.Tests.Unit/Paradise.DataAccess.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.Domain.Base.Tests.Unit/Paradise.Domain.Base.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Core/Paradise.Domain.Tests.Unit/Paradise.Domain.Tests.Unit.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Tests/Unit/Shared/">
+		<Project Path="Source/Tests/Unit/Shared/Paradise.Common.Tests.Unit/Paradise.Common.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Shared/Paradise.Models.Tests.Unit/Paradise.Models.Tests.Unit.csproj" />
+	</Folder>
+
+	<Folder Name="/Source/Tests/Unit/Web/">
+		<Project Path="Source/Tests/Unit/Web/Paradise.WebApi.Infrastructure.Tests.Unit/Paradise.WebApi.Infrastructure.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Web/Paradise.WebApi.Tests.Unit/Paradise.WebApi.Tests.Unit.csproj" />
+	</Folder>
+
+</Solution>

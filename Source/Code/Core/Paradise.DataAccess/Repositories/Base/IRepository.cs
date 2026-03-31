@@ -10,13 +10,13 @@ namespace Paradise.DataAccess.Repositories.Base;
 /// Entity type.
 /// </typeparam>
 public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
-    where TEntity : class, IDatabaseRecord
+    where TEntity : class, IDomainObject
 {
     #region Methods
     /// <summary>
     /// Marks the given <paramref name="entity"/> as added,
     /// so that it will be saved to the persistence storage
-    /// when <see cref="Commit"/> or <see cref="CommitAsync"/> method is called.
+    /// when commit transaction method is called.
     /// </summary>
     /// <param name="entity">
     /// The <typeparamref name="TEntity"/> to be marked.
@@ -26,33 +26,12 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// <summary>
     /// Marks the given <paramref name="entities"/> as added,
     /// so that they will be saved to the persistence storage
-    /// when <see cref="Commit"/> or <see cref="CommitAsync"/> method is called.
+    /// when commit transaction method is called.
     /// </summary>
     /// <param name="entities">
     /// The <see cref="IEnumerable{T}"/> of <typeparamref name="TEntity"/> to be marked.
     /// </param>
     void AddRange(IEnumerable<TEntity> entities);
-
-    /// <summary>
-    /// Saves all changes made in this repository to the persistence storage.
-    /// </summary>
-    /// <returns>
-    /// The number of state entries written to the persistence storage.
-    /// </returns>
-    int Commit();
-
-    /// <summary>
-    /// Saves all changes made in this repository to the persistence storage.
-    /// </summary>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// A task that represents the asynchronous save operation.
-    /// The task result contains the number of state entries written to the persistence storage.
-    /// </returns>
-    Task<int> CommitAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Enumerates the repository and performs
@@ -90,6 +69,9 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     Task ForEachAsync(Action<TEntity> action, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -108,12 +90,15 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
     Task ForEachAsync(Expression<Func<TEntity, bool>> predicate, Action<TEntity> action, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Marks the given <paramref name="entity"/> as removed,
     /// so that it will be removed from the persistence storage
-    /// when <see cref="Commit"/> or <see cref="CommitAsync"/> method is called.
+    /// when commit transaction method is called.
     /// </summary>
     /// <param name="entity">
     /// The entity to remove.
@@ -123,7 +108,7 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// <summary>
     /// Marks the entity with the given <paramref name="id"/> as removed,
     /// so that it will be removed from the persistence storage
-    /// when <see cref="Commit"/> or <see cref="CommitAsync"/> method is called.
+    /// when commit transaction method is called.
     /// </summary>
     /// <param name="id">
     /// The Id of the entity to be marked.
@@ -133,7 +118,7 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// <summary>
     /// Marks the given <paramref name="entities"/> as removed,
     /// so that they will be removed from the persistence storage
-    /// when <see cref="Commit"/> or <see cref="CommitAsync"/> method is called.
+    /// when commit transaction method is called.
     /// </summary>
     /// <param name="entities">
     /// The <see cref="IEnumerable{T}"/> of <typeparamref name="TEntity"/> to be marked.
@@ -144,7 +129,7 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>
     /// Marks the entities that satisfy the condition in
     /// <paramref name="predicate"/> as removed,
     /// so that they will be removed from the persistence storage
-    /// when <see cref="Commit"/> or <see cref="CommitAsync"/> method is called.
+    /// when commit transaction method is called.
     /// </summary>
     /// <param name="predicate">
     /// A function to test each element for a condition.

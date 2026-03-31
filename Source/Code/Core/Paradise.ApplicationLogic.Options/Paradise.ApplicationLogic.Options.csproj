@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<None Remove="options.json" />
+
+		<None Remove="options.Development.Docker.json" />
+		<None Remove="options.Development.json" />
+
+		<None Remove="options.Staging.Docker.json" />
+		<None Remove="options.Staging.json" />
+
+		<None Remove="options.Production.Docker.json" />
+		<None Remove="options.Production.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="options.json" CopyToOutputDirectory="Always" />
+
+		<Content Include="options.Development.Docker.json" CopyToOutputDirectory="Always">
+			<DependentUpon>options.Development.json</DependentUpon>
+		</Content>
+		<Content Include="options.Development.json" CopyToOutputDirectory="Always">
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+
+		<Content Include="options.Staging.Docker.json" CopyToOutputDirectory="Always">
+			<DependentUpon>options.Staging.json</DependentUpon>
+		</Content>
+		<Content Include="options.Staging.json" CopyToOutputDirectory="Always">
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+
+		<Content Include="options.Production.Docker.json" CopyToOutputDirectory="Always">
+			<DependentUpon>options.Production.json</DependentUpon>
+		</Content>
+		<Content Include="options.Production.json" CopyToOutputDirectory="Always">
+			<DependentUpon>options.json</DependentUpon>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+		<PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\Paradise.Common\Paradise.Common.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,55 @@
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+  - name: projectDisplayName
+    displayName: 'Project display name'
+    type: string
+    default: ''
+
+  - name: projectName
+    displayName: 'Project file name to publish. Wildcards supported'
+    type: string
+    default: ''
+
+  - name: outputFolder
+    displayName: 'Output folder name, which will be created at artifacts staging directory'
+    type: string
+    default: ''
+
+  - name: restore
+    displayName: 'Restore before publish'
+    type: boolean
+    default: false
+
+steps:
+
+- template: Parts/publish-project.yml
+  parameters:
+    verbosity: ${{ parameters.verbosity }}
+    configuration: ${{ parameters.configuration }}
+    projectDisplayName: ${{ parameters.projectDisplayName }}
+    projectName: ${{ parameters.projectName }}
+    outputFolder: ${{ parameters.outputFolder }}
+    restore: ${{ parameters.restore }}
+
+- template: Parts/publish-artifact.yml
+  parameters:
+    name: ${{ parameters.projectDisplayName }}
+    location: ${{ parameters.outputFolder }}

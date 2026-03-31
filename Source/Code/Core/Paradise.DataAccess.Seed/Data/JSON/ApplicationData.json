@@ -1,0 +1,81 @@
+{
+  "EmailTemplates": [
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 2,
+      "Subject": "Email address changed",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "EmailAddressChangedNotification",
+      "TemplateTextSourcePath": "Data\\HTML\\EmailAddressChangedNotification.html"
+    },
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 2,
+      "Subject": "Email address reset",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "EmailAddressChangeLink",
+      "TemplateTextSourcePath": "Data\\HTML\\EmailAddressChangeLink.html"
+    },
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 2,
+      "Subject": "Email address is about to be changed",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "EmailAddressChangingNotification",
+      "TemplateTextSourcePath": "Data\\HTML\\EmailAddressChangingNotification.html"
+    },
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 1,
+      "Subject": "Email address confirmation",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "EmailAddressConfirmationLink",
+      "TemplateTextSourcePath": "Data\\HTML\\EmailAddressConfirmationLink.html"
+    },
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 0,
+      "Subject": "Password changed",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "PasswordChangedNotification",
+      "TemplateTextSourcePath": "Data\\HTML\\PasswordChangedNotification.html"
+    },
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 1,
+      "Subject": "Password reset",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "PasswordChangeLink",
+      "TemplateTextSourcePath": "Data\\HTML\\PasswordChangeLink.html"
+    },
+    {
+      "CultureName": null,
+      "IsBodyHtml": true,
+      "PlaceholderName": "{parameter}",
+      "PlaceholdersNumber": 1,
+      "Subject": "New login confirmation",
+      "SubjectPlaceholderName": "{subjectParameter}",
+      "SubjectPlaceholdersNumber": 0,
+      "TemplateName": "TwoFactorVerification",
+      "TemplateTextSourcePath": "Data\\HTML\\TwoFactorVerification.html"
+    }
+  ]
+}

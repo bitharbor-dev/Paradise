@@ -1,14 +1,11 @@
-﻿using Microsoft.Extensions.Options;
-using Paradise.Common.Extensions;
-using Paradise.DataAccess.Seed.Models.Application;
-using Paradise.DataAccess.Seed.Models.Application.MessageTemplates;
+﻿using Paradise.Common.Extensions;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.DataAccess.Seed.Models.Domain;
-using Paradise.DataAccess.Seed.Models.Domain.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Users;
+using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
+using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
+using Paradise.Localization.ExceptionHandling;
 using System.Text.Json;
-using static System.IO.File;
-using static System.IO.Path;
-using static System.Text.Json.JsonSerializer;
 
 namespace Paradise.DataAccess.Seed.Providers.Implementation;
 
@@ -21,17 +18,17 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     /// <summary>
     /// Default JSON file's directory name.
     /// </summary>
-    private const string DefaultSeedFolder = "SeedData\\Json";
+    public const string DefaultSeedFolder = "Data\\JSON";
 
     /// <summary>
     /// JSON file name to read the domain data from.
     /// </summary>
-    private const string DomainDataFileName = "DomainData.json";
+    public const string DomainDataFileName = "DomainData.json";
 
     /// <summary>
     /// JSON file name to read the application data from.
     /// </summary>
-    private const string ApplicationDataFileName = "ApplicationData.json";
+    public const string ApplicationDataFileName = "ApplicationData.json";
     #endregion
 
     #region Fields
@@ -43,60 +40,54 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonSeedDataProvider"/> class.
     /// </summary>
-    /// <param name="jsonSerializerOptions">
-    /// The accessor used to access the <see cref="JsonSerializerOptions"/>.
+    /// <param name="path">
+    /// Seed data files directory path.
     /// </param>
-    /// <param name="applicationData">
-    /// Application seed data input <see cref="Stream"/>.
-    /// </param>
-    /// <param name="domainData">
-    /// Domain seed data input <see cref="Stream"/>.
-    /// </param>
-    public JsonSeedDataProvider(IOptions<JsonSerializerOptions>? jsonSerializerOptions, Stream applicationData, Stream domainData)
+    public JsonSeedDataProvider(string? path)
     {
-        _applicationData = Deserialize<ApplicationDataSeedModel>(applicationData, jsonSerializerOptions?.Value)!;
-        _domainData = Deserialize<DomainDataSeedModel>(domainData, jsonSerializerOptions?.Value)!;
-    }
+        ArgumentNullException.ThrowIfNull(path);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JsonSeedDataProvider"/> class.
-    /// </summary>
-    /// <param name="jsonSerializerOptions">
-    /// The accessor used to access the <see cref="JsonSerializerOptions"/>.
-    /// </param>
-    /// <param name="seedFolder">
-    /// Seed data files directory name.
-    /// </param>
-    public JsonSeedDataProvider(IOptions<JsonSerializerOptions>? jsonSerializerOptions, string? seedFolder = DefaultSeedFolder)
-    {
-        var root = AppContext.BaseDirectory;
+        var sanitizedPath = path.SanitizePathSeparators();
 
-        var normalizedSeedFolderPath = seedFolder is null
-            ? string.Empty
-            : seedFolder.SanitizePathSeparators();
+        var applicationFilePath = Path.Combine(sanitizedPath, ApplicationDataFileName);
+        var domainFilePath = Path.Combine(sanitizedPath, DomainDataFileName);
 
-        var applicationFilePath = Combine(root, normalizedSeedFolderPath, ApplicationDataFileName);
-        var domainFilePath = Combine(root, normalizedSeedFolderPath, DomainDataFileName);
+        using var applicationFileStream = File.OpenRead(applicationFilePath);
+        using var domainFileStream = File.OpenRead(domainFilePath);
 
-        var applicationJson = ReadAllText(applicationFilePath);
-        var domainJson = ReadAllText(domainFilePath);
+        var applicationData = JsonSerializer.Deserialize<ApplicationDataSeedModel>(applicationFileStream);
+        var domainData = JsonSerializer.Deserialize<DomainDataSeedModel>(domainFileStream);
 
-        _applicationData = Deserialize<ApplicationDataSeedModel>(applicationJson, jsonSerializerOptions?.Value)!;
-        _domainData = Deserialize<DomainDataSeedModel>(domainJson, jsonSerializerOptions?.Value)!;
+        if (applicationData is null)
+        {
+            var message = ExceptionMessages.GetMessageFailedToDeserialize<ApplicationDataSeedModel>();
+
+            throw new InvalidOperationException(message);
+        }
+
+        if (domainData is null)
+        {
+            var message = ExceptionMessages.GetMessageFailedToDeserialize<DomainDataSeedModel>();
+
+            throw new InvalidOperationException(message);
+        }
+
+        _applicationData = applicationData;
+        _domainData = domainData;
     }
     #endregion
 
     #region Public methods
     /// <inheritdoc/>
     public IEnumerable<SeedEmailTemplateModel> GetSeedEmailTemplates()
-        => _applicationData.EmailTemplates ?? [];
+        => _applicationData.EmailTemplates;
 
     /// <inheritdoc/>
     public IEnumerable<SeedRoleModel> GetSeedRoles()
-        => _domainData.Roles ?? [];
+        => _domainData.Roles;
 
     /// <inheritdoc/>
     public IEnumerable<SeedUserModel> GetSeedUsers()
-        => _domainData.Users ?? [];
+        => _domainData.Users;
     #endregion
 }

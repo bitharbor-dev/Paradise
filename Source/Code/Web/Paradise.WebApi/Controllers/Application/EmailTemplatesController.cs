@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Paradise.ApplicationLogic.Services.Application;
+using Paradise.ApplicationLogic.Infrastructure.Services;
 using Paradise.Common.Web;
 using Paradise.Models;
-using Paradise.Models.Application.EmailTemplateModels;
+using Paradise.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.WebApi.Controllers.Base;
-using Paradise.WebApi.Filters.Annotation;
+using Paradise.WebApi.Infrastructure.Extensions;
+using Paradise.WebApi.Infrastructure.Filters.Metadata;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
+using static Paradise.Common.RoleNames;
 using static Paradise.Common.Web.ParameterNames;
 
 namespace Paradise.WebApi.Controllers.Application;
@@ -21,7 +22,7 @@ namespace Paradise.WebApi.Controllers.Application;
 /// <param name="emailTemplateService">
 /// Email template service.
 /// </param>
-[Authorize(Roles = "Administrator")]
+[Authorize(AuthenticationSchemes = AuthenticationSchemeNames.Default, Roles = Administrator)]
 public sealed class EmailTemplatesController(IEmailTemplateService emailTemplateService) : ApiControllerBase
 {
     #region Public methods
@@ -35,11 +36,11 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// containing information about the email templates.
     /// </returns>
     [HttpGet(EmailTemplateRoutes.GetAll)]
-    [ResultResponse<IEnumerable<EmailTemplateModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse<IEnumerable<EmailTemplateModel>>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Prohibited)]
     public async Task<IActionResult> GetAll()
-        => await emailTemplateService.GetAllAsync().ConfigureAwait(false);
+        => (await emailTemplateService.GetAllAsync(HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Gets the email template with the given <paramref name="id"/>.
@@ -53,12 +54,12 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// containing information about the email template found.
     /// </returns>
     [HttpGet(EmailTemplateRoutes.GetById)]
-    [ResultResponse<EmailTemplateModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
-    [ResultResponse(HttpStatusCode.NotFound)]
+    [ResultResponse<EmailTemplateModel>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Prohibited)]
+    [ResultResponse(OperationStatus.Missing)]
     public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid id)
-        => await emailTemplateService.GetByIdAsync(id).ConfigureAwait(false);
+        => (await emailTemplateService.GetByIdAsync(id, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Creates a new email template.
@@ -73,13 +74,13 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// containing information about the created email template.
     /// </returns>
     [HttpPost(EmailTemplateRoutes.Create)]
-    [ResultResponse<EmailTemplateModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
+    [ResultResponse<EmailTemplateModel>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Prohibited)]
+    [ResultResponse(OperationStatus.Blocked)]
     public async Task<IActionResult> Create([FromBody, Required] EmailTemplateCreationModel model)
-        => await emailTemplateService.CreateAsync(model).ConfigureAwait(false);
+        => (await emailTemplateService.CreateAsync(model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Updates an email template.
@@ -97,13 +98,13 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// containing information about the created email template.
     /// </returns>
     [HttpPatch(EmailTemplateRoutes.Update)]
-    [ResultResponse<EmailTemplateModel>(HttpStatusCode.OK)]
-    [ResultResponse<EmailTemplateModel>(HttpStatusCode.Accepted)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
-    [ResultResponse(HttpStatusCode.NotFound)]
+    [ResultResponse<EmailTemplateModel>(OperationStatus.Success)]
+    [ResultResponse<EmailTemplateModel>(OperationStatus.Received)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Prohibited)]
+    [ResultResponse(OperationStatus.Missing)]
     public async Task<IActionResult> Update([FromRoute(Name = IdParameter)] Guid id, [FromBody, Required] EmailTemplateUpdateModel model)
-        => await emailTemplateService.UpdateAsync(id, model).ConfigureAwait(false);
+        => (await emailTemplateService.UpdateAsync(id, model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Deletes an email template.
@@ -115,10 +116,10 @@ public sealed class EmailTemplatesController(IEmailTemplateService emailTemplate
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
     [HttpDelete(EmailTemplateRoutes.Delete)]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
+    [ResultResponse(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Prohibited)]
     public async Task<IActionResult> Delete([FromRoute(Name = IdParameter)] Guid id)
-        => await emailTemplateService.DeleteAsync(id).ConfigureAwait(false);
+        => (await emailTemplateService.DeleteAsync(id, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
     #endregion
 }

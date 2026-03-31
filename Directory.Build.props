@@ -1,25 +1,62 @@
 <Project>
 
-	<PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-		<TargetFramework>net9.0</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>preview</LangVersion>
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
+	<PropertyGroup>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	</PropertyGroup>
 
+	<PropertyGroup>
+		<AssemblyTitle>Paradise</AssemblyTitle>
+		<AssemblyDescription>$(MSBuildProjectName)</AssemblyDescription>
+		<AssemblyProduct>Paradise</AssemblyProduct>
+		<AssemblyCompany>Bit Harbor LLC</AssemblyCompany>
+		<AssemblyCopyright>© Bit Harbor LLC. All rights reserved.</AssemblyCopyright>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Title>$(AssemblyTitle)</Title>
+		<Description>$(AssemblyDescription)</Description>
+		<Product>$(AssemblyProduct)</Product>
+		<ProductName>$(AssemblyProduct)</ProductName>
+		<Company>$(AssemblyCompany)</Company>
+		<Copyright>$(AssemblyCopyright)</Copyright>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
+		<AssemblyInformationalVersion>1.0.0.0</AssemblyInformationalVersion>
+		<ProductVersion>1.0.0.0</ProductVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Version>$(AssemblyVersion)</Version>
+		<FileVersion>$(AssemblyFileVersion)</FileVersion>
+		<InformationalVersion>$(AssemblyInformationalVersion)</InformationalVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
-
+		<WarningsNotAsErrors>NU1507;NU1900;NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-		<DebugType>embedded</DebugType>
-		<AssemblyVersion>9.0.0.0</AssemblyVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)</SolutionDir>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<BaseIntermediateOutputPath>$(SolutionDir).obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
 		<BaseOutputPath>$(SolutionDir).bin\$(MSBuildProjectName)</BaseOutputPath>
+		<PublishDir>$(SolutionDir).publish\$(MSBuildProjectName)\$(Configuration)\$(TargetPaltform)</PublishDir>
 	</PropertyGroup>
 
 </Project>

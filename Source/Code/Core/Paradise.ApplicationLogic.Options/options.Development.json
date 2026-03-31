@@ -1,0 +1,24 @@
+{
+  "ApplicationOptions": {
+    "ApiUrl": "https://localhost:5001"
+  },
+  "ConnectionStrings": {
+    //"DomainConnectionString": "Do not expose connection strings in the repository.",
+    //"InfrastructureConnectionString": "It is recommended to set them through the environment variables,
+    //                           here is how environment variable name should look like
+    //                           to be bound properly in the application - 'ConnectionStrings__DomainConnectionString'."
+  },
+  "SmtpOptions": {
+    "Credentials": {
+      //"Password": "You are required to provide your mailbox credentials in order to use the application.",
+      //"UserName": "It is recommended to set them through the environment variables,
+      //             e.g.: key - 'SmtpOptions__Credentials__UserName', value - 'my@email.com'"
+    },
+    "Host": "smtp",
+    "LocalEmailStorage": "{ApplicationRoot}EmailMessages", // With this setting set - no real credentials are required for application
+    //                                                        to be working properly, since all emails would be stored in the specified
+    //                                                        directory, instead of actual sending over the Internet. Yet, a dummy email address
+    //                                                        is required to be set into SmtpOptions:Credentials:UserName.
+    "Port": 25
+  }
+}

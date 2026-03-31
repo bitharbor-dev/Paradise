@@ -1,0 +1,72 @@
+﻿.container {
+    --bg-main: #f1f5f9;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --success: #10b981;
+    --error-text: #dc2626;
+    --error-border: #fecaca;
+    --error-bg: #fef2f2;
+    --radius: 0.5rem;
+    --radius-lg: 1rem;
+    align-items: center;
+    background-color: var(--bg-main);
+    display: flex;
+    font-family: -apple-system, system-ui, sans-serif;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    max-width: 420px;
+    padding: 2.5rem;
+    width: 100%;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.success-overlay {
+    align-items: center;
+    background: var(--bg-main);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+    .success-overlay h2 {
+        color: var(--success);
+    }
+
+.error-message {
+    background-color: var(--error-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--error-border);
+    box-sizing: border-box;
+    color: var(--error-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+h2 {
+    color: var(--text-main);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}

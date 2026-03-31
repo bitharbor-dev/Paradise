@@ -1,9 +1,6 @@
-﻿using Paradise.Common.Extensions;
-using Paradise.Localization.ExceptionsHandling;
-using static System.Environment;
+﻿using Paradise.Localization.ExceptionHandling;
 
 namespace Paradise.Common;
-
 /// <summary>
 /// Contains predefined application environment names.
 /// </summary>
@@ -11,29 +8,9 @@ public static class EnvironmentNames
 {
     #region Constants
     /// <summary>
-    /// Default environment variable name for "EnvironmentName" in ASP.NET Core applications.
-    /// </summary>
-    private const string AspNetCoreEnvironmentVariableName = "ASPNETCORE_ENVIRONMENT";
-
-    /// <summary>
-    /// Default environment variable name for "EnvironmentName" in .NET or .NET Core applications.
-    /// </summary>
-    private const string DotNetCoreEnvironmentVariableName = "DOTNET_ENVIRONMENT";
-
-    /// <summary>
     /// "Development" environment name.
     /// </summary>
     public const string Development = "Development";
-
-    /// <summary>
-    /// "Staging" environment name.
-    /// </summary>
-    public const string Staging = "Staging";
-
-    /// <summary>
-    /// "Production" environment name.
-    /// </summary>
-    public const string Production = "Production";
 
     /// <summary>
     /// "Development.Docker" environment name.
@@ -41,9 +18,19 @@ public static class EnvironmentNames
     public const string DevelopmentDocker = "Development.Docker";
 
     /// <summary>
+    /// "Staging" environment name.
+    /// </summary>
+    public const string Staging = "Staging";
+
+    /// <summary>
     /// "Staging.Docker" environment name.
     /// </summary>
     public const string StagingDocker = "Staging.Docker";
+
+    /// <summary>
+    /// "Production" environment name.
+    /// </summary>
+    public const string Production = "Production";
 
     /// <summary>
     /// "Production.Docker" environment name.
@@ -51,38 +38,82 @@ public static class EnvironmentNames
     public const string ProductionDocker = "Production.Docker";
     #endregion
 
-    #region Fields
-    private static readonly IEnumerable<string> _allowedEnvironments =
-        [Development, Staging, Production, DevelopmentDocker, StagingDocker, ProductionDocker];
-    #endregion
-
     #region Properties
     /// <summary>
-    /// Gets the current environment name.
+    /// The list of allowed environment names.
     /// </summary>
-    public static string Current { get; } = GetCurrentEnvironmentName();
+    public static IEnumerable<string> AllowedEnvironments { get; } =
+    [
+        Development,
+        DevelopmentDocker,
+        Staging,
+        StagingDocker,
+        Production,
+        ProductionDocker
+    ];
     #endregion
 
-    #region Private methods
+    #region Public methods
     /// <summary>
-    /// Gets the current environment name.
+    /// Indicates whether the given <paramref name="environmentName"/>
+    /// belongs to the "Development" environments group.
     /// </summary>
+    /// <param name="environmentName">
+    /// The environment name to check.
+    /// </param>
     /// <returns>
-    /// A <see langword="string"/> value containing environment name.
+    /// <see langword="true"/> if the given <paramref name="environmentName"/>
+    /// belongs to the "Development" environments group,
+    /// otherwise - <see langword="false"/>.
     /// </returns>
-    private static string GetCurrentEnvironmentName()
-    {
-        var result = GetEnvironmentVariable(DotNetCoreEnvironmentVariableName)
-                  ?? GetEnvironmentVariable(AspNetCoreEnvironmentVariableName);
+    public static bool IsDevelopment(string environmentName)
+        => environmentName is Development or DevelopmentDocker;
 
-        if (result.IsNullOrWhiteSpace() || !_allowedEnvironments.Contains(result))
+    /// <summary>
+    /// Indicates whether the given <paramref name="environmentName"/>
+    /// belongs to the "Staging" environments group.
+    /// </summary>
+    /// <param name="environmentName">
+    /// The environment name to check.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the given <paramref name="environmentName"/>
+    /// belongs to the "Development" environments group,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    public static bool IsStaging(string environmentName)
+        => environmentName is Staging or StagingDocker;
+
+    /// <summary>
+    /// Indicates whether the given <paramref name="environmentName"/>
+    /// belongs to the "Production" environments group.
+    /// </summary>
+    /// <param name="environmentName">
+    /// The environment name to check.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the given <paramref name="environmentName"/>
+    /// belongs to the "Development" environments group,
+    /// otherwise - <see langword="false"/>.
+    /// </returns>
+    public static bool IsProduction(string environmentName)
+        => environmentName is Production or ProductionDocker;
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> if the given
+    /// <paramref name="environmentName"/> is not in the list of allowed environment names.
+    /// </summary>
+    /// <param name="environmentName">
+    /// Environment name to check.
+    /// </param>
+    public static void ThrowIfNotAllowedEnvironment(string environmentName)
+    {
+        if (!AllowedEnvironments.Contains(environmentName))
         {
-            var message = ExceptionMessagesProvider.GetInvalidEnvironmentNameMessage(_allowedEnvironments, result);
+            var message = ExceptionMessages.GetMessageInvalidEnvironmentName(environmentName, AllowedEnvironments);
 
             throw new InvalidOperationException(message);
         }
-
-        return result;
     }
     #endregion
 }

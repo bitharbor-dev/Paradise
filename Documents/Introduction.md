@@ -1,18 +1,5 @@
 [1]: https://docs.microsoft.com/en-us/aspnet/core/security/docker-compose-https?view=aspnetcore-7.0
 
-## **Table of contents**
-
-1. Setup before the first run
-    - [Docker-compose HTTPS configuration](#**docker-compose-https-configuration**)
-    - [SMTP configuration](#**smtp-configuration**)
-    
-2. Pre-implemented functionalities
-    - [User management module](#**user-management-module**)
-    - [Role management module](#**role-management-module**)
-    - [Email templates and notifications module](#**email-templates-and-notifications-module**)
-
----
-
 ## **Setup before the first run**
 
 ### **Docker-compose HTTPS configuration**
@@ -32,8 +19,10 @@ Therefore, all you need to do is to export the certificate by running the follow
 
 After that you will need to set the Kestrel environment variables in the `docker-compose.override.yml`:
 
-    - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/localhost.pfx
-    - ASPNETCORE_Kestrel__Certificates__Default__Password=Password123
+```
+- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/localhost.pfx
+- ASPNETCORE_Kestrel__Certificates__Default__Password=Password123
+```
 
 ---
 
@@ -59,55 +48,46 @@ It is up to you what mailing service to use.
 
 Here is an example of how to configure this section for using Gmail as a mailing service:
 
-    "SmtpOptions": {
-        "Credentials": {
-            "UserName": "your.email.address@gmail.com",
-            "Password": "Password123"
-        },
-        "EnableSsl": true,
-        "Host": "smtp.gmail.com",
-        "Port": 587,
-        "Timeout": 100000
-    }
+```json
+{
+  "SmtpOptions": {
+    "Credentials": {
+      "UserName": "your.email.address@gmail.com",
+      "Password": "Pa$$word123"
+    },
+    "EnableSsl": true,
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "Timeout": 100000
+  }
+}
+```
 
 ---
 
-## **Pre-implemented functionalities**
+### **Database migrations**
 
-Please note, these are the lists of functionalities that are exposed on the API level.  
-But there are a lot of internal features described in the next parts of the documentation.
+Migrations are running on application startup. In multi-instance environments and/or distributed applications it is recommended
+to perform migrations as a deployment step, rather than startup step, to avoid data-corruption, errors, and concurrency issues.
 
-### **User management module**
+Migrations are running from here:
+`Paradise.ApplicationLogic.Infrastructure.Seed.IDatabaseSeeder.EnsureStorageAvailableAsync`.
 
-- Getting the list of users
-- Getting user by id
-- Registration
-- Email confirmation
-- Logging in
-- Two-factor authentication via email
-- Renewing access tokens
-- Logging out
-- Terminating all sessions
-- Resetting email address
-- Resetting password
-- Updating users
-- Deleting users
+In multi-instance environments and/or distributed applications the method mentioned above
+should only perform database availability check, but not create/amend database schema.
 
-### **Role management module**
+A single database is being used to persist the application data.
 
-- Getting the list of roles
-- Getting role by id
-- Getting the list of user roles
-- Creating roles
-- Updating roles
-- Deleting roles
-- Assigning roles
-- Unassigning roles
+Two database contexts - `InfrastructureContext` and `DomainContext`, each of them tied to the database scheme: `infrastructure` and `domain` respectively.
 
-### **Email templates and notifications module**
+To create a new migration open the terminal in `DataAccess` project directory and run migration creation command with the following parameters:
 
-- Getting the list of templates
-- Getting template by id
-- Creating templates
-- Updating templates
-- Deleting templates
+| Property name                    | Description                                                                       | Value                                                                                                                                |
+| -------------------------------: | :-------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------- |
+| `-p`                             | Relative path to the project folder of the target project.                        | `"Paradise.DataAccess.csproj"`                                                                                                       |
+| `-o`                             | The directory use to output the files.                                            | `"Database\Migrations\ApplicationLogic\Infrastructure\Domain"` or `"Database\Migrations\Domain"` (depending on the database context) |
+| `-c`                             | The `DbContext` class to use.                                                     | `"InfrastructureContext"` or `"DomainContext"`                                                                                       |
+
+**Complete example of the command:**
+
+    dotnet ef migrations add InitialState -p "Paradise.DataAccess.csproj" -o "Database\Migrations\Domain" -c "DomainContext"

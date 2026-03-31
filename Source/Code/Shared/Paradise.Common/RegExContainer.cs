@@ -11,7 +11,7 @@ public static class RegExContainer
     /// <summary>
     /// Allows only alphabet uppercase and lowercase characters, without whitespace.
     /// </summary>
-    [StringSyntax(StringSyntaxAttribute.Regex)]
-    public const string OnlyAZCharacters = "^[a-zA-Z]*$";
+    [StringSyntax("Regex")]
+    public const string OnlyAlphabetCharacters = "^[a-zA-Z]*$";
     #endregion
 }

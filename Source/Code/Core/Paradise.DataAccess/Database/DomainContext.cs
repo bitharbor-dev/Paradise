@@ -1,24 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Paradise.DataAccess.Database.Configuration;
-using Paradise.DataAccess.Repositories;
-using Paradise.DataAccess.Repositories.Base;
-using Paradise.Domain.Roles;
-using Paradise.Domain.Users;
+using Paradise.Domain.Identity.Roles;
+using Paradise.Domain.Identity.Users;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.DataAccess.Database;
 
 /// <summary>
-/// Manages all domain entities.
+/// Manages all domain entities in the database.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="DomainContext"/> class.
-/// </remarks>
-/// <param name="options">
-/// The options to be used by a <see cref="DomainContext"/>.
-/// </param>
-public sealed class DomainContext([NotNull] DbContextOptions<DomainContext> options) : IdentityDbContext<User, Role, Guid>(options), IDomainDataSource
+internal sealed class DomainContext : IdentityDbContext<User, Role, Guid>, IDataSource
 {
     #region Constants
     /// <summary>
@@ -27,14 +19,24 @@ public sealed class DomainContext([NotNull] DbContextOptions<DomainContext> opti
     public const string ConnectionStringName = "DomainConnectionString";
 
     /// <summary>
-    /// The name of a scheme tied to this database context.
+    /// Database scheme name.
     /// </summary>
     public const string SchemeName = "domain";
     #endregion
 
-    #region Public methods
+    #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DomainContext"/> class
+    /// using the specified options.
+    /// </summary>
+    /// <param name="options">
+    /// The options to be used by an <see cref="DomainContext"/>.
+    /// </param>
+    [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Omitted for code style consistency.")]
+    public DomainContext([NotNull] DbContextOptions<DomainContext> options) : base(options) { }
+    #endregion
 
-    #region IDataSource
+    #region Public methods
     /// <inheritdoc/>
     public void PreparePersistenceStorage()
         => Database.Migrate();
@@ -43,7 +45,8 @@ public sealed class DomainContext([NotNull] DbContextOptions<DomainContext> opti
     public Task PreparePersistenceStorageAsync(CancellationToken cancellationToken = default)
         => Database.MigrateAsync(cancellationToken);
 
-    IQueryable<TEntity> IDataSource.GetQueryable<TEntity>()
+    /// <inheritdoc/>
+    public IQueryable<TEntity> GetQueryable<TEntity>() where TEntity : class
         => Set<TEntity>();
 
     void IDataSource.Add<TEntity>(TEntity entity)
@@ -57,14 +60,6 @@ public sealed class DomainContext([NotNull] DbContextOptions<DomainContext> opti
 
     void IDataSource.RemoveRange<TEntity>(IEnumerable<TEntity> entities)
         => Set<TEntity>().RemoveRange(entities);
-
-    int IDataSource.SaveChanges()
-        => SaveChanges();
-
-    Task<int> IDataSource.SaveChangesAsync(CancellationToken cancellationToken)
-        => SaveChangesAsync(cancellationToken);
-    #endregion
-
     #endregion
 
     #region Protected methods

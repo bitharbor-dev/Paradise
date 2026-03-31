@@ -19,7 +19,7 @@ namespace Paradise.Localization.Logging {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class LogMessages {
@@ -61,155 +61,47 @@ namespace Paradise.Localization.Logging {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to create user claims..
+        ///   Looks up a localized string similar to Added seed item {0}: &apos;{1}&apos;..
         /// </summary>
-        internal static string CriticalClaimsAdditionFailure {
+        internal static string AddedSeedItem {
             get {
-                return ResourceManager.GetString("CriticalClaimsAdditionFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An exception occurred during the database operation execution. Method &apos;{0}&apos;..
-        /// </summary>
-        internal static string CriticalDatabaseException {
-            get {
-                return ResourceManager.GetString("CriticalDatabaseException", resourceCulture);
+                return ResourceManager.GetString("AddedSeedItem", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Failed to seed the database. Method &apos;{0}&apos;..
         /// </summary>
-        internal static string CriticalDatabaseSeedFailure {
+        internal static string DatabaseSeedFailure {
             get {
-                return ResourceManager.GetString("CriticalDatabaseSeedFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Critical errors:{0}{1}.
-        /// </summary>
-        internal static string CriticalResultErrors {
-            get {
-                return ResourceManager.GetString("CriticalResultErrors", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An unhandled exception has occurred..
-        /// </summary>
-        internal static string CriticalUnhandledExceptionOccurred {
-            get {
-                return ResourceManager.GetString("CriticalUnhandledExceptionOccurred", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to delete the user &quot;{0}&quot; after unsuccessful invitation. Errors:{1}{2}.
-        /// </summary>
-        internal static string CriticalUnsuccessfulUserDeletionAfterFailedInvitation {
-            get {
-                return ResourceManager.GetString("CriticalUnsuccessfulUserDeletionAfterFailedInvitation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Worker execution failed. Time: {0}..
-        /// </summary>
-        internal static string CriticalWorkerExecutionFailure {
-            get {
-                return ResourceManager.GetString("CriticalWorkerExecutionFailure", resourceCulture);
+                return ResourceManager.GetString("DatabaseSeedFailure", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Errors:{0}{1}.
         /// </summary>
-        internal static string ErrorResultErrors {
+        internal static string ResultErrors {
             get {
-                return ResourceManager.GetString("ErrorResultErrors", resourceCulture);
+                return ResourceManager.GetString("ResultErrors", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Added seed item {0}: &apos;{1}&apos;..
+        ///   Looks up a localized string similar to An unhandled exception has occurred..
         /// </summary>
-        internal static string InformationAddedSeedItem {
+        internal static string UnhandledExceptionOccurred {
             get {
-                return ResourceManager.GetString("InformationAddedSeedItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Outdated tokens: {0}..
-        /// </summary>
-        internal static string InformationOutdatedTokensNumber {
-            get {
-                return ResourceManager.GetString("InformationOutdatedTokensNumber", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pending deletion users: {0}..
-        /// </summary>
-        internal static string InformationPendingDeletionUsersNumber {
-            get {
-                return ResourceManager.GetString("InformationPendingDeletionUsersNumber", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unconfirmed users: {0}..
-        /// </summary>
-        internal static string InformationUnconfirmedUsersNumber {
-            get {
-                return ResourceManager.GetString("InformationUnconfirmedUsersNumber", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionOccurred", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Updated seed item {0}: &apos;{1}&apos;..
         /// </summary>
-        internal static string InformationUpdatedSeedItem {
+        internal static string UpdatedSeedItem {
             get {
-                return ResourceManager.GetString("InformationUpdatedSeedItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Worker options changed at {0}. New value:{1}{2}.
-        /// </summary>
-        internal static string InformationWorkerOptionsChangedState {
-            get {
-                return ResourceManager.GetString("InformationWorkerOptionsChangedState", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Options:{1}{2}.
-        /// </summary>
-        internal static string InformationWorkerOptionsInitialState {
-            get {
-                return ResourceManager.GetString("InformationWorkerOptionsInitialState", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} - Running at {1}..
-        /// </summary>
-        internal static string InformationWorkerRunning {
-            get {
-                return ResourceManager.GetString("InformationWorkerRunning", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to create an entry of &apos;{0}&apos;.{1}{2}.
-        /// </summary>
-        internal static string WarningDatabaseEntrySeedFailure {
-            get {
-                return ResourceManager.GetString("WarningDatabaseEntrySeedFailure", resourceCulture);
+                return ResourceManager.GetString("UpdatedSeedItem", resourceCulture);
             }
         }
     }

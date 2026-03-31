@@ -1,0 +1,62 @@
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+  - name: projectDisplayName
+    displayName: 'Project display name'
+    type: string
+    default: ''
+
+  - name: projectName
+    displayName: 'Project file name to publish. Wildcards supported'
+    type: string
+    default: ''
+
+  - name: outputFolder
+    displayName: 'Output folder name, which will be created at artifacts staging directory'
+    type: string
+    default: ''
+
+  - name: restore
+    displayName: 'Restore before publish'
+    type: boolean
+    default: false
+
+steps:
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish ${{ parameters.projectDisplayName }}'
+  inputs:
+    command: 'publish'
+    modifyOutputPath: true
+    zipAfterPublish: true
+    publishWebProjects: false
+    projects: '${{ parameters.projectName }}'
+    ${{ if eq(parameters.restore, true) }}:
+      arguments: >
+          --configuration ${{ parameters.configuration }}
+          --verbosity ${{ parameters.verbosity }}
+          --output $(Build.ArtifactStagingDirectory)/${{ parameters.outputFolder }}
+    ${{ else }}:
+      arguments: >
+          --configuration ${{ parameters.configuration }}
+          --verbosity ${{ parameters.verbosity }}
+          --output $(Build.ArtifactStagingDirectory)/${{ parameters.outputFolder }}
+          --no-restore
+          --no-build

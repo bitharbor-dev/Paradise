@@ -1,0 +1,20 @@
+{
+  "ApplicationOptions": {
+    "ApiUrl": "https://paradise-web-api-staging.azurewebsites.net"
+  },
+  "ConnectionStrings": {
+    //"InfrastructureConnectionString": "Do not expose connection strings in the repository.",
+    //"DomainConnectionString": "It is recommended to set them through the environment variables,
+    //                           here is how environment variable name should look like
+    //                           to be bound properly in the application - 'ConnectionStrings__DomainConnectionString'."
+  },
+  "SmtpOptions": {
+    "Credentials": {
+      //"Password": "You are required to provide your mailbox credentials in order to use the application.",
+      //"UserName": "It is recommended to set them through the environment variables,
+      //             e.g.: key - 'SmtpOptions__Credentials__UserName', value - 'my@email.com'"
+    },
+    "Host": "smtp",
+    "Port": 25
+  }
+}

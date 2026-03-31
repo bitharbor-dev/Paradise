@@ -18,7 +18,7 @@ namespace Paradise.DataAccess.Repositories.Base.Implementation;
 /// Repository data source.
 /// </param>
 public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyRepository<TEntity>(source), IRepository<TEntity>
-    where TEntity : class, IDatabaseRecord
+    where TEntity : class, IDomainObject
 {
     #region Public methods
     /// <inheritdoc/>
@@ -28,14 +28,6 @@ public abstract class Repository<TEntity>(IDataSource source) : ReadOnlyReposito
     /// <inheritdoc/>
     public void AddRange(IEnumerable<TEntity> entities)
         => Source.AddRange(entities);
-
-    /// <inheritdoc/>
-    public int Commit()
-        => Source.SaveChanges();
-
-    /// <inheritdoc/>
-    public Task<int> CommitAsync(CancellationToken cancellationToken = default)
-        => Source.SaveChangesAsync(cancellationToken);
 
     /// <inheritdoc/>
     public void ForEach(Action<TEntity> action)

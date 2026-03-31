@@ -9,6 +9,6 @@ public sealed class DbContextEventProperties
     /// <summary>
     /// Transaction time.
     /// </summary>
-    public DateTime TransactionTime { get; init; }
+    public DateTimeOffset TransactionTime { get; init; }
     #endregion
 }

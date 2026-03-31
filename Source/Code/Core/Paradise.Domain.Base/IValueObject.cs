@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides default properties and/or methods for all value objects.
 /// </summary>
-public interface IValueObject
+public interface IValueObject : IDomainObject
 {
     #region Methods
     /// <summary>

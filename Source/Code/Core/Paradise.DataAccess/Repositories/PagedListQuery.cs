@@ -1,18 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paradise.DataAccess.Extensions;
-using Paradise.Localization.ExceptionsHandling;
+using Paradise.DataAccess.Repositories.Base.Extensions;
+using Paradise.Domain.Base;
+using Paradise.Localization.ExceptionHandling;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace Paradise.DataAccess.Repositories;
 
 /// <summary>
-/// Represents a paged list query for the <typeparamref name="TEntity"/> entity.
+/// Represents a query for retrieving a paged list of items,
+/// with support for ordering and lookup filtering.
 /// </summary>
 /// <typeparam name="TEntity">
 /// Entity type.
 /// </typeparam>
-public sealed class PagedListQuery<TEntity> where TEntity : class
+public sealed class PagedListQuery<TEntity> where TEntity : class, IDomainObject
 {
     #region Constants
     /// <summary>
@@ -27,45 +29,52 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
 
     #region Properties
     /// <summary>
-    /// Page size.
+    /// The number of items per page.
+    /// <para>
+    /// Must be greater than zero.
+    /// </para>
     /// </summary>
     public int PageSize
     {
         get;
         set
         {
-            ThrowIfValueIsLessOrEqualToZero(value);
+            ThrowIfValueIsLessThanOrEqualToZero(value);
 
             field = value;
         }
     } = DefaultPageSize;
 
     /// <summary>
-    /// Page number.
+    /// The page number.
+    /// <para>
+    /// Must be greater than zero.
+    /// </para>
     /// </summary>
     public int PageNumber
     {
         get;
         set
         {
-            ThrowIfValueIsLessOrEqualToZero(value);
+            ThrowIfValueIsLessThanOrEqualToZero(value);
 
             field = value;
         }
     } = DefaultPageNumber;
 
     /// <summary>
-    /// Indicates whether the output list should be ordered
-    /// ascending or descending.
+    /// Indicates whether the results should be sorted
+    /// in ascending (<see langword="true"/>)
+    /// or descending (<see langword="false"/>) order.
     /// </summary>
     public bool OrderAscending { get; set; } = true;
 
     /// <summary>
-    /// Property name by which the items should be ordered.
+    /// The property name used for ordering.
+    /// <para>
+    /// If <see langword="null"/>, no ordering is applied.
+    /// </para>
     /// </summary>
-    /// <remarks>
-    /// No ordering is applied if set to <see langword="null"/>.
-    /// </remarks>
     public string? OrderBy { get; set; }
 
     /// <summary>
@@ -74,20 +83,25 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     public Expression<Func<TEntity, bool>>? Filter { get; set; }
 
     /// <summary>
+    /// Additional entity projection.
+    /// </summary>
+    public Expression<Func<TEntity, TEntity>>? Projection { get; set; }
+
+    /// <summary>
     /// The list of entity's navigation properties
     /// to be included into the query.
     /// </summary>
     public IEnumerable<string> NavigationProperties { get; set; } = [];
 
     /// <summary>
-    /// The list of entity's properties to lookup
-    /// through with the <see cref="LookupValue"/>.
+    /// The list of entity properties to search within
+    /// when applying the <see cref="LookupValue"/>.
     /// </summary>
     public IEnumerable<string> LookupProperties { get; set; } = [];
 
     /// <summary>
-    /// The value to be searched through the
-    /// <see cref="LookupProperties"/> with.
+    /// The value to be searched across
+    /// the <see cref="LookupProperties"/>.
     /// </summary>
     public string? LookupValue { get; set; }
 
@@ -116,14 +130,17 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
 
         queryable = queryable
             .FilterBy(LookupProperties, LookupValue)
-            .OrderByPropertyName(OrderBy, OrderAscending);
+            .OrderByPropertyName(OrderBy ?? nameof(IDomainObject.Created), OrderAscending);
+
+        if (Projection is not null)
+            queryable = queryable.AsNoTracking().Select(Projection);
     }
     #endregion
 
     #region Private methods
     /// <summary>
     /// Throws an <see cref="ArgumentException"/> if the given
-    /// <paramref name="value"/> is less or equal to 0.
+    /// <paramref name="value"/> is less than or equal to 0.
     /// </summary>
     /// <param name="value">
     /// An <see cref="int"/> value to be checked.
@@ -133,14 +150,14 @@ public sealed class PagedListQuery<TEntity> where TEntity : class
     /// </param>
     /// <exception cref="ArgumentException">
     /// Thrown if the given <paramref name="value"/> is
-    /// less or equal to 0.
+    /// less than or equal to 0.
     /// </exception>
-    private static void ThrowIfValueIsLessOrEqualToZero(int value, [CallerMemberName] string? propertyName = null)
+    private static void ThrowIfValueIsLessThanOrEqualToZero(int value, [CallerMemberName] string? propertyName = null)
     {
         if (value > 0)
             return;
 
-        var message = ExceptionMessagesProvider.GetValueCanNotBeLessOrEqualToZeroMessage(propertyName);
+        var message = ExceptionMessages.GetMessageValueCanNotBeLessOrEqualToZero(propertyName);
 
         throw new ArgumentException(message);
     }

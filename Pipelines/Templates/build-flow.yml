@@ -1,0 +1,28 @@
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+steps:
+
+- template: Parts/execute-git-version-tool.yml
+
+- template: Parts/build-and-test.yml
+  parameters:
+    verbosity: '${{ parameters.verbosity }}'
+    configuration: '${{ parameters.configuration }}'

@@ -1,26 +1,19 @@
-{
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Docker.Development",
-        "ConnectionStrings__ApplicationConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
-        "ConnectionStrings__DomainConnectionString": "Data Source=mssql,1433;Initial Catalog=paradise;User Id=paradise;Password=3qqimIuTQEGqVCD!;Trust Server Certificate=true",
-        "SmtpOptions__Credentials__Password": "",
-        "SmtpOptions__Credentials__UserName": "no-reply@paradise.com"
-      }
-    },
-    "WebApi": {
+    "Console": {
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__ApplicationConnectionString": "Data Source=localhost;Initial Catalog=paradise;Integrated Security=true;Trust Server Certificate=true",
-        "ConnectionStrings__DomainConnectionString": "Data Source=localhost;Initial Catalog=paradise;Integrated Security=true;Trust Server Certificate=true",
-        "SmtpOptions__Credentials__Password": "",
-        "SmtpOptions__Credentials__UserName": "no-reply@paradise.com"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}"
     }
   }
 }

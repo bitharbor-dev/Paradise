@@ -5,22 +5,39 @@ namespace Paradise.Domain.Base;
 /// <summary>
 /// Base class for all entities.
 /// </summary>
-public abstract class Entity : IEntity, IDatabaseRecord, IEquatable<Entity>
+public abstract class Entity : IEntity, IEquatable<Entity>
 {
     #region Properties
     /// <inheritdoc/>
-    public Guid Id { get; set; }
+    public Guid Id { get; protected set; }
 
     /// <inheritdoc/>
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; protected set; }
 
     /// <inheritdoc/>
-    public DateTime Modified { get; set; }
+    public DateTimeOffset Modified { get; protected set; }
     #endregion
 
     #region Public methods
     /// <inheritdoc/>
     public virtual void ValidateState() { }
+
+    /// <inheritdoc/>
+    public virtual void OnCreated(DateTimeOffset utcNow)
+    {
+        Id = Guid.CreateVersion7(utcNow);
+        Created = utcNow;
+
+        ValidateState();
+    }
+
+    /// <inheritdoc/>
+    public virtual void OnModified(DateTimeOffset utcNow)
+    {
+        Modified = utcNow;
+
+        ValidateState();
+    }
 
     /// <inheritdoc/>
     public bool Equals(Entity? other)

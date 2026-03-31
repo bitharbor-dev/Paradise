@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Paradise.ApplicationLogic.Extensions;
-using Paradise.ApplicationLogic.Services.Domain.Users;
+using Paradise.ApplicationLogic.Services.Identity.Users;
 using Paradise.Common.Web;
 using Paradise.Models;
-using Paradise.Models.Domain.UserModels;
+using Paradise.Models.Domain.Identity.Users;
 using Paradise.WebApi.Controllers.Base;
-using Paradise.WebApi.Filters.Annotation;
+using Paradise.WebApi.Infrastructure.Extensions;
+using Paradise.WebApi.Infrastructure.Filters.Metadata;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 using static Paradise.Common.Web.ParameterNames;
 
 namespace Paradise.WebApi.Controllers.Domain;
@@ -24,15 +21,8 @@ namespace Paradise.WebApi.Controllers.Domain;
 /// <param name="userService">
 /// User service.
 /// </param>
-/// <param name="identityOptions">
-/// The accessor used to access the <see cref="IdentityOptions"/>.
-/// </param>
-public sealed class UsersController(IUserService userService, IOptions<IdentityOptions> identityOptions) : ApiControllerBase
+public sealed class UsersController(IUserService userService) : ApiControllerBase
 {
-    #region Fields
-    private readonly string _idClaimType = identityOptions.Value.ClaimsIdentity.UserIdClaimType;
-    #endregion
-
     #region Public methods
     /// <summary>
     /// Gets the list of application users.
@@ -43,11 +33,12 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// of <see cref="UserModel"/>
     /// containing information about the application users.
     /// </returns>
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.Default)]
     [HttpGet(UserRoutes.GetAll)]
-    [ResultResponse<IEnumerable<UserModel>>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
+    [ResultResponse<IEnumerable<UserModel>>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.Unauthorized)]
     public async Task<IActionResult> GetAll()
-        => await userService.GetAllAsync().ConfigureAwait(false);
+        => (await userService.GetAllAsync(HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Gets the user with the given <paramref name="id"/>.
@@ -60,12 +51,13 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserModel"/>
     /// containing information about the user found.
     /// </returns>
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.Default)]
     [HttpGet(UserRoutes.GetById)]
-    [ResultResponse<UserModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
+    [ResultResponse<UserModel>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Missing)]
     public async Task<IActionResult> GetById([FromRoute(Name = IdParameter)] Guid id)
-        => await userService.GetByIdAsync(id).ConfigureAwait(false);
+        => (await userService.GetByIdAsync(id, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Registers a new user.
@@ -80,11 +72,11 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// containing information about the created user.
     /// </returns>
     [HttpPost(UserRoutes.Register), AllowAnonymous]
-    [ResultResponse<UserModel>(HttpStatusCode.Created)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
+    [ResultResponse<UserModel>(OperationStatus.Created)]
+    [ResultResponse(OperationStatus.Missing)]
+    [ResultResponse(OperationStatus.Blocked)]
     public async Task<IActionResult> Register([FromBody, Required] UserRegistrationModel model)
-        => await userService.RegisterAsync(model).ConfigureAwait(false);
+        => (await userService.RegisterAsync(model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Confirms the user's email address.
@@ -98,111 +90,12 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserModel"/>
     /// containing information about the updated user.
     /// </returns>
-    [HttpGet(UserRoutes.ConfirmEmail), AllowAnonymous]
-    [ResultResponse<UserModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> ConfirmEmail([FromRoute(Name = IdentityTokenParameter)] string identityToken)
-        => await userService.ConfirmEmailAsync(identityToken).ConfigureAwait(false);
-
-    /// <summary>
-    /// Generates a new user authorization token or
-    /// two-factor authentication token in case it is enabled for the user.
-    /// </summary>
-    /// <param name="model">
-    /// The <see cref="UserLoginModel"/> to be used to
-    /// validate login data and generate an access token.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{TValue}"/> where
-    /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
-    /// containing information about the user authorization token or
-    /// two-factor authentication token in case it is enabled for the user.
-    /// </returns>
-    [HttpPost(UserRoutes.Login), AllowAnonymous]
-    [ResultResponse<UserAuthorizationTokenModel>(HttpStatusCode.OK)]
-    [ResultResponse<UserAuthorizationTokenModel>(HttpStatusCode.Accepted)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.Forbidden)]
-    public async Task<IActionResult> Login([FromBody, Required] UserLoginModel model)
-        => await userService.LoginAsync(model).ConfigureAwait(false);
-
-    /// <summary>
-    /// Generates a new user authorization token
-    /// for the user with two-factor authentication enabled.
-    /// </summary>
-    /// <param name="model">
-    /// The <see cref="UserTwoFactorAuthenticationModel"/> to be used to
-    /// validate the login data and generate an access token.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{TValue}"/> where
-    /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
-    /// containing information about the user authorization token.
-    /// </returns>
-    [HttpPut(UserRoutes.ConfirmLogin), AllowAnonymous]
-    [ResultResponse<UserAuthorizationTokenModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
-    public async Task<IActionResult> ConfirmLogin([FromBody, Required] UserTwoFactorAuthenticationModel model)
-        => await userService.ConfirmLoginAsync(model).ConfigureAwait(false);
-
-    /// <summary>
-    /// Generates a new user authorization token
-    /// using the given <paramref name="accessToken"/>.
-    /// </summary>
-    /// <param name="accessToken">
-    /// User authorization token.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{TValue}"/> where
-    /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
-    /// containing information about the user authorization token.
-    /// </returns>
-    [HttpGet(UserRoutes.RenewToken)]
-    [ResultResponse<UserAuthorizationTokenModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> RenewToken([FromHeader(Name = AuthorizationHeaderName)] string accessToken)
-        => await userService.RenewTokenAsync(accessToken).ConfigureAwait(false);
-
-    /// <summary>
-    /// Invalidates the given <paramref name="accessToken"/>
-    /// to make it unusable during the authentication process.
-    /// </summary>
-    /// <param name="accessToken">
-    /// Authorization token to be invalidated.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result"/> instance containing errors data if any occurs.
-    /// </returns>
-    [HttpDelete(UserRoutes.Logout)]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    public async Task<IActionResult> Logout([FromHeader(Name = AuthorizationHeaderName), Required] string accessToken)
-        => await userService.LogoutAsync(accessToken).ConfigureAwait(false);
-
-    /// <summary>
-    /// Invalidates all user's refresh tokens
-    /// to make them all unusable during the authentication process.
-    /// </summary>
-    /// <param name="accessToken">
-    /// Authorization token to be invalidated.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result"/> instance containing errors data if any occurs.
-    /// </returns>
-    [HttpDelete(UserRoutes.LogoutEverywhere)]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    public async Task<IActionResult> LogoutEverywhere([FromHeader(Name = AuthorizationHeaderName), Required] string accessToken)
-        => await userService.LogoutEverywhereAsync(accessToken).ConfigureAwait(false);
+    [HttpGet(UserRoutes.ConfirmEmailAddress), AllowAnonymous]
+    [ResultResponse<UserModel>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Missing)]
+    public async Task<IActionResult> ConfirmEmailAddress([FromRoute(Name = IdentityTokenParameter)] string identityToken)
+        => (await userService.ConfirmEmailAddressAsync(identityToken, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Creates a password reset request.
@@ -215,11 +108,11 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
     [HttpPost(UserRoutes.CreatePasswordResetRequest), AllowAnonymous]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.NotFound)]
+    [ResultResponse(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Missing)]
     public async Task<IActionResult> CreatePasswordResetRequest([FromBody, Required] UserResetPasswordRequestModel model)
-        => await userService.CreatePasswordResetRequestAsync(model).ConfigureAwait(false);
+        => (await userService.CreatePasswordResetRequestAsync(model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Resets the user's password.
@@ -232,30 +125,32 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
     [HttpPatch(UserRoutes.ResetPassword), AllowAnonymous]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
+    [ResultResponse(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Missing)]
+    [ResultResponse(OperationStatus.Blocked)]
     public async Task<IActionResult> ResetPassword([FromBody, Required] UserResetPasswordModel model)
-        => await userService.ResetPasswordAsync(model).ConfigureAwait(false);
+        => (await userService.ResetPasswordAsync(model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Creates an email address reset request.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserResetEmailRequestModel"/> to be used to
+    /// The <see cref="UserResetEmailAddressRequestModel"/> to be used to
     /// create an email address reset request.
     /// </param>
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    [HttpPost(UserRoutes.CreateEmailResetRequest)]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    public async Task<IActionResult> CreateEmailResetRequest([FromBody, Required] UserResetEmailRequestModel model)
-        => await userService.CreateEmailResetRequestAsync(User.GetGuidClaim(_idClaimType), model).ConfigureAwait(false);
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.Default)]
+    [HttpPost(UserRoutes.CreateEmailAddressResetRequest)]
+    [ResultResponse(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Missing)]
+    [ResultResponse(OperationStatus.Blocked)]
+    public async Task<IActionResult> CreateEmailResetRequest([FromBody, Required] UserResetEmailAddressRequestModel model)
+        => (await userService.CreateEmailAddressResetRequestAsync(GetCurrentUserId(), model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Resets the user's email address.
@@ -267,14 +162,14 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    [HttpGet(UserRoutes.ResetEmail), AllowAnonymous]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
-    public async Task<IActionResult> ResetEmail([FromRoute(Name = IdentityTokenParameter)] string identityToken)
-        => await userService.ResetEmailAsync(identityToken).ConfigureAwait(false);
+    [HttpGet(UserRoutes.ResetEmailAddress), AllowAnonymous]
+    [ResultResponse(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Missing)]
+    [ResultResponse(OperationStatus.Blocked)]
+    public async Task<IActionResult> ResetEmailAddress([FromRoute(Name = IdentityTokenParameter)] string identityToken)
+        => (await userService.ResetEmailAddressAsync(identityToken, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Updates the user.
@@ -288,13 +183,14 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserModel"/>
     /// containing information about the updated user.
     /// </returns>
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.Default)]
     [HttpPatch(UserRoutes.Update)]
-    [ResultResponse<UserModel>(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
-    [ResultResponse(HttpStatusCode.UnprocessableEntity)]
+    [ResultResponse<UserModel>(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Missing)]
+    [ResultResponse(OperationStatus.Blocked)]
     public async Task<IActionResult> Update([FromBody, Required] UserUpdateModel model)
-        => await userService.UpdateAsync(User.GetGuidClaim(_idClaimType), model).ConfigureAwait(false);
+        => (await userService.UpdateAsync(GetCurrentUserId(), model, HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
 
     /// <summary>
     /// Deletes the user.
@@ -302,12 +198,13 @@ public sealed class UsersController(IUserService userService, IOptions<IdentityO
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.Default)]
     [HttpDelete(UserRoutes.Delete)]
-    [ResultResponse(HttpStatusCode.OK)]
-    [ResultResponse(HttpStatusCode.BadRequest)]
-    [ResultResponse(HttpStatusCode.Unauthorized)]
-    [ResultResponse(HttpStatusCode.NotFound)]
+    [ResultResponse(OperationStatus.Success)]
+    [ResultResponse(OperationStatus.InvalidInput)]
+    [ResultResponse(OperationStatus.Unauthorized)]
+    [ResultResponse(OperationStatus.Missing)]
     public async Task<IActionResult> Delete()
-        => await userService.DeleteAsync(User.GetGuidClaim(_idClaimType)).ConfigureAwait(false);
+        => (await userService.DeleteAsync(GetCurrentUserId(), HttpContext.RequestAborted).ConfigureAwait(false)).AsActionResult();
     #endregion
 }

@@ -1,0 +1,24 @@
+{
+  "Roles": [
+    {
+      "IsDefault": false,
+      "Name": "Administrator"
+    },
+    {
+      "IsDefault": true,
+      "Name": "User"
+    }
+  ],
+  "Users": [
+    {
+      "EmailAddress": "admin@paradise.bitharbor.dev",
+      "IsEmailConfirmed": true,
+      "Password": "Ae_RAJ2V#CcW@8f!ePYby$eU*%8g7jKG*CKMa=!UPbyC!67SNAJY8bTmvB64?4H7",
+      "Roles": [
+        "Administrator",
+        "User"
+      ],
+      "UserName": "SystemAdministrator"
+    }
+  ]
+}

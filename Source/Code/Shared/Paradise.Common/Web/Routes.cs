@@ -3,7 +3,7 @@
 namespace Paradise.Common.Web;
 
 /// <summary>
-/// Web API endpoints routes container class.
+/// Web API endpoints routes base class.
 /// </summary>
 internal static class Routes
 {
@@ -14,14 +14,52 @@ internal static class Routes
     public const string Slash = "/";
 
     /// <summary>
-    /// API version.
-    /// </summary>
-    public const string Version = $"v1{Slash}";
-
-    /// <summary>
     /// Base API endpoint route (without domain).
     /// </summary>
-    public const string Base = Version;
+    public const string Base = Slash;
+    #endregion
+}
+
+/// <summary>
+/// Authentication API endpoints routs.
+/// </summary>
+public static class AuthenticationRoutes
+{
+    #region Constants
+    /// <summary>
+    /// "Auth" route prefix.
+    /// </summary>
+    private const string AuthPrefix = $"Authentication{Routes.Slash}";
+
+    /// <summary>
+    /// Controller route.
+    /// </summary>
+    private const string Controller = $"{Routes.Base}{AuthPrefix}";
+
+    /// <summary>
+    /// Logging in.
+    /// </summary>
+    public const string Login = Controller;
+
+    /// <summary>
+    /// Confirming user's login.
+    /// </summary>
+    public const string ConfirmLogin = Controller;
+
+    /// <summary>
+    /// Renewing authorization token.
+    /// </summary>
+    public const string RenewToken = Controller;
+
+    /// <summary>
+    /// Logging out.
+    /// </summary>
+    public const string Logout = Controller;
+
+    /// <summary>
+    /// Terminating all sessions.
+    /// </summary>
+    public const string TerminateSessions = $"{Controller}All";
     #endregion
 }
 
@@ -102,7 +140,7 @@ public static class RoleRoutes
     /// <summary>
     /// Getting user roles.
     /// </summary>
-    public const string GetUserRoles = $"{Controller}{UserPrefix}{{{IdParameter}}}";
+    public const string GetUserRoles = $"{Controller}{UserPrefix}{{{UserIdParameter}}}";
 
     /// <summary>
     /// Creating a new role.
@@ -143,21 +181,6 @@ public static class UserRoutes
     private const string UsersPrefix = $"Users{Routes.Slash}";
 
     /// <summary>
-    /// "Confirm" route prefix.
-    /// </summary>
-    private const string ConfirmPrefix = $"Confirm{Routes.Slash}";
-
-    /// <summary>
-    /// "Auth" route prefix.
-    /// </summary>
-    private const string AuthPrefix = $"Auth{Routes.Slash}";
-
-    /// <summary>
-    /// "Reset" route prefix.
-    /// </summary>
-    private const string ResetPrefix = $"Reset{Routes.Slash}";
-
-    /// <summary>
     /// Controller route.
     /// </summary>
     private const string Controller = $"{Routes.Base}{UsersPrefix}";
@@ -178,54 +201,29 @@ public static class UserRoutes
     public const string Register = Controller;
 
     /// <summary>
-    /// Confirming user's email.
+    /// Confirming user's email address.
     /// </summary>
-    public const string ConfirmEmail = $"{Controller}{ConfirmPrefix}Email{Routes.Slash}{{{IdentityTokenParameter}}}";
-
-    /// <summary>
-    /// Logging a user in.
-    /// </summary>
-    public const string Login = $"{Controller}{AuthPrefix}";
-
-    /// <summary>
-    /// Confirming user's login.
-    /// </summary>
-    public const string ConfirmLogin = $"{Controller}{AuthPrefix}";
-
-    /// <summary>
-    /// Renewing authorization token.
-    /// </summary>
-    public const string RenewToken = $"{Controller}{AuthPrefix}";
-
-    /// <summary>
-    /// Logging a user out.
-    /// </summary>
-    public const string Logout = $"{Controller}{AuthPrefix}";
-
-    /// <summary>
-    /// Logging a user out everywhere.
-    /// </summary>
-    public const string LogoutEverywhere = $"{Controller}{AuthPrefix}All";
+    public const string ConfirmEmailAddress = $"{Controller}Email{Routes.Slash}{{{IdentityTokenParameter}}}";
 
     /// <summary>
     /// Requesting password reset.
     /// </summary>
-    public const string CreatePasswordResetRequest = $"{Controller}{ResetPrefix}Password";
+    public const string CreatePasswordResetRequest = $"{Controller}Password";
 
     /// <summary>
     /// Resetting password.
     /// </summary>
-    public const string ResetPassword = $"{Controller}{ResetPrefix}Password";
+    public const string ResetPassword = $"{Controller}Password";
 
     /// <summary>
-    /// Requesting email reset.
+    /// Requesting email address reset.
     /// </summary>
-    public const string CreateEmailResetRequest = $"{Controller}{ResetPrefix}Email";
+    public const string CreateEmailAddressResetRequest = $"{Controller}Email";
 
     /// <summary>
-    /// Resetting email.
+    /// Resetting email address.
     /// </summary>
-    public const string ResetEmail = $"{Controller}{ResetPrefix}Email{Routes.Slash}{{{IdentityTokenParameter}}}";
+    public const string ResetEmailAddress = $"{Controller}Email{Routes.Slash}{{{IdentityTokenParameter}}}";
 
     /// <summary>
     /// Updating a user.
@@ -236,5 +234,28 @@ public static class UserRoutes
     /// Deleting a user.
     /// </summary>
     public const string Delete = Controller;
+    #endregion
+}
+
+/// <summary>
+/// Static API endpoints routes.
+/// </summary>
+public static class StaticRoutes
+{
+    #region Constants
+    /// <summary>
+    /// Confirming user's email address.
+    /// </summary>
+    public const string ConfirmEmailAddress = $"confirm-email{Routes.Slash}{{{IdentityTokenParameter}}}";
+
+    /// <summary>
+    /// Resetting password.
+    /// </summary>
+    public const string ResetPassword = $"reset-password{Routes.Slash}{{{IdentityTokenParameter}}}";
+
+    /// <summary>
+    /// Resetting email address.
+    /// </summary>
+    public const string ResetEmailAddress = $"reset-email{Routes.Slash}{{{IdentityTokenParameter}}}";
     #endregion
 }

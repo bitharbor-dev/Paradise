@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.Models;
-using Paradise.Models.Application.EmailTemplateModels;
+using Paradise.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.WebApi.Client.Base;
 using System.Text.Json;
 using static Paradise.Common.Web.EmailTemplateRoutes;
@@ -42,13 +42,13 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     {
         var route = CreateRoute(GetAll);
 
-        return GetAsync<IEnumerable<EmailTemplateModel>>(route, cancellationToken);
+        return GetAsync<IEnumerable<EmailTemplateModel>>(route, true, cancellationToken);
     }
 
     /// <summary>
-    /// Gets the email template with the given <paramref name="emailTemplateId"/>.
+    /// Gets the email template with the given <paramref name="id"/>.
     /// </summary>
-    /// <param name="emailTemplateId">
+    /// <param name="id">
     /// The Id of the email template to be found.
     /// </param>
     /// <param name="cancellationToken">
@@ -60,14 +60,14 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailTemplateModel"/>
     /// containing information about the email template found.
     /// </returns>
-    public Task<Result<EmailTemplateModel>> GetByIdAsync(Guid emailTemplateId, CancellationToken cancellationToken = default)
+    public Task<Result<EmailTemplateModel>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var route = CreateRoute(GetById, routeParameters: new()
         {
-            [IdParameter] = emailTemplateId
+            [IdParameter] = id.ToString()
         });
 
-        return GetAsync<EmailTemplateModel>(route, cancellationToken);
+        return GetAsync<EmailTemplateModel>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -90,13 +90,13 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     {
         var route = CreateRoute(Create);
 
-        return PostAsync<EmailTemplateModel>(route, model, cancellationToken);
+        return PostAsync<EmailTemplateModel>(route, true, model, cancellationToken);
     }
 
     /// <summary>
     /// Updates an email template.
     /// </summary>
-    /// <param name="emailTemplateId">
+    /// <param name="id">
     /// The Id of the email template to be updated.
     /// </param>
     /// <param name="model">
@@ -112,20 +112,21 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     /// <see cref="Result{TValue}.Value"/> is an <see cref="EmailTemplateModel"/>
     /// containing information about the created email template.
     /// </returns>
-    public Task<Result<EmailTemplateModel>> UpdateAsync(Guid emailTemplateId, EmailTemplateUpdateModel model, CancellationToken cancellationToken = default)
+    public Task<Result<EmailTemplateModel>> UpdateAsync(
+        Guid id, EmailTemplateUpdateModel model, CancellationToken cancellationToken = default)
     {
         var route = CreateRoute(Update, routeParameters: new()
         {
-            [IdParameter] = emailTemplateId
+            [IdParameter] = id.ToString()
         });
 
-        return PatchAsync<EmailTemplateModel>(route, model, cancellationToken);
+        return PatchAsync<EmailTemplateModel>(route, true, model, cancellationToken);
     }
 
     /// <summary>
     /// Deletes an email template.
     /// </summary>
-    /// <param name="emailTemplateId">
+    /// <param name="id">
     /// The Id of the email template to be deleted.
     /// </param>
     /// <param name="cancellationToken">
@@ -135,14 +136,14 @@ public sealed class EmailTemplatesApiClient(IOptionsMonitor<JsonSerializerOption
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> DeleteAsync(Guid emailTemplateId, CancellationToken cancellationToken = default)
+    public Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var route = CreateRoute(Delete, routeParameters: new()
         {
-            [IdParameter] = emailTemplateId
+            [IdParameter] = id.ToString()
         });
 
-        return DeleteAsync(route, cancellationToken);
+        return DeleteAsync(route, true, cancellationToken);
     }
     #endregion
 }

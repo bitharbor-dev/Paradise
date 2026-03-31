@@ -1,0 +1,19 @@
+parameters:
+  - name: name
+    displayName: 'Artifact name to upload'
+    type: string
+    default: ''
+
+  - name: location
+    displayName: 'File(s) location'
+    type: string
+    default: ''
+
+steps:
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Upload ${{ parameters.name }}'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.location }}'
+    ArtifactName: '${{ parameters.name }}'
+    publishLocation: 'Container'

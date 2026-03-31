@@ -5,11 +5,32 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="xunit.abstractions" />
+		<InternalsVisibleTo Include="Paradise.ApplicationLogic.DataConverters.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.ApplicationLogic.Infrastructure.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.ApplicationLogic.Options.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.ApplicationLogic.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.Common.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.DataAccess.Seed.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.DataAccess.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.Domain.Base.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.Domain.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.Models.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.WebApi.Infrastructure.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.WebApi.Tests.Unit" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Code\Core\Paradise.ApplicationLogic\Paradise.ApplicationLogic.csproj" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="xunit.v3.assert" />
+		<PackageReference Include="xunit.v3.extensibility.core" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Code\Web\Paradise.WebApi\Paradise.WebApi.csproj" />
+		<ProjectReference Include="..\..\..\Code\Web\Paradise.Maintenance\Paradise.Maintenance.csproj" />
 	</ItemGroup>
 
 </Project>

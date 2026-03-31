@@ -1,21 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<NeutralLanguage>en-US</NeutralLanguage>
+		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="DataRepresentation\RepresentationMessages.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>RepresentationMessages.resx</DependentUpon>
+		</Compile>
 		<Compile Update="DataValidation\ValidationMessages.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>ValidationMessages.resx</DependentUpon>
 		</Compile>
-		<Compile Update="ErrorsHandling\ErrorMessages.Designer.cs">
+		<Compile Update="ErrorHandling\ErrorMessages.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>ErrorMessages.resx</DependentUpon>
 		</Compile>
-		<Compile Update="ExceptionsHandling\ExceptionMessages.Designer.cs">
+		<Compile Update="ExceptionHandling\ExceptionMessages.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>ExceptionMessages.resx</DependentUpon>
@@ -25,38 +34,29 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>LogMessages.resx</DependentUpon>
 		</Compile>
-		<Compile Update="ModelsLocalization\ModelsLocalizationMessages.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>ModelsLocalizationMessages.resx</DependentUpon>
-		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Update="DataRepresentation\RepresentationMessages.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>RepresentationMessages.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 		<EmbeddedResource Update="DataValidation\ValidationMessages.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
+			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>ValidationMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-		<EmbeddedResource Update="ErrorsHandling\ErrorMessages.resx">
+		<EmbeddedResource Update="ErrorHandling\ErrorMessages.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-		<EmbeddedResource Update="ExceptionsHandling\ExceptionMessages.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
+		<EmbeddedResource Update="ExceptionHandling\ExceptionMessages.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Logging\LogMessages.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>LogMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-		<EmbeddedResource Update="ModelsLocalization\ModelsLocalizationMessages.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>ModelsLocalizationMessages.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 	</ItemGroup>
 
 </Project>

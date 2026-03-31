@@ -1,407 +1,183 @@
-﻿using Paradise.Localization.ErrorsHandling;
-using Paradise.Models.Attributes;
+﻿using Paradise.Models.Attributes;
 using System.ComponentModel.DataAnnotations;
+using EM = Paradise.Localization.ErrorHandling.ErrorMessages;
 
 namespace Paradise.Models;
 
 /// <summary>
-/// Contains localized descriptions for all kinds of errors within the application.
+/// Contains error codes which describes all kinds of errors within the application
+/// and provides access to the localized error descriptions.
 /// </summary>
 public enum ErrorCode
 {
-    #region IdentityResult errors
-    /// <summary>
-    /// Optimistic concurrency failure, the object has been modified.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityConcurrencyFailure))]
-    ConcurrencyFailure,
     /// <summary>
     /// An unknown failure has occurred.
     /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityDefaultError))]
+    [IsCritical(true), Display(ResourceType = typeof(EM), Name = nameof(EM.DefaultError))]
     DefaultError,
     /// <summary>
-    /// Email is already taken.
+    /// Email address '{0}' is in use.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityDuplicateEmail))]
-    DuplicateEmail,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.DuplicateEmailAddress))]
+    DuplicateEmailAddress,
     /// <summary>
-    /// Role name is already taken.
+    /// Phone number '{0}' is in use.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityDuplicateRoleName))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.DuplicatePhoneNumber))]
+    DuplicatePhoneNumber,
+    /// <summary>
+    /// Role name '{0}' is in use.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.DuplicateRoleName))]
     DuplicateRoleName,
     /// <summary>
-    /// User-name is already taken.
+    /// User-name '{0}' is in use.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityDuplicateUserName))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.DuplicateUserName))]
     DuplicateUserName,
     /// <summary>
-    /// Email is invalid.
+    /// Email address '{0}' is invalid.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidEmail))]
-    InvalidEmail,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidEmailAddress))]
+    InvalidEmailAddress,
     /// <summary>
-    /// Invalid manager type.
+    /// {0}
     /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidManagerType))]
-    InvalidManagerType,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidModel))]
+    InvalidModel,
     /// <summary>
-    /// The provided PasswordHasherCompatibilityMode is invalid.
+    /// Phone number '{0}' is invalid.
     /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidPasswordHasherCompatibilityMode))]
-    InvalidPasswordHasherCompatibilityMode,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidPhoneNumber))]
+    InvalidPhoneNumber,
     /// <summary>
-    /// The iteration count must be a positive integer.
+    /// Role name '{0}' is invalid.
     /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidPasswordHasherIterationCount))]
-    InvalidPasswordHasherIterationCount,
-    /// <summary>
-    /// Role name is invalid.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidRoleName))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidRoleName))]
     InvalidRoleName,
     /// <summary>
     /// Invalid token.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidToken))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidToken))]
     InvalidToken,
     /// <summary>
-    /// User-name is invalid, can only contain letters or digits.
+    /// User-name '{0}' is invalid.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityInvalidUserName))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidUserName))]
     InvalidUserName,
     /// <summary>
-    /// A user with this login already exists.
+    /// Message template with the name '{0}' and culture '{1}' already exists.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityLoginAlreadyAssociated))]
-    LoginAlreadyAssociated,
-    /// <summary>
-    /// AddIdentity must be called on the service collection.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityMustCallAddIdentity))]
-    MustCallAddIdentity,
-    /// <summary>
-    /// No IUserTwoFactorTokenProvider with this name is registered.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityNoTokenProvider))]
-    NoTokenProvider,
-    /// <summary>
-    /// User security stamp cannot be null.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityNullSecurityStamp))]
-    NullSecurityStamp,
-    /// <summary>
-    /// Incorrect password.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordMismatch))]
-    PasswordMismatch,
-    /// <summary>
-    /// Passwords must have at least one digit ('0'-'9').
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordRequiresDigit))]
-    PasswordRequiresDigit,
-    /// <summary>
-    /// Passwords must have at least one lowercase ('a'-'z').
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordRequiresLower))]
-    PasswordRequiresLower,
-    /// <summary>
-    /// Passwords must have at least one non-alphanumeric character.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordRequiresNonAlphanumeric))]
-    PasswordRequiresNonAlphanumeric,
-    /// <summary>
-    /// Passwords must have at least one uppercase ('A'-'Z').
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordRequiresUpper))]
-    PasswordRequiresUpper,
-    /// <summary>
-    /// Password is too short.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordTooShort))]
-    PasswordTooShort,
-    /// <summary>
-    /// Role does not exist.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityRoleNotFound))]
-    RoleNotFound,
-    /// <summary>
-    /// Store does not implement IQueryableRoleStore&lt;TRole&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIQueryableRoleStore))]
-    StoreNotIQueryableRoleStore,
-    /// <summary>
-    /// Store does not implement IQueryableUserStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIQueryableUserStore))]
-    StoreNotIQueryableUserStore,
-    /// <summary>
-    /// Store does not implement IRoleClaimStore&lt;TRole&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIRoleClaimStore))]
-    StoreNotIRoleClaimStore,
-    /// <summary>
-    /// Store does not implement IUserAuthenticationTokenStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserAuthenticationTokenStore))]
-    StoreNotIUserAuthenticationTokenStore,
-    /// <summary>
-    /// Store does not implement IUserClaimStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserClaimStore))]
-    StoreNotIUserClaimStore,
-    /// <summary>
-    /// Store does not implement IUserConfirmationStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserConfirmationStore))]
-    StoreNotIUserConfirmationStore,
-    /// <summary>
-    /// Store does not implement IUserEmailStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserEmailStore))]
-    StoreNotIUserEmailStore,
-    /// <summary>
-    /// Store does not implement IUserLockoutStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserLockoutStore))]
-    StoreNotIUserLockoutStore,
-    /// <summary>
-    /// Store does not implement IUserLoginStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserLoginStore))]
-    StoreNotIUserLoginStore,
-    /// <summary>
-    /// Store does not implement IUserPasswordStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserPasswordStore))]
-    StoreNotIUserPasswordStore,
-    /// <summary>
-    /// Store does not implement IUserPhoneNumberStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserPhoneNumberStore))]
-    StoreNotIUserPhoneNumberStore,
-    /// <summary>
-    /// Store does not implement IUserRoleStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserRoleStore))]
-    StoreNotIUserRoleStore,
-    /// <summary>
-    /// Store does not implement IUserSecurityStampStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserSecurityStampStore))]
-    StoreNotIUserSecurityStampStore,
-    /// <summary>
-    /// Store does not implement IUserAuthenticatorKeyStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserAuthenticatorKeyStore))]
-    StoreNotIUserAuthenticatorKeyStore,
-    /// <summary>
-    /// Store does not implement IUserTwoFactorStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserTwoFactorStore))]
-    StoreNotIUserTwoFactorStore,
-    /// <summary>
-    /// Recovery code redemption failed.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityRecoveryCodeRedemptionFailed))]
-    RecoveryCodeRedemptionFailed,
-    /// <summary>
-    /// User already has a password set.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityUserAlreadyHasPassword))]
-    UserAlreadyHasPassword,
-    /// <summary>
-    /// User already in the role.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityUserAlreadyInRole))]
-    UserAlreadyInRole,
-    /// <summary>
-    /// User is locked out.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityUserLockedOut))]
-    UserLockedOut,
-    /// <summary>
-    /// Lockout is not enabled for this user.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityUserLockoutNotEnabled))]
-    UserLockoutNotEnabled,
-    /// <summary>
-    /// User does not exist.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityUserNameNotFound))]
-    UserNameNotFound,
-    /// <summary>
-    /// User is not in role.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityUserNotInRole))]
-    UserNotInRole,
-    /// <summary>
-    /// Store does not implement IUserTwoFactorRecoveryCodeStore&lt;TUser&gt;.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIUserTwoFactorRecoveryCodeStore))]
-    StoreNotIUserTwoFactorRecoveryCodeStore,
-    /// <summary>
-    /// Passwords must use different characters.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityPasswordRequiresUniqueChars))]
-    PasswordRequiresUniqueChars,
-    /// <summary>
-    /// No RoleType was specified, try AddRoles&lt;TRole&gt;().
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityNoRoleType))]
-    NoRoleType,
-    /// <summary>
-    /// Store does not implement IProtectedUserStore&lt;TUser&gt; which is required when ProtectPersonalData = true.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityStoreNotIProtectedUserStore))]
-    StoreNotIProtectedUserStore,
-    /// <summary>
-    /// No IPersonalDataProtector service was registered, this is required when ProtectPersonalData = true.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.IdentityNoPersonalDataProtector))]
-    NoPersonalDataProtector,
-    #endregion
-
-    #region Custom errors
-    /// <summary>
-    /// Access to the resource is forbidden.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.AccessForbidden))]
-    AccessForbidden,
-    /// <summary>
-    /// Phone number is already taken.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.DuplicatePhoneNumber))]
-    DuplicatePhoneNumber,
-    /// <summary>
-    /// The message recipients list is empty.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.EmptyRecipientsList))]
-    EmptyRecipientsList,
-    /// <summary>
-    /// The model did not pass the validation process.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.InvalidModel))]
-    InvalidModel,
-    /// <summary>
-    /// Phone number is invalid.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.InvalidPhoneNumber))]
-    InvalidPhoneNumber,
-    /// <summary>
-    /// SMTP configuration is not valid.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.InvalidSmtpConfiguration))]
-    InvalidSmtpConfiguration,
-    /// <summary>
-    /// Message template with the specified name and culture already exists.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateAlreadyExists))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.MessageTemplateAlreadyExists))]
     MessageTemplateAlreadyExists,
     /// <summary>
-    /// Empty template text.
+    /// {0}
     /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateEmptyText))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.MessageTemplateEmptyText))]
     MessageTemplateEmptyText,
     /// <summary>
-    /// Message template with the specified Id does not exist.
+    /// Message template with Id '{0}' does not exist.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateIdNotFound))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.MessageTemplateIdNotFound))]
     MessageTemplateIdNotFound,
-    /// <summary>
-    /// Invalid placeholders number.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateInvalidPlaceholdersNumber))]
-    MessageTemplateInvalidPlaceholdersNumber,
     /// <summary>
     /// Message template name is a null or empty string.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateMissingName))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.MessageTemplateMissingName))]
     MessageTemplateMissingName,
     /// <summary>
-    /// Missing placeholder.
+    /// Message template with the name '{0}' and culture '{1}' does not exist.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateMissingPlaceholder))]
-    MessageTemplateMissingPlaceholder,
-    /// <summary>
-    /// Message template with the specified name and culture does not exist.
-    /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.MessageTemplateNotFound))]
+    [IsCritical(true), Display(ResourceType = typeof(EM), Name = nameof(EM.MessageTemplateNotFound))]
     MessageTemplateNotFound,
     /// <summary>
     /// The token is outdated. Generate a new one.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.OutdatedToken))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.OutdatedToken))]
     OutdatedToken,
     /// <summary>
     /// Missing password.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.PasswordMissing))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.PasswordMissing))]
     PasswordMissing,
     /// <summary>
-    /// Password does not match its confirmation value.
+    /// The password value does not match it's confirmation value.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.PasswordNotMatchConfirmation))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.PasswordNotMatchConfirmation))]
     PasswordNotMatchConfirmation,
     /// <summary>
-    /// Role with the specified Id does not exist.
+    /// The email address '{0}' does not match it's confirmation - '{1}'.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.RoleIdNotFound))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.EmailAddressNotMatchConfirmation))]
+    EmailAddressNotMatchConfirmation,
+    /// <summary>
+    /// Role with Id '{0}' does not exist.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.RoleIdNotFound))]
     RoleIdNotFound,
     /// <summary>
-    /// No email address was provided to send messages from.
+    /// The deletion request has exceeded its lifetime ({0}).
     /// </summary>
-    [IsCritical(true), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.SenderEmailIsMissing))]
-    SenderEmailIsMissing,
-    /// <summary>
-    /// The token owner does not exist.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.TokenOwnerNotExists))]
-    TokenOwnerNotExists,
-    /// <summary>
-    /// Unauthorized.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UnauthorizedUser))]
-    UnauthorizedUser,
-    /// <summary>
-    /// The deletion request has exceeded its lifetime.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserDeletionRequestExpired))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserDeletionRequestExpired))]
     UserDeletionRequestExpired,
     /// <summary>
-    /// Email is already confirmed.
+    /// The email address '{0}' is already confirmed.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserEmailAlreadyConfirmed))]
-    UserEmailAlreadyConfirmed,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserEmailAddressAlreadyConfirmed))]
+    UserEmailAddressAlreadyConfirmed,
     /// <summary>
-    /// Email is not confirmed.
+    /// Email address '{0}' is not confirmed.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserEmailNotConfirmed))]
-    UserEmailNotConfirmed,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserEmailAddressNotConfirmed))]
+    UserEmailAddressNotConfirmed,
     /// <summary>
-    /// The user with the specified email does not exist.
+    /// User with email address '{0}' does not exist.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserEmailNotFound))]
-    UserEmailNotFound,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserEmailAddressNotFound))]
+    UserEmailAddressNotFound,
     /// <summary>
-    /// The user with the specified Id does not exist.
+    /// User with Id '{0}' does not exist.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserIdNotFound))]
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserIdNotFound))]
     UserIdNotFound,
     /// <summary>
-    /// The user is not pending deletion.
+    /// User is locked out.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserNotPendingDeletion))]
-    UserNotPendingDeletion,
-    /// <summary>
-    /// The user with the specified phone number does not exist.
-    /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserPhoneNumberNotFound))]
-    UserPhoneNumberNotFound,
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserLockedOut))]
+    UserLockedOut,
     /// <summary>
     /// The specified user does not exist or password is incorrect.
     /// </summary>
-    [IsCritical(false), Display(ResourceType = typeof(ErrorMessages), Name = nameof(ErrorMessages.UserNotFoundOrPasswordMismatch))]
-    UserNotFoundOrPasswordMismatch
-    #endregion
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserNotFoundOrPasswordMismatch))]
+    UserNotFoundOrPasswordMismatch,
+    /// <summary>
+    /// The user '{0}' is not pending deletion.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserNotPendingDeletion))]
+    UserNotPendingDeletion,
+    /// <summary>
+    /// User with phone number '{0}' does not exist.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserPhoneNumberNotFound))]
+    UserPhoneNumberNotFound,
+    /// <summary>
+    /// Refresh token with Id '{0}' does not exist.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserRefreshTokenIdNotFound))]
+    UserRefreshTokenIdNotFound,
+    /// <summary>
+    /// Unauthorized.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserUnauthorized))]
+    UserUnauthorized,
+    /// <summary>
+    /// User with user-name '{0}' does not exist.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.UserUserNameNotFound))]
+    UserUserNameNotFound,
+    /// <summary>
+    /// Access forbidden.
+    /// </summary>
+    [IsCritical(false), Display(ResourceType = typeof(EM), Name = nameof(EM.AccessForbidden))]
+    AccessForbidden,
 }

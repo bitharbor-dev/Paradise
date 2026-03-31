@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Paradise.Models;
-using Paradise.WebApi.Filters.Validation;
+using Microsoft.Extensions.Options;
+using Paradise.WebApi.Extensions;
+using Paradise.WebApi.Infrastructure.Filters.Validation;
+using System.Net.Mime;
 
 namespace Paradise.WebApi.Controllers.Base;
 
@@ -10,8 +11,7 @@ namespace Paradise.WebApi.Controllers.Base;
 /// Base API controller class.
 /// </summary>
 [ApiController, RequireHttps, ValidateModel]
-[Consumes(Result.ContentType), Produces(Result.ContentType)]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Produces(MediaTypeNames.Application.Json)]
 public abstract class ApiControllerBase : ControllerBase
 {
     #region Constants
@@ -19,5 +19,23 @@ public abstract class ApiControllerBase : ControllerBase
     /// Request authorization header name.
     /// </summary>
     public const string AuthorizationHeaderName = "Authorization";
+    #endregion
+
+    #region Private protected methods
+    /// <summary>
+    /// Gets the currently authenticated user's Id.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="Guid"/> value representing the currently
+    /// authenticated user's Id.
+    /// </returns>
+    private protected Guid GetCurrentUserId()
+    {
+        var identityOptions = HttpContext.RequestServices.GetRequiredService<IOptions<IdentityOptions>>();
+
+        var idClaimType = identityOptions.Value.ClaimsIdentity.UserIdClaimType;
+
+        return User.GetGuidClaim(idClaimType);
+    }
     #endregion
 }

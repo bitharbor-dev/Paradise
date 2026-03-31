@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using static Paradise.Localization.ExceptionsHandling.ExceptionMessagesProvider;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
 
 namespace Paradise.Common.Extensions;
 
@@ -39,7 +39,7 @@ public static class IConfigurationExtensions
     /// Value type.
     /// </typeparam>
     /// <param name="configuration">
-    /// The configuration in which to look for a value.
+    /// The configuration instance containing the target configuration section.
     /// </param>
     /// <returns>
     /// The value of type <typeparamref name="T"/>,
@@ -47,13 +47,15 @@ public static class IConfigurationExtensions
     /// </returns>
     public static T GetRequiredInstance<T>(this IConfiguration configuration)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+
         var instanceType = typeof(T);
 
-        var instance = configuration.GetRequiredSection(instanceType.Name).Get<T>();
+        var instance = configuration.GetSection(instanceType.Name).Get<T>();
 
         if (instance is null)
         {
-            var message = GetFailedToCreateInstanceOfTypeMessage(instanceType);
+            var message = GetMessageFailedToCreateInstanceOfType(instanceType);
 
             throw new InvalidOperationException(message);
         }

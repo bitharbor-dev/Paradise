@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\Paradise.Models\Paradise.Models.csproj" />
+		<ProjectReference Include="..\Paradise.ApplicationLogic.Infrastructure.Domain\Paradise.ApplicationLogic.Infrastructure.Domain.csproj" />
+		<ProjectReference Include="..\Paradise.DataAccess.Seed\Paradise.DataAccess.Seed.csproj" />
+		<ProjectReference Include="..\Paradise.Domain\Paradise.Domain.csproj" />
+	</ItemGroup>
+
+</Project>

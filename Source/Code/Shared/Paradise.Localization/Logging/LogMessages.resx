@@ -117,61 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CriticalClaimsAdditionFailure" xml:space="preserve">
-    <value>Failed to create user claims.</value>
-  </data>
-  <data name="CriticalDatabaseException" xml:space="preserve">
-    <value>An exception occurred during the database operation execution. Method '{0}'.</value>
-  </data>
-  <data name="CriticalDatabaseSeedFailure" xml:space="preserve">
-    <value>Failed to seed the database. Method '{0}'.</value>
-  </data>
-  <data name="CriticalResultErrors" xml:space="preserve">
-    <value>Critical errors:{0}{1}</value>
-    <comment>Pass `Environment.NewLine` as the first argument.</comment>
-  </data>
-  <data name="CriticalUnhandledExceptionOccurred" xml:space="preserve">
-    <value>An unhandled exception has occurred.</value>
-  </data>
-  <data name="CriticalUnsuccessfulUserDeletionAfterFailedInvitation" xml:space="preserve">
-    <value>Failed to delete the user "{0}" after unsuccessful invitation. Errors:{1}{2}</value>
-    <comment>Pass `Environment.NewLine` as the second argument.</comment>
-  </data>
-  <data name="CriticalWorkerExecutionFailure" xml:space="preserve">
-    <value>Worker execution failed. Time: {0}.</value>
-  </data>
-  <data name="ErrorResultErrors" xml:space="preserve">
-    <value>Errors:{0}{1}</value>
-    <comment>Pass `Environment.NewLine` as the first argument.</comment>
-  </data>
-  <data name="InformationAddedSeedItem" xml:space="preserve">
+  <data name="AddedSeedItem" xml:space="preserve">
     <value>Added seed item {0}: '{1}'.</value>
   </data>
-  <data name="InformationOutdatedTokensNumber" xml:space="preserve">
-    <value>Outdated tokens: {0}.</value>
+  <data name="DatabaseSeedFailure" xml:space="preserve">
+    <value>Failed to seed the database. Method '{0}'.</value>
   </data>
-  <data name="InformationPendingDeletionUsersNumber" xml:space="preserve">
-    <value>Pending deletion users: {0}.</value>
+  <data name="ResultErrors" xml:space="preserve">
+    <value>Errors:{0}{1}</value>
+    <comment>Pass `Environment.NewLine` as {0} argument.</comment>
   </data>
-  <data name="InformationUnconfirmedUsersNumber" xml:space="preserve">
-    <value>Unconfirmed users: {0}.</value>
+  <data name="UnhandledExceptionOccurred" xml:space="preserve">
+    <value>An unhandled exception has occurred.</value>
   </data>
-  <data name="InformationUpdatedSeedItem" xml:space="preserve">
+  <data name="UpdatedSeedItem" xml:space="preserve">
     <value>Updated seed item {0}: '{1}'.</value>
-  </data>
-  <data name="InformationWorkerOptionsChangedState" xml:space="preserve">
-    <value>Worker options changed at {0}. New value:{1}{2}</value>
-    <comment>Pass `Environment.NewLine` as the second argument.</comment>
-  </data>
-  <data name="InformationWorkerOptionsInitialState" xml:space="preserve">
-    <value>Options:{1}{2}</value>
-    <comment>Pass `Environment.NewLine` as the second argument.</comment>
-  </data>
-  <data name="InformationWorkerRunning" xml:space="preserve">
-    <value>{0} - Running at {1}.</value>
-  </data>
-  <data name="WarningDatabaseEntrySeedFailure" xml:space="preserve">
-    <value>Failed to create an entry of '{0}'.{1}{2}</value>
-    <comment>Pass `Environment.NewLine` as the second argument.</comment>
   </data>
 </root>

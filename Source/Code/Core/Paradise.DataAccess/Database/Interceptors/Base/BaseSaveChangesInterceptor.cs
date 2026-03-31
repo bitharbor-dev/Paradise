@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.DataAccess.Database.Interceptors.Base;
 
@@ -9,12 +10,28 @@ namespace Paradise.DataAccess.Database.Interceptors.Base;
 /// </summary>
 public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
 {
+    #region Fields
+    private readonly TimeProvider _timeProvider;
+    #endregion
+
+    #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseSaveChangesInterceptor"/> class.
+    /// </summary>
+    /// <param name="timeProvider">
+    /// Time provider.
+    /// </param>
+    [SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Primary constructors can not be protected.")]
+    protected BaseSaveChangesInterceptor(TimeProvider timeProvider)
+        => _timeProvider = timeProvider;
+    #endregion
+
     #region Properties
     /// <summary>
     /// Entity entry filter to be applied on the tacked entries collection
     /// before state interception.
     /// </summary>
-    protected virtual Func<EntityEntry, bool>? EntityFilter { get; }
+    public virtual Func<EntityEntry, bool>? EntityFilter { get; }
     #endregion
 
     #region Public methods
@@ -23,23 +40,29 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     {
         ArgumentNullException.ThrowIfNull(eventData);
 
-        OnSavingChanges(eventData);
+        OnSavingChanges(eventData, new()
+        {
+            TransactionTime = _timeProvider.GetUtcNow()
+        });
 
         return base.SavingChanges(eventData, result);
     }
 
     /// <inheritdoc/>
-    public sealed override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+    public sealed override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
+                                                                                 InterceptionResult<int> result,
+                                                                                 CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(eventData);
 
-        OnSavingChanges(eventData);
+        OnSavingChanges(eventData, new()
+        {
+            TransactionTime = _timeProvider.GetUtcNow()
+        });
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-    #endregion
 
-    #region Protected methods
     /// <summary>
     /// Intercepts the <paramref name="entry"/> state.
     /// </summary>
@@ -49,7 +72,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     /// <param name="properties">
     /// Contains additional transaction information.
     /// </param>
-    protected abstract void Intercept(EntityEntry entry, DbContextEventProperties properties);
+    public abstract void Intercept(EntityEntry entry, DbContextEventProperties properties);
     #endregion
 
     #region Private methods
@@ -59,7 +82,10 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
     /// <param name="eventData">
     /// Contextual information about the <see cref="DbContext" /> being used.
     /// </param>
-    private void OnSavingChanges(DbContextEventData eventData)
+    /// <param name="properties">
+    /// Contains additional transaction information.
+    /// </param>
+    private void OnSavingChanges(DbContextEventData eventData, DbContextEventProperties properties)
     {
         var context = eventData.Context;
 
@@ -69,11 +95,6 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
         var entries = EntityFilter is not null
             ? context.ChangeTracker.Entries().Where(EntityFilter)
             : context.ChangeTracker.Entries();
-
-        var properties = new DbContextEventProperties
-        {
-            TransactionTime = DateTime.UtcNow
-        };
 
         foreach (var entry in entries)
             Intercept(entry, properties);

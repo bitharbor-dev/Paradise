@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.Models;
-using Paradise.Models.Domain.RoleModels;
+using Paradise.Models.Domain.Identity.Roles;
 using Paradise.WebApi.Client.Base;
 using System.Text.Json;
 using static Paradise.Common.Web.ParameterNames;
@@ -55,16 +55,14 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     /// </returns>
     public Task<Result<IEnumerable<RoleModel>>> GetAllAsync(bool? isDefault, CancellationToken cancellationToken = default)
     {
-        var queryParameters = isDefault.HasValue
-            ? new Dictionary<string, object?>
-            {
-                [IsDefaultParameter] = isDefault.Value
-            }
-            : null;
+        var queryParameters = new Dictionary<string, string?>
+        {
+            [IsDefaultParameter] = isDefault?.ToString()
+        };
 
         var route = CreateRoute(GetAll, queryParameters: queryParameters);
 
-        return GetAsync<IEnumerable<RoleModel>>(route, cancellationToken);
+        return GetAsync<IEnumerable<RoleModel>>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -86,10 +84,10 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetById, routeParameters: new()
         {
-            [RoleIdParameter] = roleId
+            [RoleIdParameter] = roleId.ToString()
         });
 
-        return GetAsync<RoleModel>(route, cancellationToken);
+        return GetAsync<RoleModel>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -116,10 +114,10 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetUserRoles, routeParameters: new()
         {
-            [UserIdParameter] = userId
+            [UserIdParameter] = userId?.ToString() ?? string.Empty
         });
 
-        return GetAsync<IEnumerable<RoleModel>>(route, cancellationToken);
+        return GetAsync<IEnumerable<RoleModel>>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -142,7 +140,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Create);
 
-        return PostAsync<RoleModel>(route, model, cancellationToken);
+        return PostAsync<RoleModel>(route, true, model, cancellationToken);
     }
 
     /// <summary>
@@ -168,10 +166,10 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Update, routeParameters: new()
         {
-            [RoleIdParameter] = roleId
+            [RoleIdParameter] = roleId.ToString()
         });
 
-        return PatchAsync<RoleModel>(route, model, cancellationToken);
+        return PatchAsync<RoleModel>(route, true, model, cancellationToken);
     }
 
     /// <summary>
@@ -194,10 +192,10 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Delete, routeParameters: new()
         {
-            [RoleIdParameter] = roleId
+            [RoleIdParameter] = roleId.ToString()
         });
 
-        return DeleteAsync<IEnumerable<RoleModel>>(route, cancellationToken);
+        return DeleteAsync<IEnumerable<RoleModel>>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -224,11 +222,11 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Assign, routeParameters: new()
         {
-            [RoleIdParameter] = roleId,
-            [UserIdParameter] = userId
+            [RoleIdParameter] = roleId.ToString(),
+            [UserIdParameter] = userId.ToString()
         });
 
-        return PatchAsync<IEnumerable<RoleModel>>(route, null, cancellationToken);
+        return PatchAsync<IEnumerable<RoleModel>>(route, true, null, cancellationToken);
     }
 
     /// <summary>
@@ -255,11 +253,11 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Unassign, routeParameters: new()
         {
-            [RoleIdParameter] = roleId,
-            [UserIdParameter] = userId
+            [RoleIdParameter] = roleId.ToString(),
+            [UserIdParameter] = userId.ToString()
         });
 
-        return DeleteAsync<IEnumerable<RoleModel>>(route, cancellationToken);
+        return DeleteAsync<IEnumerable<RoleModel>>(route, true, cancellationToken);
     }
     #endregion
 }

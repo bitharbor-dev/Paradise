@@ -1,24 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<UserSecretsId>WebApi-C13617A9-FD80-4960-89BF-00B45766F7B6</UserSecretsId>
-
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<DockerfileContext>..\..\..\..</DockerfileContext>
+		<UserSecretsId>Paradise.WebApi</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
-		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.Tests.Miscellaneous" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Core\Paradise.DependencyInjection\Paradise.DependencyInjection.csproj" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Scalar.AspNetCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Paradise.WebApi.Infrastructure\Paradise.WebApi.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

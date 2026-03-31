@@ -1,31 +1,34 @@
-﻿namespace Paradise.DataAccess.Repositories;
+﻿using Paradise.Domain.Base;
+
+namespace Paradise.DataAccess.Repositories;
 
 /// <summary>
-/// Represents a paged list query result for the <typeparamref name="TEntity"/> entity.
+/// Represents the result of a paged list query for the <typeparamref name="TEntity"/> entity.
 /// </summary>
 /// <typeparam name="TEntity">
-/// Entity type.
+/// The entity type.
 /// </typeparam>
 /// <remarks>
 /// Initializes a new instance of the <see cref="PagedListQueryResult{TEntity}"/> class.
 /// </remarks>
 /// <param name="currentPageItems">
-/// Current page items.
+/// The items contained in the current page.
 /// </param>
 /// <param name="total">
-/// Total number of records.
+/// The total number of records across all pages.
 /// </param>
 public sealed class PagedListQueryResult<TEntity>(IEnumerable<TEntity> currentPageItems, int total)
+    where TEntity : class, IDomainObject
 {
     #region Properties
     /// <summary>
-    /// Current page items.
+    /// The items contained in the current page.
     /// </summary>
-    public IEnumerable<TEntity> CurrentPageItems { get; set; } = currentPageItems;
+    public IEnumerable<TEntity> CurrentPageItems { get; } = currentPageItems;
 
     /// <summary>
-    /// Total number of records.
+    /// The total number of records across all pages.
     /// </summary>
-    public int Total { get; set; } = total;
+    public int Total { get; } = total;
     #endregion
 }

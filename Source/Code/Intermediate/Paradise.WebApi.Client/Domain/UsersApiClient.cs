@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Paradise.Models;
-using Paradise.Models.Domain.UserModels;
+using Paradise.Models.Domain.Identity.Users;
 using Paradise.WebApi.Client.Base;
 using System.Text.Json;
 using static Paradise.Common.Web.ParameterNames;
@@ -42,7 +42,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetAll);
 
-        return GetAsync<IEnumerable<UserModel>>(route, cancellationToken);
+        return GetAsync<IEnumerable<UserModel>>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -64,10 +64,10 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(GetById, routeParameters: new()
         {
-            [UserIdParameter] = userId
+            [UserIdParameter] = userId.ToString()
         });
 
-        return GetAsync<UserModel>(route, cancellationToken);
+        return GetAsync<UserModel>(route, true, cancellationToken);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Register);
 
-        return PostAsync<UserModel>(route, model, cancellationToken);
+        return PostAsync<UserModel>(route, false, model, cancellationToken);
     }
 
     /// <summary>
@@ -109,119 +109,14 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     /// <see cref="Result{TValue}.Value"/> is a <see cref="UserModel"/>
     /// containing information about the updated user.
     /// </returns>
-    public Task<Result<UserModel>> ConfirmEmailAsync(string identityToken, CancellationToken cancellationToken = default)
+    public Task<Result<UserModel>> ConfirmEmailAddressAsync(string identityToken, CancellationToken cancellationToken = default)
     {
-        var route = CreateRoute(ConfirmEmail, routeParameters: new()
+        var route = CreateRoute(ConfirmEmailAddress, routeParameters: new()
         {
             [IdentityTokenParameter] = identityToken
         });
 
-        return GetAsync<UserModel>(route, cancellationToken);
-    }
-
-    /// <summary>
-    /// Generates a new user authorization token or
-    /// two-factor authentication token in case it is enabled for the user.
-    /// </summary>
-    /// <param name="model">
-    /// The <see cref="UserLoginModel"/> to be used to
-    /// validate login data and generate an access token.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{TValue}"/> where
-    /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
-    /// containing information about the user authorization token or
-    /// two-factor authentication token in case it is enabled for the user.
-    /// </returns>
-    public Task<Result<UserAuthorizationTokenModel>> LoginAsync(UserLoginModel model, CancellationToken cancellationToken = default)
-    {
-        var route = CreateRoute(Login);
-
-        return PostAsync<UserAuthorizationTokenModel>(route, model, cancellationToken);
-    }
-
-    /// <summary>
-    /// Generates a new user authorization token
-    /// for the user with two-factor authentication enabled.
-    /// </summary>
-    /// <param name="model">
-    /// The <see cref="UserTwoFactorAuthenticationModel"/> to be used to
-    /// validate the login data and generate an access token.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{TValue}"/> where
-    /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
-    /// containing information about the user authorization token.
-    /// </returns>
-    public Task<Result<UserAuthorizationTokenModel>> ConfirmLoginAsync(UserTwoFactorAuthenticationModel model, CancellationToken cancellationToken = default)
-    {
-        var route = CreateRoute(ConfirmLogin);
-
-        return PutAsync<UserAuthorizationTokenModel>(route, model, cancellationToken);
-    }
-
-    /// <summary>
-    /// Generates a new user authorization token
-    /// using the access token.
-    /// </summary>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{TValue}"/> where
-    /// <see cref="Result{TValue}.Value"/> is a <see cref="UserAuthorizationTokenModel"/>
-    /// containing information about the user authorization token.
-    /// </returns>
-    public Task<Result<UserAuthorizationTokenModel>> RenewTokenAsync(CancellationToken cancellationToken = default)
-    {
-        var route = CreateRoute(RenewToken);
-
-        return GetAsync<UserAuthorizationTokenModel>(route, cancellationToken);
-    }
-
-    /// <summary>
-    /// Invalidates the access token
-    /// to make it unusable during the authentication process.
-    /// </summary>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result"/> instance containing errors data if any occurs.
-    /// </returns>
-    public Task<Result> LogoutAsync(CancellationToken cancellationToken = default)
-    {
-        var route = CreateRoute(Logout);
-
-        return DeleteAsync(route, cancellationToken);
-    }
-
-    /// <summary>
-    /// Invalidates all user's refresh tokens
-    /// to make them all unusable during the authentication process.
-    /// </summary>
-    /// <param name="cancellationToken">
-    /// A <see cref="CancellationToken"/> to observe
-    /// while waiting for the task to complete.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result"/> instance containing errors data if any occurs.
-    /// </returns>
-    public Task<Result> LogoutEverywhereAsync(CancellationToken cancellationToken = default)
-    {
-        var route = CreateRoute(LogoutEverywhere);
-
-        return DeleteAsync(route, cancellationToken);
+        return GetAsync<UserModel>(route, false, cancellationToken);
     }
 
     /// <summary>
@@ -242,7 +137,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(CreatePasswordResetRequest);
 
-        return PostAsync(route, model, cancellationToken);
+        return PostAsync(route, false, model, cancellationToken);
     }
 
     /// <summary>
@@ -263,14 +158,14 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(ResetPassword);
 
-        return PatchAsync(route, model, cancellationToken);
+        return PatchAsync(route, false, model, cancellationToken);
     }
 
     /// <summary>
     /// Creates an email address reset request.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="UserResetEmailRequestModel"/> to be used to
+    /// The <see cref="UserResetEmailAddressRequestModel"/> to be used to
     /// create an email address reset request.
     /// </param>
     /// <param name="cancellationToken">
@@ -280,11 +175,12 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> CreateEmailResetRequestAsync(UserResetEmailRequestModel model, CancellationToken cancellationToken = default)
+    public Task<Result> CreateEmailAddressResetRequestAsync(
+        UserResetEmailAddressRequestModel model, CancellationToken cancellationToken = default)
     {
-        var route = CreateRoute(CreateEmailResetRequest);
+        var route = CreateRoute(CreateEmailAddressResetRequest);
 
-        return PutAsync(route, model, cancellationToken);
+        return PutAsync(route, true, model, cancellationToken);
     }
 
     /// <summary>
@@ -301,14 +197,14 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.
     /// </returns>
-    public Task<Result> ResetEmailAsync(string identityToken, CancellationToken cancellationToken = default)
+    public Task<Result> ResetEmailAddressAsync(string identityToken, CancellationToken cancellationToken = default)
     {
-        var route = CreateRoute(ResetEmail, routeParameters: new()
+        var route = CreateRoute(ResetEmailAddress, routeParameters: new()
         {
             [IdentityTokenParameter] = identityToken
         });
 
-        return GetAsync(route, cancellationToken);
+        return GetAsync(route, false, cancellationToken);
     }
 
     /// <summary>
@@ -331,7 +227,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Update);
 
-        return PatchAsync<UserModel>(route, model, cancellationToken);
+        return PatchAsync<UserModel>(route, true, model, cancellationToken);
     }
 
     /// <summary>
@@ -348,7 +244,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     {
         var route = CreateRoute(Delete);
 
-        return DeleteAsync(route, cancellationToken);
+        return DeleteAsync(route, true, cancellationToken);
     }
     #endregion
 }

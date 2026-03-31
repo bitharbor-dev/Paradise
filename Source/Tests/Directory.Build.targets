@@ -1,0 +1,13 @@
+<Project>
+
+	<PropertyGroup>
+		<_ParentTargets>$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)..\'))</_ParentTargets>
+
+		<_ExcludedProjects>Paradise.Tests.Miscellaneous</_ExcludedProjects>
+	</PropertyGroup>
+
+	<Import Project="$(_ParentTargets)" Condition="Exists($(_ParentTargets))" />
+
+	<Import Project="Directory.Build.Tests.targets" Condition="!$(_ExcludedProjects.Contains('$(MSBuildProjectName)'))"/>
+
+</Project>

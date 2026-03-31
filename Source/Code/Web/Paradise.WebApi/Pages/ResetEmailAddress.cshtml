@@ -1,0 +1,29 @@
+﻿@page "/reset-email/{IdentityToken}"
+@model ResetEmailAddressModel
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<main class="container">
+    @if (Model.IsSuccess)
+    {
+        <div class="success-overlay">
+            <div class="card">
+                <h2>@Localizer["SuccessMessageHeader"]</h2>
+                <p class="subtitle">@Localizer["SuccessMessage"]</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="error-message">
+                    @Model.ErrorMessage
+                </div>
+            }
+        </div>
+    }
+</main>
