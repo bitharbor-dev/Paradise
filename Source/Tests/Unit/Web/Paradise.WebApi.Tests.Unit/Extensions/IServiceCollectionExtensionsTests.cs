@@ -85,23 +85,6 @@ public sealed partial class IServiceCollectionExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="IServiceCollectionExtensions.AddStartupAndShutdownActivities"/> method should
-    /// register the <see cref="LifecycleManagementService"/> as hosted service.
-    /// </summary>
-    [Fact]
-    public void AddStartupAndShutdownActivities()
-    {
-        // Arrange
-        var provider = Test.BuildStartupActivitiesServiceProvider();
-
-        // Act
-        var hostedServices = provider.GetServices<IHostedService>();
-
-        // Assert
-        Assert.Contains(hostedServices, hostedService => hostedService is LifecycleManagementService);
-    }
-
-    /// <summary>
     /// The <see cref="IServiceCollectionExtensions.AddDomainEventsDispatchingService"/> method should
     /// register the <see cref="DomainEventsDispatchingService"/> as hosted service.
     /// </summary>

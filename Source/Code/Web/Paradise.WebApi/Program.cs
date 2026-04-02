@@ -11,11 +11,12 @@ var preBuildSteps = new IPreBuildStep[]
 var postBuildSteps = new IPostBuildStep[]
 {
     new PipelineBootstrap(),
-    new RoutingBootstrap()
+    new RoutingBootstrap(),
+    new DataBootstrap()
 };
 
 var bootstrapper = new ApplicationBootstrapper(preBuildSteps, postBuildSteps);
-var app = bootstrapper.Bootstrap(args);
+var app = await bootstrapper.BootstrapAsync(args);
 
 await app.RunAsync()
     .ConfigureAwait(false);

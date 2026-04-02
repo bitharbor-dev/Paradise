@@ -12,6 +12,9 @@ internal interface IPostBuildStep
     /// <param name="context">
     /// The <see cref="PostBuildContext"/> containing shared state required for execution.
     /// </param>
-    void Execute(PostBuildContext context);
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    Task ExecuteAsync(PostBuildContext context);
     #endregion
 }

@@ -25,20 +25,20 @@ internal sealed class ApplicationBootstrapper(IEnumerable<IPreBuildStep> preBuil
     /// <returns>
     /// The fully configured <see cref="WebApplication"/> instance.
     /// </returns>
-    public WebApplication Bootstrap(string[] args)
+    public async Task<WebApplication> BootstrapAsync(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         var preContext = new PreBuildContext(builder);
 
         foreach (var step in preBuildSteps)
-            step.Execute(preContext);
+            await step.ExecuteAsync(preContext);
 
         var app = builder.Build();
 
         var postContext = new PostBuildContext(app);
 
         foreach (var step in postBuildSteps)
-            step.Execute(postContext);
+            await step.ExecuteAsync(postContext);
 
         return app;
     }

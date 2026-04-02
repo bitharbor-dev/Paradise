@@ -10,7 +10,7 @@ internal sealed class PipelineBootstrap : IPostBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public void Execute(PostBuildContext context)
+    public Task ExecuteAsync(PostBuildContext context)
     {
         var app = context.App;
 
@@ -26,6 +26,8 @@ internal sealed class PipelineBootstrap : IPostBuildStep
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        return Task.CompletedTask;
     }
     #endregion
 }

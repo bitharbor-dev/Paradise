@@ -63,22 +63,6 @@ internal static class IServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers <see cref="LifecycleManagementService"/> as a hosted service.
-    /// </summary>
-    /// <remarks>
-    /// This extension method is intended to hook into the application lifecycle
-    /// to run startup and shutdown activities via <see cref="IHostedService"/>.
-    /// </remarks>
-    /// <param name="services">
-    /// The <see cref="IServiceCollection"/> to add the services to.
-    /// </param>
-    /// <returns>
-    /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
-    /// </returns>
-    public static IServiceCollection AddStartupAndShutdownActivities(this IServiceCollection services)
-        => services.AddHostedService<LifecycleManagementService>();
-
-    /// <summary>
     /// Registers the domain event dispatching service.
     /// </summary>
     /// <param name="services">

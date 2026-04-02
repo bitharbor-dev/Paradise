@@ -10,7 +10,7 @@ internal sealed class RoutingBootstrap : IPostBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public void Execute(PostBuildContext context)
+    public Task ExecuteAsync(PostBuildContext context)
     {
         var app = context.App;
 
@@ -21,6 +21,8 @@ internal sealed class RoutingBootstrap : IPostBuildStep
 
         app.MapOpenApi();
         app.MapScalarApiReference("/reference", app.Configuration.BindSection);
+
+        return Task.CompletedTask;
     }
     #endregion
 }

@@ -163,19 +163,6 @@ public sealed partial class IServiceCollectionExtensionsTests
 
         /// <summary>
         /// Builds a service provider using the
-        /// <see cref="IServiceCollectionExtensions.AddStartupAndShutdownActivities"/> registration method.
-        /// </summary>
-        /// <returns>
-        /// A configured <see cref="IServiceProvider"/>.
-        /// </returns>
-        public ServiceProvider BuildStartupActivitiesServiceProvider()
-        {
-            _services.AddStartupAndShutdownActivities();
-            return _services.BuildServiceProvider(_serviceProviderOptions);
-        }
-
-        /// <summary>
-        /// Builds a service provider using the
         /// <see cref="IServiceCollectionExtensions.AddDomainEventsDispatchingService"/> registration method.
         /// </summary>
         /// <returns>

@@ -12,6 +12,9 @@ internal interface IPreBuildStep
     /// <param name="context">
     /// The <see cref="PreBuildContext"/> containing shared state required for execution.
     /// </param>
-    void Execute(PreBuildContext context);
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    Task ExecuteAsync(PreBuildContext context);
     #endregion
 }

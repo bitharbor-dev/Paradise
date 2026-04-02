@@ -9,7 +9,7 @@ internal sealed class ConfigurationBootstrap : IPreBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public void Execute(PreBuildContext context)
+    public Task ExecuteAsync(PreBuildContext context)
     {
         var environmentName = context.Builder.Environment.EnvironmentName;
 
@@ -18,6 +18,8 @@ internal sealed class ConfigurationBootstrap : IPreBuildStep
             .AddJsonFile("options.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"options.{environmentName}.json", optional: true, reloadOnChange: true)
             .AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true, reloadOnChange: true);
+
+        return Task.CompletedTask;
     }
     #endregion
 }

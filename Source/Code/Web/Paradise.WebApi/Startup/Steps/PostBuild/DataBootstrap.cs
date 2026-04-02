@@ -1,28 +1,19 @@
-﻿using Paradise.ApplicationLogic.Infrastructure.Seed;
+﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using Paradise.ApplicationLogic.Infrastructure.Seed;
 using Paradise.DataAccess.Seed.Providers;
 
-namespace Paradise.WebApi.Services.Background;
+namespace Paradise.WebApi.Startup.Steps.PostBuild;
 
 /// <summary>
-/// A background services which performs
-/// the application startup and shutdown activities.
+/// Configures the HTTP request processing pipeline.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="LifecycleManagementService"/> class.
-/// </remarks>
-/// <param name="services">
-/// The <see cref="IServiceProvider"/> to resolve lifecycle actions dependencies.
-/// </param>
-internal sealed class LifecycleManagementService(IServiceProvider services) : IHostedService
+internal sealed class DataBootstrap : IPostBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public Task StartAsync(CancellationToken cancellationToken)
-        => SeedDatabaseAsync(services, cancellationToken);
-
-    /// <inheritdoc/>
-    public Task StopAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    public Task ExecuteAsync(PostBuildContext context)
+        => SeedDatabaseAsync(context.App.Services, context.App.Lifetime.ApplicationStopping);
     #endregion
 
     #region Private methods

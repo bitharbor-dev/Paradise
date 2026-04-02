@@ -16,7 +16,7 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public void Execute(PreBuildContext context)
+    public Task ExecuteAsync(PreBuildContext context)
     {
         var services = context.Builder.Services;
         var configuration = context.Builder.Configuration;
@@ -26,6 +26,8 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
         RegisterOpenApi(services, configuration);
 
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+
+        return Task.CompletedTask;
     }
     #endregion
 
@@ -48,7 +50,6 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
                                      IWebHostEnvironment environment)
     {
         services.AddDomainEventsDispatchingService();
-        services.AddStartupAndShutdownActivities();
         services.AddAuthenticationAndAuthorization(configuration, environment.EnvironmentName);
         services.AddAuthorizationResultHandler();
         services.AddApplicationLogic(configuration, environment.EnvironmentName);
