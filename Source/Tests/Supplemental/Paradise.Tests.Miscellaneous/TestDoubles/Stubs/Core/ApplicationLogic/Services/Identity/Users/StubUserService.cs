@@ -48,7 +48,7 @@ public sealed class StubUserService : IUserService
     /// <summary>
     /// <see cref="ConfirmEmailAddressAsync"/> result.
     /// </summary>
-    public Func<Task<Result<UserModel>>>? ConfirmEmailAsyncResult { get; set; }
+    public Func<Task<Result<UserModel>>>? ConfirmEmailAddressAsyncResult { get; set; }
 
     /// <summary>
     /// <see cref="CheckPasswordAsync"/> result.
@@ -127,7 +127,7 @@ public sealed class StubUserService : IUserService
 
     /// <inheritdoc/>
     public Task<Result<UserModel>> ConfirmEmailAddressAsync(string identityToken, CancellationToken cancellationToken = default)
-        => ConfirmEmailAsyncResult!();
+        => ConfirmEmailAddressAsyncResult!();
 
     /// <inheritdoc/>
     public Task<Result> CheckPasswordAsync(Guid id, string password, CancellationToken cancellationToken = default)

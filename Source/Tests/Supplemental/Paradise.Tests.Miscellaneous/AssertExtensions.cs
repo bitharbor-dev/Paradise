@@ -10,6 +10,10 @@ namespace Paradise.Tests.Miscellaneous;
 /// </summary>
 public static class AssertExtensions
 {
+    #region Constants
+    private const string UnexpectedServiceLifetimeMessage = "Unexpected service lifetime value.";
+    #endregion
+
     extension(Assert)
     {
         #region Public methods
@@ -48,7 +52,7 @@ public static class AssertExtensions
         public static void ServiceLifetime<T>(IServiceProvider rootServiceProvider,
                                               Lifetime lifetime,
                                               Action<T>? assertions = null)
-            where T: class
+            where T : class
         {
             void AssertSingleton()
             {
@@ -92,6 +96,9 @@ public static class AssertExtensions
                     break;
                 case Lifetime.Transient:
                     AssertTransient();
+                    break;
+                default:
+                    Assert.Fail(UnexpectedServiceLifetimeMessage);
                     break;
             }
         }
@@ -180,6 +187,9 @@ public static class AssertExtensions
                     break;
                 case Lifetime.Transient:
                     AssertTransient();
+                    break;
+                default:
+                    Assert.Fail(UnexpectedServiceLifetimeMessage);
                     break;
             }
         }
@@ -280,6 +290,9 @@ public static class AssertExtensions
                     break;
                 case Lifetime.Transient:
                     AssertTransient();
+                    break;
+                default:
+                    Assert.Fail(UnexpectedServiceLifetimeMessage);
                     break;
             }
         }
@@ -385,6 +398,9 @@ public static class AssertExtensions
                     break;
                 case Lifetime.Transient:
                     AssertTransient();
+                    break;
+                default:
+                    Assert.Fail(UnexpectedServiceLifetimeMessage);
                     break;
             }
         }

@@ -4,7 +4,6 @@ using Paradise.ApplicationLogic.Infrastructure.DataProtection;
 using Paradise.ApplicationLogic.Services.Identity.Roles;
 using Paradise.ApplicationLogic.Services.Identity.Users;
 using Paradise.Domain.Base.Events;
-using Paradise.Domain.Identity.Users;
 using Paradise.Models;
 using Paradise.Models.Domain.Identity.Roles;
 using Paradise.Models.Domain.Identity.Users;
