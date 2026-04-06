@@ -18,6 +18,10 @@ parameters:
       - Release
       - Debug
 
+  - name: solution
+    displayName: 'Solution file path'
+    type: string
+
 steps:
 
 - task: UseDotNet@2
@@ -29,22 +33,29 @@ steps:
   displayName: 'Restore solution dependencies'
   inputs:
     command: 'restore'
+    projects: '${{ parameters.solution }}'
     verbosityRestore: '${{ parameters.verbosity }}'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build solution'
   inputs:
     command: 'build'
+    projects: '${{ parameters.solution }}'
     arguments: >
         --configuration ${{ parameters.configuration }}
         --verbosity ${{ parameters.verbosity }}
         --no-restore
+        /p:AssemblyVersion=$(GitVersion_AssemblySemVer)
+        /p:AssemblyFileVersion=$(GitVersion_AssemblySemFileVer)
+        /p:AssemblyInformationalVersion=$(GitVersion_InformationalVersion)
+        /p:ProductVersion=$(GitVersion_SemVer)
 
 - task: DotNetCoreCLI@2
   displayName: 'Run tests'
   continueOnError: true
   inputs:
     command: 'test'
+    projects: '${{ parameters.solution }}'
     arguments: >
         --configuration ${{ parameters.configuration }}
         --verbosity ${{ parameters.verbosity }}

@@ -1,0 +1,41 @@
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+  - name: workingDirectory
+    displayName: 'Packing working directory'
+    type: string
+    default: ''
+
+steps:
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Create NuGet package'
+    inputs:
+      command: 'pack'
+      packagesToPack: '${{ parameters.workingDirectory }}\pack\template.csproj'
+      configuration: '${{ parameters.configuration }}'
+      verbosityPack: '${{ parameters.verbosity }}'
+      versioningScheme: 'byEnvVar'
+      versionEnvVar: 'GitVersion_MajorMinorPatch'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload package'
+    inputs:
+      ArtifactName: 'Package'

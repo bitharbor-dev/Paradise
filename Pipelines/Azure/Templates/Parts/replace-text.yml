@@ -1,0 +1,59 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: workingDirectory
+    displayName: 'A directory where file renaming is performed'
+    type: string
+    default: ''
+
+  - name: textToReplace
+    displayName: 'A double semicolon separated list of text segments to replace in file contents'
+    type: string
+    default: ''
+
+  - name: replaceWith
+    displayName: 'A replacement for "textToReplace"'
+    type: string
+    default: ''
+
+  - name: skipFiles
+    displayName: 'A semicolon separated list of files to omit when modifying files content'
+
+steps:
+
+- powershell: |
+    $workingDirectory = "${{ parameters.workingDirectory }}"
+    $textToReplace = "${{ parameters.textToReplace }}".Split(";;", [System.StringSplitOptions]::RemoveEmptyEntries)
+    $replaceWith = "${{ parameters.replaceWith }}"
+    $exclusions = "${{ parameters.skipFiles }}".Split(";", [System.StringSplitOptions]::RemoveEmptyEntries)
+
+    $escapedPatterns = $textToReplace |
+      Sort-Object Length -Descending |
+      ForEach-Object { [regex]::Escape($_) }
+
+    $pattern = ($escapedPatterns -join "|")
+
+    Write-Host "Replacing '$($textToReplace -join ", ")' with '$replaceWith' in $workingDirectory files."
+
+    Get-ChildItem $workingDirectory -Recurse -File |
+    Where-Object { $exclusions -notcontains $_.Name } |
+    ForEach-Object {
+      $path = $_.FullName
+      $content = Get-Content $path -Raw
+
+      if ($content -match $pattern) {
+        Write-Host "Processing '$path'."
+
+        $updated = [regex]::Replace($content, $pattern, $replaceWith)
+
+        if ($updated -ne $content) {
+          Set-Content -Path $path -Value $updated -Encoding UTF8
+        }
+      }
+    }
+
+    Write-Host "Replacements complete."
+  displayName: '${{ parameters.displayName }}'

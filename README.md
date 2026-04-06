@@ -59,7 +59,7 @@ Update connection strings and required settings before running.
 
 ### Database
 
-Migrations are executed automatically on startup. Data is seeded from the `SeedData` directory.
+Migrations are executed automatically on startup. Data is seeded from the `Data` directory.
 If seed files change, existing records are updated accordingly instead of duplicated.
 
 ### Project structure

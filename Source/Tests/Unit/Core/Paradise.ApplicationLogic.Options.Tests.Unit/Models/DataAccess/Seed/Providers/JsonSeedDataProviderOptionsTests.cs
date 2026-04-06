@@ -13,11 +13,11 @@ public sealed class JsonSeedDataProviderOptionsTests
     /// </summary>
     public static TheoryData<string, string> ResolveSeedDirectoryPath_MemberData { get; } = new()
     {
-        { "SeedData", "SeedData"                                                                                            },
-        { "{ApplicationRoot}", AppContext.BaseDirectory                                                                     },
-        { $"{{ApplicationRoot}}{Path.DirectorySeparatorChar}SeedData", Path.Combine(AppContext.BaseDirectory, "SeedData")   },
-        { "Config/{ApplicationRoot}SeedData", "Config/{ApplicationRoot}SeedData"                                            },
-        { "{applicationroot}SeedData", "{applicationroot}SeedData"                                                          }
+        { "Data", "Data"                                                                                            },
+        { "{ApplicationRoot}", AppContext.BaseDirectory                                                             },
+        { $"{{ApplicationRoot}}{Path.DirectorySeparatorChar}Data", Path.Combine(AppContext.BaseDirectory, "Data")   },
+        { "Config/{ApplicationRoot}Data", "Config/{ApplicationRoot}Data"                                            },
+        { "{applicationroot}Data", "{applicationroot}Data"                                                          }
     };
 
     /// <summary>

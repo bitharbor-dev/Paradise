@@ -40,16 +40,23 @@ parameters:
 
 steps:
 
-- template: Parts/publish-project.yml
-  parameters:
-    verbosity: ${{ parameters.verbosity }}
-    configuration: ${{ parameters.configuration }}
-    projectDisplayName: ${{ parameters.projectDisplayName }}
-    projectName: ${{ parameters.projectName }}
-    outputFolder: ${{ parameters.outputFolder }}
-    restore: ${{ parameters.restore }}
-
-- template: Parts/publish-artifact.yml
-  parameters:
-    name: ${{ parameters.projectDisplayName }}
-    location: ${{ parameters.outputFolder }}
+- task: DotNetCoreCLI@2
+  displayName: 'Publish ${{ parameters.projectDisplayName }}'
+  inputs:
+    command: 'publish'
+    modifyOutputPath: true
+    zipAfterPublish: true
+    publishWebProjects: false
+    projects: '${{ parameters.projectName }}'
+    ${{ if eq(parameters.restore, true) }}:
+      arguments: >
+          --configuration ${{ parameters.configuration }}
+          --verbosity ${{ parameters.verbosity }}
+          --output $(Build.ArtifactStagingDirectory)\${{ parameters.outputFolder }}
+    ${{ else }}:
+      arguments: >
+          --configuration ${{ parameters.configuration }}
+          --verbosity ${{ parameters.verbosity }}
+          --output $(Build.ArtifactStagingDirectory)\${{ parameters.outputFolder }}
+          --no-restore
+          --no-build

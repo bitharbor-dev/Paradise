@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bit Harbor",
+  "classifications": [
+    "Web",
+    "API",
+    "Back-end"
+  ],
+  "identity": "BitHarbor.WebApplicationTemplate.Paradise",
+  "name": "Paradise back-end template",
+  "preferNameDirectory": true,
+  "shortName": "paradise",
+  "sourceName": "__SOURCE_NAME__",
+  "tags": {
+    "type": "solution"
+  }
+}

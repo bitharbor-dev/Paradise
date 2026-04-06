@@ -54,9 +54,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<BaseIntermediateOutputPath>$(SolutionDir).obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-		<BaseOutputPath>$(SolutionDir).bin\$(MSBuildProjectName)</BaseOutputPath>
-		<PublishDir>$(SolutionDir).publish\$(MSBuildProjectName)\$(Configuration)\$(TargetPaltform)</PublishDir>
+		<BaseIntermediateOutputPath>$(SolutionDir)Build\.obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+		<BaseOutputPath>$(SolutionDir)Build\.bin\$(MSBuildProjectName)</BaseOutputPath>
+		<PublishDir>$(SolutionDir)Build\.publish\$(MSBuildProjectName)\$(Configuration)\$(TargetPaltform)</PublishDir>
 	</PropertyGroup>
 
 </Project>

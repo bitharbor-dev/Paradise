@@ -1,0 +1,57 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: location
+    displayName: 'Template location'
+    type: string
+    default: ''
+
+  - name: shortName
+    displayName: 'Short name of the template. Must be equal to the value of "shortName" property in "template.json"'
+    type: string
+    default: ''
+
+  - name: templateToken
+    displayName: 'Must be equal to the value of "sourceName" property in "template.json"'
+    type: string
+    default: ''
+
+steps:
+
+- powershell: |
+    $location = "${{ parameters.location }}"
+    $shortName = "${{ parameters.shortName }}"
+    $templateToken = "${{ parameters.templateToken }}"
+    $workingDirectory = Join-Path $env:Build_SourcesDirectory "TemplateTest"
+    $solutionName = "Solution"
+    $outputPath = Join-Path $workingDirectory $solutionName
+
+    Write-Host "Installing and validating template."
+
+    dotnet new install $location
+
+    Write-Host "Creating template-based solution."
+
+    if (Test-Path $workingDirectory) {
+        Remove-Item $workingDirectory -Recurse -Force
+    }
+
+    New-Item -ItemType Directory -Path $workingDirectory | Out-Null
+
+    dotnet new $shortName -n $solutionName -o $outputPath
+
+    $csproj = Get-ChildItem -Path $outputPath -Filter *.csproj -Recurse | Select-Object -First 1
+    if (-not $csproj) {
+        Write-Error "Validation failed - no project files generated."
+    }
+
+    $remaining = Select-String -Path "$outputPath\**\*" -Pattern $templateToken -SimpleMatch -ErrorAction SilentlyContinue
+    if ($remaining) {
+        Write-Error "Validation failed - unresolved tokens found."
+    }
+
+    Write-Host "Template installation and validation succeeded"
+  displayName: '${{ parameters.displayName }}'

@@ -18,6 +18,10 @@ parameters:
       - Release
       - Debug
 
+  - name: solution
+    displayName: 'Solution file path'
+    type: string
+
 steps:
 
 - template: Parts/execute-git-version-tool.yml
@@ -26,3 +30,4 @@ steps:
   parameters:
     verbosity: '${{ parameters.verbosity }}'
     configuration: '${{ parameters.configuration }}'
+    solution: '${{ parameters.solution }}'

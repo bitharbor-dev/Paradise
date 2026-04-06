@@ -1,0 +1,34 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: source
+    displayName: 'Source directory'
+    type: string
+    default: ''
+
+  - name: destination
+    displayName: 'Destination path'
+    type: string
+    default: ''
+
+  - name: exclusions
+    displayName: 'A semicolon separated list of files to omit when copying. Relative to "source"'
+    type: string
+    default: ''
+
+steps:
+
+- powershell: |
+    $source = "${{ parameters.source }}"
+    $destination = "${{ parameters.destination }}"
+    $exclusions = "${{ parameters.exclusions }}".Split(";")
+
+    Write-Host "Copying items from $source to $destination, excluding $exclusions."
+
+    New-Item -Path $destination -ItemType Directory -Force
+
+    Get-ChildItem -Path $source -Exclude $exclusions | Copy-Item -Destination $destination -Recurse
+  displayName: '${{ parameters.displayName }}'

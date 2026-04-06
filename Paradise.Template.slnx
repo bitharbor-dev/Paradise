@@ -1,34 +1,5 @@
 <Solution>
 
-	<Folder Name="/Documents/">
-		<File Path="Documents/.order" />
-		<File Path="Documents/Contacts.md" />
-		<File Path="Documents/Introduction.md" />
-	</Folder>
-
-	<Folder Name="/Pipelines/">
-		<File Path="Pipelines/build-pipeline.yml" />
-		<File Path="Pipelines/publish-pipeline.all.yml" />
-		<File Path="Pipelines/publish-pipeline.maintenance.yml" />
-		<File Path="Pipelines/publish-pipeline.web-api.yml" />
-	</Folder>
-
-	<Folder Name="/Pipelines/Scripts/">
-		<File Path="Pipelines/Scripts/UpdatePropsFileVersionInfo.ps1" />
-	</Folder>
-
-	<Folder Name="/Pipelines/Templates/">
-		<File Path="Pipelines/Templates/build-flow.yml" />
-		<File Path="Pipelines/Templates/publish-flow.yml" />
-	</Folder>
-
-	<Folder Name="/Pipelines/Templates/Parts/">
-		<File Path="Pipelines/Templates/Parts/build-and-test.yml" />
-		<File Path="Pipelines/Templates/Parts/execute-git-version-tool.yml" />
-		<File Path="Pipelines/Templates/Parts/publish-artifact.yml" />
-		<File Path="Pipelines/Templates/Parts/publish-project.yml" />
-	</Folder>
-
 	<Folder Name="/Solution Items/">
 		<File Path=".editorconfig" />
 		<File Path=".gitattributes" />
@@ -37,8 +8,6 @@
 		<File Path="Directory.Build.props" />
 		<File Path="Directory.Packages.props" />
 		<File Path="global.json" />
-		<File Path="LICENSE.txt" />
-		<File Path="README.md" />
 	</Folder>
 
 	<Folder Name="/Source/" />

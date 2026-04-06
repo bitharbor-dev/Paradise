@@ -1,0 +1,91 @@
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+  - name: workingDirectory
+    displayName: 'Template transformation working directory'
+    type: string
+    default: ''
+
+  - name: exclusions
+    displayName: 'Files and folders to exclude from template, semicolon separated. Relative to repository root'
+    type: string
+    default: ''
+
+  - name: templateProjectLocation
+    displayName: 'Path to template.xml file. Relative to repository root'
+    type: string
+    default: ''
+
+  - name: templateShortName
+    displayName: 'Short name of the template. Must be equal to the value of "shortName" property in "template.json"'
+    type: string
+    default: ''
+
+  - name: templateToken
+    displayName: 'String token to place instead of "textToReplace". Must be equal to the value of "sourceName" property in "template.json"'
+    type: string
+    default: ''
+
+  - name: textToReplace
+    displayName: 'Text segments to replace with template token, double semicolon separated'
+    type: string
+    default: ''
+
+  - name: preserveContent
+    displayName: 'Files to skip during template token placement, semicolon separated'
+    type: string
+    default: ''
+
+steps:
+
+- template: Parts/copy-files.yml
+  parameters:
+    displayName: 'Copy template items'
+    source: '$(Build.SourcesDirectory)'
+    destination: '${{ parameters.workingDirectory }}\pack\content'
+    exclusions: '${{ parameters.exclusions }}'
+
+- template: Parts/copy-file.yml
+  parameters:
+    displayName: 'Copy template project file'
+    source: '$(Build.SourcesDirectory)\${{ parameters.templateProjectLocation }}template.xml'
+    destination: '${{ parameters.workingDirectory }}\pack\template.csproj'
+
+- template: Parts/rename-items.yml
+  parameters:
+    displayName: 'Rename template files'
+    workingDirectory: '${{ parameters.workingDirectory }}\pack\content'
+    textToReplace: '${{ parameters.textToReplace }}'
+    replaceWith: '${{ parameters.templateToken }}'
+
+- template: Parts/replace-text.yml
+  parameters:
+    displayName: 'Place template token into files'
+    workingDirectory: '${{ parameters.workingDirectory }}\pack\content'
+    textToReplace: '${{ parameters.textToReplace }}'
+    replaceWith: '${{ parameters.templateToken }}'
+    skipFiles: '${{ parameters.preserveContent }}'
+
+- template: Parts/install-template.yml
+  parameters:
+    displayName: 'Install and validate template'
+    location: '${{ parameters.workingDirectory }}\pack\content'
+    shortName: '${{ parameters.templateShortName }}'
+    templateToken: '${{ parameters.templateToken }}'

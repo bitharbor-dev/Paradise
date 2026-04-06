@@ -1,0 +1,26 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: source
+    displayName: 'Source directory'
+    type: string
+    default: ''
+
+  - name: destination
+    displayName: 'Destination path'
+    type: string
+    default: ''
+
+steps:
+
+- powershell: |
+    $source = "${{ parameters.source }}"
+    $destination = "${{ parameters.destination }}"
+
+    Write-Host "Copying $source to $destination."
+
+    Copy-Item -Path $source -Destination $destination
+  displayName: '${{ parameters.displayName }}'

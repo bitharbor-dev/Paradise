@@ -1,0 +1,52 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: workingDirectory
+    displayName: 'A directory where file renaming is performed'
+    type: string
+    default: ''
+
+  - name: textToReplace
+    displayName: 'A double semicolon separated list of text segments to replace in file names'
+    type: string
+    default: ''
+
+  - name: replaceWith
+    displayName: 'A replacement for "textToReplace"'
+    type: string
+    default: ''
+
+steps:
+
+- powershell: |
+    $workingDirectory = "${{ parameters.workingDirectory }}"
+    $textToReplace = "${{ parameters.textToReplace }}".Split(";;", [System.StringSplitOptions]::RemoveEmptyEntries)
+    $replaceWith = "${{ parameters.replaceWith }}"
+
+    Write-Host "Renaming files with names containing '$($textToReplace -join ", ")'."
+
+    $patterns = $textToReplace | Sort-Object Length -Descending
+
+    Get-ChildItem $workingDirectory -Recurse |
+        Sort-Object { $_.FullName.Length } -Descending |
+        ForEach-Object {
+            $originalName = $_.Name
+            $newName = $originalName
+
+            foreach ($pattern in $patterns) {
+                $escaped = [regex]::Escape($pattern)
+                $newName = $newName -replace $escaped, $replaceWith
+            }
+
+            if ($newName -ne $originalName) {
+                Write-Host "Renaming '$originalName' -> '$newName'."
+
+                Rename-Item -LiteralPath $_.FullName -NewName $newName
+            }
+        }
+
+    Write-Host "Renaming complete."
+  displayName: '${{ parameters.displayName }}'

@@ -36,10 +36,11 @@ jobs:
   displayName: 'Build & test'
   steps:
   - checkout: self
-    displayName: Checkout
+    displayName: 'Checkout'
     fetchDepth: '0'
 
-  - template: Templates/build-flow.yml
+  - template: Templates/build.template.yml
     parameters:
       verbosity: '${{ parameters.verbosity }}'
       configuration: '${{ parameters.configuration }}'
+      solution: 'Paradise.Main.slnx'

@@ -1,0 +1,57 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: windows-latest
+
+parameters:
+  - name: verbosity
+    displayName: 'Verbosity level'
+    type: string
+    default: 'minimal'
+    values:
+      - quiet
+      - minimal
+      - normal
+      - detailed
+      - diagnostic
+
+  - name: configuration
+    displayName: 'Build configuration'
+    type: string
+    default: 'Release'
+    values:
+      - Release
+      - Debug
+
+jobs:
+- job: GeneratePackAndPublishArtifact
+  displayName: 'Generate template, pack & publish artifact'
+  steps:
+  - checkout: self
+    displayName: 'Checkout'
+    fetchDepth: '0'
+
+  - template: Templates/build.template.yml
+    parameters:
+      verbosity: '${{ parameters.verbosity }}'
+      configuration: '${{ parameters.configuration }}'
+      solution: 'Paradise.Template.slnx'
+
+  - template: Templates/transform.template.yml
+    parameters:
+      verbosity: '${{ parameters.verbosity }}'
+      configuration: '${{ parameters.configuration }}'
+      workingDirectory: '$(Agent.TempDirectory)\template'
+      exclusions: 'Paradise.Main.slnx;README.md;LICENSE.txt;.issuetracker;template.xml;.git;Pipelines;Documents;Build'
+      templateProjectLocation: ''
+      templateShortName: 'paradise'
+      templateToken: '__SOURCE_NAME__'
+      textToReplace: 'Paradise;;Paradise.Template'
+      preserveContent: 'template.json'
+
+  - template: Templates/pack.template.yml
+    parameters:
+      verbosity: '${{ parameters.verbosity }}'
+      configuration: '${{ parameters.configuration }}'
+      workingDirectory: '$(Agent.TempDirectory)\template'

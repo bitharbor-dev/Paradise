@@ -14,6 +14,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Upload ${{ parameters.name }}'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.location }}'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{ parameters.location }}'
     ArtifactName: '${{ parameters.name }}'
     publishLocation: 'Container'

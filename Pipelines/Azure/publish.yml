@@ -29,15 +29,16 @@ jobs:
   displayName: 'Build, test & publish artifact'
   steps:
   - checkout: self
-    displayName: Checkout
+    displayName: 'Checkout'
     fetchDepth: '0'
 
-  - template: Templates/build-flow.yml
+  - template: Templates/build.template.yml
     parameters:
       verbosity: '${{ parameters.verbosity }}'
       configuration: '${{ parameters.configuration }}'
+      solution: 'Paradise.Main.slnx'
 
-  - template: Templates/publish-flow.yml
+  - template: Templates/publish.template.yml
     parameters:
       verbosity: '${{ parameters.verbosity }}'
       configuration: '${{ parameters.configuration }}'
@@ -45,7 +46,7 @@ jobs:
       projectName: '**/*.WebApi.csproj'
       outputFolder: 'WebApi'
 
-  - template: Templates/publish-flow.yml
+  - template: Templates/publish.template.yml
     parameters:
       verbosity: '${{ parameters.verbosity }}'
       configuration: '${{ parameters.configuration }}'
