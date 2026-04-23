@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paradise.DataAccess.Repositories.Base.Extensions;
 using Paradise.Domain.Base;
-using Paradise.Localization.ExceptionHandling;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 namespace Paradise.DataAccess.Repositories;
 
@@ -39,7 +37,7 @@ public sealed class PagedListQuery<TEntity> where TEntity : class, IDomainObject
         get;
         set
         {
-            ThrowIfValueIsLessThanOrEqualToZero(value);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0);
 
             field = value;
         }
@@ -56,7 +54,7 @@ public sealed class PagedListQuery<TEntity> where TEntity : class, IDomainObject
         get;
         set
         {
-            ThrowIfValueIsLessThanOrEqualToZero(value);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0);
 
             field = value;
         }
@@ -134,32 +132,6 @@ public sealed class PagedListQuery<TEntity> where TEntity : class, IDomainObject
 
         if (Projection is not null)
             queryable = queryable.AsNoTracking().Select(Projection);
-    }
-    #endregion
-
-    #region Private methods
-    /// <summary>
-    /// Throws an <see cref="ArgumentException"/> if the given
-    /// <paramref name="value"/> is less than or equal to 0.
-    /// </summary>
-    /// <param name="value">
-    /// An <see cref="int"/> value to be checked.
-    /// </param>
-    /// <param name="propertyName">
-    /// Property name, which value to be checked.
-    /// </param>
-    /// <exception cref="ArgumentException">
-    /// Thrown if the given <paramref name="value"/> is
-    /// less than or equal to 0.
-    /// </exception>
-    private static void ThrowIfValueIsLessThanOrEqualToZero(int value, [CallerMemberName] string? propertyName = null)
-    {
-        if (value > 0)
-            return;
-
-        var message = ExceptionMessages.GetMessageValueCanNotBeLessOrEqualToZero(propertyName);
-
-        throw new ArgumentException(message);
     }
     #endregion
 }

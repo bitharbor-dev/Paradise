@@ -179,8 +179,4 @@
     <value>{0}{1}{0}Status: {2}{0}</value>
     <comment>Pass `Environment.NewLine` as {0} argument.</comment>
   </data>
-  <data name="ValueCanNotBeLessOrEqualToZero" xml:space="preserve">
-    <value>'{0}' value can not be less or equal to 0.</value>
-    <comment>Pass parameter name as {0} argument.</comment>
-  </data>
 </root>

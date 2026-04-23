@@ -239,14 +239,5 @@ namespace Paradise.Localization.ExceptionHandling {
                 return ResourceManager.GetString("ResultExceptionMessage", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; value can not be less or equal to 0..
-        /// </summary>
-        public static string ValueCanNotBeLessOrEqualToZero {
-            get {
-                return ResourceManager.GetString("ValueCanNotBeLessOrEqualToZero", resourceCulture);
-            }
-        }
     }
 }

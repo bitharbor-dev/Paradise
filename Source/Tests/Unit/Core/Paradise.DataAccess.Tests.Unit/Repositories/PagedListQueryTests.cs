@@ -35,7 +35,7 @@ public sealed partial class PagedListQueryTests
     #region Public methods
     /// <summary>
     /// The <see cref="PagedListQuery{TEntity}.PageSize"/> property should
-    /// throw the <see cref="ArgumentException"/> if the input
+    /// throw the <see cref="ArgumentOutOfRangeException"/> if the input
     /// value is less than or equal to 0.
     /// </summary>
     [Fact]
@@ -43,17 +43,14 @@ public sealed partial class PagedListQueryTests
     {
         // Arrange
 
-        // Act
-        var exception = Assert.Throws<ArgumentException>(()
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(()
             => Test.Target.PageSize = 0);
-
-        // Assert
-        Assert.Contains(nameof(PagedListQuery<>.PageSize), exception.Message, StringComparison.Ordinal);
     }
 
     /// <summary>
     /// The <see cref="PagedListQuery{TEntity}.PageNumber"/> property should
-    /// throw the <see cref="ArgumentException"/> if the input
+    /// throw the <see cref="ArgumentOutOfRangeException"/> if the input
     /// value is less than or equal to 0.
     /// </summary>
     [Fact]
@@ -61,12 +58,9 @@ public sealed partial class PagedListQueryTests
     {
         // Arrange
 
-        // Act
-        var exception = Assert.Throws<ArgumentException>(()
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(()
             => Test.Target.PageNumber = -3);
-
-        // Assert
-        Assert.Contains(nameof(PagedListQuery<>.PageNumber), exception.Message, StringComparison.Ordinal);
     }
 
     /// <summary>

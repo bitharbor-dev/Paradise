@@ -1,5 +1,4 @@
-﻿using Paradise.Localization.ExceptionHandling;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Paradise.Models;
 
@@ -48,8 +47,8 @@ public class PagedListQueryModel
     public PagedListQueryModel(int pageSize, int pageNumber, bool orderAscending, string? orderBy,
                                IEnumerable<string> lookupProperties, string? lookupValue)
     {
-        ThrowIfValueIsLessThanOrEqualToZero(pageSize, nameof(PageSize));
-        ThrowIfValueIsLessThanOrEqualToZero(pageNumber, nameof(PageNumber));
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(pageSize, 0, nameof(PageSize));
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(pageNumber, 0, nameof(PageNumber));
 
         PageSize = pageSize;
         PageNumber = pageNumber;
@@ -103,31 +102,5 @@ public class PagedListQueryModel
     /// the <see cref="LookupProperties"/>.
     /// </summary>
     public string? LookupValue { get; }
-    #endregion
-
-    #region Private methods
-    /// <summary>
-    /// Throws an <see cref="ArgumentException"/> if the given
-    /// <paramref name="value"/> is less than or equal to 0.
-    /// </summary>
-    /// <param name="value">
-    /// An <see cref="int"/> value to be checked.
-    /// </param>
-    /// <param name="propertyName">
-    /// Property name, which value to be checked.
-    /// </param>
-    /// <exception cref="ArgumentException">
-    /// Thrown if the given <paramref name="value"/> is
-    /// less than or equal to 0.
-    /// </exception>
-    private static void ThrowIfValueIsLessThanOrEqualToZero(int value, string propertyName)
-    {
-        if (value <= 0)
-        {
-            var message = ExceptionMessages.GetMessageValueCanNotBeLessOrEqualToZero(propertyName);
-
-            throw new ArgumentException(message);
-        }
-    }
     #endregion
 }

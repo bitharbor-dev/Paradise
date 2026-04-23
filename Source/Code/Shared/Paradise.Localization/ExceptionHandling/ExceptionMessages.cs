@@ -361,23 +361,5 @@ public sealed partial class ExceptionMessages
                              details,
                              status);
     }
-
-    /// <summary>
-    /// Gets the <see cref="ValueCanNotBeLessOrEqualToZero"/> formatted message.
-    /// </summary>
-    /// <param name="propertyName">
-    /// Property name, which value is less or equal to zero.
-    /// </param>
-    /// <returns>
-    /// A formatted message using the <see cref="ValueCanNotBeLessOrEqualToZero"/> format string.
-    /// </returns>
-    public static string GetMessageValueCanNotBeLessOrEqualToZero(string? propertyName)
-    {
-        var messageFormat = ValueCanNotBeLessOrEqualToZero;
-
-        return string.Format(Culture,
-                             messageFormat,
-                             propertyName);
-    }
     #endregion
 }
