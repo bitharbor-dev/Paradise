@@ -1,5 +1,4 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
-using Paradise.Domain.Base.Exceptions;
 using Paradise.Tests.Miscellaneous.TestImplementations.Core.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit.MessageTemplates.Base;
@@ -165,7 +164,7 @@ public sealed class MessageTemplateTests
 
     /// <summary>
     /// The <see cref="MessageTemplate.GetFormattedText"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> if the
+    /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="MessageTemplate.PlaceholderName"/> is <see langword="null"/> and
     /// <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal to 0.
     /// </summary>
@@ -182,7 +181,7 @@ public sealed class MessageTemplateTests
         };
 
         // Act & Assert
-        Assert.Throws<DomainStateException<MessageTemplate>>(()
+        Assert.Throws<InvalidOperationException>(()
             => entity.GetFormattedText(parameters));
     }
 
@@ -217,7 +216,7 @@ public sealed class MessageTemplateTests
 
     /// <summary>
     /// The <see cref="MessageTemplate.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="MessageTemplate"/> instance
     /// which <see cref="MessageTemplate.PlaceholderName"/> is <see langword="null"/>
     /// but <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal to 0.
@@ -233,12 +232,12 @@ public sealed class MessageTemplateTests
         };
 
         // Act & Assert
-        Assert.Throws<DomainStateException<MessageTemplate>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
 
     /// <summary>
     /// The <see cref="MessageTemplate.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="MessageTemplate"/> instance
     /// which <see cref="MessageTemplate.TemplateText"/> does not contain the specified number of placeholders.
     /// </summary>
@@ -253,7 +252,7 @@ public sealed class MessageTemplateTests
         };
 
         // Act & Assert
-        Assert.Throws<DomainStateException<MessageTemplate>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
     #endregion
 }

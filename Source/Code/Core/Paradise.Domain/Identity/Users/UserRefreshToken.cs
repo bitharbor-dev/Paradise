@@ -1,5 +1,4 @@
 ﻿using Paradise.Domain.Base;
-using Paradise.Domain.Base.Exceptions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Identity.Users;
@@ -54,7 +53,7 @@ public sealed class UserRefreshToken(Guid ownerId, DateTimeOffset expiryDateUtc)
         base.ValidateState();
 
         if (OwnerId == Guid.Empty)
-            throw new DomainStateException<UserRefreshToken>(OwnerId);
+            throw new InvalidOperationException(new DomainStateError<UserRefreshToken>(OwnerId));
     }
 
     /// <inheritdoc/>

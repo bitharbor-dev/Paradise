@@ -1,5 +1,4 @@
 ﻿using Paradise.Domain.Base;
-using Paradise.Domain.Base.Exceptions;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -81,9 +80,11 @@ public abstract class MessageTemplate(string templateName, CultureInfo? culture,
             // - an exception to be thrown.
             if (PlaceholdersNumber is not 0)
             {
-                var message = GetMessageMessageTemplateFormattableTextInInvalidState();
+                var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                throw new DomainStateException<MessageTemplate>(PlaceholdersNumber, message);
+                var message = new DomainStateError<MessageTemplate>(PlaceholdersNumber, additionalInformation);
+
+                throw new InvalidOperationException(message);
             }
         }
         else
@@ -92,9 +93,12 @@ public abstract class MessageTemplate(string templateName, CultureInfo? culture,
 
             if (PlaceholdersNumber != placeholderOccurrences)
             {
-                var message = GetMessageMessageTemplateInvalidPlaceholdersNumber(PlaceholdersNumber, (ushort)placeholderOccurrences);
+                var additionalInformation = GetMessageMessageTemplateInvalidPlaceholdersNumber(
+                    PlaceholdersNumber, (ushort)placeholderOccurrences);
 
-                throw new DomainStateException<MessageTemplate>(TemplateText, message);
+                var message = new DomainStateError<MessageTemplate>(TemplateText, additionalInformation);
+
+                throw new InvalidOperationException(message);
             }
         }
     }
@@ -170,9 +174,11 @@ public abstract class MessageTemplate(string templateName, CultureInfo? culture,
             // - an exception to be thrown.
             if (PlaceholdersNumber is not 0)
             {
-                var message = GetMessageMessageTemplateFormattableTextInInvalidState();
+                var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                throw new DomainStateException<MessageTemplate>(PlaceholdersNumber, message);
+                var message = new DomainStateError<MessageTemplate>(PlaceholdersNumber, additionalInformation);
+
+                throw new InvalidOperationException(message);
             }
 
             // If placeholder name is not set, but input parameters number is not 0

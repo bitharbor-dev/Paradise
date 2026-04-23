@@ -1,5 +1,4 @@
 ﻿using Paradise.Domain.Base;
-using Paradise.Domain.Base.Exceptions;
 using Paradise.Domain.Identity.Users;
 
 namespace Paradise.Domain.Tests.Unit.Identity.Users;
@@ -61,7 +60,7 @@ public sealed class UserRefreshTokenTests
 
     /// <summary>
     /// The <see cref="UserRefreshToken.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="UserRefreshToken"/> instance
     /// which <see cref="UserRefreshToken.OwnerId"/> is equal to <see cref="Guid.Empty"/>.
     /// </summary>
@@ -74,7 +73,7 @@ public sealed class UserRefreshTokenTests
             expiryDateUtc: UnixEpoch);
 
         // Act & Assert
-        Assert.Throws<DomainStateException<UserRefreshToken>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
     #endregion
 }

@@ -1,5 +1,4 @@
 ﻿using Paradise.Domain.Base;
-using Paradise.Domain.Base.Exceptions;
 using Paradise.Domain.Identity.Users;
 using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
@@ -508,7 +507,7 @@ public sealed class UserTests
 
     /// <summary>
     /// The <see cref="User.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="User"/> instance which <see cref="User.Email"/>
     /// is equal to <see langword="null"/>, <see cref="string.Empty"/> or whitespace-only.
     /// </summary>
@@ -522,12 +521,12 @@ public sealed class UserTests
         var entity = GetUser(Guid.Empty, email: emailAddress!);
 
         // Act & Assert
-        Assert.Throws<DomainStateException<User>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
 
     /// <summary>
     /// The <see cref="User.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="User"/> instance which <see cref="User.UserName"/>
     /// is equal to <see langword="null"/>, <see cref="string.Empty"/> or whitespace-only.
     /// </summary>
@@ -541,7 +540,7 @@ public sealed class UserTests
         var entity = GetUser(Guid.Empty, userName: userName!);
 
         // Act & Assert
-        Assert.Throws<DomainStateException<User>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
 
     /// <summary>

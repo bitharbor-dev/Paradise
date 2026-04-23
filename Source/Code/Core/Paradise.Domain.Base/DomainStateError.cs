@@ -3,38 +3,55 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
 
-namespace Paradise.Domain.Base.Exceptions;
+namespace Paradise.Domain.Base;
 
 /// <summary>
-/// Represents the errors that occur during domain layer CRUD operations.
+/// Represents a domain state error message formatting contract.
 /// </summary>
-/// <typeparam name="TEntity">
-/// Entity type.
-/// </typeparam>
-/// <remarks>
-/// Initializes a new instance of the <see cref="DomainStateException{TEntity}"/> class.
-/// </remarks>
 /// <param name="value">
 /// Property value.
 /// </param>
 /// <param name="additionalInformation">
-/// Additional information to be captured into exception message.
+/// Additional information to be captured into error message.
 /// </param>
 /// <param name="propertyName">
 /// Property name.
 /// </param>
-public sealed class DomainStateException<TEntity>(object? value,
-                                                  string? additionalInformation = null,
-                                                  [CallerArgumentExpression(nameof(value))] string? propertyName = null)
-    : Exception(CreateExceptionMessage(typeof(TEntity), value, propertyName, additionalInformation))
+public sealed class DomainStateError<TEntity>(object? value, string? additionalInformation = null,
+                                              [CallerArgumentExpression(nameof(value))] string? propertyName = null)
 {
     #region Constants
     private const string NullValueRepresentation = "null";
     #endregion
 
+    #region Properties
+    /// <summary>
+    /// Formatted error message.
+    /// </summary>
+    public string Message { get; } = CreateMessage(typeof(TEntity), value, propertyName, additionalInformation);
+    #endregion
+
+    #region Public methods
+    /// <inheritdoc/>
+    public override string ToString()
+        => Message;
+    #endregion
+
+    #region Operators
+    /// <summary>
+    /// Implicitly converts the given <paramref name="message"/>
+    /// into a <see cref="string"/> by calling <see cref="ToString"/> method.
+    /// </summary>
+    /// <param name="message">
+    /// The <see cref="DomainStateError{TEntity}"/> to be converted into a <see cref="string"/>.
+    /// </param>
+    public static implicit operator string?(DomainStateError<TEntity> message)
+        => message?.ToString();
+    #endregion
+
     #region Private methods
     /// <summary>
-    /// Creates exception message based on the input arguments.
+    /// Creates error message based on the input arguments.
     /// </summary>
     /// <param name="entityType">
     /// Entity type.
@@ -49,10 +66,10 @@ public sealed class DomainStateException<TEntity>(object? value,
     /// Optional additional information.
     /// </param>
     /// <returns>
-    /// A <see cref="string"/> value containing exception
+    /// A <see cref="string"/> value containing error
     /// message based on the input arguments.
     /// </returns>
-    private static string CreateExceptionMessage(Type entityType, object? value, string? propertyName, string? additionalInformation)
+    private static string CreateMessage(Type entityType, object? value, string? propertyName, string? additionalInformation)
     {
         var stringValue = value is null
             ? NullValueRepresentation

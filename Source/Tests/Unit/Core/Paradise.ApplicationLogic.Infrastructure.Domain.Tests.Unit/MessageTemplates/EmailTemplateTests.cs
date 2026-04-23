@@ -1,5 +1,4 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.Domain.Base.Exceptions;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit.MessageTemplates;
 
@@ -143,7 +142,7 @@ public sealed class EmailTemplateTests
 
     /// <summary>
     /// The <see cref="EmailTemplate.GetFormattedSubject"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> if the
+    /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="EmailTemplate.SubjectPlaceholderName"/> is <see langword="null"/> and
     /// <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal to 0.
     /// </summary>
@@ -160,7 +159,7 @@ public sealed class EmailTemplateTests
         };
 
         // Act & Assert
-        Assert.Throws<DomainStateException<EmailTemplate>>(()
+        Assert.Throws<InvalidOperationException>(()
             => entity.GetFormattedSubject(parameters));
     }
 
@@ -278,7 +277,7 @@ public sealed class EmailTemplateTests
 
     /// <summary>
     /// The <see cref="EmailTemplate.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="EmailTemplate"/> instance
     /// which <see cref="EmailTemplate.SubjectPlaceholderName"/> is <see langword="null"/>
     /// but <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal to 0.
@@ -294,12 +293,12 @@ public sealed class EmailTemplateTests
         };
 
         // Act & Assert
-        Assert.Throws<DomainStateException<EmailTemplate>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
 
     /// <summary>
     /// The <see cref="EmailTemplate.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="EmailTemplate"/> instance
     /// which <see cref="EmailTemplate.Subject"/> does not contain the specified number of placeholders.
     /// </summary>
@@ -314,7 +313,7 @@ public sealed class EmailTemplateTests
         };
 
         // Act & Assert
-        Assert.Throws<DomainStateException<EmailTemplate>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
     #endregion
 }

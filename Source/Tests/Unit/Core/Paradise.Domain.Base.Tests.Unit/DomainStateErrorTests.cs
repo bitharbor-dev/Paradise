@@ -1,13 +1,12 @@
-﻿using Paradise.Domain.Base.Exceptions;
-using Paradise.Tests.Miscellaneous.TestDoubles.Dummies.Core.Domain.Base;
+﻿using Paradise.Tests.Miscellaneous.TestDoubles.Dummies.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Paradise.Domain.Base.Tests.Unit.Exceptions;
+namespace Paradise.Domain.Base.Tests.Unit;
 
 /// <summary>
-/// <see cref="DomainStateException{TEntity}"/> test class.
+/// <see cref="DomainStateError{TEntity}"/> test class.
 /// </summary>
-public sealed class DomainStateExceptionTests
+public sealed class DomainStateErrorTests
 {
     #region Constants
     [StringSyntax("Regex")]
@@ -26,15 +25,15 @@ public sealed class DomainStateExceptionTests
     /// </summary>
     public static TheoryData<string?, string?, string> Message_ReturnsProperlyFormattedValue_MemberData { get; } = new()
     {
-        { "Invalid data",   null,                           DefaultPattern },
-        { "Invalid data",   "Invalid value in the test",    DefaultPattern + AdditionalInformationPattern },
-        { null,             null,                           NullValuePattern }
+        { "Invalid data",   null,                           DefaultPattern                                  },
+        { "Invalid data",   "Invalid value in the test",    DefaultPattern + AdditionalInformationPattern   },
+        { null,             null,                           NullValuePattern                                }
     };
     #endregion
 
     #region Public methods
     /// <summary>
-    /// The <see cref="DomainStateException{TEntity}"/> message property should
+    /// The <see cref="DomainStateError{TEntity}"/> message property should
     /// return the properly formatted value, containing the type of the entity
     /// whish is in invalid state, the name of the entity's property which is invalid,
     /// value of that property and additional information (if provided).
@@ -56,20 +55,20 @@ public sealed class DomainStateExceptionTests
         var property = nameof(input);
 
         // Act
-        var exception = new DomainStateException<DummyEntity>(input, additionalInformation);
+        var error = new DomainStateError<DummyEntity>(input, additionalInformation);
 
         // Assert
-        Assert.Matches(pattern, exception.Message);
-        Assert.Contains(type, exception.Message, StringComparison.Ordinal);
-        Assert.Contains(input ?? "null", exception.Message, StringComparison.Ordinal);
-        Assert.Contains(property, exception.Message, StringComparison.Ordinal);
+        Assert.Matches(pattern, error.Message);
+        Assert.Contains(type, error.Message, StringComparison.Ordinal);
+        Assert.Contains(input ?? "null", error.Message, StringComparison.Ordinal);
+        Assert.Contains(property, error.Message, StringComparison.Ordinal);
 
         if (!string.IsNullOrWhiteSpace(additionalInformation))
-            Assert.Contains(additionalInformation, exception.Message, StringComparison.Ordinal);
+            Assert.Contains(additionalInformation, error.Message, StringComparison.Ordinal);
     }
 
     /// <summary>
-    /// The <see cref="DomainStateException{TEntity}"/> message property should
+    /// The <see cref="DomainStateError{TEntity}"/> message property should
     /// return the properly formatted value, containing name of the parameter
     /// which was passed into exception constructor.
     /// </summary>
@@ -80,10 +79,10 @@ public sealed class DomainStateExceptionTests
         var test = "Invalid data";
 
         // Act
-        var exception = new DomainStateException<DummyEntity>(test);
+        var error = new DomainStateError<DummyEntity>(test, additionalInformation: null);
 
         // Assert
-        Assert.Contains(nameof(test), exception.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(test), error.Message, StringComparison.Ordinal);
     }
     #endregion
 }

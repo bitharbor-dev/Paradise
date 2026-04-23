@@ -1,5 +1,4 @@
-﻿using Paradise.Domain.Base.Exceptions;
-using Paradise.Domain.Identity.Roles;
+﻿using Paradise.Domain.Identity.Roles;
 using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
@@ -374,7 +373,7 @@ public sealed class RoleTests
 
     /// <summary>
     /// The <see cref="Role.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="Role"/> instance
     /// which <see cref="Role.Name"/> contains invalid characters.
     /// </summary>
@@ -385,12 +384,12 @@ public sealed class RoleTests
         var entity = GetRole(Guid.Empty, name: "Name-123");
 
         // Act & Assert
-        Assert.Throws<DomainStateException<Role>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
 
     /// <summary>
     /// The <see cref="Role.ValidateState"/> method should
-    /// throw the <see cref="DomainStateException{TEntity}"/> for the
+    /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="Role"/> instance
     /// which <see cref="Role.Name"/>
     /// is equal to <see langword="null"/>, <see cref="string.Empty"/> or whitespace-only.
@@ -405,7 +404,7 @@ public sealed class RoleTests
         var entity = GetRole(Guid.Empty, name: name!);
 
         // Act & Assert
-        Assert.Throws<DomainStateException<Role>>(entity.ValidateState);
+        Assert.Throws<InvalidOperationException>(entity.ValidateState);
     }
 
     /// <summary>

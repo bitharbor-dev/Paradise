@@ -1,6 +1,6 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
 using Paradise.Common.Extensions;
-using Paradise.Domain.Base.Exceptions;
+using Paradise.Domain.Base;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -74,9 +74,11 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
             // - an exception to be thrown.
             if (SubjectPlaceholdersNumber is not 0)
             {
-                var message = GetMessageMessageTemplateFormattableTextInInvalidState();
+                var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                throw new DomainStateException<EmailTemplate>(SubjectPlaceholdersNumber, message);
+                var message = new DomainStateError<EmailTemplate>(SubjectPlaceholdersNumber, additionalInformation);
+
+                throw new InvalidOperationException(message);
             }
         }
         else
@@ -85,9 +87,12 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
 
             if (SubjectPlaceholdersNumber != placeholderOccurrences)
             {
-                var message = GetMessageMessageTemplateInvalidPlaceholdersNumber(SubjectPlaceholdersNumber, (ushort)placeholderOccurrences);
+                var additionalInformation = GetMessageMessageTemplateInvalidPlaceholdersNumber(
+                    SubjectPlaceholdersNumber, (ushort)placeholderOccurrences);
 
-                throw new DomainStateException<EmailTemplate>(Subject, message);
+                var message = new DomainStateError<EmailTemplate>(Subject, additionalInformation);
+
+                throw new InvalidOperationException(message);
             }
         }
     }
@@ -263,9 +268,11 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
             // - an exception to be thrown.
             if (SubjectPlaceholdersNumber is not 0)
             {
-                var message = GetMessageMessageTemplateFormattableTextInInvalidState();
+                var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                throw new DomainStateException<EmailTemplate>(SubjectPlaceholdersNumber, message);
+                var message = new DomainStateError<EmailTemplate>(SubjectPlaceholdersNumber, additionalInformation);
+
+                throw new InvalidOperationException(message);
             }
 
             // If placeholder name is not set, but input parameters number is not 0

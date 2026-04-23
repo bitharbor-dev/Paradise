@@ -3,7 +3,6 @@ using Paradise.Common;
 using Paradise.Common.Extensions;
 using Paradise.Domain.Base;
 using Paradise.Domain.Base.EqualityComparers;
-using Paradise.Domain.Base.Exceptions;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
@@ -52,10 +51,10 @@ public sealed partial class Role(string name, bool isDefault) : IdentityRole<Gui
     public void ValidateState()
     {
         if (Name.IsNullOrWhiteSpace())
-            throw new DomainStateException<Role>(Name);
+            throw new InvalidOperationException(new DomainStateError<Role>(Name));
 
         if (!GetOnlyAlphabetCharactersRegex().IsMatch(Name))
-            throw new DomainStateException<Role>(Name);
+            throw new InvalidOperationException(new DomainStateError<Role>(Name));
     }
 
     /// <inheritdoc/>

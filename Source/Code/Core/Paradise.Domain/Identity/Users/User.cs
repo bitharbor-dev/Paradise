@@ -2,7 +2,6 @@
 using Paradise.Common.Extensions;
 using Paradise.Domain.Base;
 using Paradise.Domain.Base.EqualityComparers;
-using Paradise.Domain.Base.Exceptions;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
@@ -71,10 +70,10 @@ public sealed class User : IdentityUser<Guid>, IEntity, IEquatable<User>
     public void ValidateState()
     {
         if (Email.IsNullOrWhiteSpace())
-            throw new DomainStateException<User>(Email);
+            throw new InvalidOperationException(new DomainStateError<User>(Email));
 
         if (UserName.IsNullOrWhiteSpace())
-            throw new DomainStateException<User>(UserName);
+            throw new InvalidOperationException(new DomainStateError<User>(UserName));
     }
 
     /// <inheritdoc/>
