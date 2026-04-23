@@ -38,7 +38,7 @@ public sealed class EmailTemplateDataConverterTests
     /// with the data from the input <see cref="EmailTemplateCreationModel"/> object.
     /// </summary>
     /// <param name="cultureId">
-    /// Template culture LCID.
+    /// Template culture language code identifier.
     /// </param>
     [Theory, MemberData(nameof(ToEntity_MemberData))]
     public void ToEntity(int? cultureId)

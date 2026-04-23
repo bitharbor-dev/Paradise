@@ -45,22 +45,22 @@ public sealed partial class DefaultEmailSenderTests
     /// <param name="isBodyHtml">
     /// Indicates whether the email body is an HTML document.
     /// </param>
-    /// <param name="cc">
-    /// Copy recipients' email addresses.
+    /// <param name="carbonCopy">
+    /// Carbon copy recipients' email addresses.
     /// </param>
-    /// <param name="bcc">
-    /// Blind copy recipients' email addresses.
+    /// <param name="blindCarbonCopy">
+    /// Blind carbon copy recipients' email addresses.
     /// </param>
     [Theory, MemberData(nameof(SendAsync_MemberData))]
-    public async Task SendAsync(bool isBodyHtml, string[]? cc, string[]? bcc)
+    public async Task SendAsync(bool isBodyHtml, string[]? carbonCopy, string[]? blindCarbonCopy)
     {
         // Arrange
         using var attachmentStream = new MemoryStream([1]);
         var model = new EmailModel("Subject", "Body", TestEmail, [TestEmail])
         {
             Attachments = [new(attachmentStream, "test", "text/plain")],
-            Bcc = bcc,
-            Cc = cc,
+            BlindCarbonCopy = blindCarbonCopy,
+            CarbonCopy = carbonCopy,
             IsBodyHtml = isBodyHtml
         };
 
@@ -77,8 +77,8 @@ public sealed partial class DefaultEmailSenderTests
 
         Assert.Equivalent(modelAttachment, messageAttachment);
 
-        Assert.Equivalent(model.Bcc ?? [], message.Bcc ?? []);
-        Assert.Equivalent(model.Cc ?? [], message.Cc ?? []);
+        Assert.Equivalent(model.BlindCarbonCopy ?? [], message.BlindCarbonCopy ?? []);
+        Assert.Equivalent(model.CarbonCopy ?? [], message.CarbonCopy ?? []);
         Assert.Equivalent(model.To, message.To ?? []);
 
         Assert.Equal(model.From, message.From);

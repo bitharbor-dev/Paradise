@@ -305,7 +305,7 @@ public static class IServiceCollectionExtensions
         {
             client.Host = options.Host;
             client.Port = options.Port;
-            client.EnableSsl = options.EnableSsl;
+            client.EnableSsl = options.EnableSecureSocketsLayer;
             client.Credentials = options.Credentials;
 
             if (client.Credentials is null)

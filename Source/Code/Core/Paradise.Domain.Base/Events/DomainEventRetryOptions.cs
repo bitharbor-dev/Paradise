@@ -22,7 +22,7 @@ public sealed class DomainEventRetryOptions
     /// Base delay between retry attempts.
     /// </summary>
     /// <remarks>
-    /// If <see cref="UseExponentialBackoff"/> is <see langword="true"/>, the delay
+    /// If <see cref="UseExponentialBackOff"/> is <see langword="true"/>, the delay
     /// will increase exponentially with each retry attempt.
     /// </remarks>
     public TimeSpan BaseDelay { get; set; } = TimeSpan.FromSeconds(2);
@@ -34,7 +34,7 @@ public sealed class DomainEventRetryOptions
     /// When enabled, the actual delay for each retry attempt will be
     /// calculated as <c>BaseDelay × 2^retryCount</c>.
     /// </remarks>
-    public bool UseExponentialBackoff { get; set; } = true;
+    public bool UseExponentialBackOff { get; set; } = true;
     #endregion
 
     #region Public methods
@@ -80,7 +80,7 @@ public sealed class DomainEventRetryOptions
         if (attempt is 0)
             return TimeSpan.Zero;
 
-        if (UseExponentialBackoff)
+        if (UseExponentialBackOff)
             return BaseDelay * Math.Pow(2, attempt);
 
         return BaseDelay;

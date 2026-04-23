@@ -63,8 +63,8 @@ internal sealed class AzureEmailSender(IOptions<SmtpOptions> smtpOptions,
 
         var recipients = new EmailRecipients(
             model.To.Select(recipient => new EmailAddress(recipient)),
-            model.Cc?.Select(recipient => new EmailAddress(recipient)),
-            model.Bcc?.Select(recipient => new EmailAddress(recipient)));
+            model.CarbonCopy?.Select(recipient => new EmailAddress(recipient)),
+            model.BlindCarbonCopy?.Select(recipient => new EmailAddress(recipient)));
 
         var emailMessage = new EmailMessage(smtpOptions.Value.Credentials!.UserName, recipients, content);
 

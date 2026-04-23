@@ -59,8 +59,8 @@ public sealed class CultureInfoConverterTests
         }
         else
         {
-            var lcid = Assert.IsType<int>(result);
-            Assert.Equal(culture.LCID, lcid);
+            var languageCodeId = Assert.IsType<int>(result);
+            Assert.Equal(culture.LCID, languageCodeId);
         }
     }
 
@@ -69,26 +69,26 @@ public sealed class CultureInfoConverterTests
     /// convert the input nullable <see cref="int"/> values
     /// into the nullable <see cref="CultureInfo"/> instances.
     /// </summary>
-    /// <param name="lcid">
+    /// <param name="languageCodeId">
     /// The <see cref="int"/> to convert.
     /// </param>
     [Theory, MemberData(nameof(ConvertFrom_MemberData))]
-    public void ConvertFrom(int? lcid)
+    public void ConvertFrom(int? languageCodeId)
     {
         // Arrange
 
         // Act
-        var result = Converter.ConvertFromProvider(lcid);
+        var result = Converter.ConvertFromProvider(languageCodeId);
 
         // Assert
-        if (lcid is null)
+        if (languageCodeId is null)
         {
             Assert.Null(result);
         }
         else
         {
             var culture = Assert.IsType<CultureInfo>(result);
-            Assert.Equal(lcid, culture.LCID);
+            Assert.Equal(languageCodeId, culture.LCID);
         }
     }
     #endregion

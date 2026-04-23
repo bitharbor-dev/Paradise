@@ -23,14 +23,14 @@ public class BaseEmailModel(IEnumerable<string> to)
     public IEnumerable<string> To { get; } = to;
 
     /// <summary>
-    /// Copy recipients' email addresses.
+    /// Carbon copy recipients' email addresses.
     /// </summary>
-    public IEnumerable<string>? Cc { get; set; }
+    public IEnumerable<string>? CarbonCopy { get; set; }
 
     /// <summary>
-    /// Blind copy recipients' email addresses.
+    /// Blind carbon copy recipients' email addresses.
     /// </summary>
-    public IEnumerable<string>? Bcc { get; set; }
+    public IEnumerable<string>? BlindCarbonCopy { get; set; }
 
     /// <summary>
     /// Attachments.

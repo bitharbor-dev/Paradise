@@ -22,7 +22,7 @@ public sealed class SmtpOptions
     /// uses Secure Sockets Layer (SSL)
     /// to encrypt the connection.
     /// </summary>
-    public bool EnableSsl { get; set; }
+    public bool EnableSecureSocketsLayer { get; set; }
 
     /// <summary>
     /// Gets or sets the name or IP address of the host used for SMTP transactions.

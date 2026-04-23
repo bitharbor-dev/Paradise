@@ -54,8 +54,8 @@ public sealed class EmailModel : BaseEmailModel
         Body = body;
         From = from;
 
-        Cc = baseModel.Cc;
-        Bcc = baseModel.Bcc;
+        CarbonCopy = baseModel.CarbonCopy;
+        BlindCarbonCopy = baseModel.BlindCarbonCopy;
         Attachments = baseModel.Attachments;
     }
     #endregion

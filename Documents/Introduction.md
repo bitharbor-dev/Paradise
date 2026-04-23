@@ -55,7 +55,7 @@ Here is an example of how to configure this section for using Gmail as a mailing
       "UserName": "your.email.address@gmail.com",
       "Password": "Pa$$word123"
     },
-    "EnableSsl": true,
+    "EnableSecureSocketsLayer": true,
     "Host": "smtp.gmail.com",
     "Port": 587,
     "Timeout": 100000

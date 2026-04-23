@@ -56,7 +56,7 @@ public sealed class DomainEventRetryOptionsTests
         // Assert
         Assert.Equal(defaultMaxRetries, options.MaxRetries);
         Assert.Equal(defaultBaseDelay, options.BaseDelay);
-        Assert.Equal(defaultUseExponentialBackoff, options.UseExponentialBackoff);
+        Assert.Equal(defaultUseExponentialBackoff, options.UseExponentialBackOff);
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public sealed class DomainEventRetryOptionsTests
         var options = new DomainEventRetryOptions
         {
             BaseDelay = TimeSpan.FromTicks(1),
-            UseExponentialBackoff = true
+            UseExponentialBackOff = true
         };
 
         options.Delaying += (s, e) => delay = e.Delay;
@@ -110,7 +110,7 @@ public sealed class DomainEventRetryOptionsTests
         var options = new DomainEventRetryOptions
         {
             BaseDelay = TimeSpan.FromTicks(1),
-            UseExponentialBackoff = false
+            UseExponentialBackOff = false
         };
 
         options.Delaying += (s, e) => delay = e.Delay;

@@ -83,11 +83,11 @@ internal sealed class CommunicationClient : ICommunicationClient
 
         ValidateRecipients(request.BasicData.To);
 
-        if (request.BasicData.Cc is not null)
-            ValidateRecipients(request.BasicData.Cc);
+        if (request.BasicData.CarbonCopy is not null)
+            ValidateRecipients(request.BasicData.CarbonCopy);
 
-        if (request.BasicData.Bcc is not null)
-            ValidateRecipients(request.BasicData.Bcc);
+        if (request.BasicData.BlindCarbonCopy is not null)
+            ValidateRecipients(request.BasicData.BlindCarbonCopy);
 
         var template = await FindEmailTemplateAsync(request, cancellationToken)
             .ConfigureAwait(false);

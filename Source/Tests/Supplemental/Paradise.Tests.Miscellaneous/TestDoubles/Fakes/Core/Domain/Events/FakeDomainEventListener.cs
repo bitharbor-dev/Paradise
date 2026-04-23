@@ -24,7 +24,7 @@ public abstract class FakeDomainEventListener : IDomainEventListener<SpyDomainEv
 
         ArgumentNullException.ThrowIfNull(domainEvent);
 
-        domainEvent.Processings++;
+        domainEvent.Invocations++;
 
         return Task.CompletedTask;
     }

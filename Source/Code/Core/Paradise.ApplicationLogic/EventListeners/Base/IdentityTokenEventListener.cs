@@ -75,7 +75,7 @@ public abstract class IdentityTokenEventListener<TEvent>(IServiceProvider servic
 
         if (!path.Contains(placeholder, StringComparison.Ordinal))
         {
-            var message = GetMessageMissingSubstring(path, placeholder);
+            var message = GetMessageMissingSubString(path, placeholder);
 
             throw new ArgumentException(message, nameof(path));
         }

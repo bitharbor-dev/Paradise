@@ -19,7 +19,7 @@ public sealed partial class SeedEmailTemplateModel
     /// Template name.
     /// </param>
     /// <param name="cultureId">
-    /// Template culture LCID.
+    /// Template culture language code identifier.
     /// </param>
     /// <param name="subject">
     /// Email subject.
@@ -112,7 +112,7 @@ public sealed partial class SeedEmailTemplateModel
     public string TemplateName { get; }
 
     /// <summary>
-    /// Template culture LCID.
+    /// Template culture language code identifier.
     /// </summary>
     public int? CultureId { get; }
 

@@ -19,6 +19,6 @@ public sealed class SpyDomainEvent(DateTimeOffset? occurredOn = null) : DomainEv
     /// The number of <see cref="IDomainEventListener{TEvent}.ProcessAsync"/>
     /// method invocations on the current instance.
     /// </summary>
-    public ushort Processings { get; set; }
+    public ushort Invocations { get; set; }
     #endregion
 }

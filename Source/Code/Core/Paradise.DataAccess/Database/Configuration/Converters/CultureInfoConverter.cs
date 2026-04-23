@@ -23,6 +23,6 @@ internal sealed class CultureInfoConverter() : ValueConverter<CultureInfo?, int?
     /// <see cref="int"/> into a <see cref="CultureInfo"/> conversion expression.
     /// </summary>
     private static Expression<Func<int?, CultureInfo?>> ConvertFrom { get; }
-        = lcid => lcid == null ? null : CultureInfo.GetCultureInfo(lcid.Value);
+        = languageCodeId => languageCodeId == null ? null : CultureInfo.GetCultureInfo(languageCodeId.Value);
     #endregion
 }

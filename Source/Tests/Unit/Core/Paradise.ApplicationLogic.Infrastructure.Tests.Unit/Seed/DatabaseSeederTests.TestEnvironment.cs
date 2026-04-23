@@ -195,7 +195,7 @@ public sealed partial class DatabaseSeederTests
         /// Template name.
         /// </param>
         /// <param name="cultureId">
-        /// Template culture LCID.
+        /// Template culture language code identifier.
         /// </param>
         /// <param name="templateText">
         /// Template text.
@@ -225,7 +225,7 @@ public sealed partial class DatabaseSeederTests
         /// Template name.
         /// </param>
         /// <param name="cultureId">
-        /// Template culture LCID.
+        /// Template culture language code identifier.
         /// </param>
         /// <param name="templateText">
         /// Template text.

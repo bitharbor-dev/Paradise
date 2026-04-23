@@ -58,7 +58,7 @@ public sealed partial class IServiceCollectionExtensionsTests
             SmtpOptions = new()
             {
                 Credentials = new("UserName", "endpoint=https://test.com/;accesskey=1234"),
-                EnableSsl = false,
+                EnableSecureSocketsLayer = false,
                 Host = "smtp.test",
                 Port = 2525
             }

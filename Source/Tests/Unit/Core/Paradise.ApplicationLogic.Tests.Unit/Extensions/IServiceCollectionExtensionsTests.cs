@@ -109,7 +109,7 @@ public sealed partial class IServiceCollectionExtensionsTests
         {
             options.BaseDelay = TimeSpan.FromSeconds(2);
             options.MaxRetries = 10;
-            options.UseExponentialBackoff = false;
+            options.UseExponentialBackOff = false;
         }
 
         var expectedOptions = new DomainEventRetryOptions();

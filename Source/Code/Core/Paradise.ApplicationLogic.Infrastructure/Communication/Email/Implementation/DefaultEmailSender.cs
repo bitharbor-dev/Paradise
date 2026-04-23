@@ -52,15 +52,15 @@ internal sealed class DefaultEmailSender(ISmtpClient client) : IEmailSender
         foreach (var recipient in model.To)
             mailMessage.To.Add(recipient);
 
-        if (model.Cc is not null)
+        if (model.CarbonCopy is not null)
         {
-            foreach (var recipient in model.Cc)
+            foreach (var recipient in model.CarbonCopy)
                 mailMessage.CC.Add(recipient);
         }
 
-        if (model.Bcc is not null)
+        if (model.BlindCarbonCopy is not null)
         {
-            foreach (var recipient in model.Bcc)
+            foreach (var recipient in model.BlindCarbonCopy)
                 mailMessage.Bcc.Add(recipient);
         }
 

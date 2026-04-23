@@ -20,8 +20,8 @@ public sealed partial class CommunicationClientTests
     {
         { new BaseEmailModel([TestEmail])                                                       },
         { new BaseEmailModel([TestEmail]) { Attachments = [new(null!, "Test", "text/plain")] }  },
-        { new BaseEmailModel([TestEmail]) { Cc = [TestEmail] }                                  },
-        { new BaseEmailModel([TestEmail]) { Bcc = [TestEmail] }                                 }
+        { new BaseEmailModel([TestEmail]) { CarbonCopy = [TestEmail] }                          },
+        { new BaseEmailModel([TestEmail]) { BlindCarbonCopy = [TestEmail] }                     }
     };
 
     /// <summary>
@@ -29,9 +29,9 @@ public sealed partial class CommunicationClientTests
     /// </summary>
     public static TheoryData<BaseEmailModel> SendEmailAsync_ThrowsOnInvalidEmailAddressFormat_MemberData { get; } = new()
     {
-        { new BaseEmailModel([InvalidEmailAddress])                         },
-        { new BaseEmailModel([TestEmail]) { Cc = [InvalidEmailAddress] }    },
-        { new BaseEmailModel([TestEmail]) { Bcc = [InvalidEmailAddress] }   }
+        { new BaseEmailModel([InvalidEmailAddress])                                     },
+        { new BaseEmailModel([TestEmail]) { CarbonCopy = [InvalidEmailAddress] }        },
+        { new BaseEmailModel([TestEmail]) { BlindCarbonCopy = [InvalidEmailAddress] }   }
     };
 
     /// <summary>

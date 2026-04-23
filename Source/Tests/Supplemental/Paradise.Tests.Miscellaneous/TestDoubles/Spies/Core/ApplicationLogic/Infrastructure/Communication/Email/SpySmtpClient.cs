@@ -18,8 +18,8 @@ public sealed class SpySmtpClient : ISmtpClient
         var baseModel = new BaseEmailModel(message.To.Select(recipient => recipient.Address))
         {
             Attachments = message.Attachments.Select(a => new EmailAttachmentModel(a.ContentStream, a.Name!, a.ContentType.MediaType)).ToList(),
-            Bcc = message.Bcc.Select(recipient => recipient.Address).ToList(),
-            Cc = message.CC.Select(recipient => recipient.Address).ToList()
+            BlindCarbonCopy = message.Bcc.Select(recipient => recipient.Address).ToList(),
+            CarbonCopy = message.CC.Select(recipient => recipient.Address).ToList()
         };
 
         var model = new EmailModel(message.Subject, message.Body, message.From?.Address!, baseModel)

@@ -68,7 +68,7 @@ public static class IServiceCollectionExtensions
         {
             options.MaxRetries = 3;
             options.BaseDelay = TimeSpan.FromSeconds(2);
-            options.UseExponentialBackoff = true;
+            options.UseExponentialBackOff = true;
         }
 
         return services

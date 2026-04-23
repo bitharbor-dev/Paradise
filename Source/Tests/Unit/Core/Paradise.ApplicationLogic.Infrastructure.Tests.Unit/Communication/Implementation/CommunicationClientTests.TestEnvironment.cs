@@ -83,7 +83,7 @@ public sealed partial class CommunicationClientTests : IDisposable
             Options = new()
             {
                 Credentials = new("test@test.com", "Test"),
-                EnableSsl = true,
+                EnableSecureSocketsLayer = true,
                 Host = "Test",
                 Port = 123
             };

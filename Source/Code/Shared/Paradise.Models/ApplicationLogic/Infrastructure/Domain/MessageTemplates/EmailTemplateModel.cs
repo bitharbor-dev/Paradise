@@ -22,7 +22,7 @@ namespace Paradise.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplate
 /// Template name.
 /// </param>
 /// <param name="cultureId">
-/// Template culture LCID.
+/// Template culture language code identifier.
 /// </param>
 /// <param name="templateText">
 /// Template text.
@@ -76,7 +76,7 @@ public sealed class EmailTemplateModel(Guid id, DateTimeOffset created, DateTime
     public string TemplateName { get; } = templateName;
 
     /// <summary>
-    /// Template culture LCID.
+    /// Template culture language code identifier.
     /// </summary>
     public int? CultureId { get; } = cultureId;
 

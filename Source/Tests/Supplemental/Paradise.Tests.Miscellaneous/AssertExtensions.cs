@@ -415,10 +415,10 @@ public static class AssertExtensions
         /// <param name="code">
         /// The <see cref="ErrorCode"/> value expected to be present.
         /// </param>
-        /// <param name="descriptionSubstring">
+        /// <param name="descriptionSubString">
         /// The <see cref="string"/> value expected to be contained within expected error's description.
         /// </param>
-        public static void ContainsErrorCode(ResultBase result, ErrorCode code, string? descriptionSubstring = null)
+        public static void ContainsErrorCode(ResultBase result, ErrorCode code, string? descriptionSubString = null)
         {
             ArgumentNullException.ThrowIfNull(result);
 
@@ -437,15 +437,15 @@ public static class AssertExtensions
                 Assert.Fail(message);
             }
 
-            if (descriptionSubstring is not null)
+            if (descriptionSubString is not null)
             {
                 var containsExpectedDescription = errors
-                    .Any(error => error.Description.Contains(descriptionSubstring, StringComparison.Ordinal));
+                    .Any(error => error.Description.Contains(descriptionSubString, StringComparison.Ordinal));
 
                 if (!containsExpectedDescription)
                 {
                     var details = "None of the matched errors contains the specified description sub-string.";
-                    var expected = $"Expected: \"{descriptionSubstring}\"";
+                    var expected = $"Expected: \"{descriptionSubString}\"";
                     var actual = $"Actual:   \"{string.Join(", ", errors.Select(error => error.Description))}\"";
 
                     var message = string.Join(Environment.NewLine, details, expected, actual);

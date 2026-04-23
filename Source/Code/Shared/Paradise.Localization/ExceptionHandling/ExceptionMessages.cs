@@ -287,21 +287,21 @@ public sealed partial class ExceptionMessages
     /// Gets the <see cref="MissingSubstring"/> formatted message.
     /// </summary>
     /// <param name="value">
-    /// <see langword="string"/> value which was expected to contain the <paramref name="substring"/>.
+    /// <see langword="string"/> value which was expected to contain the <paramref name="subString"/>.
     /// </param>
-    /// <param name="substring">
+    /// <param name="subString">
     /// Expected sub-string.
     /// </param>
     /// <returns>
     /// A formatted message using the <see cref="MissingSubstring"/> format string.
     /// </returns>
-    public static string GetMessageMissingSubstring(string value, string substring)
+    public static string GetMessageMissingSubString(string value, string subString)
     {
         var messageFormat = MissingSubstring;
 
         return string.Format(Culture,
                              messageFormat,
-                             substring,
+                             subString,
                              value);
     }
 

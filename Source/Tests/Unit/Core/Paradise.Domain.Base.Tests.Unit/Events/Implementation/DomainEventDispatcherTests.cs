@@ -56,7 +56,7 @@ public sealed partial class DomainEventDispatcherTests
         await dispatcher.WaitForCompletionAsync();
 
         // Assert
-        Assert.All(events, domainEvent => Assert.Equal(1, domainEvent.Processings));
+        Assert.All(events, domainEvent => Assert.Equal(1, domainEvent.Invocations));
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public sealed partial class DomainEventDispatcherTests
         {
             listenerAInvoked = true;
 
-            e.Processings++;
+            e.Invocations++;
             return Task.CompletedTask;
         });
 
@@ -82,7 +82,7 @@ public sealed partial class DomainEventDispatcherTests
         {
             listenerBInvoked = true;
 
-            e.Processings++;
+            e.Invocations++;
             return Task.CompletedTask;
         });
 
@@ -97,7 +97,7 @@ public sealed partial class DomainEventDispatcherTests
         // Assert
         Assert.True(listenerAInvoked);
         Assert.True(listenerBInvoked);
-        Assert.Equal(2, domainEvent.Processings);
+        Assert.Equal(2, domainEvent.Invocations);
     }
 
     /// <summary>
@@ -115,11 +115,11 @@ public sealed partial class DomainEventDispatcherTests
         {
             options.MaxRetries = retries;
             options.BaseDelay = TimeSpan.Zero;
-            options.UseExponentialBackoff = false;
+            options.UseExponentialBackOff = false;
         },
         processAsyncOverride: (e, c) =>
         {
-            e.Processings++;
+            e.Invocations++;
 
             throw new InvalidOperationException();
         });
@@ -133,7 +133,7 @@ public sealed partial class DomainEventDispatcherTests
         await dispatcher.WaitForCompletionAsync();
 
         // Assert
-        Assert.Equal(totalProcessings, domainEvent.Processings);
+        Assert.Equal(totalProcessings, domainEvent.Invocations);
     }
 
     /// <summary>
@@ -147,7 +147,7 @@ public sealed partial class DomainEventDispatcherTests
     /// Indicates whetter the cancellation should happen before
     /// looping over the queued events.
     /// </param>
-    /// <param name="expectedProcessings">
+    /// <param name="expectedInvocations">
     /// Expected number of <see cref="IDomainEventListener{TEvent}.ProcessAsync"/>
     /// invocations over a particular domain event.
     /// </param>
@@ -157,7 +157,7 @@ public sealed partial class DomainEventDispatcherTests
     /// </param>
     [Theory, MemberData(nameof(StartDispatchingAsync_StopsWhenCancelled_MemberData))]
     public async Task StartDispatchingAsync_StopsWhenCancelled(bool isGracefulCancellation,
-                                                               int expectedProcessings,
+                                                               int expectedInvocations,
                                                                bool cancelsFromListener)
     {
         // Arrange
@@ -170,14 +170,14 @@ public sealed partial class DomainEventDispatcherTests
         {
             options.MaxRetries = 3;
             options.BaseDelay = TimeSpan.Zero;
-            options.UseExponentialBackoff = false;
+            options.UseExponentialBackOff = false;
 
             if (!cancelsFromListener && !isGracefulCancellation)
                 options.Delaying += (s, e) => tokenSource.Cancel();
         },
         processAsyncOverride: async (e, c) =>
         {
-            e.Processings++;
+            e.Invocations++;
 
             if (cancelsFromListener)
             {
@@ -199,7 +199,7 @@ public sealed partial class DomainEventDispatcherTests
         await dispatcher.WaitForCompletionAsync();
 
         // Assert
-        Assert.Equal(expectedProcessings, domainEvent.Processings);
+        Assert.Equal(expectedInvocations, domainEvent.Invocations);
     }
 
     /// <summary>
@@ -219,7 +219,7 @@ public sealed partial class DomainEventDispatcherTests
         await dispatcher.WaitForCompletionAsync();
 
         // Assert
-        Assert.Equal(0, domainEvent.Processings);
+        Assert.Equal(0, domainEvent.Invocations);
     }
 
     /// <summary>
@@ -235,7 +235,7 @@ public sealed partial class DomainEventDispatcherTests
 
         Task ProcessAsync(SpyDomainEvent e, CancellationToken c)
         {
-            e.Processings++;
+            e.Invocations++;
             Interlocked.Increment(ref entered);
             return gate.Task;
         }
@@ -256,7 +256,7 @@ public sealed partial class DomainEventDispatcherTests
 
         // Assert
         Assert.Equal(2, entered);
-        Assert.Equal(2, domainEvent.Processings);
+        Assert.Equal(2, domainEvent.Invocations);
     }
 
     /// <summary>
@@ -273,7 +273,7 @@ public sealed partial class DomainEventDispatcherTests
         {
             magicNumbers.Add(1);
 
-            e.Processings++;
+            e.Invocations++;
             return Task.CompletedTask;
         });
 
@@ -281,7 +281,7 @@ public sealed partial class DomainEventDispatcherTests
         {
             magicNumbers.Add(2);
 
-            e.Processings++;
+            e.Invocations++;
             return Task.CompletedTask;
         });
 
@@ -296,7 +296,7 @@ public sealed partial class DomainEventDispatcherTests
         // Assert
         Assert.Collection(magicNumbers, processingOrder => Assert.Equal(1, processingOrder),
                                         processingOrder => Assert.Equal(2, processingOrder));
-        Assert.Equal(2, domainEvent.Processings);
+        Assert.Equal(2, domainEvent.Invocations);
     }
     #endregion
 }

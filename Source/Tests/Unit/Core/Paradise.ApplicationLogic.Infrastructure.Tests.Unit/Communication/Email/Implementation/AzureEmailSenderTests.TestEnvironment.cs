@@ -59,7 +59,7 @@ public sealed partial class AzureEmailSenderTests : IDisposable
             Options = new SmtpOptions
             {
                 Credentials = new(TestEmail, "Test"),
-                EnableSsl = false,
+                EnableSecureSocketsLayer = false,
                 Host = "SMTP",
                 Port = 587
             };
