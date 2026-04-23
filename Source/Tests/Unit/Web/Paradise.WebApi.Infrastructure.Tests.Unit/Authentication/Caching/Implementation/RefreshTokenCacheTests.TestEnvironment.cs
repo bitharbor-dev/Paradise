@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Caching.Distributed;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.WebApi.Infrastructure.Authentication.Caching;
 using Paradise.WebApi.Infrastructure.Authentication.Caching.Implementation;
 using System.Diagnostics.CodeAnalysis;

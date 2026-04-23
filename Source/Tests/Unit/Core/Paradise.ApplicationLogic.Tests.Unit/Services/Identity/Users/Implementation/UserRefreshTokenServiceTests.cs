@@ -158,8 +158,6 @@ public sealed partial class UserRefreshTokenServiceTests
     public async Task DeleteExpiredAsync()
     {
         // Arrange
-        Test.UtcNow = DateTimeOffset.UnixEpoch;
-
         var user = await Test.AddUserAsync();
         await Test.AddRefreshTokenAsync(user, Test.UtcNow - TimeSpan.FromDays(1));
         await Test.AddRefreshTokenAsync(user, Test.UtcNow - TimeSpan.FromDays(1));

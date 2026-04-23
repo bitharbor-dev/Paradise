@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.DataAccess.Database.Interceptors.Base;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.EntityFrameworkCore;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.Tests.Miscellaneous.TestImplementations.Core.DataAccess.Database.Interceptors.Base;
 using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;

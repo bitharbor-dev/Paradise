@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Time.Testing;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection;
 using Paradise.ApplicationLogic.Services.Identity.Roles;
@@ -8,7 +9,6 @@ using Paradise.Models;
 using Paradise.Models.Domain.Identity.Roles;
 using Paradise.Models.Domain.Identity.Users;
 using Paradise.Models.WebApi.Services.Authentication;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.Domain.Events;
 using Paradise.Tests.Miscellaneous.TestDoubles.Stubs.Core.ApplicationLogic.Infrastructure.DataProtection;
 using Paradise.Tests.Miscellaneous.TestDoubles.Stubs.Core.ApplicationLogic.Services.Identity.Roles;

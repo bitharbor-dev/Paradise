@@ -1,10 +1,10 @@
-﻿using Paradise.ApplicationLogic.Infrastructure.Communication.Implementation;
+﻿using Microsoft.Extensions.Time.Testing;
+using Paradise.ApplicationLogic.Infrastructure.Communication.Implementation;
 using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
 using Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess.Repositories.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.ApplicationLogic.Infrastructure.Communication.Email;
 using System.Globalization;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;

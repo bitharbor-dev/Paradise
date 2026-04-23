@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.ApplicationLogic.EventListeners.Domain.Identity.Users;
 using Paradise.ApplicationLogic.Services.Identity.Roles;
 using Paradise.Domain.Identity.Roles;
@@ -7,7 +8,6 @@ using Paradise.Domain.Identity.Users;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infrastructure.Identity;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Services.Identity.Roles;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 
 namespace Paradise.ApplicationLogic.Tests.Unit.EventListeners.Domain.Identity.Users;
 

@@ -1,7 +1,7 @@
-﻿using Paradise.DataAccess.Repositories.Implementation;
+﻿using Microsoft.Extensions.Time.Testing;
+using Paradise.DataAccess.Repositories.Implementation;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess.Repositories.Domain.Identity.Users;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 
 namespace Paradise.DataAccess.Tests.Unit.Repositories.Implementation;
 

@@ -1,8 +1,8 @@
-﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
+﻿using Microsoft.Extensions.Time.Testing;
+using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
 using Paradise.DataAccess.Repositories.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Implementation;
 using Paradise.DataAccess.Tests.Unit.Repositories.Base.Implementation;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using System.Globalization;
 
 namespace Paradise.DataAccess.Tests.Unit.Repositories.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Implementation;

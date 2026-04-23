@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.ApplicationLogic.Services.Identity.Users.Implementation;
 using Paradise.Domain.Identity.Users;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infrastructure.Identity;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess.Repositories;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 
 namespace Paradise.ApplicationLogic.Tests.Unit.Services.Identity.Users;
 

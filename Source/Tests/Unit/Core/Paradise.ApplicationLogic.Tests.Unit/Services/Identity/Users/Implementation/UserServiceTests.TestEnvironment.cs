@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.ApplicationLogic.Options.Models;
 using Paradise.ApplicationLogic.Services.Identity.Users.Implementation;
@@ -10,7 +11,6 @@ using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infra
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infrastructure.Identity;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.Domain.Events;
 using System.Security.Claims;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;

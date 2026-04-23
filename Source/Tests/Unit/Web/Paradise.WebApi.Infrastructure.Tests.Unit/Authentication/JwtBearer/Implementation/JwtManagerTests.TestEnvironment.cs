@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Time.Testing;
 using Microsoft.IdentityModel.Tokens;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Implementation;
 using Paradise.WebApi.Infrastructure.Options;
 using System.Diagnostics.CodeAnalysis;

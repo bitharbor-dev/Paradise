@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.ApplicationLogic.EventListeners.Domain.Identity.Users;
 using Paradise.ApplicationLogic.Infrastructure.Communication;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection;
@@ -10,7 +11,6 @@ using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infra
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infrastructure.DataProtection;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess.Repositories;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
 using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.ApplicationLogic.Infrastructure.Communication.Email;
 using System.Globalization;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;

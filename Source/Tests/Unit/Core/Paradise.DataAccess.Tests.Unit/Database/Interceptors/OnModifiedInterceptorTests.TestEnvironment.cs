@@ -1,5 +1,5 @@
-﻿using Paradise.DataAccess.Database.Interceptors;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.System;
+﻿using Microsoft.Extensions.Time.Testing;
+using Paradise.DataAccess.Database.Interceptors;
 
 namespace Paradise.DataAccess.Tests.Unit.Database.Interceptors;
 
