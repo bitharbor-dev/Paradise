@@ -55,8 +55,8 @@ steps:
   continueOnError: true
   inputs:
     command: 'test'
-    projects: '${{ parameters.solution }}'
     arguments: >
+        --solution ${{ parameters.solution }}
         --configuration ${{ parameters.configuration }}
         --verbosity ${{ parameters.verbosity }}
         --no-restore

@@ -5,9 +5,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-
 		<NoWarn>CA1707</NoWarn>
 	</PropertyGroup>
 
