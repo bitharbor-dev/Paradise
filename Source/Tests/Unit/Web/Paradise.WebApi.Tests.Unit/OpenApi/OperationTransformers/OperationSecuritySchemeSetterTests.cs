@@ -80,7 +80,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
     /// <summary>
     /// The <see cref="OperationSecuritySchemeSetter.TransformAsync"/> method should
     /// throw the <see cref="ArgumentNullException"/> if the input
-    /// <see cref="OpenApiOperation"/> is equal to null.
+    /// <see cref="OpenApiOperation"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
     public async Task TransformAsync_ThrowsOnNullOperation()
@@ -97,7 +97,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
     /// <summary>
     /// The <see cref="OperationSecuritySchemeSetter.TransformAsync"/> method should
     /// throw the <see cref="ArgumentNullException"/> if the input
-    /// <see cref="OpenApiOperationTransformerContext"/> is equal to null.
+    /// <see cref="OpenApiOperationTransformerContext"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
     public async Task TransformAsync_ThrowsOnNullContext()

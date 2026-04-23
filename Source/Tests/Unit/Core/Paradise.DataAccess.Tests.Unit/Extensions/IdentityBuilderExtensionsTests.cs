@@ -53,8 +53,8 @@ public sealed class IdentityBuilderExtensionsTests
         var builder = null as Identity.IdentityBuilder;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            IdentityBuilderExtensions.AddDataAccessStores(builder!));
+        Assert.Throws<ArgumentNullException>(()
+            => builder!.AddDataAccessStores());
     }
     #endregion
 }

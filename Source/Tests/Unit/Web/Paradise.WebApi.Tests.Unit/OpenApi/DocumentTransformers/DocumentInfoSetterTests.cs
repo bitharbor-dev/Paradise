@@ -31,10 +31,10 @@ public sealed partial class DocumentInfoSetterTests
     /// <summary>
     /// The <see cref="DocumentInfoSetter.TransformAsync"/> method should
     /// throw the <see cref="ArgumentNullException"/> if the input
-    /// <see cref="OpenApiDocument"/> is equal to null.
+    /// <see cref="OpenApiDocument"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
-    public async Task TransformAsync_ThrowsOnNullDocument()
+    public async Task TransformAsync_ThrowsOnNull()
     {
         // Arrange
         var transformer = Test.CreateTransformer();

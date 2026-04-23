@@ -123,7 +123,7 @@ internal sealed class DomainEventDispatcher(ILogger<DomainEventDispatcher> logge
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    private async Task DispatchInternalAsync<TEvent>(IDomainEvent domainEvent, CancellationToken cancellationToken)
+    private async Task DispatchInternalAsync<TEvent>(TEvent domainEvent, CancellationToken cancellationToken)
         where TEvent : IDomainEvent
     {
         var listeners = serviceProvider.GetServices<IDomainEventListener<TEvent>>();
@@ -134,7 +134,7 @@ internal sealed class DomainEventDispatcher(ILogger<DomainEventDispatcher> logge
 
         foreach (var group in orderedGroups)
         {
-            var tasks = group.Select(listener => ProcessInternalAsync(listener, (TEvent)domainEvent, cancellationToken));
+            var tasks = group.Select(listener => ProcessInternalAsync(listener, domainEvent, cancellationToken));
 
             await Task.WhenAll(tasks)
                 .ConfigureAwait(false);
@@ -158,10 +158,10 @@ internal sealed class DomainEventDispatcher(ILogger<DomainEventDispatcher> logge
     [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Omitted for readability.")]
     private static int GetListenerProcessingOrder<TEvent>(IDomainEventListener<TEvent> listener) where TEvent : IDomainEvent
     {
-        if (listener is not IOrderedDomainEventListener<TEvent> orderedListener)
-            return int.MaxValue;
+        if (listener is IOrderedDomainEventListener<TEvent> orderedListener)
+            return orderedListener.ProcessingOrder;
 
-        return orderedListener.ProcessingOrder;
+        return int.MaxValue;
     }
 
     /// <summary>

@@ -110,7 +110,7 @@ public sealed class ClaimsPrincipalExtensionsTests
     /// <see cref="ClaimsPrincipal"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
-    public void GetGuidClaim_ThrowsOnNullPrincipal()
+    public void GetGuidClaim_ThrowsOnNull()
     {
         // Arrange
         var principal = null as ClaimsPrincipal;
@@ -168,7 +168,7 @@ public sealed class ClaimsPrincipalExtensionsTests
     /// <see cref="ClaimsPrincipal"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
-    public void FindValues_ThrowsOnNullPrincipal()
+    public void FindValues_ThrowsOnNull()
     {
         // Arrange
         var principal = null as ClaimsPrincipal;

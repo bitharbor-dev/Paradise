@@ -166,8 +166,8 @@ public sealed class RequestCultureConverterTests
         var value = "en-US|fr-FR|de-DE";
 
         // Act & Assert
-        Assert.Throws<FormatException>(() =>
-            Converter.ConvertFrom(context: null, culture: null, value: value));
+        Assert.Throws<FormatException>(()
+            => Converter.ConvertFrom(context: null, culture: null, value: value));
     }
 
     /// <summary>
@@ -182,8 +182,8 @@ public sealed class RequestCultureConverterTests
         var value = new object();
 
         // Act & Assert
-        Assert.Throws<NotSupportedException>(() =>
-            Converter.ConvertFrom(context: null, culture: null, value: value));
+        Assert.Throws<NotSupportedException>(()
+            => Converter.ConvertFrom(context: null, culture: null, value: value));
     }
 
     /// <summary>
@@ -226,8 +226,8 @@ public sealed class RequestCultureConverterTests
         var value = new object();
 
         // Act & Assert
-        Assert.Throws<NotSupportedException>(() =>
-            Converter.ConvertTo(null, null, value, typeof(object)));
+        Assert.Throws<NotSupportedException>(()
+            => Converter.ConvertTo(null, null, value, typeof(object)));
     }
     #endregion
 }

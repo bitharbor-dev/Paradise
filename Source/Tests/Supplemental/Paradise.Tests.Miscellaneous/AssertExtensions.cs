@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Paradise.Models;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Lifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime;
 
@@ -8,6 +9,7 @@ namespace Paradise.Tests.Miscellaneous;
 /// <summary>
 /// Contains extension methods for the <see cref="Assert"/> <see langword="class"/>.
 /// </summary>
+[SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "False positive on extension members.")]
 public static class AssertExtensions
 {
     #region Constants

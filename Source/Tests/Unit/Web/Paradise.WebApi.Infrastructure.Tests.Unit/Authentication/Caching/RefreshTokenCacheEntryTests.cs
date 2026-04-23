@@ -1,4 +1,5 @@
 ﻿using Paradise.WebApi.Infrastructure.Authentication.Caching;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.WebApi.Infrastructure.Tests.Unit.Authentication.Caching;
 
@@ -224,7 +225,7 @@ public sealed class RefreshTokenCacheEntryTests
     /// return <see langword="false"/> if one of the values being compared
     /// is <see langword="null"/>.
     /// </summary>
-    [Fact]
+    [Fact, SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Test scenario.")]
     public void Equals_Overload_ReturnsFalseOnNull()
     {
         // Arrange

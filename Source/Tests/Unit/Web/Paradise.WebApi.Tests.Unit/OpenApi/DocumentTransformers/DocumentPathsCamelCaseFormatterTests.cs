@@ -62,7 +62,7 @@ public sealed partial class DocumentPathsCamelCaseFormatterTests
     /// <see cref="OpenApiDocument"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
-    public async Task FormatPathsToCamelCase_ThrowsOnNullDocument()
+    public async Task FormatPathsToCamelCase_ThrowsOnNull()
     {
         // Arrange
         var transformer = new DocumentPathsCamelCaseFormatter();

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 using static Paradise.Localization.DataRepresentation.RepresentationMessages;
 using static Paradise.Models.ErrorCode;
@@ -13,7 +14,7 @@ public sealed class ApplicationErrorTests
 {
     #region Properties
     /// <summary>
-    ///
+    /// The <see cref="ApplicationError.ToString"/> method format string.
     /// </summary>
     public CompositeFormat ToStringFormat { get; } = Parse(ApplicationErrorToStringFormat);
     #endregion
@@ -142,7 +143,7 @@ public sealed class ApplicationErrorTests
     /// return <see langword="false"/> if one of the values being compared
     /// is <see langword="null"/>.
     /// </summary>
-    [Fact]
+    [Fact, SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Test scenario.")]
     public void Equals_Overload_ReturnsFalseOnNull()
     {
         // Arrange

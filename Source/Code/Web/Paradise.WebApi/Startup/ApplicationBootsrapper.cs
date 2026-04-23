@@ -31,14 +31,20 @@ internal sealed class ApplicationBootstrapper(IEnumerable<IPreBuildStep> preBuil
         var preContext = new PreBuildContext(builder);
 
         foreach (var step in preBuildSteps)
-            await step.ExecuteAsync(preContext);
+        {
+            await step.ExecuteAsync(preContext)
+                .ConfigureAwait(false);
+        }
 
         var app = builder.Build();
 
         var postContext = new PostBuildContext(app);
 
         foreach (var step in postBuildSteps)
-            await step.ExecuteAsync(postContext);
+        {
+            await step.ExecuteAsync(postContext)
+                .ConfigureAwait(false);
+        }
 
         return app;
     }

@@ -118,8 +118,8 @@ public sealed partial class ApplicationActionResultTests
         var response = null as HttpResponse;
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(
-                () => Test.Target.WriteResponseContentAsync(response!));
+        await Assert.ThrowsAsync<ArgumentNullException>(()
+            => Test.Target.WriteResponseContentAsync(response!));
     }
     #endregion
 }

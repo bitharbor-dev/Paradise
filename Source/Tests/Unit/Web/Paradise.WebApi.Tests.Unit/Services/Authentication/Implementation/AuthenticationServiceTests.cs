@@ -408,6 +408,8 @@ public sealed partial class AuthenticationServiceTests
     [Theory, MemberData(nameof(LoginAsync_ReturnsTwoFactorToken_MemberData))]
     public async Task LoginAsync_ReturnsTwoFactorToken(LoginModel model)
     {
+        ArgumentNullException.ThrowIfNull(model);
+
         // Arrange
         Test.SetupLoginSuccessWithTwoFactorAuthentication(model, out var twoFactorToken);
 

@@ -11,7 +11,7 @@ public sealed class EmailModelTests
     /// <summary>
     /// The <see cref="EmailModel(string, string, string, BaseEmailModel)"/> constructor should
     /// throw the <see cref="ArgumentNullException"/> if the input
-    /// <see cref="BaseEmailModel"/> is equal to null.
+    /// <see cref="BaseEmailModel"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
     public void Constructor_ThrowsOnNull()

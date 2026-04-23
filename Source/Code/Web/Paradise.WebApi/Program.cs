@@ -16,7 +16,8 @@ var postBuildSteps = new IPostBuildStep[]
 };
 
 var bootstrapper = new ApplicationBootstrapper(preBuildSteps, postBuildSteps);
-var app = await bootstrapper.BootstrapAsync(args);
+var app = await bootstrapper.BootstrapAsync(args)
+    .ConfigureAwait(false);
 
 await app.RunAsync()
     .ConfigureAwait(false);

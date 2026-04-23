@@ -32,8 +32,11 @@ public sealed class ValueObjectEqualityComparer : IEqualityComparer<IValueObject
         // Both objects are not null: compare them and return the result
         if (x is not null && y is not null)
         {
+            var xComponents = x.GetEqualityComponents();
+            var yComponents = y.GetEqualityComponents();
+
             return x.GetType() == y.GetType()
-                && x.GetEqualityComponents().SequenceEqual(y.GetEqualityComponents());
+                && xComponents.SequenceEqual(yComponents);
         }
         // One object is null and another one is not: just return false
         else if (x is null ^ y is null)

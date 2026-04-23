@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Options;
-using Paradise.ApplicationLogic.Infrastructure.Seed;
+﻿using Paradise.ApplicationLogic.Infrastructure.Seed;
 using Paradise.DataAccess.Seed.Providers;
 
 namespace Paradise.WebApi.Startup.Steps.PostBuild;

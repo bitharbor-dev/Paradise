@@ -1,6 +1,6 @@
 {
   "ApplicationOptions": {
-    "ApiUrl": "https://paradise-web-api-staging.azurewebsites.net"
+    "ApiUrl": "https://web-api-staging.com"
   },
   "ConnectionStrings": {
     //"InfrastructureConnectionString": "Do not expose connection strings in the repository.",
