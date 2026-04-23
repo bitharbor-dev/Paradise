@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Paradise.ApplicationLogic.Extensions;
 using Paradise.Common;
+using Paradise.Common.Extensions;
 using Paradise.WebApi.Extensions;
 using Paradise.WebApi.Infrastructure.Binders.Providers;
 using Paradise.WebApi.Infrastructure.Filters.ExceptionHandling;
@@ -57,7 +59,7 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
         services.AddRequestLocalization(configuration);
 
         if (EnvironmentNames.IsProduction(environment.EnvironmentName))
-            services.AddApplicationInsightsTelemetry(configuration);
+            services.AddOpenTelemetry().UseAzureMonitor(configuration.BindOptionalSection);
     }
 
     /// <summary>

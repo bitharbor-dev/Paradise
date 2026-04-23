@@ -13,6 +13,9 @@ public static class IConfigurationExtensions
     /// Attempts to bind the given object <paramref name="instance"/>
     /// to configuration values by matching property names against configuration keys in the configuration section
     /// with the name of the <paramref name="instance"/> type name.
+    /// <para>
+    /// Fails on non-existing configuration section.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">
     /// Instance type which name is used as a section name.
@@ -25,8 +28,40 @@ public static class IConfigurationExtensions
     /// </param>
     public static void BindSection<T>(this IConfiguration configuration, T instance)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+
         var sectionName = typeof(T).Name;
         var section = configuration.GetRequiredSection(sectionName);
+
+        section.Bind(instance);
+    }
+
+    /// <summary>
+    /// Attempts to bind the given object <paramref name="instance"/>
+    /// to configuration values by matching property names against configuration keys in the configuration section
+    /// with the name of the <paramref name="instance"/> type name.
+    /// <para>
+    /// Skips on non-existing configuration section.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="T">
+    /// Instance type which name is used as a section name.
+    /// </typeparam>
+    /// <param name="configuration">
+    /// The configuration instance containing the target configuration section.
+    /// </param>
+    /// <param name="instance">
+    /// The object to bind.
+    /// </param>
+    public static void BindOptionalSection<T>(this IConfiguration configuration, T instance)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        var sectionName = typeof(T).Name;
+        var section = configuration.GetSection(sectionName);
+
+        if (!section.Exists())
+            return;
 
         section.Bind(instance);
     }
