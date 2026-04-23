@@ -24,9 +24,9 @@ parameters:
 
 steps:
 
-- template: Parts/execute-git-version-tool.yml
+- template: ../Parts/execute-git-version-tool.yml
 
-- template: Parts/build-and-test.yml
+- template: ../Parts/build-and-test.yml
   parameters:
     verbosity: '${{ parameters.verbosity }}'
     configuration: '${{ parameters.configuration }}'

@@ -16,11 +16,10 @@ parameters:
 
 steps:
 
-- powershell: |
-    $source = "${{ parameters.source }}"
-    $destination = "${{ parameters.destination }}"
-
-    Write-Host "Copying $source to $destination."
-
-    Copy-Item -Path $source -Destination $destination
+- task: PowerShell@2
   displayName: '${{ parameters.displayName }}'
+  inputs:
+    filePath: 'Pipelines\Scripts\copy-file.ps1'
+    arguments: >
+      -Source "${{ parameters.source }}"
+      -Destination "${{ parameters.destination }}"

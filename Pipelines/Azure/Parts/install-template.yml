@@ -1,0 +1,32 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: location
+    displayName: 'Template location'
+    type: string
+    default: ''
+
+  - name: shortName
+    displayName: 'Short name of the template. Must be equal to the value of "shortName" property in "template.json"'
+    type: string
+    default: ''
+
+  - name: templateToken
+    displayName: 'Must be equal to the value of "sourceName" property in "template.json"'
+    type: string
+    default: ''
+
+steps:
+
+- task: PowerShell@2
+  displayName: '${{ parameters.displayName }}'
+  inputs:
+    filePath: 'Pipelines\Scripts\install-template.ps1'
+    arguments: >
+      -WorkingDirectory "$(Agent.TempDirectory)\TemplateTest"
+      -Location "${{ parameters.location }}"
+      -ShortName "${{ parameters.shortName }}"
+      -TemplateToken "${{ parameters.templateToken }}"

@@ -1,0 +1,37 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: workingDirectory
+    displayName: 'A directory where file renaming is performed'
+    type: string
+    default: ''
+
+  - name: textToReplace
+    displayName: 'A double semicolon separated list of text segments to replace in file contents'
+    type: string
+    default: ''
+
+  - name: replaceWith
+    displayName: 'A replacement for "textToReplace"'
+    type: string
+    default: ''
+
+  - name: skipFiles
+    displayName: 'A semicolon separated list of files to omit when modifying files content'
+    type: string
+    default: ''
+
+steps:
+
+- task: PowerShell@2
+  displayName: '${{ parameters.displayName }}'
+  inputs:
+    filePath: 'Pipelines\Scripts\replace-text.ps1'
+    arguments: >
+      -WorkingDirectory "${{ parameters.workingDirectory }}"
+      -TextToReplace "${{ parameters.textToReplace }}"
+      -ReplaceWith "${{ parameters.replaceWith }}"
+      -SkipFiles "${{ parameters.skipFiles }}"

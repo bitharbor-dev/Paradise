@@ -1,23 +1,4 @@
 parameters:
-  - name: verbosity
-    displayName: 'Verbosity level'
-    type: string
-    default: 'minimal'
-    values:
-      - quiet
-      - minimal
-      - normal
-      - detailed
-      - diagnostic
-
-  - name: configuration
-    displayName: 'Build configuration'
-    type: string
-    default: 'Release'
-    values:
-      - Release
-      - Debug
-
   - name: workingDirectory
     displayName: 'Template transformation working directory'
     type: string
@@ -55,27 +36,27 @@ parameters:
 
 steps:
 
-- template: Parts/copy-files.yml
+- template: ../Parts/copy-files.yml
   parameters:
     displayName: 'Copy template items'
     source: '$(Build.SourcesDirectory)'
     destination: '${{ parameters.workingDirectory }}\pack\content'
     exclusions: '${{ parameters.exclusions }}'
 
-- template: Parts/copy-file.yml
+- template: ../Parts/copy-file.yml
   parameters:
     displayName: 'Copy template project file'
     source: '$(Build.SourcesDirectory)\${{ parameters.templateProjectLocation }}template.xml'
     destination: '${{ parameters.workingDirectory }}\pack\template.csproj'
 
-- template: Parts/rename-items.yml
+- template: ../Parts/rename-items.yml
   parameters:
     displayName: 'Rename template files'
     workingDirectory: '${{ parameters.workingDirectory }}\pack\content'
     textToReplace: '${{ parameters.textToReplace }}'
     replaceWith: '${{ parameters.templateToken }}'
 
-- template: Parts/replace-text.yml
+- template: ../Parts/replace-text.yml
   parameters:
     displayName: 'Place template token into files'
     workingDirectory: '${{ parameters.workingDirectory }}\pack\content'
@@ -83,7 +64,7 @@ steps:
     replaceWith: '${{ parameters.templateToken }}'
     skipFiles: '${{ parameters.preserveContent }}'
 
-- template: Parts/install-template.yml
+- template: ../Parts/install-template.yml
   parameters:
     displayName: 'Install and validate template'
     location: '${{ parameters.workingDirectory }}\pack\content'

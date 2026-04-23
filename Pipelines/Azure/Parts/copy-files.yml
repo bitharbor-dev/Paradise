@@ -1,0 +1,31 @@
+parameters:
+  - name: displayName
+    displayName: 'Template display name'
+    type: string
+    default: ''
+
+  - name: source
+    displayName: 'Source directory'
+    type: string
+    default: ''
+
+  - name: destination
+    displayName: 'Destination path'
+    type: string
+    default: ''
+
+  - name: exclusions
+    displayName: 'A semicolon separated list of files to omit when copying. Relative to "source"'
+    type: string
+    default: ''
+
+steps:
+
+- task: PowerShell@2
+  displayName: '${{ parameters.displayName }}'
+  inputs:
+    filePath: 'Pipelines\Scripts\copy-files.ps1'
+    arguments: >
+      -Source "${{ parameters.source }}"
+      -Destination "${{ parameters.destination }}"
+      -Exclusions "${{ parameters.exclusions }}"
