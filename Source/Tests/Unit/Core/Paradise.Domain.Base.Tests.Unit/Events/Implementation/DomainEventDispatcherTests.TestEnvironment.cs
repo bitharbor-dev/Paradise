@@ -177,7 +177,7 @@ public sealed partial class DomainEventDispatcherTests
                 {
                     var monitor = provider.GetRequiredService<IOptionsMonitor<DomainEventRetryOptions>>();
 
-                    return OptionsBuilder.Create(monitor.Get((string)key));
+                    return OptionsBuilder.Create(monitor.Get((string)key!));
                 });
             }
 
