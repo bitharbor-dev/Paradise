@@ -27,20 +27,21 @@ internal sealed class SendTwoFactorAuthenticationCode(IServiceProvider servicePr
     public async Task ProcessAsync(TwoFactorAuthenticationOccurringEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var scope = serviceProvider.CreateAsyncScope();
-        var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
-        var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var request = new EmailSendRequestModel(
-            basicData: new([domainEvent.EmailAddress]),
-            templateName: emailTemplateOptions.Value.TwoFactorVerificationTemplateName,
-            culture: domainEvent.UserCulture,
-            bodyArgs: [domainEvent.VerificationCode]);
+        await using (scope.ConfigureAwait(false))
+        {
+            var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
+            var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        await communicationClient.SendEmailAsync(request, cancellationToken)
-            .ConfigureAwait(false);
+            var request = new EmailSendRequestModel(
+                basicData: new([domainEvent.EmailAddress]),
+                templateName: emailTemplateOptions.Value.TwoFactorVerificationTemplateName,
+                culture: domainEvent.UserCulture,
+                bodyArgs: [domainEvent.VerificationCode]);
 
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            await communicationClient.SendEmailAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
     #endregion
 }

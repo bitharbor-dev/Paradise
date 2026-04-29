@@ -27,19 +27,20 @@ internal sealed class SendPasswordChangedNotification(IServiceProvider servicePr
     public async Task ProcessAsync(PasswordResetCompletedEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var scope = serviceProvider.CreateAsyncScope();
-        var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
-        var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var request = new EmailSendRequestModel(
-            basicData: new([domainEvent.EmailAddress]),
-            templateName: emailTemplateOptions.Value.PasswordChangedNotificationTemplateName,
-            culture: domainEvent.UserCulture);
+        await using (scope.ConfigureAwait(false))
+        {
+            var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
+            var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        await communicationClient.SendEmailAsync(request, cancellationToken)
-            .ConfigureAwait(false);
+            var request = new EmailSendRequestModel(
+                basicData: new([domainEvent.EmailAddress]),
+                templateName: emailTemplateOptions.Value.PasswordChangedNotificationTemplateName,
+                culture: domainEvent.UserCulture);
 
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            await communicationClient.SendEmailAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
     #endregion
 }

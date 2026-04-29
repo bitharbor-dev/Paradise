@@ -32,23 +32,23 @@ internal sealed class DataBootstrap : IPostBuildStep
     {
         var scope = provider.CreateAsyncScope();
 
-        var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
-        var seedDataProvider = scope.ServiceProvider.GetRequiredService<ISeedDataProvider>();
+        await using (scope.ConfigureAwait(false))
+        {
+            var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
+            var seedDataProvider = scope.ServiceProvider.GetRequiredService<ISeedDataProvider>();
 
-        await seeder.EnsureStorageAvailableAsync(cancellationToken)
-            .ConfigureAwait(false);
+            await seeder.EnsureStorageAvailableAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-        await seeder.SeedRolesAsync(seedDataProvider.GetSeedRoles(), cancellationToken)
-            .ConfigureAwait(false);
+            await seeder.SeedRolesAsync(seedDataProvider.GetSeedRoles(), cancellationToken)
+                .ConfigureAwait(false);
 
-        await seeder.SeedUsersAsync(seedDataProvider.GetSeedUsers(), cancellationToken)
-            .ConfigureAwait(false);
+            await seeder.SeedUsersAsync(seedDataProvider.GetSeedUsers(), cancellationToken)
+                .ConfigureAwait(false);
 
-        await seeder.SeedEmailTemplatesAsync(seedDataProvider.GetSeedEmailTemplates(), cancellationToken)
-            .ConfigureAwait(false);
-
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            await seeder.SeedEmailTemplatesAsync(seedDataProvider.GetSeedEmailTemplates(), cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
     #endregion
 }

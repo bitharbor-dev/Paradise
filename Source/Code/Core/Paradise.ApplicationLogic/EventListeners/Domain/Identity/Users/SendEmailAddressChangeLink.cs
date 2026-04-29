@@ -39,35 +39,36 @@ internal sealed class SendEmailAddressChangeLink(IServiceProvider serviceProvide
     public override async Task ProcessAsync(EmailAddressResetRequestedEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var scope = _serviceProvider.CreateAsyncScope();
-        var applicationOptions = scope.ServiceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
-        var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
-        var timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>();
-        var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var timeout = applicationOptions.Value.Timeout.ResetEmailAddressTimeout;
-        var expiryDate = timeProvider.GetUtcNow().Add(timeout);
+        await using (scope.ConfigureAwait(false))
+        {
+            var applicationOptions = scope.ServiceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
+            var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
+            var timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>();
+            var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var identityToken = new IdentityToken(domainEvent.CurrentEmailAddress,
-                                              domainEvent.ChangeEmailAddressToken,
-                                              domainEvent.NewEmailAddress,
-                                              expiryDate);
+            var timeout = applicationOptions.Value.Timeout.ResetEmailAddressTimeout;
+            var expiryDate = timeProvider.GetUtcNow().Add(timeout);
 
-        var link = CreateIdentityTokenLink(identityToken,
-                                           applicationOptions.Value.ApiUrl,
-                                           StaticRoutes.ResetEmailAddress,
-                                           new() { ["culture"] = domainEvent.UserCulture.Name });
+            var identityToken = new IdentityToken(domainEvent.CurrentEmailAddress,
+                                                  domainEvent.ChangeEmailAddressToken,
+                                                  domainEvent.NewEmailAddress,
+                                                  expiryDate);
 
-        var request = new EmailSendRequestModel(
-            basicData: new([domainEvent.NewEmailAddress]),
-            templateName: emailTemplateOptions.Value.EmailAddressChangeLinkTemplateName,
-            culture: domainEvent.UserCulture,
-            bodyArgs: [domainEvent.UserName, link]);
+            var link = CreateIdentityTokenLink(identityToken,
+                                               applicationOptions.Value.ApiUrl,
+                                               StaticRoutes.ResetEmailAddress,
+                                               new() { ["culture"] = domainEvent.UserCulture.Name });
 
-        await communicationClient.SendEmailAsync(request, cancellationToken)
-            .ConfigureAwait(false);
+            var request = new EmailSendRequestModel(
+                basicData: new([domainEvent.NewEmailAddress]),
+                templateName: emailTemplateOptions.Value.EmailAddressChangeLinkTemplateName,
+                culture: domainEvent.UserCulture,
+                bodyArgs: [domainEvent.UserName, link]);
 
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            await communicationClient.SendEmailAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
     #endregion
 }

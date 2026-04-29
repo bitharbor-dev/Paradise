@@ -23,32 +23,34 @@ internal sealed class AssignDefaultUserRoles(IServiceProvider serviceProvider) :
     public async Task ProcessAsync(EmailAddressConfirmedEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var scope = serviceProvider.CreateAsyncScope();
-        var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
 
-        var errors = new List<ApplicationError>();
-
-        var defaultRolesResult = await roleService.GetAllAsync(true, cancellationToken)
-            .ConfigureAwait(false);
-
-        if (defaultRolesResult.Value is not null)
+        await using (scope.ConfigureAwait(false))
         {
-            foreach (var role in defaultRolesResult.Value)
+
+            var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
+
+            var errors = new List<ApplicationError>();
+
+            var defaultRolesResult = await roleService.GetAllAsync(true, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (defaultRolesResult.Value is not null)
             {
-                var assignResult = await roleService.AssignAsync(role.Id, domainEvent.UserId, cancellationToken)
-                    .ConfigureAwait(false);
+                foreach (var role in defaultRolesResult.Value)
+                {
+                    var assignResult = await roleService.AssignAsync(role.Id, domainEvent.UserId, cancellationToken)
+                        .ConfigureAwait(false);
 
-                errors.AddRange(assignResult.Errors);
+                    errors.AddRange(assignResult.Errors);
+                }
             }
-        }
 
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            if (errors.Count > 0)
+            {
+                var message = string.Join(Environment.NewLine, errors);
 
-        if (errors.Count > 0)
-        {
-            var message = string.Join(Environment.NewLine, errors);
-
-            throw new InvalidOperationException(message);
+                throw new InvalidOperationException(message);
+            }
         }
     }
     #endregion

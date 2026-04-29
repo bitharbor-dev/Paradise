@@ -49,16 +49,11 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
     {
         var scope = serviceProvider.CreateAsyncScope();
 
-        try
+        await using (scope.ConfigureAwait(false))
         {
             var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
             await userService.CancelExpiredDeletionRequestsAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
-        finally
-        {
-            await scope.DisposeAsync()
                 .ConfigureAwait(false);
         }
     }
@@ -83,16 +78,11 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
     {
         var scope = serviceProvider.CreateAsyncScope();
 
-        try
+        await using (scope.ConfigureAwait(false))
         {
             var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
             await userService.DeleteUnconfirmedUsersAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
-        finally
-        {
-            await scope.DisposeAsync()
                 .ConfigureAwait(false);
         }
     }
@@ -115,17 +105,11 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
                                                       CancellationToken cancellationToken)
     {
         var scope = serviceProvider.CreateAsyncScope();
-
-        try
+        await using (scope.ConfigureAwait(false))
         {
             var userRefreshTokenService = scope.ServiceProvider.GetRequiredService<IUserRefreshTokenService>();
 
             await userRefreshTokenService.DeleteExpiredAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
-        finally
-        {
-            await scope.DisposeAsync()
                 .ConfigureAwait(false);
         }
     }

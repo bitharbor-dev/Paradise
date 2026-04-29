@@ -34,20 +34,21 @@ internal sealed class SendEmailAddressChangingNotification(IServiceProvider serv
     public async Task ProcessAsync(EmailAddressResetRequestedEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var scope = serviceProvider.CreateAsyncScope();
-        var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
-        var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var request = new EmailSendRequestModel(
-            basicData: new([domainEvent.CurrentEmailAddress]),
-            templateName: emailTemplateOptions.Value.EmailAddressChangingNotificationTemplateName,
-            culture: domainEvent.UserCulture,
-            bodyArgs: [domainEvent.UserName, domainEvent.NewEmailAddress]);
+        await using (scope.ConfigureAwait(false))
+        {
+            var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
+            var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        await communicationClient.SendEmailAsync(request, cancellationToken)
-            .ConfigureAwait(false);
+            var request = new EmailSendRequestModel(
+                basicData: new([domainEvent.CurrentEmailAddress]),
+                templateName: emailTemplateOptions.Value.EmailAddressChangingNotificationTemplateName,
+                culture: domainEvent.UserCulture,
+                bodyArgs: [domainEvent.UserName, domainEvent.NewEmailAddress]);
 
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            await communicationClient.SendEmailAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
     #endregion
 }

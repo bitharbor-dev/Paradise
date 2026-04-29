@@ -33,35 +33,36 @@ internal sealed class SendPasswordChangeLink(IServiceProvider serviceProvider)
     public override async Task ProcessAsync(PasswordResetRequestedEvent domainEvent, CancellationToken cancellationToken = default)
     {
         var scope = _serviceProvider.CreateAsyncScope();
-        var applicationOptions = scope.ServiceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
-        var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
-        var timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>();
-        var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var timeout = applicationOptions.Value.Timeout.ResetPasswordTimeout;
-        var expiryDate = timeProvider.GetUtcNow().Add(timeout);
+        await using (scope.ConfigureAwait(false))
+        {
+            var applicationOptions = scope.ServiceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
+            var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
+            var timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>();
+            var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-        var identityToken = new IdentityToken(domainEvent.EmailAddress,
-                                              domainEvent.ChangePasswordToken,
-                                              null,
-                                              expiryDate);
+            var timeout = applicationOptions.Value.Timeout.ResetPasswordTimeout;
+            var expiryDate = timeProvider.GetUtcNow().Add(timeout);
 
-        var link = CreateIdentityTokenLink(identityToken,
-                                           applicationOptions.Value.ApiUrl,
-                                           StaticRoutes.ResetPassword,
-                                           new() { ["culture"] = domainEvent.UserCulture.Name });
+            var identityToken = new IdentityToken(domainEvent.EmailAddress,
+                                                  domainEvent.ChangePasswordToken,
+                                                  null,
+                                                  expiryDate);
 
-        var request = new EmailSendRequestModel(
-            basicData: new([domainEvent.EmailAddress]),
-            templateName: emailTemplateOptions.Value.PasswordChangeLinkTemplateName,
-            culture: domainEvent.UserCulture,
-            bodyArgs: [link]);
+            var link = CreateIdentityTokenLink(identityToken,
+                                               applicationOptions.Value.ApiUrl,
+                                               StaticRoutes.ResetPassword,
+                                               new() { ["culture"] = domainEvent.UserCulture.Name });
 
-        await communicationClient.SendEmailAsync(request, cancellationToken)
-            .ConfigureAwait(false);
+            var request = new EmailSendRequestModel(
+                basicData: new([domainEvent.EmailAddress]),
+                templateName: emailTemplateOptions.Value.PasswordChangeLinkTemplateName,
+                culture: domainEvent.UserCulture,
+                bodyArgs: [link]);
 
-        await scope.DisposeAsync()
-            .ConfigureAwait(false);
+            await communicationClient.SendEmailAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
     #endregion
 }
