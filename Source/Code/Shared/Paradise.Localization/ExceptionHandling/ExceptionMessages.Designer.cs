@@ -70,15 +70,6 @@ namespace Paradise.Localization.ExceptionHandling {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to cast from &apos;{0}&apos; to &apos;{1}&apos;..
-        /// </summary>
-        public static string FailedToCast {
-            get {
-                return ResourceManager.GetString("FailedToCast", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed to create instance of type &apos;{0}&apos;..
         /// </summary>
         public static string FailedToCreateInstanceOfType {
@@ -228,15 +219,6 @@ namespace Paradise.Localization.ExceptionHandling {
         public static string PropertyNotDeclared {
             get {
                 return ResourceManager.GetString("PropertyNotDeclared", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0}{1}{0}Status: {2}{0}.
-        /// </summary>
-        public static string ResultExceptionMessage {
-            get {
-                return ResourceManager.GetString("ResultExceptionMessage", resourceCulture);
             }
         }
     }

@@ -24,32 +24,6 @@ public sealed partial class ExceptionMessages
         => EmptyRecipientsList;
 
     /// <summary>
-    /// Gets the <see cref="FailedToCast"/> formatted message.
-    /// </summary>
-    /// <param name="actualType">
-    /// Input type.
-    /// </param>
-    /// <param name="expectedType">
-    /// Expected type.
-    /// </param>
-    /// <returns>
-    /// A formatted message using the <see cref="FailedToCast"/> format string.
-    /// </returns>
-    public static string GetMessageFailedToCast(Type? actualType, Type expectedType)
-    {
-        ArgumentNullException.ThrowIfNull(expectedType);
-
-        var messageFormat = FailedToCast;
-        var actualTypeName = actualType?.Name;
-        var expectedTypeName = expectedType.Name;
-
-        return string.Format(Culture,
-                             messageFormat,
-                             actualTypeName,
-                             expectedTypeName);
-    }
-
-    /// <summary>
     /// Gets the <see cref="FailedToCreateInstanceOfType"/> formatted message.
     /// </summary>
     /// <param name="type">
@@ -337,29 +311,6 @@ public sealed partial class ExceptionMessages
                              messageFormat,
                              propertyName,
                              entityTypeName);
-    }
-
-    /// <summary>
-    /// Gets the <see cref="ResultExceptionMessage"/> formatted message.
-    /// </summary>
-    /// <param name="details">
-    /// Exception message details.
-    /// </param>
-    /// <param name="status">
-    /// Result status.
-    /// </param>
-    /// <returns>
-    /// A formatted message using the <see cref="ResultExceptionMessage"/> format string.
-    /// </returns>
-    public static string GetMessageResultExceptionMessage(string details, string status)
-    {
-        var messageFormat = ResultExceptionMessage;
-
-        return string.Format(Culture,
-                             messageFormat,
-                             Environment.NewLine,
-                             details,
-                             status);
     }
     #endregion
 }
