@@ -31,7 +31,7 @@ public sealed class ApplicationActionResult(ResultBase result) : IActionResult
         var serviceProvider = context.HttpContext.RequestServices;
         var jsonSerializerOptions = serviceProvider.GetService<IOptions<JsonSerializerOptions>>()?.Value;
 
-        return WriteResponseContentAsync(response, jsonSerializerOptions);
+        return WriteResponseContentAsync(response, jsonSerializerOptions, context.HttpContext.RequestAborted);
     }
 
     /// <summary>
@@ -44,10 +44,15 @@ public sealed class ApplicationActionResult(ResultBase result) : IActionResult
     /// <param name="options">
     /// The <see cref="JsonSerializerOptions"/> instance.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    public async Task WriteResponseContentAsync(HttpResponse response, JsonSerializerOptions? options = null)
+    public async Task WriteResponseContentAsync(HttpResponse response, JsonSerializerOptions? options = null,
+                                                CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(response);
 
@@ -56,7 +61,7 @@ public sealed class ApplicationActionResult(ResultBase result) : IActionResult
 
         response.StatusCode = (int)result.Status.GetStatusCode();
 
-        await response.WriteAsJsonAsync(result, result.GetType(), options, MediaTypeNames.Application.Json)
+        await response.WriteAsJsonAsync(result, result.GetType(), options, MediaTypeNames.Application.Json, cancellationToken)
             .ConfigureAwait(false);
 
         await response.CompleteAsync()

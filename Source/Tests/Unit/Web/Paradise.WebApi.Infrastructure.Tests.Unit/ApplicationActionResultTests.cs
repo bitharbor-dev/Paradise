@@ -75,7 +75,7 @@ public sealed partial class ApplicationActionResultTests
         var context = Test.CreateContext();
 
         // Act
-        await Test.Target.WriteResponseContentAsync(context.HttpContext.Response);
+        await Test.Target.WriteResponseContentAsync(context.HttpContext.Response, null, Token);
 
         // Assert
         Assert.Equal((int)Test.Result.Status.GetStatusCode(), context.HttpContext.Response.StatusCode);
@@ -99,7 +99,7 @@ public sealed partial class ApplicationActionResultTests
         response.OnStarting(() => Task.CompletedTask);
 
         // Act
-        await Test.Target.WriteResponseContentAsync(response);
+        await Test.Target.WriteResponseContentAsync(response, null, Token);
 
         // Assert
         Assert.Equal(expectedStatusCode, response.StatusCode);
@@ -119,7 +119,7 @@ public sealed partial class ApplicationActionResultTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(()
-            => Test.Target.WriteResponseContentAsync(response!));
+            => Test.Target.WriteResponseContentAsync(response!, null, Token));
     }
     #endregion
 }
