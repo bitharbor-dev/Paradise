@@ -52,9 +52,8 @@ public static class LogMessagesDefinition
     private static Dictionary<string, EventId> Map { get; } = new()
     {
         [nameof(AddedSeedItem)] = new(52000, nameof(LogMessages.AddedSeedItem)),
-        [nameof(CriticalResultErrors)] = new(55000, nameof(LogMessages.ResultErrors)),
         [nameof(DatabaseSeedFailure)] = new(55001, nameof(LogMessages.DatabaseSeedFailure)),
-        [nameof(ErrorResultErrors)] = new(54000, nameof(LogMessages.ResultErrors)),
+        [nameof(IdentityFailure)] = new(54000, nameof(LogMessages.IdentityFailure)),
         [nameof(UnhandledExceptionOccurred)] = new(55002, nameof(LogMessages.UnhandledExceptionOccurred)),
         [nameof(UpdatedSeedItem)] = new(52001, nameof(LogMessages.UpdatedSeedItem)),
     };
@@ -69,15 +68,6 @@ public static class LogMessagesDefinition
             LogMessages.AddedSeedItem);
 
     /// <summary>
-    /// Gets an action to be executed while logging the result critical errors.
-    /// </summary>
-    public static Action<ILogger, string, string, Exception?> CriticalResultErrors { get; }
-        = LoggerMessage.Define<string, string>(
-            LogLevel.Critical,
-            Map[nameof(CriticalResultErrors)],
-            LogMessages.ResultErrors);
-
-    /// <summary>
     /// Gets an action to be executed while logging database seed failure.
     /// </summary>
     public static Action<ILogger, string?, Exception?> DatabaseSeedFailure { get; }
@@ -87,13 +77,13 @@ public static class LogMessagesDefinition
             LogMessages.DatabaseSeedFailure);
 
     /// <summary>
-    /// Gets an action to be executed while logging the result errors.
+    /// Gets an action to be executed while logging the identity failure.
     /// </summary>
-    public static Action<ILogger, string, string, Exception?> ErrorResultErrors { get; }
+    public static Action<ILogger, string, string, Exception?> IdentityFailure { get; }
         = LoggerMessage.Define<string, string>(
-            LogLevel.Error,
-            Map[nameof(ErrorResultErrors)],
-            LogMessages.ResultErrors);
+            LogLevel.Critical,
+            Map[nameof(IdentityFailure)],
+            LogMessages.IdentityFailure);
 
     /// <summary>
     /// Gets an action to be executed while logging an unhandled exception.

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Paradise.ApplicationLogic.Extensions;
+using Paradise.Common.Extensions;
 using Paradise.Models;
 using Paradise.WebApi.Infrastructure.Extensions;
 
@@ -40,12 +40,9 @@ public sealed class ExceptionFilter : IExceptionFilter, IOrderedFilter
             .RequestServices
             .GetRequiredService<ILogger<ExceptionFilter>>();
 
-        var result = new Result(OperationStatus.Failure);
-        result.AddException(context.Exception);
+        logger.LogUnhandledException(context.Exception);
 
-        logger.LogResultErrors(result.Errors, result.CapturedException, true);
-
-        context.Result = result.AsActionResult();
+        context.Result = new Result(OperationStatus.Failure, ErrorCode.DefaultError).AsActionResult();
         context.ExceptionHandled = true;
     }
     #endregion

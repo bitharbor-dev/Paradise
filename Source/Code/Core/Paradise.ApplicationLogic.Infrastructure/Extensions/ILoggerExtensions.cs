@@ -28,7 +28,7 @@ public static class ILoggerExtensions
 
         var errors = identityResult.Errors.Select(error => error.Description);
 
-        CriticalResultErrors(logger, NewLine, string.Join(NewLine, errors), null);
+        IdentityFailure(logger, NewLine, string.Join(NewLine, errors), null);
     }
     #endregion
 

@@ -24,7 +24,6 @@ public sealed class ResultBaseTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Null(result.CapturedException);
         Assert.Equal(Success, result.Status);
         Assert.Empty(result.Errors);
     }
@@ -44,7 +43,6 @@ public sealed class ResultBaseTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Null(result.CapturedException);
         Assert.Equal(status, result.Status);
         Assert.Empty(result.Errors);
     }
@@ -67,7 +65,6 @@ public sealed class ResultBaseTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Null(result.CapturedException);
         Assert.Equal(status, result.Status);
 
         var error = Assert.Single(result.Errors);
@@ -95,7 +92,6 @@ public sealed class ResultBaseTests
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Null(result.CapturedException);
         Assert.Equal(status, result.Status);
 
         Assert.Collection(result.Errors, error => Assert.Equivalent(errors[0], error),
@@ -221,54 +217,6 @@ public sealed class ResultBaseTests
         // Assert
         Assert.Collection(result.Errors, error => Assert.Equivalent(errors[0], error),
                                          error => Assert.Equivalent(errors[1], error));
-    }
-
-    /// <summary>
-    /// The <see cref="ResultBase.AddException"/> method should
-    /// set the value of <see cref="ResultBase.CapturedException"/>
-    /// to the specified exception and generate and add
-    /// a default error containing exception information.
-    /// </summary>
-    [Fact]
-    public void AddException()
-    {
-        // Arrange
-        var exception = new InvalidOperationException("Message");
-
-        var expectedDescription =
-#if !DEBUG
-            exception.Message;
-#else
-            exception.ToString();
-#endif
-
-        var result = new TestResult();
-
-        // Act
-        result.AddException(exception);
-
-        // Assert
-        Assert.Same(exception, result.CapturedException);
-        Assert.Contains(result.Errors, error => error.Code is DefaultError
-                                             && error.Description.Equals(expectedDescription, StringComparison.Ordinal));
-    }
-
-    /// <summary>
-    /// The <see cref="ResultBase.AddException"/> method should
-    /// throw the <see cref="ArgumentNullException"/> if the input
-    /// <see cref="Exception"/> is equal to <see langword="null"/>.
-    /// </summary>
-    [Fact]
-    public void AddException_ThrowsOnNull()
-    {
-        // Arrange
-        var exception = null as InvalidOperationException;
-
-        var result = new TestResult();
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(()
-            => result.AddException(exception!));
     }
     #endregion
 }

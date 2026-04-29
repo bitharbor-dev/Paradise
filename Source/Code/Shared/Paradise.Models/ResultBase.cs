@@ -1,5 +1,4 @@
 ﻿using Paradise.Models.Extensions;
-using System.Text.Json.Serialization;
 
 namespace Paradise.Models;
 
@@ -86,12 +85,6 @@ public abstract class ResultBase
     public OperationStatus Status { get; set; }
 
     /// <summary>
-    /// Exception associated with the result.
-    /// </summary>
-    [JsonIgnore]
-    public Exception? CapturedException { get; private set; }
-
-    /// <summary>
     /// Errors associated with the result.
     /// </summary>
     public IEnumerable<ApplicationError> Errors
@@ -139,27 +132,5 @@ public abstract class ResultBase
     /// </param>
     public void AddErrors(IEnumerable<ApplicationError> errors)
         => _errors.AddRange(errors);
-
-    /// <summary>
-    /// Adds the given <paramref name="exception"/> to the result.
-    /// </summary>
-    /// <param name="exception">
-    /// The <see cref="Exception"/> to be added.
-    /// </param>
-    public void AddException(Exception exception)
-    {
-        ArgumentNullException.ThrowIfNull(exception);
-
-        CapturedException = exception;
-
-        var message =
-#if !DEBUG
-            exception.Message;
-#else
-            exception.ToString();
-#endif
-
-        _errors.Add(new(ErrorCode.DefaultError, message));
-    }
     #endregion
 }

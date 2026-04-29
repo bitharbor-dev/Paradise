@@ -1,5 +1,4 @@
 ﻿using Paradise.Common.Extensions;
-using Paradise.Models.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
@@ -39,27 +38,6 @@ public static class EnumExtensions
             ? string.Format(CultureInfo.CurrentCulture, errorDisplayValue, arguments)
             : errorDisplayValue;
     }
-    #endregion
-
-    #region Internal methods
-    /// <summary>
-    /// Gets the value of the <see cref="IsCriticalAttribute.Value"/> property
-    /// from the attribute assigned to the given <paramref name="enum"/>.
-    /// </summary>
-    /// <typeparam name="T">
-    /// <see langword="enum"/> type.
-    /// </typeparam>
-    /// <param name="enum">
-    /// Target <see langword="enum"/>.
-    /// </param>
-    /// <returns>
-    /// The value of the <see cref="IsCriticalAttribute.Value"/> property
-    /// from the attribute assigned to the given <paramref name="enum"/>
-    /// or <see langword="false"/> if not assigned.
-    /// </returns>
-    internal static bool GetIsCritical<T>(this T @enum)
-        where T : Enum
-        => @enum.GetAttributeOfType<IsCriticalAttribute, T>()?.Value ?? false;
     #endregion
 
     #region Private methods

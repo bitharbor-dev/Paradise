@@ -81,9 +81,9 @@ namespace Paradise.Localization.Logging {
         /// <summary>
         ///   Looks up a localized string similar to Errors:{0}{1}.
         /// </summary>
-        internal static string ResultErrors {
+        internal static string IdentityFailure {
             get {
-                return ResourceManager.GetString("ResultErrors", resourceCulture);
+                return ResourceManager.GetString("IdentityFailure", resourceCulture);
             }
         }
         

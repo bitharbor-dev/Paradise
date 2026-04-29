@@ -1,5 +1,4 @@
-﻿using Paradise.Models.Extensions;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using static Paradise.Localization.DataRepresentation.RepresentationMessages;
@@ -26,20 +25,6 @@ public readonly struct ApplicationError(ErrorCode code, string description) : IE
     private static readonly CompositeFormat _toStringFormat = Parse(ApplicationErrorToStringFormat);
     #endregion
 
-    #region Constructors
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ApplicationError"/> structure.
-    /// </summary>
-    /// <param name="description">
-    /// Error description.
-    /// </param>
-    /// <param name="isCritical">
-    /// Indicates whether the error is critical.
-    /// </param>
-    internal ApplicationError(string description, bool isCritical) : this(default, description)
-        => IsCritical = isCritical;
-    #endregion
-
     #region Properties
     /// <summary>
     /// Error code.
@@ -50,12 +35,6 @@ public readonly struct ApplicationError(ErrorCode code, string description) : IE
     /// Error description.
     /// </summary>
     public string Description { get; } = description;
-
-    /// <summary>
-    /// Indicates whether the error is critical.
-    /// </summary>
-    [JsonIgnore]
-    public bool IsCritical { get; } = code.GetIsCritical();
     #endregion
 
     #region Public methods

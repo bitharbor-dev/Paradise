@@ -1,5 +1,4 @@
-﻿using Paradise.Models.Attributes;
-using Paradise.Models.Extensions;
+﻿using Paradise.Models.Extensions;
 using Paradise.Tests.Miscellaneous.TestData.Shared.Models;
 
 namespace Paradise.Models.Tests.Unit.Extensions;
@@ -20,16 +19,6 @@ public sealed partial class EnumExtensionsTests
         { TestErrorCode.DisplayValueWithoutParametersMember,    [],             "Test"                              },
         { TestErrorCode.DisplayValueWithParametersMember,       [],             "Test {0}"                          },
         { TestErrorCode.DisplayValueWithParametersMember,       ["argument"],   "Test argument"                     }
-    };
-
-    /// <summary>
-    /// Provides member data for <see cref="GetIsCritical"/> method.
-    /// </summary>
-    public static TheoryData<TestErrorCode, bool> GetIsCritical_MemberData { get; } = new()
-    {
-        { TestErrorCode.DefaultMember,      false   },
-        { TestErrorCode.IsCriticalFalse,    false   },
-        { TestErrorCode.IsCriticalTrue,     true    }
     };
     #endregion
 
@@ -55,30 +44,6 @@ public sealed partial class EnumExtensionsTests
 
         // Act
         var result = errorCode.GetFormattedDisplayValue(arguments);
-
-        // Assert
-        Assert.Equal(expectedResult, result);
-    }
-
-    /// <summary>
-    /// The <see cref="EnumExtensions.GetIsCritical"/> method should
-    /// return the <see cref="IsCriticalAttribute.Value"/> property value
-    /// assigned to the given <paramref name="errorCode"/>,
-    /// or default value (<see langword="false"/>) if attribute not assigned.
-    /// </summary>
-    /// <param name="errorCode">
-    /// <see cref="TestErrorCode"/> to run tests onto.
-    /// </param>
-    /// <param name="expectedResult">
-    /// Expected result.
-    /// </param>
-    [Theory, MemberData(nameof(GetIsCritical_MemberData))]
-    public void GetIsCritical(TestErrorCode errorCode, bool expectedResult)
-    {
-        // Arrange
-
-        // Act
-        var result = errorCode.GetIsCritical();
 
         // Assert
         Assert.Equal(expectedResult, result);
