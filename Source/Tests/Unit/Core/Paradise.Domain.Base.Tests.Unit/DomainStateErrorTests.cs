@@ -33,6 +33,43 @@ public sealed class DomainStateErrorTests
 
     #region Public methods
     /// <summary>
+    /// The <see cref="DomainStateError{TEntity}.implicit operator string?"/> operator should
+    /// return the same value as <see cref="DomainStateError{TEntity}.ToString"/> method.
+    /// </summary>
+    [Fact]
+    public void OperatorImplicitString()
+    {
+        // Arrange
+        var test = "Test";
+
+        var error = new DomainStateError<DummyEntity>(test);
+
+        // Act
+        var result = (string?)error;
+
+        // Assert
+        Assert.Equal(error.ToString(), result);
+    }
+
+    /// <summary>
+    /// The <see cref="DomainStateError{TEntity}.implicit operator string?"/> operator should
+    /// return <see langword="null"/> if the input
+    /// <see cref="DomainStateError{TEntity}"/> is equal to <see langword="null"/>.
+    /// </summary>
+    [Fact]
+    public void OperatorImplicitString_ReturnsNull()
+    {
+        // Arrange
+        var error = null as DomainStateError<DummyEntity>;
+
+        // Act
+        var result = (string?)error!;
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    /// <summary>
     /// The <see cref="DomainStateError{TEntity}"/> message property should
     /// return the properly formatted value, containing the type of the entity
     /// whish is in invalid state, the name of the entity's property which is invalid,
