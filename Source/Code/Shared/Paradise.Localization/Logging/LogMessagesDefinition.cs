@@ -9,62 +9,12 @@ public static class LogMessagesDefinition
 {
     #region Properties
     /// <summary>
-    /// Contains <see cref="EventId"/> instances used by the application.
-    /// </summary>
-    /// <remarks>
-    /// <strong>There is a convention on how to define a new event id:</strong>
-    /// <list type="number">
-    /// <item>
-    /// All numbers start from 5 to leave some capacity
-    /// for events being logged from packages used by the application.
-    /// </item>
-    /// <item>
-    /// The second number is an integer representation of the <see cref="LogLevel"/> <see langword="enum"/>.
-    /// <list type="bullet">
-    /// <item>
-    /// <see cref="LogLevel.Trace"/> = 0.
-    /// </item>
-    /// <item>
-    /// <see cref="LogLevel.Debug"/> = 1.
-    /// </item>
-    /// <item>
-    /// <see cref="LogLevel.Information"/> = 2.
-    /// </item>
-    /// <item>
-    /// <see cref="LogLevel.Warning"/> = 3.
-    /// </item>
-    /// <item>
-    /// <see cref="LogLevel.Error"/> = 4.
-    /// </item>
-    /// <item>
-    /// <see cref="LogLevel.Critical"/> = 5.
-    /// </item>
-    /// </list>
-    /// </item>
-    /// <item>
-    /// The rest of the numbers can be used freely,
-    /// but number 55 should be avoided
-    /// (apart from the first two digits)
-    /// to easily find critical errors in the logs.
-    /// </item>
-    /// </list>
-    /// </remarks>
-    private static Dictionary<string, EventId> Map { get; } = new()
-    {
-        [nameof(AddedSeedItem)] = new(52000, nameof(LogMessages.AddedSeedItem)),
-        [nameof(DatabaseSeedFailure)] = new(55001, nameof(LogMessages.DatabaseSeedFailure)),
-        [nameof(IdentityFailure)] = new(54000, nameof(LogMessages.IdentityFailure)),
-        [nameof(UnhandledExceptionOccurred)] = new(55002, nameof(LogMessages.UnhandledExceptionOccurred)),
-        [nameof(UpdatedSeedItem)] = new(52001, nameof(LogMessages.UpdatedSeedItem)),
-    };
-
-    /// <summary>
     /// Gets an action to be executed while logging added seed item information.
     /// </summary>
     public static Action<ILogger, string, string, Exception?> AddedSeedItem { get; }
         = LoggerMessage.Define<string, string>(
-            LogLevel.Information,
-            Map[nameof(AddedSeedItem)],
+            EventIdContainer.AddedSeedItem.Level,
+            EventIdContainer.AddedSeedItem.Id,
             LogMessages.AddedSeedItem);
 
     /// <summary>
@@ -72,8 +22,8 @@ public static class LogMessagesDefinition
     /// </summary>
     public static Action<ILogger, string?, Exception?> DatabaseSeedFailure { get; }
         = LoggerMessage.Define<string?>(
-            LogLevel.Critical,
-            Map[nameof(DatabaseSeedFailure)],
+            EventIdContainer.DatabaseSeedFailure.Level,
+            EventIdContainer.DatabaseSeedFailure.Id,
             LogMessages.DatabaseSeedFailure);
 
     /// <summary>
@@ -81,8 +31,8 @@ public static class LogMessagesDefinition
     /// </summary>
     public static Action<ILogger, string, string, Exception?> IdentityFailure { get; }
         = LoggerMessage.Define<string, string>(
-            LogLevel.Critical,
-            Map[nameof(IdentityFailure)],
+            EventIdContainer.IdentityFailure.Level,
+            EventIdContainer.IdentityFailure.Id,
             LogMessages.IdentityFailure);
 
     /// <summary>
@@ -90,8 +40,8 @@ public static class LogMessagesDefinition
     /// </summary>
     public static Action<ILogger, Exception> UnhandledExceptionOccurred { get; }
         = LoggerMessage.Define(
-            LogLevel.Critical,
-            Map[nameof(UnhandledExceptionOccurred)],
+            EventIdContainer.UnhandledExceptionOccurred.Level,
+            EventIdContainer.UnhandledExceptionOccurred.Id,
             LogMessages.UnhandledExceptionOccurred);
 
     /// <summary>
@@ -99,8 +49,8 @@ public static class LogMessagesDefinition
     /// </summary>
     public static Action<ILogger, string, string, Exception?> UpdatedSeedItem { get; }
         = LoggerMessage.Define<string, string>(
-            LogLevel.Information,
-            Map[nameof(UpdatedSeedItem)],
+            EventIdContainer.UpdatedSeedItem.Level,
+            EventIdContainer.UpdatedSeedItem.Id,
             LogMessages.UpdatedSeedItem);
     #endregion
 }

@@ -53,14 +53,12 @@ public sealed class ILoggerExtensionsTests : IDisposable
     /// <summary>
     /// The <see cref="ILoggerExtensions.LogUnhandledException"/> method should
     /// log the input exception with <see cref="LogLevel.Critical"/>
-    /// and event Id of <c>55002</c>.
+    /// and event Id of <c>55000</c>.
     /// </summary>
     [Fact]
     public void LogUnhandledException()
     {
         // Arrange
-        var expectedEventId = new EventId(55002, nameof(LogMessagesDefinition.UnhandledExceptionOccurred));
-
         var exception = new InvalidOperationException("Test exception");
 
         // Act
@@ -70,7 +68,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
         var entry = Assert.Single(LoggedMessages);
 
         Assert.Equal(LogLevel.Critical, entry.LogLevel);
-        Assert.Equal(expectedEventId, entry.EventId);
+        Assert.Equal(EventIdContainer.UnhandledExceptionOccurred.Id, entry.EventId);
         Assert.Equal("An unhandled exception has occurred.", entry.RawMessage);
         Assert.IsType<InvalidOperationException>(entry.Exception);
         Assert.Contains(exception.GetType().Name, entry.FormattedMessage, StringComparison.Ordinal);
