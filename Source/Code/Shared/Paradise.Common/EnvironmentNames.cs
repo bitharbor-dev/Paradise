@@ -1,6 +1,7 @@
 ﻿using Paradise.Localization.ExceptionHandling;
 
 namespace Paradise.Common;
+
 /// <summary>
 /// Contains predefined application environment names.
 /// </summary>

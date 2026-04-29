@@ -131,7 +131,7 @@ internal sealed class UserService(ILogger<UserService> logger,
             .ConfigureAwait(false);
 
         if (!validationResult.IsSuccess)
-            return new(validationResult.Status, validationResult.Errors, default);
+            return new(validationResult.Status, validationResult.Errors, null);
 
         var user = model.ToEntity();
 

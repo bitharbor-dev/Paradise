@@ -20,6 +20,7 @@ public sealed class UserRefreshToken(Guid ownerId, DateTimeOffset expiryDateUtc)
     #region Fields
     [SuppressMessage("Style", "IDE0032:Use auto property", Justification = "Field is used by EF, so the property can remain get-only.")]
     private readonly Guid _ownerId = ownerId;
+
     [SuppressMessage("Style", "IDE0032:Use auto property", Justification = "Field is used by EF, so the property can remain get-only.")]
     private readonly DateTimeOffset _expiryDateUtc = expiryDateUtc;
     #endregion

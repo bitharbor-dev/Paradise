@@ -226,7 +226,7 @@ public sealed partial class ExceptionMessages
     }
 
     /// <summary>
-    /// Gets the <see cref="MessageTemplateInvalidParametersNumber"/> formatted message.
+    /// Gets the <see cref="MessageTemplateInvalidPlaceholdersNumber"/> formatted message.
     /// </summary>
     /// <param name="expectedNumber">
     /// Expected number of placeholders.
@@ -235,7 +235,7 @@ public sealed partial class ExceptionMessages
     /// Actual number of placeholders.
     /// </param>
     /// <returns>
-    /// A formatted message using the <see cref="MessageTemplateInvalidParametersNumber"/> format string.
+    /// A formatted message using the <see cref="MessageTemplateInvalidPlaceholdersNumber"/> format string.
     /// </returns>
     public static string GetMessageMessageTemplateInvalidPlaceholdersNumber(ushort expectedNumber, ushort actualNumber)
     {

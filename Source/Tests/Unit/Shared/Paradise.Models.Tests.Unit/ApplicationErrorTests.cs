@@ -47,7 +47,7 @@ public sealed class ApplicationErrorTests
 
     /// <summary>
     /// The <see cref="ApplicationError.implicit operator string"/> operator should
-    /// return the save value as <see cref="ApplicationError.ToString"/> method.
+    /// return the same value as <see cref="ApplicationError.ToString"/> method.
     /// </summary>
     [Fact]
     public void OperatorImplicitString()
@@ -59,7 +59,7 @@ public sealed class ApplicationErrorTests
         var result = (string)error;
 
         // Assert
-        Assert.Equal(result.ToString(), result);
+        Assert.Equal(error.ToString(), result);
     }
 
     /// <summary>

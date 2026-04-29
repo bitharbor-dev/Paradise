@@ -76,7 +76,7 @@ public sealed class FakeLogger<T> : ILogger<T>
 
         var message = formatter(state, exception);
 
-        if (!string.IsNullOrWhiteSpace(message) || exception != null)
+        if (!string.IsNullOrWhiteSpace(message) || exception is not null)
             WriteMessage(logLevel, _categoryName, eventId, message, exception);
     }
     #endregion

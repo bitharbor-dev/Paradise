@@ -37,6 +37,7 @@ public sealed partial class IServiceCollectionExtensionsTests
     {
         #region Fields
         private static readonly JsonSerializerOptions _jsonSerializerOptions = GetJsonSerializerOptions();
+
         private static readonly ServiceProviderOptions _serviceProviderOptions = new()
         {
             ValidateOnBuild = true,
