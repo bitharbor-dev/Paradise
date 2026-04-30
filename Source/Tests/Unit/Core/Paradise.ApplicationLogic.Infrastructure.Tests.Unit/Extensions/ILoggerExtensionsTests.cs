@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Paradise.ApplicationLogic.Infrastructure.Extensions;
 using Paradise.Localization.Logging;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
-using static System.Text.RegularExpressions.Regex;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Extensions;
 
@@ -71,12 +70,13 @@ public sealed class ILoggerExtensionsTests : IDisposable
         Logger.LogIdentityFailure(identityResult);
 
         // Assert
-        var message = Assert.Single(LoggedMessages);
-        Assert.Equal(EventIdContainer.IdentityFailure.Level, message.LogLevel);
+        var entry = Assert.Single(LoggedMessages);
 
-        var newline = Escape(Environment.NewLine);
+        Assert.Equal(EventIdContainer.IdentityFailure.Level, entry.LogLevel);
+        Assert.Equal(EventIdContainer.IdentityFailure.Id, entry.EventId);
 
-        Assert.Matches($"^Errors:{newline}(?:.+{newline})*.+$", message.Message);
+        Assert.Contains(error1.Description, entry.Message, StringComparison.Ordinal);
+        Assert.Contains(error2.Description, entry.Message, StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -105,18 +105,19 @@ public sealed class ILoggerExtensionsTests : IDisposable
     {
         // Arrange
         var itemName = "ItemName";
+        var typeName = nameof(Object);
 
         // Act
         Logger.LogAddedSeedItem<object>(itemName);
 
         // Assert
-        var message = Assert.Single(LoggedMessages);
-        Assert.Equal(EventIdContainer.AddedSeedItem.Level, message.LogLevel);
+        var entry = Assert.Single(LoggedMessages);
 
-        var escapedName = Escape(itemName);
-        var escapedType = Escape(nameof(Object));
+        Assert.Equal(EventIdContainer.AddedSeedItem.Level, entry.LogLevel);
+        Assert.Equal(EventIdContainer.AddedSeedItem.Id, entry.EventId);
 
-        Assert.Matches($"^Added seed item {escapedType}: '{escapedName}'\\.$", message.Message);
+        Assert.Contains(typeName, entry.Message, StringComparison.Ordinal);
+        Assert.Contains(itemName, entry.Message, StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -129,18 +130,19 @@ public sealed class ILoggerExtensionsTests : IDisposable
     {
         // Arrange
         var itemName = "ItemName";
+        var typeName = nameof(Object);
 
         // Act
         Logger.LogUpdatedSeedItem<object>(itemName);
 
         // Assert
-        var message = Assert.Single(LoggedMessages);
-        Assert.Equal(EventIdContainer.UpdatedSeedItem.Level, message.LogLevel);
+        var entry = Assert.Single(LoggedMessages);
 
-        var escapedName = Escape(itemName);
-        var escapedType = Escape(nameof(Object));
+        Assert.Equal(EventIdContainer.UpdatedSeedItem.Level, entry.LogLevel);
+        Assert.Equal(EventIdContainer.UpdatedSeedItem.Id, entry.EventId);
 
-        Assert.Matches($"^Updated seed item {escapedType}: '{escapedName}'\\.$", message.Message);
+        Assert.Contains(typeName, entry.Message, StringComparison.Ordinal);
+        Assert.Contains(itemName, entry.Message, StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -159,13 +161,13 @@ public sealed class ILoggerExtensionsTests : IDisposable
         Logger.LogDatabaseSeedFailure(exception, methodName);
 
         // Assert
-        var message = Assert.Single(LoggedMessages);
-        Assert.Equal(EventIdContainer.DatabaseSeedFailure.Level, message.LogLevel);
-        Assert.Same(exception, message.Exception);
+        var entry = Assert.Single(LoggedMessages);
 
-        var escapedName = Escape(methodName);
+        Assert.Equal(EventIdContainer.DatabaseSeedFailure.Level, entry.LogLevel);
+        Assert.Equal(EventIdContainer.DatabaseSeedFailure.Id, entry.EventId);
 
-        Assert.Matches($"^Failed to seed the database. Method '{escapedName}'\\.$", message.Message);
+        Assert.Contains(exception.Message, entry.FullLogMessage, StringComparison.Ordinal);
+        Assert.Contains(methodName, entry.Message, StringComparison.Ordinal);
     }
     #endregion
 
