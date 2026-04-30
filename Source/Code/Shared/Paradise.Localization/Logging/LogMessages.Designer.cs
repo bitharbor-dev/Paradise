@@ -79,6 +79,15 @@ namespace Paradise.Localization.Logging {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exception handling reached fallback pipeline. Method: {0} Path: {1} Scheme: {2} Host: {3} Trace identifier: {4}.
+        /// </summary>
+        internal static string FallbackHandlerReached {
+            get {
+                return ResourceManager.GetString("FallbackHandlerReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Errors:{0}{1}.
         /// </summary>
         internal static string IdentityFailure {

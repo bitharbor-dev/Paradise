@@ -123,6 +123,9 @@
   <data name="DatabaseSeedFailure" xml:space="preserve">
     <value>Failed to seed the database. Method '{0}'.</value>
   </data>
+  <data name="FallbackHandlerReached" xml:space="preserve">
+    <value>Exception handling reached fallback pipeline. Method: {0} Path: {1} Scheme: {2} Host: {3} Trace identifier: {4}</value>
+  </data>
   <data name="IdentityFailure" xml:space="preserve">
     <value>Errors:{0}{1}</value>
     <comment>Pass `Environment.NewLine` as {0} argument.</comment>

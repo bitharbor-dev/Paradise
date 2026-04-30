@@ -4,8 +4,8 @@ using Paradise.ApplicationLogic.Extensions;
 using Paradise.Common;
 using Paradise.Common.Extensions;
 using Paradise.WebApi.Extensions;
+using Paradise.WebApi.Infrastructure;
 using Paradise.WebApi.Infrastructure.Binders.Providers;
-using Paradise.WebApi.Infrastructure.Filters.ExceptionHandling;
 using Paradise.WebApi.OpenApi.DocumentTransformers;
 using Paradise.WebApi.OpenApi.OperationTransformers;
 
@@ -24,6 +24,7 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
         var configuration = context.Builder.Configuration;
 
         RegisterCore(services, configuration, context.Builder.Environment);
+        RegisterExceptionHandler(services);
         RegisterPagesAndControllers(services);
         RegisterOpenApi(services, configuration);
 
@@ -63,14 +64,23 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
     }
 
     /// <summary>
+    /// Registers a global exception handler.
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to.
+    /// </param>
+    private static void RegisterExceptionHandler(IServiceCollection services)
+        => services.AddExceptionHandler<ExceptionHandler>();
+
+    /// <summary>
     /// Registers Razor Pages and controller configuration.
     /// </summary>
     /// <param name="services">
     /// The <see cref="IServiceCollection"/> to add the services to.
     /// </param>
     /// <remarks>
-    /// Configures controllers to use <see cref="ExceptionFilter"/> and prioritizes
-    /// <see cref="CustomModelBinderProvider"/> within the model binder provider collection.
+    /// Configures controllers and prioritizes <see cref="CustomModelBinderProvider"/>
+    /// within the model binder provider collection.
     /// </remarks>
     private static void RegisterPagesAndControllers(IServiceCollection services)
     {
@@ -79,11 +89,7 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
             .AddViewLocalization(options => options.ResourcesPath = "Resources")
             .AddDataAnnotationsLocalization();
 
-        services.AddControllers(options =>
-        {
-            options.Filters.Add(ExceptionFilter.Instance);
-            options.ModelBinderProviders.Insert(0, CustomModelBinderProvider.Instance);
-        });
+        services.AddControllers(options => options.ModelBinderProviders.Insert(0, CustomModelBinderProvider.Instance));
     }
 
     /// <summary>

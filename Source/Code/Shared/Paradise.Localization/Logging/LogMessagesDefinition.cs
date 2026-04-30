@@ -27,6 +27,15 @@ public static class LogMessagesDefinition
             LogMessages.DatabaseSeedFailure);
 
     /// <summary>
+    /// Gets an action to be executed while logging HTTP request led to an unhandled exception.
+    /// </summary>
+    public static Action<ILogger, string, string, string, string, string, Exception?> FallbackHandlerReached { get; }
+        = LoggerMessage.Define<string, string, string, string, string>(
+            EventIdContainer.FallbackHandlerReached.Level,
+            EventIdContainer.FallbackHandlerReached.Id,
+            LogMessages.FallbackHandlerReached);
+
+    /// <summary>
     /// Gets an action to be executed while logging the identity failure.
     /// </summary>
     public static Action<ILogger, string, string, Exception?> IdentityFailure { get; }

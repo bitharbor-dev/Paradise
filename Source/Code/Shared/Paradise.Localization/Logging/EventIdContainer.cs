@@ -57,6 +57,11 @@ public static class EventIdContainer
     public static LoggedEvent DatabaseSeedFailure { get; } = new(new(55_003, nameof(DatabaseSeedFailure)), LogLevel.Critical);
 
     /// <summary>
+    /// <see cref="LogMessagesDefinition.FallbackHandlerReached"/> event identifier.
+    /// </summary>
+    public static LoggedEvent FallbackHandlerReached { get; } = new(new(55_001, nameof(FallbackHandlerReached)), LogLevel.Critical);
+
+    /// <summary>
     /// <see cref="LogMessagesDefinition.IdentityFailure"/> event identifier.
     /// </summary>
     public static LoggedEvent IdentityFailure { get; } = new(new(55_002, nameof(IdentityFailure)), LogLevel.Critical);

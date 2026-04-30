@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using Paradise.WebApi.Infrastructure;
 
 namespace Paradise.WebApi.Startup.Steps.PostBuild;
 
@@ -8,6 +9,13 @@ namespace Paradise.WebApi.Startup.Steps.PostBuild;
 /// </summary>
 internal sealed class PipelineBootstrap : IPostBuildStep
 {
+    #region Fields
+    private static readonly ExceptionHandlerOptions _defaultHandlerOptions = new()
+    {
+        ExceptionHandler = ExceptionHandler.HandleFallbackAsync
+    };
+    #endregion
+
     #region Public methods
     /// <inheritdoc/>
     public Task ExecuteAsync(PostBuildContext context)
@@ -16,6 +24,8 @@ internal sealed class PipelineBootstrap : IPostBuildStep
 
         if (app.Environment.IsDevelopment())
             app.UseDeveloperExceptionPage();
+
+        app.UseExceptionHandler(_defaultHandlerOptions);
 
         var requestLocalizationOptions = app
             .Services
