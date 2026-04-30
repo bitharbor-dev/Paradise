@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Paradise.ApplicationLogic.Infrastructure.Extensions;
+using Paradise.Localization.Logging;
 using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
 using static System.Text.RegularExpressions.Regex;
 
@@ -52,12 +53,13 @@ public sealed class ILoggerExtensionsTests : IDisposable
         => _logger.MessageLogged -= OnMessageLogged;
 
     /// <summary>
-    /// The <see cref="ILoggerExtensions.LogIdentityResult"/> method should
+    /// The <see cref="ILoggerExtensions.LogIdentityFailure"/> method should
     /// concatenate all errors from the input <see cref="IdentityResult"/> object
-    /// and log the concatenated string with <see cref="LogLevel.Critical"/>.
+    /// and log the concatenated string with <see cref="LogLevel"/>
+    /// equal to <see cref="EventIdContainer.IdentityFailure"/> log level.
     /// </summary>
     [Fact]
-    public void LogIdentityResult()
+    public void LogIdentityFailure()
     {
         // Arrange
         var error1 = new IdentityError { Description = "Error 1" };
@@ -66,11 +68,11 @@ public sealed class ILoggerExtensionsTests : IDisposable
         var identityResult = IdentityResult.Failed(error1, error2);
 
         // Act
-        Logger.LogIdentityResult(identityResult);
+        Logger.LogIdentityFailure(identityResult);
 
         // Assert
         var message = Assert.Single(LoggedMessages);
-        Assert.Equal(LogLevel.Critical, message.LogLevel);
+        Assert.Equal(EventIdContainer.IdentityFailure.Level, message.LogLevel);
 
         var newline = Escape(Environment.NewLine);
 
@@ -78,19 +80,19 @@ public sealed class ILoggerExtensionsTests : IDisposable
     }
 
     /// <summary>
-    /// The <see cref="ILoggerExtensions.LogIdentityResult"/> method should
+    /// The <see cref="ILoggerExtensions.LogIdentityFailure"/> method should
     /// throw the <see cref="ArgumentNullException"/> if the input
     /// <see cref="IdentityResult"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
-    public void LogIdentityResult_ThrowsOnNull()
+    public void LogIdentityFailure_ThrowsOnNull()
     {
         // Arrange
         var identityResult = null as IdentityResult;
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(()
-            => Logger.LogIdentityResult(identityResult!));
+            => Logger.LogIdentityFailure(identityResult!));
     }
 
     /// <summary>
@@ -109,7 +111,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
 
         // Assert
         var message = Assert.Single(LoggedMessages);
-        Assert.Equal(LogLevel.Information, message.LogLevel);
+        Assert.Equal(EventIdContainer.AddedSeedItem.Level, message.LogLevel);
 
         var escapedName = Escape(itemName);
         var escapedType = Escape(nameof(Object));
@@ -133,7 +135,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
 
         // Assert
         var message = Assert.Single(LoggedMessages);
-        Assert.Equal(LogLevel.Information, message.LogLevel);
+        Assert.Equal(EventIdContainer.UpdatedSeedItem.Level, message.LogLevel);
 
         var escapedName = Escape(itemName);
         var escapedType = Escape(nameof(Object));
@@ -158,7 +160,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
 
         // Assert
         var message = Assert.Single(LoggedMessages);
-        Assert.Equal(LogLevel.Critical, message.LogLevel);
+        Assert.Equal(EventIdContainer.DatabaseSeedFailure.Level, message.LogLevel);
         Assert.Same(exception, message.Exception);
 
         var escapedName = Escape(methodName);

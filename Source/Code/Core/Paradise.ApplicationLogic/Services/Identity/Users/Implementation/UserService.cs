@@ -229,7 +229,7 @@ internal sealed class UserService(ILogger<UserService> logger,
                      .ConfigureAwait(false);
 
                 if (!incrementResult.Succeeded)
-                    logger.LogIdentityResult(incrementResult);
+                    logger.LogIdentityFailure(incrementResult);
             }
 
             return new(Unauthorized, UserNotFoundOrPasswordMismatch);
@@ -246,7 +246,7 @@ internal sealed class UserService(ILogger<UserService> logger,
                 .ConfigureAwait(false);
 
             if (!updateResult.Succeeded)
-                logger.LogIdentityResult(updateResult);
+                logger.LogIdentityFailure(updateResult);
         }
 
         return new(Success);
@@ -489,7 +489,7 @@ internal sealed class UserService(ILogger<UserService> logger,
                 .ConfigureAwait(false);
 
             if (!updateResult.Succeeded)
-                logger.LogIdentityResult(updateResult);
+                logger.LogIdentityFailure(updateResult);
 
             return new(InvalidInput, UserDeletionRequestExpired, timeout);
         }
@@ -499,7 +499,7 @@ internal sealed class UserService(ILogger<UserService> logger,
 
         if (!deletionResult.Succeeded)
         {
-            logger.LogIdentityResult(deletionResult);
+            logger.LogIdentityFailure(deletionResult);
 
             return deletionResult.GetResult();
         }

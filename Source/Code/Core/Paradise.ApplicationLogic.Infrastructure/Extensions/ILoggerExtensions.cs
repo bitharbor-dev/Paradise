@@ -22,7 +22,7 @@ public static class ILoggerExtensions
     /// <param name="identityResult">
     /// The <see cref="IdentityResult"/> to be logged.
     /// </param>
-    public static void LogIdentityResult(this ILogger logger, IdentityResult identityResult)
+    public static void LogIdentityFailure(this ILogger logger, IdentityResult identityResult)
     {
         ArgumentNullException.ThrowIfNull(identityResult);
 
