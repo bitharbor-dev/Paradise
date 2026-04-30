@@ -74,7 +74,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
 
         var newline = Escape(Environment.NewLine);
 
-        Assert.Matches($"^Errors:{newline}(?:.+{newline})*.+$", message.RawMessage);
+        Assert.Matches($"^Errors:{newline}(?:.+{newline})*.+$", message.Message);
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
         var escapedName = Escape(itemName);
         var escapedType = Escape(nameof(Object));
 
-        Assert.Matches($"^Added seed item {escapedType}: '{escapedName}'\\.$", message.RawMessage);
+        Assert.Matches($"^Added seed item {escapedType}: '{escapedName}'\\.$", message.Message);
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
         var escapedName = Escape(itemName);
         var escapedType = Escape(nameof(Object));
 
-        Assert.Matches($"^Updated seed item {escapedType}: '{escapedName}'\\.$", message.RawMessage);
+        Assert.Matches($"^Updated seed item {escapedType}: '{escapedName}'\\.$", message.Message);
     }
 
     /// <summary>
@@ -163,7 +163,7 @@ public sealed class ILoggerExtensionsTests : IDisposable
 
         var escapedName = Escape(methodName);
 
-        Assert.Matches($"^Failed to seed the database. Method '{escapedName}'\\.$", message.RawMessage);
+        Assert.Matches($"^Failed to seed the database. Method '{escapedName}'\\.$", message.Message);
     }
     #endregion
 

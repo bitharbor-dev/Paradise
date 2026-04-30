@@ -47,17 +47,33 @@ public sealed class FakeLogger<T> : ILogger<T>
     /// Closing brace to wrap log event id.
     /// </summary>
     private const char CloseBrace = ']';
-
-    private const ushort DefaultStringBuilderCapacity = 1024;
     #endregion
 
     #region Fields
-    [ThreadStatic]
-    private static StringBuilder? _logBuilder;
+    private static readonly int _maxLogLevelLength = new[]
+    {
+        TraceLevel.Length,
+        DebugLevel.Length,
+        InformationLevel.Length,
+        WarningLevel.Length,
+        ErrorLevel.Length,
+        CriticalLevel.Length
+    }.Max();
 
-    private static readonly string _messagePadding = new(' ', GetLogLevelString(default).Length + LogLevelPadding.Length);
+    private static readonly string _messagePadding = new(' ', _maxLogLevelLength + LogLevelPadding.Length);
     private static readonly string _newLineWithMessagePadding = NewLine + _messagePadding;
-    private static readonly string _categoryName = typeof(T).Name;
+    private static readonly string _categoryName = typeof(T).FullName ?? typeof(T).Name;
+
+    private readonly Dictionary<LogLevel, bool> _isEnabledMap = new()
+    {
+        { LogLevel.Trace,       true },
+        { LogLevel.Debug,       true },
+        { LogLevel.Information, true },
+        { LogLevel.Warning,     true },
+        { LogLevel.Error,       true },
+        { LogLevel.Critical,    true },
+        { LogLevel.None,        false }
+    };
     #endregion
 
     #region Public methods
@@ -67,7 +83,25 @@ public sealed class FakeLogger<T> : ILogger<T>
 
     /// <inheritdoc/>
     public bool IsEnabled(LogLevel logLevel)
-        => true;
+        => _isEnabledMap[logLevel];
+
+    /// <summary>
+    /// Enables logging for the specified <paramref name="logLevel"/>.
+    /// </summary>
+    /// <param name="logLevel">
+    /// The <see cref="LogLevel"/> for which logging should be enabled.
+    /// </param>
+    public void EnableFor(LogLevel logLevel)
+        => _isEnabledMap[logLevel] = true;
+
+    /// <summary>
+    /// Disables logging for the specified <paramref name="logLevel"/>.
+    /// </summary>
+    /// <param name="logLevel">
+    /// The <see cref="LogLevel"/> for which logging should be disabled.
+    /// </param>
+    public void DisableFor(LogLevel logLevel)
+        => _isEnabledMap[logLevel] = false;
 
     /// <inheritdoc/>
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -77,13 +111,26 @@ public sealed class FakeLogger<T> : ILogger<T>
         var message = formatter(state, exception);
 
         if (!string.IsNullOrWhiteSpace(message) || exception is not null)
-            WriteMessage(logLevel, _categoryName, eventId, message, exception);
+        {
+            var fullLogMessage = CreateLog(logLevel, _categoryName, eventId, message, exception);
+
+            TestContext.Current.TestOutputHelper?.WriteLine(fullLogMessage);
+
+            var eventArgs = new MessageLoggedEventArgs(logLevel,
+                                                       _categoryName,
+                                                       eventId,
+                                                       fullLogMessage,
+                                                       message,
+                                                       exception);
+
+            MessageLogged?.Invoke(this, eventArgs);
+        }
     }
     #endregion
 
     #region Private methods
     /// <summary>
-    /// Writes the log message.
+    /// Creates the log message.
     /// </summary>
     /// <param name="logLevel">
     /// Log level.
@@ -100,16 +147,11 @@ public sealed class FakeLogger<T> : ILogger<T>
     /// <param name="exception">
     /// Exception.
     /// </param>
-    private void WriteMessage(LogLevel logLevel, string categoryName, EventId eventId, string? message, Exception? exception)
+    private static string CreateLog(LogLevel logLevel, string categoryName, EventId eventId, string message, Exception? exception)
     {
-        var builder = _logBuilder;
-        _logBuilder = null;
-
-        builder ??= new();
-
         var logLevelString = GetLogLevelString(logLevel);
 
-        builder
+        var builder = new StringBuilder()
             .Append(LogLevelPadding)
             .Append(categoryName)
             .Append(OpenBrace)
@@ -124,35 +166,16 @@ public sealed class FakeLogger<T> : ILogger<T>
             var currentTextLength = builder.Length;
 
             builder.AppendLine(message);
-            builder.Replace(NewLine, _newLineWithMessagePadding, currentTextLength, message.Length);
+            builder.Replace(NewLine, _newLineWithMessagePadding, currentTextLength, builder.Length - currentTextLength);
         }
 
         if (exception is not null)
             builder.AppendLine(exception.ToString());
 
-        if (builder.Length > 0)
-        {
-            if (!string.IsNullOrWhiteSpace(logLevelString))
-                builder.Insert(0, logLevelString);
+        if (!string.IsNullOrWhiteSpace(logLevelString))
+            builder.Insert(0, logLevelString);
 
-            TestContext.Current.TestOutputHelper?.WriteLine(builder.ToString().Trim());
-
-            var eventArgs = new MessageLoggedEventArgs(logLevel,
-                                                       categoryName,
-                                                       eventId,
-                                                       builder.ToString(),
-                                                       message ?? string.Empty,
-                                                       exception);
-
-            MessageLogged?.Invoke(this, eventArgs);
-
-            builder.Clear();
-
-            if (builder.Capacity > DefaultStringBuilderCapacity)
-                builder.Capacity = DefaultStringBuilderCapacity;
-        }
-
-        _logBuilder = builder;
+        return builder.ToString();
     }
 
     /// <summary>

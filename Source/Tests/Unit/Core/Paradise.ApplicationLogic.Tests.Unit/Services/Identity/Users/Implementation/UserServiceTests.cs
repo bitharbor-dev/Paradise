@@ -944,7 +944,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Success, result.Status);
 
-        Assert.Contains(Test.LoggedMessages, message => message.RawMessage.Contains(error.Description, StringComparison.Ordinal));
+        Assert.Contains(Test.LoggedMessages, message => message.Message.Contains(error.Description, StringComparison.Ordinal));
     }
 
     /// <summary>
@@ -1055,7 +1055,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Unauthorized, result.Status);
 
         Assert.Equal(0, Test.GetAccessFailedCount(user.Id));
-        Assert.Contains(Test.LoggedMessages, message => message.RawMessage.Contains(error.Description, StringComparison.Ordinal));
+        Assert.Contains(Test.LoggedMessages, message => message.Message.Contains(error.Description, StringComparison.Ordinal));
         Assert.ContainsErrorCode(result, UserNotFoundOrPasswordMismatch);
     }
 
@@ -2151,7 +2151,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.Contains(Test.LoggedMessages, message => message.RawMessage.Contains(error.Description, StringComparison.Ordinal));
+        Assert.Contains(Test.LoggedMessages, message => message.Message.Contains(error.Description, StringComparison.Ordinal));
         Assert.ContainsErrorCode(result, UserDeletionRequestExpired);
     }
 

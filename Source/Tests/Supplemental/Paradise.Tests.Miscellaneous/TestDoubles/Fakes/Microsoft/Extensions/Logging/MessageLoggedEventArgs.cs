@@ -17,18 +17,24 @@ namespace Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Lo
 /// <param name="eventId">
 /// Event id.
 /// </param>
-/// <param name="formattedMessage">
-/// Formatted log message.
+/// <param name="fullLogMessage">
+/// Full log message.
+/// <para>
+/// Contains full log message with category name, log level string, exception stack trace, etc.
+/// </para>
 /// </param>
-/// <param name="rawMessage">
-/// Raw log message.
+/// <param name="message">
+/// Message.
+/// <para>
+/// Contains a single-row message produced by logger formatter.
+/// </para>
 /// </param>
 /// <param name="exception">
 /// Exception.
 /// </param>
 public sealed class MessageLoggedEventArgs(LogLevel logLevel, string categoryName,
-                                           EventId eventId, string formattedMessage,
-                                           string rawMessage, Exception? exception) : EventArgs
+                                           EventId eventId, string fullLogMessage,
+                                           string message, Exception? exception) : EventArgs
 {
     #region Properties
     /// <summary>
@@ -42,19 +48,25 @@ public sealed class MessageLoggedEventArgs(LogLevel logLevel, string categoryNam
     public string CategoryName { get; } = categoryName;
 
     /// <summary>
-    /// Event Id.
+    /// Event id.
     /// </summary>
     public EventId EventId { get; } = eventId;
 
     /// <summary>
-    /// Formatted log message.
+    /// Full log message.
     /// </summary>
-    public string FormattedMessage { get; } = formattedMessage;
+    /// <remarks>
+    /// Contains full log message with category name, log level string, exception stack trace, etc.
+    /// </remarks>
+    public string FullLogMessage { get; } = fullLogMessage;
 
     /// <summary>
-    /// Raw log message.
+    /// Message.
     /// </summary>
-    public string RawMessage { get; } = rawMessage;
+    /// <remarks>
+    /// Contains a single-row message produced by logger formatter.
+    /// </remarks>
+    public string Message { get; } = message;
 
     /// <summary>
     /// Exception.

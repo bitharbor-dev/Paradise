@@ -67,12 +67,12 @@ public sealed class ILoggerExtensionsTests : IDisposable
         // Assert
         var entry = Assert.Single(LoggedMessages);
 
-        Assert.Equal(LogLevel.Critical, entry.LogLevel);
+        Assert.Equal(EventIdContainer.UnhandledExceptionOccurred.Level, entry.LogLevel);
         Assert.Equal(EventIdContainer.UnhandledExceptionOccurred.Id, entry.EventId);
-        Assert.Equal("An unhandled exception has occurred.", entry.RawMessage);
+        Assert.Equal("An unhandled exception has occurred.", entry.Message);
         Assert.IsType<InvalidOperationException>(entry.Exception);
-        Assert.Contains(exception.GetType().Name, entry.FormattedMessage, StringComparison.Ordinal);
-        Assert.Contains(exception.Message, entry.FormattedMessage, StringComparison.Ordinal);
+        Assert.Contains(exception.GetType().Name, entry.FullLogMessage, StringComparison.Ordinal);
+        Assert.Contains(exception.Message, entry.FullLogMessage, StringComparison.Ordinal);
     }
     #endregion
 
