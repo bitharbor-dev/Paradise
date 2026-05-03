@@ -165,11 +165,17 @@
   <data name="MissingSubstring" xml:space="preserve">
     <value>The '{0}' substring is not present in the following string: '{1}'.</value>
   </data>
+  <data name="ObjectIsNull" xml:space="preserve">
+    <value>Object '{0}' is null.</value>
+  </data>
   <data name="PropertyHasInvalidType" xml:space="preserve">
     <value>Invalid property type.</value>
   </data>
   <data name="PropertyNotDeclared" xml:space="preserve">
     <value>Property '{0}' is not declared in type '{1}'.</value>
     <comment>Pass property name as {0} argument and type name as {1}.</comment>
+  </data>
+  <data name="RequiredAtLeastOne" xml:space="preserve">
+    <value>At least one of the following properties is required: {0}.</value>
   </data>
 </root>

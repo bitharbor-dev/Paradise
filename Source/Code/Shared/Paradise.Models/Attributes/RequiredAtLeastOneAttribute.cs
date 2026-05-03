@@ -1,6 +1,6 @@
 ﻿using Paradise.Common.Extensions;
 using System.ComponentModel.DataAnnotations;
-using static Paradise.Localization.DataValidation.ValidationMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
 
 namespace Paradise.Models.Attributes;
 

@@ -8,7 +8,7 @@ using Paradise.ApplicationLogic.Services.Identity.Users;
 using Paradise.Common.Extensions;
 using Paradise.Domain.Base.Events;
 using Paradise.Domain.Events.Identity.Users;
-using Paradise.Localization.DataValidation;
+using Paradise.Localization.ExceptionHandling;
 using Paradise.Models;
 using Paradise.Models.Domain.Identity.Users;
 using Paradise.Models.WebApi.Services.Authentication;
@@ -335,7 +335,7 @@ internal sealed class AuthenticationService(IOptions<AuthenticationOptions> auth
         }
         else
         {
-            var error = ValidationMessages.GetMessageRequiredAtLeastOne(
+            var error = ExceptionMessages.GetMessageRequiredAtLeastOne(
                 nameof(LoginModel.EmailAddress),
                 nameof(LoginModel.PhoneNumber),
                 nameof(LoginModel.UserName));

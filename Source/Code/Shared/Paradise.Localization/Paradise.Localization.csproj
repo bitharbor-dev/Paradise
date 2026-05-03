@@ -14,11 +14,6 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>RepresentationMessages.resx</DependentUpon>
 		</Compile>
-		<Compile Update="DataValidation\ValidationMessages.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>ValidationMessages.resx</DependentUpon>
-		</Compile>
 		<Compile Update="ErrorHandling\ErrorMessages.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
@@ -40,10 +35,6 @@
 		<EmbeddedResource Update="DataRepresentation\RepresentationMessages.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>RepresentationMessages.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-		<EmbeddedResource Update="DataValidation\ValidationMessages.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>ValidationMessages.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="ErrorHandling\ErrorMessages.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>

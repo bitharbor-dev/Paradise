@@ -4,7 +4,7 @@ using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys.Options;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
-using static Paradise.Localization.DataValidation.ValidationMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
 
 namespace Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys.Implementation;
 

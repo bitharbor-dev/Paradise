@@ -205,6 +205,15 @@ namespace Paradise.Localization.ExceptionHandling {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Object &apos;{0}&apos; is null..
+        /// </summary>
+        public static string ObjectIsNull {
+            get {
+                return ResourceManager.GetString("ObjectIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid property type..
         /// </summary>
         public static string PropertyHasInvalidType {
@@ -219,6 +228,15 @@ namespace Paradise.Localization.ExceptionHandling {
         public static string PropertyNotDeclared {
             get {
                 return ResourceManager.GetString("PropertyNotDeclared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one of the following properties is required: {0}..
+        /// </summary>
+        public static string RequiredAtLeastOne {
+            get {
+                return ResourceManager.GetString("RequiredAtLeastOne", resourceCulture);
             }
         }
     }
