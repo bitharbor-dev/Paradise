@@ -43,6 +43,8 @@ public sealed class IQueryableExtensionsTests
         var value1 = "Entity1";
         var value2 = "Entity2";
 
+        var path = nameof(TestNamedEntity.Name);
+
         var queryable = new List<TestNamedEntity>
         {
             new() { Name = value1 },
@@ -50,11 +52,69 @@ public sealed class IQueryableExtensionsTests
         }.AsQueryable();
 
         // Act
-        var result = queryable.FilterBy([nameof(TestNamedEntity.Name)], value1);
+        var result = queryable.FilterBy([path], value1);
 
         // Assert
         var entity = Assert.Single(result);
         Assert.Equal(value1, entity.Name);
+    }
+
+    /// <summary>
+    /// The <see cref="IQueryableExtensions.FilterBy"/> method should
+    /// modify the input query, such that the filtering will be applied
+    /// on the nested object level
+    /// using the input property names and the value they should contain.
+    /// </summary>
+    [Fact]
+    public void FilterBy_NestedEntity()
+    {
+        // Arrange
+        var value1 = "Entity1";
+        var value2 = "Entity2";
+
+        var path = nameof(TestNamedEntity.Child) + '.' + nameof(TestNamedEntity.Name);
+
+        var queryable = new List<TestNamedEntity>
+        {
+            new() { Child = new() { Name = value1 } },
+            new() { Child = new() { Name = value2 } }
+        }.AsQueryable();
+
+        // Act
+        var result = queryable.FilterBy([path], value1);
+
+        // Assert
+        var entity = Assert.Single(result);
+        Assert.Equal(value1, entity.Child?.Name);
+    }
+
+    /// <summary>
+    /// The <see cref="IQueryableExtensions.FilterBy"/> method should
+    /// modify the input query, such that filtering will be applied
+    /// against all specified properties using OR semantics.
+    /// </summary>
+    [Fact]
+    public void FilterBy_MultipleProperties()
+    {
+        // Arrange
+        var value = "Entity1";
+
+        var path1 = nameof(TestNamedEntity.Child) + '.' + nameof(TestNamedEntity.Name);
+        var path2 = nameof(TestNamedEntity.Name);
+
+        var queryable = new List<TestNamedEntity>
+        {
+            new() { Name = value, Child = new() { Name = "Entity2" } },
+            new() { Name = "Entity2", Child = new() { Name = value } },
+            new() { Name = "Entity3", Child = new() { Name = "Entity4" } }
+        }.AsQueryable();
+
+        // Act
+        var result = queryable.FilterBy([path1, path2], value);
+
+        // Assert
+        Assert.Collection(result, item => Assert.Equal(value, item.Name),
+                                  item => Assert.Equal(value, item.Child?.Name));
     }
 
     /// <summary>
@@ -69,6 +129,8 @@ public sealed class IQueryableExtensionsTests
         var value1 = "Entity1";
         var value2 = value1.ToUpperInvariant();
 
+        var path = nameof(TestNamedEntity.Name);
+
         var queryable = new List<TestNamedEntity>
         {
             new() { Name = value1 },
@@ -76,7 +138,7 @@ public sealed class IQueryableExtensionsTests
         }.AsQueryable();
 
         // Act
-        var result = queryable.FilterBy([nameof(TestNamedEntity.Name)], value1);
+        var result = queryable.FilterBy([path], value1);
 
         // Assert
         Assert.Collection(result, item => Assert.Equal(value1, item.Name),
@@ -117,16 +179,41 @@ public sealed class IQueryableExtensionsTests
     public void FilterBy_ReturnsOriginalOnNullOrEmptyValue(string? value)
     {
         // Arrange
+        var path = nameof(TestNamedEntity.Name);
+
         var queryable = new List<TestNamedEntity>
         {
             new() { Name = value }
         }.AsQueryable();
 
         // Act
-        var result = queryable.FilterBy([nameof(TestNamedEntity.Name)], value);
+        var result = queryable.FilterBy([path], value);
 
         // Assert
         Assert.Same(queryable, result);
+    }
+
+    /// <summary>
+    /// The <see cref="IQueryableExtensions.FilterBy"/> method should
+    /// throw the <see cref="NullReferenceException"/> if the input
+    /// filtering property value is equal to <see langword="null"/>.
+    /// </summary>
+    [Fact]
+    public void FilterBy_ThrowsOnNullStringProperty()
+    {
+        // Arrange
+        var value = "Entity1";
+
+        var path = nameof(TestNamedEntity.Name);
+
+        var queryable = new List<TestNamedEntity>
+        {
+            new() { Name = null }
+        }.AsQueryable();
+
+        // Act & Assert
+        Assert.Throws<NullReferenceException>(()
+            => queryable.FilterBy([path], value).ToList());
     }
 
     /// <summary>
@@ -140,11 +227,36 @@ public sealed class IQueryableExtensionsTests
         // Arrange
         var value = "Entity1";
 
+        var path = nameof(TestNamedEntity.Id);
+
         var queryable = new List<TestNamedEntity>().AsQueryable();
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(()
-            => queryable.FilterBy([nameof(TestNamedEntity.Id)], value));
+            => queryable.FilterBy([path], value));
+    }
+
+    /// <summary>
+    /// The <see cref="IQueryableExtensions.FilterBy"/> method should
+    /// throw the <see cref="NullReferenceException"/> if the input
+    /// nested filtering property value is equal to <see langword="null"/>.
+    /// </summary>
+    [Fact]
+    public void FilterBy_ThrowsOnNullNestedEntity()
+    {
+        // Arrange
+        var value = "Entity1";
+
+        var path = nameof(TestNamedEntity.Child) + '.' + nameof(TestNamedEntity.Name);
+
+        var queryable = new List<TestNamedEntity>
+        {
+            new() { Child = null }
+        }.AsQueryable();
+
+        // Act & Assert
+        Assert.Throws<NullReferenceException>(()
+            => queryable.FilterBy([path], value).ToList());
     }
 
     /// <summary>
@@ -159,11 +271,13 @@ public sealed class IQueryableExtensionsTests
         // Arrange
         var value = "Entity1";
 
+        var path = nameof(Object);
+
         var queryable = new List<TestNamedEntity>().AsQueryable();
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(()
-            => queryable.FilterBy([nameof(Exception.Message)], value));
+            => queryable.FilterBy([path], value));
     }
 
     /// <summary>
@@ -178,6 +292,8 @@ public sealed class IQueryableExtensionsTests
         var value1 = "Entity1";
         var value2 = "Entity2";
 
+        var path = nameof(TestNamedEntity.Name);
+
         var queryable = new List<TestNamedEntity>
         {
             new() { Name = value1 },
@@ -185,7 +301,7 @@ public sealed class IQueryableExtensionsTests
         }.AsQueryable();
 
         // Act
-        var result = queryable.OrderByPropertyName(nameof(TestNamedEntity.Name), true);
+        var result = queryable.OrderByPropertyName(path, true);
 
         // Assert
         Assert.Collection(result, item => Assert.Equal(value1, item.Name),
@@ -204,6 +320,8 @@ public sealed class IQueryableExtensionsTests
         var value1 = "Entity1";
         var value2 = "Entity2";
 
+        var path = nameof(TestNamedEntity.Name);
+
         var queryable = new List<TestNamedEntity>
         {
             new() { Name = value1 },
@@ -211,7 +329,7 @@ public sealed class IQueryableExtensionsTests
         }.AsQueryable();
 
         // Act
-        var result = queryable.OrderByPropertyName(nameof(TestNamedEntity.Name), false);
+        var result = queryable.OrderByPropertyName(path, false);
 
         // Assert
         Assert.Collection(result, item => Assert.Equal(value2, item.Name),
@@ -219,21 +337,50 @@ public sealed class IQueryableExtensionsTests
     }
 
     /// <summary>
+    /// The <see cref="IQueryableExtensions.OrderByPropertyName"/> method
+    /// modify the input query, such that the descending ordering will be applied
+    /// on the nested object level
+    /// using the input property name.
+    /// </summary>
+    [Fact]
+    public void OrderByPropertyName_NestedEntity()
+    {
+        // Arrange
+        var value1 = "Entity1";
+        var value2 = "Entity2";
+
+        var path = nameof(TestNamedEntity.Child) + '.' + nameof(TestNamedEntity.Name);
+
+        var queryable = new List<TestNamedEntity>
+        {
+            new() { Child = new() { Name = value1 } },
+            new() { Child = new() { Name = value2 } }
+        }.AsQueryable();
+
+        // Act
+        var result = queryable.OrderByPropertyName(path, false);
+
+        // Assert
+        Assert.Collection(result, item => Assert.Equal(value2, item.Child?.Name),
+                                  item => Assert.Equal(value1, item.Child?.Name));
+    }
+
+    /// <summary>
     /// The <see cref="IQueryableExtensions.OrderByPropertyName"/> method should
     /// return the input query, if the ordering property name
     /// is equal to <see langword="null"/>, <see cref="string.Empty"/> or whitespace-only.
     /// </summary>
-    /// <param name="name">
-    /// Ordering property name.
+    /// <param name="path">
+    /// Ordering property path.
     /// </param>
     [Theory, MemberData(nameof(OrderByPropertyName_ReturnsOriginalOnNullOrEmptyName_MemberData))]
-    public void OrderByPropertyName_ReturnsOriginalOnNullOrEmptyName(string? name)
+    public void OrderByPropertyName_ReturnsOriginalOnNullOrEmptyName(string? path)
     {
         // Arrange
         var queryable = new List<TestNamedEntity>().AsQueryable();
 
         // Act
-        var result = queryable.OrderByPropertyName(name, false);
+        var result = queryable.OrderByPropertyName(path, false);
 
         // Assert
         Assert.Same(queryable, result);
@@ -248,11 +395,34 @@ public sealed class IQueryableExtensionsTests
     public void OrderByPropertyName_ThrowsOnUnknownProperty()
     {
         // Arrange
+        var path = nameof(Object);
+
         var queryable = new List<TestNamedEntity>().AsQueryable();
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(()
-            => queryable.OrderByPropertyName(nameof(Exception.Message), true));
+            => queryable.OrderByPropertyName(path, true));
+    }
+
+    /// <summary>
+    /// The <see cref="IQueryableExtensions.OrderByPropertyName"/> method should
+    /// throw the <see cref="NullReferenceException"/> if the input
+    /// nested ordering property value is equal to <see langword="null"/>.
+    /// </summary>
+    [Fact]
+    public void OrderByPropertyName_ThrowsOnNullNestedEntity()
+    {
+        // Arrange
+        var path = nameof(TestNamedEntity.Child) + '.' + nameof(TestNamedEntity.Name);
+
+        var queryable = new List<TestNamedEntity>
+        {
+            new() { Child = null }
+        }.AsQueryable();
+
+        // Act & Assert
+        Assert.Throws<NullReferenceException>(()
+            => queryable.OrderByPropertyName(path, true).ToList());
     }
     #endregion
 }

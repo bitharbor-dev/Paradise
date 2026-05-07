@@ -12,6 +12,11 @@ public sealed class TestNamedEntity : Entity
     /// Entity name.
     /// </summary>
     public string? Name { get; set; }
+
+    /// <summary>
+    /// Child entity.
+    /// </summary>
+    public TestNamedEntity? Child { get; set; }
     #endregion
 
     #region Public methods
