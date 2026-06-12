@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Paradise.Domain.Identity.Roles;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.AspNetCore.Identity;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
-using Paradise.Tests.Miscellaneous.TestImplementations.Microsoft.AspNetCore.Identity;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
+using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Identity;
+using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Paradise.Tests.Doubles.Fakes.Microsoft.Extensions.Logging;
+using Paradise.Tests.Fixtures.Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;
 using UserManager = Paradise.ApplicationLogic.Infrastructure.Identity.Implementation.UserManager
-    <Paradise.Tests.Miscellaneous.TestImplementations.Microsoft.AspNetCore.Identity.TestUser>;
+    <Paradise.Tests.Fixtures.Microsoft.AspNetCore.Identity.TestUser>;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Identity.Implementation;
 

@@ -1,10 +1,10 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
-using Paradise.Common.Extensions;
 using Paradise.Domain.Base;
+using Paradise.Primitives.Extensions;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 
@@ -76,7 +76,7 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
             {
                 var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                var message = new DomainStateError<EmailTemplate>(SubjectPlaceholdersNumber, additionalInformation);
+                var message = new DomainStateError(GetType(), SubjectPlaceholdersNumber, additionalInformation);
 
                 throw new InvalidOperationException(message);
             }
@@ -90,7 +90,7 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
                 var additionalInformation = GetMessageMessageTemplateInvalidPlaceholdersNumber(
                     SubjectPlaceholdersNumber, (ushort)placeholderOccurrences);
 
-                var message = new DomainStateError<EmailTemplate>(Subject, additionalInformation);
+                var message = new DomainStateError(GetType(), Subject, additionalInformation);
 
                 throw new InvalidOperationException(message);
             }
@@ -270,7 +270,7 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
             {
                 var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                var message = new DomainStateError<EmailTemplate>(SubjectPlaceholdersNumber, additionalInformation);
+                var message = new DomainStateError(GetType(), SubjectPlaceholdersNumber, additionalInformation);
 
                 throw new InvalidOperationException(message);
             }

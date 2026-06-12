@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Paradise.Common.Extensions;
+using Paradise.Primitives.Extensions;
 
 namespace Paradise.ApplicationLogic.Options.Extensions;
 

@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Options.Extensions;
-using Paradise.Common.Extensions;
-using Paradise.Common.Web;
+using Paradise.Primitives.Extensions;
+using Paradise.Primitives.Web;
 using Paradise.WebApi.Infrastructure.Authentication.Caching;
 using Paradise.WebApi.Infrastructure.Authentication.Caching.Implementation;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer;
@@ -12,8 +12,8 @@ using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys.Implementation;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys.Options;
 using Paradise.WebApi.Infrastructure.Options;
-using static Paradise.Common.EnvironmentNames;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
+using static Paradise.Primitives.EnvironmentNames;
 
 namespace Paradise.WebApi.Infrastructure.Extensions;
 
@@ -26,14 +26,14 @@ public static class IServiceCollectionExtensions
     /// <summary>
     /// Adds the JWT Bearer authentication.
     /// </summary>
+    /// <typeparam name="TEvents">
+    /// JWT Bearer events type.
+    /// </typeparam>
     /// <param name="services">
     /// The <see cref="IServiceCollection"/> to add the services to.
     /// </param>
     /// <param name="configuration">
     /// The <see cref="IConfiguration"/> for authentication configuration.
-    /// </param>
-    /// <param name="eventsType">
-    /// JWT Bearer events type.
     /// </param>
     /// <param name="environmentName">
     /// Current environment name.
@@ -41,9 +41,13 @@ public static class IServiceCollectionExtensions
     /// <returns>
     /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
     /// </returns>
-    public static IServiceCollection AddJwtBearerAuthentication(this IServiceCollection services, IConfiguration configuration,
-                                                                Type eventsType, string environmentName)
+    public static IServiceCollection AddJwtBearerAuthentication<TEvents>(this IServiceCollection services,
+                                                                         IConfiguration configuration,
+                                                                         string environmentName)
+        where TEvents : JwtBearerEvents
     {
+        var eventsType = typeof(TEvents);
+
         void UseDefaultJwtBearerConfiguration(JwtBearerOptions options)
         {
             configuration.BindSection(options);
@@ -74,19 +78,19 @@ public static class IServiceCollectionExtensions
         services
             .AddJwtSigningKeyProvider(configuration, environmentName)
             .AddAuthentication()
-            .AddJwtBearer(AuthenticationSchemeNames.Default, UseDefaultJwtBearerConfiguration)
-            .AddJwtBearer(AuthenticationSchemeNames.DisableTokenLifetimeValidation, options =>
+            .AddJwtBearer(AuthenticationSchemeNames.DefaultScheme, UseDefaultJwtBearerConfiguration)
+            .AddJwtBearer(AuthenticationSchemeNames.LifetimelessScheme, options =>
             {
                 UseDefaultJwtBearerConfiguration(options);
 
                 SetValidateLifetime(options, false);
             });
 
-        services.PostConfigure<JwtBearerOptions>(AuthenticationSchemeNames.Default, JwtBearerOptionsPostConfigure);
-        services.PostConfigure<JwtBearerOptions>(AuthenticationSchemeNames.DisableTokenLifetimeValidation, JwtBearerOptionsPostConfigure);
+        services.PostConfigure<JwtBearerOptions>(AuthenticationSchemeNames.DefaultScheme, JwtBearerOptionsPostConfigure);
+        services.PostConfigure<JwtBearerOptions>(AuthenticationSchemeNames.LifetimelessScheme, JwtBearerOptionsPostConfigure);
 
         return services
-            .AddScoped(eventsType)
+            .AddScoped<TEvents>()
             .AddScoped<IJwtManager, JwtManager>()
             .AddDistributedMemoryCache()
             .AddSingleton<IRefreshTokenCache, RefreshTokenCache>();

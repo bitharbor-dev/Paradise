@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Localization;
-using Paradise.Common.Extensions;
+﻿using Microsoft.AspNetCore.Localization;
+using Paradise.Primitives.Extensions;
 using Paradise.WebApi.Authentication.JwtBearer;
-using Paradise.WebApi.Authorization;
 using Paradise.WebApi.Infrastructure.Extensions;
 using Paradise.WebApi.Infrastructure.TypeConverters;
 using Paradise.WebApi.Services.Authentication;
@@ -38,28 +35,9 @@ internal static class IServiceCollectionExtensions
                                                                        string environmentName)
     {
         return services
-            .AddJwtBearerAuthentication(configuration, typeof(JwtEvents), environmentName)
+            .AddJwtBearerAuthentication<JwtEvents>(configuration, environmentName)
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddAuthorization();
-    }
-
-    /// <summary>
-    /// Registers the default authorization result handler.
-    /// </summary>
-    /// <param name="services">
-    /// The <see cref="IServiceCollection"/> to add the services to.
-    /// </param>
-    /// <returns>
-    /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
-    /// </returns>
-    public static IServiceCollection AddAuthorizationResultHandler(this IServiceCollection services)
-    {
-        return services.AddSingleton<IAuthorizationMiddlewareResultHandler>(provider =>
-        {
-            var defaultHandler = new AuthorizationMiddlewareResultHandler();
-
-            return new AuthorizationResultHandler(defaultHandler);
-        });
     }
 
     /// <summary>
@@ -88,9 +66,32 @@ internal static class IServiceCollectionExtensions
     /// </returns>
     public static IServiceCollection AddRequestLocalization(this IServiceCollection services, IConfiguration appSettings)
     {
-        TypeDescriptor.AddAttributes(typeof(RequestCulture), new TypeConverterAttribute(typeof(RequestCultureConverter)));
+        RegisterTypeConverter<RequestCulture, RequestCultureConverter>();
 
         return services.AddRequestLocalization(appSettings.BindSection);
+    }
+    #endregion
+
+    #region Private methods
+    /// <summary>
+    /// Registers a <see cref="TypeConverter"/> for the specified target type by adding a
+    /// <see cref="TypeConverterAttribute"/> to the type descriptor metadata.
+    /// </summary>
+    /// <typeparam name="TTarget">
+    /// The type for which the converter should be registered.
+    /// </typeparam>
+    /// <typeparam name="TConverter">
+    /// The <see cref="TypeConverter"/> implementation associated with <typeparamref name="TTarget"/>.
+    /// </typeparam>
+    private static void RegisterTypeConverter<TTarget, TConverter>()
+        where TConverter : TypeConverter
+    {
+        var targetType = typeof(TTarget);
+        var converterType = typeof(TConverter);
+
+        var attribute = new TypeConverterAttribute(converterType);
+
+        TypeDescriptor.AddAttributes(targetType, attribute);
     }
     #endregion
 }

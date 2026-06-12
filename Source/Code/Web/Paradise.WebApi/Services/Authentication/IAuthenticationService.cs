@@ -7,7 +7,7 @@ namespace Paradise.WebApi.Services.Authentication;
 /// <summary>
 /// Provides authentication functionalities.
 /// </summary>
-public interface IAuthenticationService
+internal interface IAuthenticationService
 {
     #region Methods
     /// <summary>

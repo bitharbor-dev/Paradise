@@ -1,6 +1,5 @@
-﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
+﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.Identity;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Seed;
 

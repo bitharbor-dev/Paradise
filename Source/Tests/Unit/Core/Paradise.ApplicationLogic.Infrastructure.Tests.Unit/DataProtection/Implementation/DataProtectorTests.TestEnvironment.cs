@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection.Implementation;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.AspNetCore.DataProtection;
+using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.DataProtection;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.DataProtection.Implementation;
 

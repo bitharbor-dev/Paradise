@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Paradise.ApplicationLogic.Services.Identity.Users;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 using Paradise.Models;
-using Paradise.Tests.Miscellaneous.TestDoubles.Stubs.Core.ApplicationLogic.Services.Identity.Users;
+using Paradise.Tests.Doubles.Stubs.Core.ApplicationLogic.Infrastructure.Services.Identity;
 using Paradise.WebApi.Pages;
 using static Paradise.Models.ErrorCode;
 using static Paradise.Models.OperationStatus;

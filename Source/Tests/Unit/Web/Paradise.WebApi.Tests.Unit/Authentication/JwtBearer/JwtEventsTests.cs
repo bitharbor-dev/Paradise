@@ -1,4 +1,5 @@
-﻿using Paradise.Models;
+﻿using Microsoft.AspNetCore.Authentication;
+using Paradise.Models;
 using Paradise.WebApi.Authentication.JwtBearer;
 
 namespace Paradise.WebApi.Tests.Unit.Authentication.JwtBearer;
@@ -21,8 +22,6 @@ public sealed partial class JwtEventsTests
 
         var context = Test.GetTokenValidatedContext();
 
-        var key = JwtEvents.JwtEventsSessionCheckResult;
-
         Test.SetAuthenticationServiceCheckSessionAsyncResult(()
             => Task.FromResult(refreshTokenValidationResult));
 
@@ -31,11 +30,6 @@ public sealed partial class JwtEventsTests
 
         // Assert
         Assert.Null(context.Result);
-
-        Assert.True(context.HttpContext.Items.TryGetValue(key, out var storedResult));
-
-        var result = Assert.IsType<Result>(storedResult);
-        Assert.Same(refreshTokenValidationResult, result);
     }
 
     /// <summary>
@@ -50,8 +44,6 @@ public sealed partial class JwtEventsTests
 
         var context = Test.GetTokenValidatedContext();
 
-        var key = JwtEvents.JwtEventsSessionCheckResult;
-
         Test.SetAuthenticationServiceCheckSessionAsyncResult(()
             => Task.FromResult(refreshTokenValidationResult));
 
@@ -61,11 +53,7 @@ public sealed partial class JwtEventsTests
         // Assert
         Assert.NotNull(context.Result);
         Assert.False(context.Result.Succeeded);
-
-        Assert.True(context.HttpContext.Items.TryGetValue(key, out var storedResult));
-
-        var result = Assert.IsType<Result>(storedResult);
-        Assert.Same(refreshTokenValidationResult, result);
+        Assert.IsType<AuthenticationFailureException>(context.Result.Failure);
     }
     #endregion
 }

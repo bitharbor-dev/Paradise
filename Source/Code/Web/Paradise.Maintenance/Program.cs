@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Paradise.ApplicationLogic.Extensions;
-using Paradise.Common;
-using Paradise.Common.Extensions;
 using Paradise.Domain.Base.Events.Extensions;
+using Paradise.Primitives;
+using Paradise.Primitives.Extensions;
 using System.Reflection;
 
 var builder = FunctionsApplication.CreateBuilder(args);

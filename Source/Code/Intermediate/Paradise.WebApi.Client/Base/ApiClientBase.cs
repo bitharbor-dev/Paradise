@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Paradise.Models;
+using Paradise.WebApi.Base.Extensions;
 using System.Globalization;
 using System.Net.Http.Json;
+using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 using static System.Text.Json.JsonSerializer;
 
 namespace Paradise.WebApi.Client.Base;
@@ -42,8 +44,15 @@ public abstract class ApiClientBase : IDisposable
         _httpClient = httpClient;
         _jsonSerializerOptions = jsonSerializerOptions.CurrentValue;
 
-        _jsonSerializerOptionsReloadToken = jsonSerializerOptions.OnChange(UpdateJsonSerializerSettings);
+        _jsonSerializerOptionsReloadToken = jsonSerializerOptions.OnChange(UpdateJsonSerializerOptions);
     }
+    #endregion
+
+    #region Properties
+    /// <summary>
+    /// An optional route prefix to prepend to the input routes.
+    /// </summary>
+    public virtual string? RoutePrefix { get; }
     #endregion
 
     #region Public methods
@@ -420,7 +429,7 @@ public abstract class ApiClientBase : IDisposable
     /// <param name="options">
     /// The <see cref="JsonSerializerOptions"/> instance.
     /// </param>
-    private void UpdateJsonSerializerSettings(JsonSerializerOptions options)
+    private void UpdateJsonSerializerOptions(JsonSerializerOptions options)
         => _jsonSerializerOptions = options;
 
     /// <summary>
@@ -443,7 +452,7 @@ public abstract class ApiClientBase : IDisposable
     /// </returns>
     private HttpRequestMessage CreateRequest(HttpMethod method, string route, bool authorize, object? content = null)
     {
-        var request = new HttpRequestMessage(method, route);
+        var request = new HttpRequestMessage(method, $"{RoutePrefix}{route}");
 
         request.Options.Set(AuthenticationHeaderHandler.AuthorizeParameterKey, authorize);
 
@@ -479,22 +488,40 @@ public abstract class ApiClientBase : IDisposable
     /// </exception>
     private async Task<Result<TValue>> ParseResultAsync<TValue>(HttpResponseMessage response, CancellationToken cancellationToken = default)
     {
+        var statusCode = (int)response.StatusCode;
+        var contentType = response.Content.Headers.ContentType?.MediaType;
+
         var content = await response
             .Content
             .ReadAsStreamAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        var result = await DeserializeAsync<Result<TValue>>(content, _jsonSerializerOptions, cancellationToken)
+        if (MediaTypeNames.Application.ProblemJson.Equals(contentType, StringComparison.OrdinalIgnoreCase))
+        {
+            var problemDetails = await DeserializeAsync<ProblemDetailsMetadata>(content, _jsonSerializerOptions, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (problemDetails is null)
+            {
+                var message = GetMessageFailedToDeserialize<ProblemDetailsMetadata>();
+
+                throw new JsonException(message);
+            }
+
+            return new(statusCode.GetOperationStatus(), problemDetails.Errors, default);
+        }
+
+        var result = await DeserializeAsync<TValue>(content, _jsonSerializerOptions, cancellationToken)
             .ConfigureAwait(false);
 
         if (result is null)
         {
-            var message = GetMessageFailedToDeserialize<Result<TValue>>();
+            var message = GetMessageFailedToDeserialize<TValue>();
 
             throw new JsonException(message);
         }
 
-        return result;
+        return new(result, statusCode.GetOperationStatus());
     }
 
     /// <summary>
@@ -514,24 +541,32 @@ public abstract class ApiClientBase : IDisposable
     /// <exception cref="JsonException">
     /// Occurs when deserialization fails, which means that the response is badly formatted.
     /// </exception>
-    private async Task<Result> ParseResultAsync(HttpResponseMessage response, CancellationToken cancellationToken = default)
+    private async Task<Result> ParseResultAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
+        var statusCode = (int)response.StatusCode;
+        var contentType = response.Content.Headers.ContentType?.MediaType;
+
         var content = await response
             .Content
             .ReadAsStreamAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        var result = await DeserializeAsync<Result>(content, _jsonSerializerOptions, cancellationToken)
-            .ConfigureAwait(false);
-
-        if (result is null)
+        if (MediaTypeNames.Application.ProblemJson.Equals(contentType, StringComparison.OrdinalIgnoreCase))
         {
-            var message = GetMessageFailedToDeserialize<Result>();
+            var problemDetails = await DeserializeAsync<ProblemDetailsMetadata>(content, _jsonSerializerOptions, cancellationToken)
+                .ConfigureAwait(false);
 
-            throw new JsonException(message);
+            if (problemDetails is null)
+            {
+                var message = GetMessageFailedToDeserialize<ProblemDetailsMetadata>();
+
+                throw new JsonException(message);
+            }
+
+            return new(statusCode.GetOperationStatus(), problemDetails.Errors);
         }
 
-        return result;
+        return new(statusCode.GetOperationStatus());
     }
     #endregion
 }

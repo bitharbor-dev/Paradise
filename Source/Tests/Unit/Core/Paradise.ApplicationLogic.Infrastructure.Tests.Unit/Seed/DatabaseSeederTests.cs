@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Seed.Implementation;
-using Paradise.ApplicationLogic.Infrastructure.Services;
+using Paradise.ApplicationLogic.Infrastructure.Services.MessageTemplates;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
 using Paradise.Models;
 using Paradise.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using static Paradise.Models.ErrorCode;
@@ -43,8 +42,7 @@ public sealed partial class DatabaseSeederTests
         await Test.Target.EnsureStorageAvailableAsync(Token);
 
         // Assert
-        Assert.True(Test.DomainStoragePrepared);
-        Assert.True(Test.InfrastructureStoragePrepared);
+        Assert.True(Test.StoragePrepared);
     }
 
     /// <summary>

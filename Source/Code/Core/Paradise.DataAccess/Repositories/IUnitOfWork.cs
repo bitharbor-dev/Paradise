@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Paradise.DataAccess.Repositories.ApplicationLogic.Infrastructure.Domain.Identity;
+using Paradise.DataAccess.Repositories.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 
 namespace Paradise.DataAccess.Repositories;
 
@@ -8,6 +10,18 @@ namespace Paradise.DataAccess.Repositories;
 /// </summary>
 public interface IUnitOfWork
 {
+    #region Properties
+    /// <summary>
+    /// User refresh tokens repository.
+    /// </summary>
+    IUserRefreshTokensRepository UserRefreshTokensRepository { get; }
+
+    /// <summary>
+    /// Email templates repository.
+    /// </summary>
+    IEmailTemplatesRepository EmailTemplatesRepository { get; }
+    #endregion
+
     #region Methods
     /// <summary>
     /// Persists all pending changes tracked by the underlying

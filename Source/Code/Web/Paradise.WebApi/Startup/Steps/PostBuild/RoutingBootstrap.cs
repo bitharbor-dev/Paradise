@@ -1,4 +1,5 @@
-﻿using Paradise.Common.Extensions;
+﻿using Paradise.Primitives.Extensions;
+using Paradise.WebApi.Extensions;
 using Scalar.AspNetCore;
 
 namespace Paradise.WebApi.Startup.Steps.PostBuild;
@@ -10,19 +11,20 @@ internal sealed class RoutingBootstrap : IPostBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public Task ExecuteAsync(PostBuildContext context)
+    public ValueTask ExecuteAsync(PostBuildContext context)
     {
         var app = context.App;
 
         app.MapStaticAssets();
         app.MapRazorPages()
            .WithStaticAssets();
-        app.MapControllers();
+
+        app.MapEndpoints();
 
         app.MapOpenApi();
         app.MapScalarApiReference("/reference", app.Configuration.BindSection);
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
     #endregion
 }

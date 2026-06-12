@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Paradise.ApplicationLogic.Infrastructure.Extensions;
 using Paradise.Localization.Logging;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
+using Paradise.Tests.Doubles.Fakes.Microsoft.Extensions.Logging;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Extensions;
 

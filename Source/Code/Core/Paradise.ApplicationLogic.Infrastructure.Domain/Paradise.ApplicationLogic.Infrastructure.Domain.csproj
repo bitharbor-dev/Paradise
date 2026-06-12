@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Paradise.Domain.Base\Paradise.Domain.Base.csproj" />
 	</ItemGroup>
 

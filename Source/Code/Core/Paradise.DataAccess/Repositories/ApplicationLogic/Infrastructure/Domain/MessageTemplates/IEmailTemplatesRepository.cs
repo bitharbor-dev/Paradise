@@ -26,6 +26,8 @@ public interface IEmailTemplatesRepository : IRepository<EmailTemplate>
     /// <returns>
     /// The <see cref="EmailTemplate"/> found, or <see langword="null"/>.
     /// </returns>
-    Task<EmailTemplate?> GetByNameAndCultureAsync(string templateName, CultureInfo? culture, CancellationToken cancellationToken = default);
+    Task<EmailTemplate?> GetByNameAndCultureAsync(string templateName,
+                                                  CultureInfo? culture,
+                                                  CancellationToken cancellationToken = default);
     #endregion
 }

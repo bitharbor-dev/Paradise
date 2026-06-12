@@ -1,1 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Code\Core\Paradise.DataAccess.Seed\Paradise.DataAccess.Seed.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Serialization\Paradise.Tests.Serialization.csproj" />
+	</ItemGroup>
+
+</Project>

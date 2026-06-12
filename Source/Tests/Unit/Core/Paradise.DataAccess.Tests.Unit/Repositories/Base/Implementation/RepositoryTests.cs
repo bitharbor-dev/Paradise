@@ -142,11 +142,11 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var created = DateTimeOffset.UnixEpoch;
 
         // Act
-        Repository.ForEach(entry => entry.OnCreated(created));
+        Repository.ForEach(entry => entry.OnModified(created));
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Modified == created));
     }
 
     /// <summary>
@@ -171,11 +171,11 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
             entry => entry.Id != id;
 
         // Act
-        Repository.ForEach(predicate, entry => entry.OnCreated(created));
+        Repository.ForEach(predicate, entry => entry.OnModified(created));
         Source.SaveChanges();
 
         // Assert
-        Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Modified == created));
     }
 
     /// <summary>
@@ -195,11 +195,11 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
         var created = DateTimeOffset.UnixEpoch;
 
         // Act
-        await Repository.ForEachAsync(entry => entry.OnCreated(created), Token);
+        await Repository.ForEachAsync(entry => entry.OnModified(created), Token);
         await Source.SaveChangesAsync(Token);
 
         // Assert
-        Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>(), entity => Assert.True(entity.Modified == created));
     }
 
     /// <summary>
@@ -224,11 +224,11 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
             entry => entry.Id != id;
 
         // Act
-        await Repository.ForEachAsync(predicate, entry => entry.OnCreated(created), Token);
+        await Repository.ForEachAsync(predicate, entry => entry.OnModified(created), Token);
         await Source.SaveChangesAsync(Token);
 
         // Assert
-        Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Created == created));
+        Assert.All(Source.GetQueryable<TEntity>().Where(predicate), entity => Assert.True(entity.Modified == created));
     }
 
     /// <summary>

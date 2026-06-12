@@ -7,7 +7,6 @@ using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys.Options;
 using Paradise.WebApi.Infrastructure.Extensions;
 using Paradise.WebApi.Infrastructure.Options;
 using Paradise.WebApi.Infrastructure.Tests.Unit.Authentication.JwtBearer.Implementation;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Paradise.WebApi.Infrastructure.Tests.Unit.Extensions;
@@ -93,14 +92,12 @@ public sealed partial class IServiceCollectionExtensionsTests
         /// <returns>
         /// A configured <see cref="IServiceProvider"/>.
         /// </returns>
-        [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance",
-            Justification = "Intentional encapsulation.")]
-        public IServiceProvider BuildWebInfrastructureServiceProvider(string environmentName)
+        public ServiceProvider BuildWebInfrastructureServiceProvider(string environmentName)
         {
             var configuration = BuildConfiguration();
 
             var services = new ServiceCollection()
-                .AddJwtBearerAuthentication(configuration, typeof(JwtBearerEvents), environmentName);
+                .AddJwtBearerAuthentication<JwtBearerEvents>(configuration, environmentName);
 
             return services.BuildServiceProvider();
         }

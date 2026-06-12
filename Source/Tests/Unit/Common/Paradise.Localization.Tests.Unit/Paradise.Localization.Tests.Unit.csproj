@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Code\Common\Paradise.Localization\Paradise.Localization.csproj" />
+	</ItemGroup>
+
+</Project>

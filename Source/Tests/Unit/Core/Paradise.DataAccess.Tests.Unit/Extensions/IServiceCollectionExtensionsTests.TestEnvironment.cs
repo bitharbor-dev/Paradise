@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.DataAccess.Extensions;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Paradise.DataAccess.Tests.Unit.Extensions;
@@ -32,8 +31,7 @@ public sealed partial class IServiceCollectionExtensionsTests
             {
                 ConnectionStrings = new
                 {
-                    DomainConnectionString = "",
-                    InfrastructureConnectionString = ""
+                    DatabaseConnectionString = ""
                 }
             });
 
@@ -61,9 +59,7 @@ public sealed partial class IServiceCollectionExtensionsTests
         /// <returns>
         /// A configured <see cref="IServiceProvider"/>.
         /// </returns>
-        [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance",
-            Justification = "Intentional encapsulation.")]
-        public IServiceProvider BuildDataAccessServiceProvider()
+        public ServiceProvider BuildDataAccessServiceProvider()
         {
             var services = new ServiceCollection()
                 .AddDataAccess(Configuration);

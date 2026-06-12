@@ -1,4 +1,4 @@
-﻿using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Base;
+﻿using Paradise.Tests.Fixtures.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Base.Tests.Unit;
@@ -396,6 +396,25 @@ public sealed class ValueObjectTests
         Assert.NotEqual(default, entity.Id);
         Assert.Equal(utcNow, entity.Created);
         Assert.True(entity.StateValidated);
+    }
+
+    /// <summary>
+    /// The <see cref="ValueObject.OnCreated"/> method should
+    /// throw the <see cref="InvalidOperationException"/> if the
+    /// unique identifier has been already set.
+    /// </summary>
+    [Fact]
+    public void OnCreated_ThrowsOnAssignedIdentity()
+    {
+        // Arrange
+        var utcNow = DateTimeOffset.UnixEpoch;
+        var entity = new TestValidatableValueObject();
+
+        entity.OnCreated(utcNow);
+
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(()
+            => entity.OnCreated(utcNow));
     }
 
     /// <summary>

@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi;
-using Paradise.Tests.Miscellaneous.Reflection;
 using Paradise.WebApi.OpenApi.OperationTransformers;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Text.Json;
 
 namespace Paradise.WebApi.Tests.Unit.OpenApi.OperationTransformers;
@@ -33,7 +29,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
     private sealed class TestEnvironment
     {
         #region Fields
-        private readonly CustomAttributeBuilder _allowAnonymous;
+        private readonly AllowAnonymousAttribute _allowAnonymous;
         private readonly OpenApiSecurityScheme _sampleScheme;
         #endregion
 
@@ -43,8 +39,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
         /// </summary>
         public TestEnvironment()
         {
-            _allowAnonymous = new CustomAttributeBuilder(
-                typeof(AllowAnonymousAttribute).GetConstructor(Type.EmptyTypes)!, []);
+            _allowAnonymous = new();
 
             _sampleScheme = new()
             {
@@ -84,48 +79,28 @@ public sealed partial class OperationSecuritySchemeSetterTests
         };
 
         /// <summary>
-        /// Creates a new instance of <see cref="OpenApiOperationTransformerContext"/> class
-        /// with its action descriptor method set to
-        /// dynamically generated <see cref="MethodInfo"/> instance.
+        /// Creates a new instance of the <see cref="OpenApiOperationTransformerContext"/> class
+        /// with its action descriptor metadata set to contain <see cref="AllowAnonymousAttribute"/>
+        /// depending on the <paramref name="allowAnonymous"/> value.
         /// </summary>
-        /// <param name="allowAnonymousOnMethod">
-        /// Indicates whether <see cref="ControllerActionDescriptor.MethodInfo"/>
-        /// should be decorated with <see cref="AllowAnonymousAttribute"/>.
-        /// </param>
-        /// <param name="allowAnonymousOnType">
-        /// Indicates whether <see cref="ControllerActionDescriptor.MethodInfo"/> declaring type
-        /// should be decorated with <see cref="AllowAnonymousAttribute"/>.
+        /// <param name="allowAnonymous">
+        /// Indicates whether the output context targets the endpoint allowing anonymous requests.
         /// </param>
         /// <returns>
-        /// A new <see cref="OpenApiOperationTransformerContext"/> instance with configured method information.
+        /// A new <see cref="OpenApiOperationTransformerContext"/> instance with configured action descriptor.
         /// </returns>
-        public OpenApiOperationTransformerContext CreateContext(bool allowAnonymousOnMethod = false,
-                                                                bool allowAnonymousOnType = false)
+        public OpenApiOperationTransformerContext CreateContext(bool allowAnonymous = false) => new()
         {
-            var typeAttributes = allowAnonymousOnType
-                ? new[] { _allowAnonymous }
-                : [];
-
-            var methodAttributes = allowAnonymousOnMethod
-                ? new[] { _allowAnonymous }
-                : [];
-
-            var methodInfo = MethodInfoFactory.CreateVoid(
-                Guid.NewGuid().ToString("N"), "Test", typeAttributes, methodAttributes);
-
-            return new()
+            ApplicationServices = null!,
+            Description = new()
             {
-                ApplicationServices = null!,
-                Description = new()
+                ActionDescriptor = new()
                 {
-                    ActionDescriptor = new ControllerActionDescriptor()
-                    {
-                        MethodInfo = methodInfo
-                    }
-                },
-                DocumentName = string.Empty
-            };
-        }
+                    EndpointMetadata = allowAnonymous ? [_allowAnonymous] : []
+                }
+            },
+            DocumentName = string.Empty
+        };
         #endregion
 
         #region Private methods

@@ -1,5 +1,5 @@
 ﻿using Paradise.Models.WebApi.Services.Authentication;
-using Paradise.Tests.Miscellaneous.XunitSerialization;
+using Paradise.Tests.Serialization;
 using Xunit.Sdk;
 
 [assembly: Trait("Type", "Unit")]

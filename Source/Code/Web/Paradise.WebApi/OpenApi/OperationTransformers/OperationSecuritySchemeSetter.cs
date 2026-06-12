@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
-using Paradise.Common.Extensions;
+using Paradise.Primitives.Extensions;
 
 namespace Paradise.WebApi.OpenApi.OperationTransformers;
 
@@ -26,7 +26,7 @@ internal sealed class OperationSecuritySchemeSetter(IConfiguration configuration
 
         var scheme = configuration.GetRequiredInstance<OpenApiSecurityScheme>();
 
-        var descriptor = (ControllerActionDescriptor)context.Description.ActionDescriptor;
+        var descriptor = context.Description.ActionDescriptor;
         var schemeReference = new OpenApiSecuritySchemeReference(scheme.Scheme!, context.Document);
 
         AddSecurityScheme(operation, descriptor, schemeReference);
@@ -35,17 +35,16 @@ internal sealed class OperationSecuritySchemeSetter(IConfiguration configuration
     }
     #endregion
 
-    #region Public methods
+    #region Private methods
     /// <summary>
     /// Adds the given scheme <paramref name="reference"/> to the input <paramref name="operation"/>
-    /// using the data from <paramref name="operationDescriptor"/>.
+    /// using the data from <paramref name="descriptor"/>.
     /// </summary>
     /// <param name="operation">
     /// The <see cref="OpenApiOperation"/> to which to add the given <paramref name="reference"/>.
     /// </param>
-    /// <param name="operationDescriptor">
-    /// The <see cref="ControllerActionDescriptor"/> instance containing the <paramref name="operation"/>
-    /// information.
+    /// <param name="descriptor">
+    /// The <see cref="ActionDescriptor"/> instance containing the <paramref name="operation"/> information.
     /// </param>
     /// <param name="reference">
     /// The <see cref="OpenApiSecuritySchemeReference"/> to add.
@@ -56,21 +55,10 @@ internal sealed class OperationSecuritySchemeSetter(IConfiguration configuration
     /// If referenced security scheme is not "<c>oauth2</c>" or "<c>openIdConnect</c>" - the array MUST be empty.
     /// </para>
     /// </param>
-    public static void AddSecurityScheme(OpenApiOperation operation, ControllerActionDescriptor operationDescriptor,
-                                         OpenApiSecuritySchemeReference reference, params List<string> scopes)
+    private static void AddSecurityScheme(OpenApiOperation operation, ActionDescriptor descriptor,
+                                          OpenApiSecuritySchemeReference reference, params List<string> scopes)
     {
-        var methodInfo = operationDescriptor.MethodInfo;
-
-        var actionAttributes = methodInfo.GetCustomAttributes(true);
-        var controllerAttributes = methodInfo.DeclaringType!.GetCustomAttributes(true);
-
-        var attributes = actionAttributes.Union(controllerAttributes);
-
-        var authRequired = !attributes
-            .OfType<AllowAnonymousAttribute>()
-            .Any();
-
-        if (authRequired)
+        if (!descriptor.EndpointMetadata.Any(item => item is AllowAnonymousAttribute))
         {
             operation.Security ??= [];
             operation.Security.Add(new()

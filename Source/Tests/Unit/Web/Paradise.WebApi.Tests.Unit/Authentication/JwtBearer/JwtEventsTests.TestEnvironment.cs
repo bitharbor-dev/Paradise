@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.Models;
-using Paradise.Tests.Miscellaneous.TestDoubles.Stubs.Web.WebApi.Services.Authentication;
+using Paradise.Tests.Doubles.Stubs.Web.WebApi.Services.Authentication;
 using Paradise.WebApi.Authentication.JwtBearer;
 using Paradise.WebApi.Services.Authentication;
 

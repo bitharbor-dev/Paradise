@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.AspNetCore.Http.Features;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
-using System.Text.Json;
-using OptionsBuilder = Microsoft.Extensions.Options.Options;
+using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Http;
+using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Http.Features;
+using Paradise.Tests.Doubles.Fakes.Microsoft.Extensions.Logging;
 
 namespace Paradise.WebApi.Infrastructure.Tests.Unit;
 
@@ -28,10 +26,16 @@ public sealed class ExceptionHandlerTests : IDisposable
     {
         _logger.MessageLogged += OnMessageLogged;
 
+        ProblemDetailsService = new();
+
         Context = new DefaultHttpContext();
         Context.Features.Set<IHttpResponseFeature>(new FakeHttpResponseFeature());
 
-        Handler = new(_logger, OptionsBuilder.Create(JsonSerializerOptions.Default));
+        Context.RequestServices = new ServiceCollection()
+            .AddSingleton<IProblemDetailsService>(ProblemDetailsService)
+            .BuildServiceProvider();
+
+        Handler = new(_logger);
     }
     #endregion
 
@@ -40,6 +44,12 @@ public sealed class ExceptionHandlerTests : IDisposable
     /// System under test.
     /// </summary>
     public ExceptionHandler Handler { get; }
+
+    /// <summary>
+    /// An accessor to the <see cref="IProblemDetailsService"/> instance
+    /// used by the test target or it's dependencies.
+    /// </summary>
+    public FakeProblemDetailsService ProblemDetailsService { get; }
 
     /// <summary>
     /// The <see cref="Exception"/> passed into
@@ -79,6 +89,7 @@ public sealed class ExceptionHandlerTests : IDisposable
     public async Task TryHandleAsync()
     {
         // Arrange
+        ProblemDetailsService.Result = true;
 
         // Act
         var result = await Handler.TryHandleAsync(Context, CapturedException, Token);
@@ -88,6 +99,7 @@ public sealed class ExceptionHandlerTests : IDisposable
 
         var entry = Assert.Single(LoggedMessages);
         Assert.Same(CapturedException, entry.Exception);
+        Assert.Same(CapturedException, ProblemDetailsService.DetailsContext?.Exception);
     }
 
     /// <summary>
@@ -125,29 +137,6 @@ public sealed class ExceptionHandlerTests : IDisposable
 
         var entry = Assert.Single(LoggedMessages);
         Assert.Same(CapturedException, entry.Exception);
-    }
-
-    /// <summary>
-    /// The <see cref="ExceptionHandler.HandleFallbackAsync"/> method should
-    /// log fallback invocation and write the default failure response.
-    /// </summary>
-    [Fact]
-    public async Task HandleFallbackAsync()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-
-        services.AddSingleton<ILogger<ExceptionHandler>>(_logger);
-
-        services.AddSingleton(OptionsBuilder.Create(JsonSerializerOptions.Default));
-
-        Context.RequestServices = services.BuildServiceProvider();
-
-        // Act
-        await ExceptionHandler.HandleFallbackAsync(Context);
-
-        // Assert
-        Assert.Single(LoggedMessages);
     }
     #endregion
 

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Code\Web\Paradise.WebApi.Base\Paradise.WebApi.Base.csproj" />
+	</ItemGroup>
+
+</Project>

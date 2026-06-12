@@ -1,5 +1,5 @@
 ﻿using Paradise.Domain.Base.Events;
-using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.Domain.Events;
+using Paradise.Tests.Doubles.Spies.Core.Domain.Base.Events;
 using Paradise.WebApi.Services.Background;
 
 namespace Paradise.WebApi.Tests.Unit.Services.Background;

@@ -1,6 +1,6 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Communication.Email.Implementation;
 using Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
-using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.ApplicationLogic.Infrastructure.Communication.Email;
+using Paradise.Tests.Doubles.Spies.Core.ApplicationLogic.Infrastructure.Communication.Email;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Communication.Email.Implementation;
 

@@ -1,4 +1,4 @@
-﻿using Paradise.Tests.Miscellaneous.XunitSerialization;
+﻿using Paradise.Tests.Serialization;
 using System.Globalization;
 using Xunit.Sdk;
 

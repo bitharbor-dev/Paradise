@@ -1,7 +1,7 @@
 ﻿using Paradise.DataAccess.Repositories;
 using Paradise.DataAccess.Repositories.Base.Implementation;
 using Paradise.Domain.Base;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
+using Paradise.Tests.Doubles.Fakes.DataAccess;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.DataAccess.Tests.Unit.Repositories.Base.Implementation;

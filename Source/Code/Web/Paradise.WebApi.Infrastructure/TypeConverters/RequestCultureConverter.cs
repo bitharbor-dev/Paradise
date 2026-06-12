@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.WebApi.Infrastructure.TypeConverters;
 
@@ -51,7 +51,7 @@ public sealed class RequestCultureConverter : TypeConverter
         {
             1 => new RequestCulture(parts[0]),
             2 => new RequestCulture(parts[0], parts[1]),
-            _ => throw new FormatException(GetMessageFailedToCreateInstanceOfType(typeof(RequestCulture)))
+            _ => throw new FormatException(GetMessageFailedToCreateInstanceOfType<RequestCulture>())
         };
     }
 

@@ -1,22 +1,22 @@
-﻿using Paradise.Tests.Miscellaneous.TestDoubles.Dummies.Core.Domain.Base;
+﻿using Paradise.Tests.Doubles.Dummies.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Base.Tests.Unit;
 
 /// <summary>
-/// <see cref="DomainStateError{TEntity}"/> test class.
+/// <see cref="DomainStateError"/> test class.
 /// </summary>
 public sealed class DomainStateErrorTests
 {
     #region Constants
     [StringSyntax("Regex")]
-    private const string DefaultPattern = "^The object of type '.*' is in invalid state\\. Property name: '.*', value: '.*'\\.";
+    private const string DefaultPattern = "^The object of type '.*' is in an invalid state\\. Property name: '.*', value: '.*'\\.";
 
     [StringSyntax("Regex")]
     private const string AdditionalInformationPattern = " Additional information:\\r?\\n.*$";
 
     [StringSyntax("Regex")]
-    private const string NullValuePattern = "^The object of type '.*' is in invalid state\\. Property name: '.*', value: 'null'\\.$";
+    private const string NullValuePattern = "^The object of type '.*' is in an invalid state\\. Property name: '.*', value: 'null'\\.$";
     #endregion
 
     #region Properties
@@ -33,8 +33,8 @@ public sealed class DomainStateErrorTests
 
     #region Public methods
     /// <summary>
-    /// The <see cref="DomainStateError{TEntity}.implicit operator string?"/> operator should
-    /// return the same value as <see cref="DomainStateError{TEntity}.ToString"/> method.
+    /// The <see cref="DomainStateError.implicit operator string?"/> operator should
+    /// return the same value as <see cref="DomainStateError.ToString"/> method.
     /// </summary>
     [Fact]
     public void OperatorImplicitString()
@@ -42,7 +42,7 @@ public sealed class DomainStateErrorTests
         // Arrange
         var test = "Test";
 
-        var error = new DomainStateError<DummyEntity>(test);
+        var error = new DomainStateError(typeof(DummyEntity), test);
 
         // Act
         var result = (string?)error;
@@ -52,15 +52,15 @@ public sealed class DomainStateErrorTests
     }
 
     /// <summary>
-    /// The <see cref="DomainStateError{TEntity}.implicit operator string?"/> operator should
+    /// The <see cref="DomainStateError.implicit operator string?"/> operator should
     /// return <see langword="null"/> if the input
-    /// <see cref="DomainStateError{TEntity}"/> is equal to <see langword="null"/>.
+    /// <see cref="DomainStateError"/> is equal to <see langword="null"/>.
     /// </summary>
     [Fact]
     public void OperatorImplicitString_ReturnsNull()
     {
         // Arrange
-        var error = null as DomainStateError<DummyEntity>;
+        var error = null as DomainStateError;
 
         // Act
         var result = (string?)error!;
@@ -70,7 +70,7 @@ public sealed class DomainStateErrorTests
     }
 
     /// <summary>
-    /// The <see cref="DomainStateError{TEntity}"/> message property should
+    /// The <see cref="DomainStateError"/> message property should
     /// return the properly formatted value, containing the type of the entity
     /// whish is in invalid state, the name of the entity's property which is invalid,
     /// value of that property and additional information (if provided).
@@ -88,15 +88,15 @@ public sealed class DomainStateErrorTests
     public void Message_ReturnsProperlyFormattedValue(string? input, string? additionalInformation, string pattern)
     {
         // Arrange
-        var type = nameof(DummyEntity);
+        var type = typeof(DummyEntity);
         var property = nameof(input);
 
         // Act
-        var error = new DomainStateError<DummyEntity>(input, additionalInformation);
+        var error = new DomainStateError(type, input, additionalInformation);
 
         // Assert
         Assert.Matches(pattern, error.Message);
-        Assert.Contains(type, error.Message, StringComparison.Ordinal);
+        Assert.Contains(type.Name, error.Message, StringComparison.Ordinal);
         Assert.Contains(input ?? "null", error.Message, StringComparison.Ordinal);
         Assert.Contains(property, error.Message, StringComparison.Ordinal);
 
@@ -105,7 +105,7 @@ public sealed class DomainStateErrorTests
     }
 
     /// <summary>
-    /// The <see cref="DomainStateError{TEntity}"/> message property should
+    /// The <see cref="DomainStateError"/> message property should
     /// return the properly formatted value, containing name of the parameter
     /// which was passed into exception constructor.
     /// </summary>
@@ -116,7 +116,7 @@ public sealed class DomainStateErrorTests
         var test = "Invalid data";
 
         // Act
-        var error = new DomainStateError<DummyEntity>(test, additionalInformation: null);
+        var error = new DomainStateError(typeof(DummyEntity), test, additionalInformation: null);
 
         // Assert
         Assert.Contains(nameof(test), error.Message, StringComparison.Ordinal);

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="xunit.v3.extensibility.core" />
+	</ItemGroup>
+
+</Project>

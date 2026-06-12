@@ -9,10 +9,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<AssemblyTitle>Paradise</AssemblyTitle>
 		<AssemblyDescription>$(MSBuildProjectName)</AssemblyDescription>
 		<AssemblyProduct>Paradise</AssemblyProduct>

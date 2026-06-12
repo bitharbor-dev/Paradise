@@ -5,9 +5,7 @@ using Paradise.ApplicationLogic.Extensions;
 using Paradise.ApplicationLogic.Options.Models;
 using Paradise.ApplicationLogic.Options.Models.DataAccess.Seed.Providers;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.ApplicationLogic.Options.Models.Infrastructure.Services;
-using Paradise.Domain.Base.Events;
-using System.Diagnostics.CodeAnalysis;
+using Paradise.ApplicationLogic.Options.Models.Infrastructure.Services.MessageTemplates;
 using System.Text.Json;
 
 namespace Paradise.ApplicationLogic.Tests.Unit.Extensions;
@@ -39,8 +37,7 @@ public sealed partial class IServiceCollectionExtensionsTests
             },
             ConnectionStrings = new()
             {
-                ["DomainConnectionString"] = "",
-                ["InfrastructureConnectionString"] = ""
+                ["DatabaseConnectionString"] = ""
             },
             EmailTemplateOptions = new()
             {
@@ -72,19 +69,12 @@ public sealed partial class IServiceCollectionExtensionsTests
         /// <param name="environmentName">
         /// Current environment name.
         /// </param>
-        /// <param name="retryOptionsBuilder">
-        /// An action used to configure global domain event retry policy.
-        /// </param>
-        [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance",
-            Justification = "Intentional encapsulation.")]
-        public IServiceProvider BuildApplicationLogicServiceProvider(string environmentName,
-                                                                     Action<DomainEventRetryOptions>? retryOptionsBuilder = null)
+        public ServiceProvider BuildApplicationLogicServiceProvider(string environmentName)
         {
             var configuration = BuildConfiguration();
 
             var services = new ServiceCollection()
-                .AddApplicationLogic(configuration, environmentName)
-                .AddDomainEvents(retryOptionsBuilder);
+                .AddApplicationLogic(configuration, environmentName);
 
             return services.BuildServiceProvider(new ServiceProviderOptions
             {

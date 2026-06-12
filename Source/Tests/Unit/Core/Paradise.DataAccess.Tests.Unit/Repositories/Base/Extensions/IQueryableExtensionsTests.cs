@@ -1,5 +1,5 @@
 ﻿using Paradise.DataAccess.Repositories.Base.Extensions;
-using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Base;
+using Paradise.Tests.Fixtures.Core.Domain.Base;
 
 namespace Paradise.DataAccess.Tests.Unit.Repositories.Base.Extensions;
 

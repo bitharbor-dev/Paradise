@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Paradise.Common;
-using Paradise.Tests.Miscellaneous;
-using Paradise.WebApi.Authorization;
+using Paradise.Primitives;
+using Paradise.Tests.Extensibility;
 using Paradise.WebApi.Extensions;
 using Paradise.WebApi.Infrastructure.TypeConverters;
 using Paradise.WebApi.Services.Authentication;
@@ -67,21 +65,6 @@ public sealed partial class IServiceCollectionExtensionsTests
         // Act & Assert
         Assert.Throws<InvalidOperationException>(()
             => Test.BuildAuthenticationAndAuthorizationServiceProvider(environmentName));
-    }
-
-    /// <summary>
-    /// The <see cref="IServiceCollectionExtensions.AddAuthorizationResultHandler"/> method should
-    /// register a singleton <see cref="IAuthorizationMiddlewareResultHandler"/> implementation.
-    /// </summary>
-    [Fact]
-    public void AddAuthorizationResultHandler()
-    {
-        // Arrange
-        var provider = Test.BuilderAuthorizationResultHandlerServiceProvider();
-
-        // Act & Assert
-        Assert.ServiceLifetime<IAuthorizationMiddlewareResultHandler>(provider, ServiceLifetime.Singleton,
-            handler => Assert.IsType<AuthorizationResultHandler>(handler));
     }
 
     /// <summary>

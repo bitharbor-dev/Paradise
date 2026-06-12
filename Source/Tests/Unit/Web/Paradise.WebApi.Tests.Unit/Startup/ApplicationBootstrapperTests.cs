@@ -1,4 +1,4 @@
-﻿using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Web.WebApi.Startup;
+﻿using Paradise.Tests.Doubles.Spies.Web.WebApi.Startup;
 using Paradise.WebApi.Startup;
 
 namespace Paradise.WebApi.Tests.Unit.Startup;

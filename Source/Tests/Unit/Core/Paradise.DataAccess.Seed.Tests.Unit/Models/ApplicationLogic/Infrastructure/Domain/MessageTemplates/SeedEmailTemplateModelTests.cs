@@ -38,7 +38,7 @@ public sealed partial class SeedEmailTemplateModelTests
     public void Constructor_ThrowsOnTemplateTextOrSourcePathNull()
     {
         // Arrange
-        var message = ExceptionMessages.GetMessageMessageTemplateTemplateTextOrSourcePathIsRequired();
+        var message = ExceptionMessagesProvider.GetMessageMessageTemplateTemplateTextOrSourcePathIsRequired();
 
         // Act
         var exception = Assert.Throws<ArgumentException>(()

@@ -1,1 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Code\Web\Paradise.WebApi.Infrastructure\Paradise.WebApi.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Doubles\Paradise.Tests.Doubles.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Serialization\Paradise.Tests.Serialization.csproj" />
+	</ItemGroup>
+
+</Project>

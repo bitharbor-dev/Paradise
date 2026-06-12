@@ -1,10 +1,7 @@
-﻿using Paradise.Common.Extensions;
-using Paradise.DataAccess.Seed.Models.ApplicationLogic;
-using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
+﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic;
 using Paradise.DataAccess.Seed.Models.Domain;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
 using Paradise.Localization.ExceptionHandling;
+using Paradise.Primitives.Extensions;
 using System.Text.Json;
 
 namespace Paradise.DataAccess.Seed.Providers.Implementation;
@@ -26,14 +23,9 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
     public const string DomainDataFileName = "DomainData.json";
 
     /// <summary>
-    /// JSON file name to read the application data from.
+    /// JSON file name to read the infrastructure data from.
     /// </summary>
-    public const string ApplicationDataFileName = "ApplicationData.json";
-    #endregion
-
-    #region Fields
-    private readonly ApplicationDataSeedModel _applicationData;
-    private readonly DomainDataSeedModel _domainData;
+    public const string InfrastructureDataFileName = "InfrastructureData.json";
     #endregion
 
     #region Constructors
@@ -49,45 +41,52 @@ public sealed class JsonSeedDataProvider : ISeedDataProvider
 
         var sanitizedPath = path.SanitizePathSeparators();
 
-        var applicationFilePath = Path.Combine(sanitizedPath, ApplicationDataFileName);
         var domainFilePath = Path.Combine(sanitizedPath, DomainDataFileName);
+        var infrastructureFilePath = Path.Combine(sanitizedPath, InfrastructureDataFileName);
 
-        using var applicationFileStream = File.OpenRead(applicationFilePath);
-        using var domainFileStream = File.OpenRead(domainFilePath);
-
-        var applicationData = JsonSerializer.Deserialize<ApplicationDataSeedModel>(applicationFileStream);
-        var domainData = JsonSerializer.Deserialize<DomainDataSeedModel>(domainFileStream);
-
-        if (applicationData is null)
-        {
-            var message = ExceptionMessages.GetMessageFailedToDeserialize<ApplicationDataSeedModel>();
-
-            throw new InvalidOperationException(message);
-        }
-
-        if (domainData is null)
-        {
-            var message = ExceptionMessages.GetMessageFailedToDeserialize<DomainDataSeedModel>();
-
-            throw new InvalidOperationException(message);
-        }
-
-        _applicationData = applicationData;
-        _domainData = domainData;
+        DomainData = ReadFromJsonFile<DomainDataSeedModel>(domainFilePath);
+        InfrastructureData = ReadFromJsonFile<InfrastructureDataSeedModel>(infrastructureFilePath);
     }
     #endregion
 
-    #region Public methods
+    #region Properties
     /// <inheritdoc/>
-    public IEnumerable<SeedEmailTemplateModel> GetSeedEmailTemplates()
-        => _applicationData.EmailTemplates;
+    public DomainDataSeedModel DomainData { get; }
 
     /// <inheritdoc/>
-    public IEnumerable<SeedRoleModel> GetSeedRoles()
-        => _domainData.Roles;
+    public InfrastructureDataSeedModel InfrastructureData { get; }
+    #endregion
 
-    /// <inheritdoc/>
-    public IEnumerable<SeedUserModel> GetSeedUsers()
-        => _domainData.Users;
+    #region Private methods
+    /// <summary>
+    /// Reads and deserializes JSON data from the specified file
+    /// into an instance of <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The target type to deserialize the JSON content into.
+    /// </typeparam>
+    /// <param name="path">
+    /// The path to the JSON file.
+    /// </param>
+    /// <returns>
+    /// An instance of <typeparamref name="T"/> populated with data from the JSON file.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the JSON content cannot be deserialized into <typeparamref name="T"/>.
+    /// </exception>
+    private static T ReadFromJsonFile<T>(string path)
+    {
+        using var stream = File.OpenRead(path);
+        var data = JsonSerializer.Deserialize<T>(stream);
+
+        if (data is null)
+        {
+            var message = ExceptionMessagesProvider.GetMessageFailedToDeserialize<T>();
+
+            throw new InvalidOperationException(message);
+        }
+
+        return data;
+    }
     #endregion
 }

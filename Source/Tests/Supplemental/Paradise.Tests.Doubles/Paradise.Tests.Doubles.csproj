@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Paradise.WebApi.Tests.Unit" />
+		<InternalsVisibleTo Include="Paradise.ApplicationLogic.Infrastructure.Tests.Unit" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Code\Web\Paradise.WebApi\Paradise.WebApi.csproj" />
+		<ProjectReference Include="..\Paradise.Tests.Fixtures\Paradise.Tests.Fixtures.csproj" />
+	</ItemGroup>
+
+</Project>

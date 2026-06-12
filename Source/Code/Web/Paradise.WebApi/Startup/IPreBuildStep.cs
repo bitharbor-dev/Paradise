@@ -15,6 +15,6 @@ internal interface IPreBuildStep
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    Task ExecuteAsync(PreBuildContext context);
+    ValueTask ExecuteAsync(PreBuildContext context);
     #endregion
 }

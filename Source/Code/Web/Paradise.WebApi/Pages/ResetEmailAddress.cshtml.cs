@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Paradise.ApplicationLogic.Services.Identity.Users;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 
 namespace Paradise.WebApi.Pages;
 

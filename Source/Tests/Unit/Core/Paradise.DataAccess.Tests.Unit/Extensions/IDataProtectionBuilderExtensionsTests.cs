@@ -26,7 +26,7 @@ public sealed class IDataProtectionBuilderExtensionsTests
         var services = new ServiceCollection();
 
         var builder = services
-            .AddDbContext<InfrastructureContext>(options => options.UseInMemoryDatabase(TestContext.Current.Test!.UniqueID))
+            .AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase(TestContext.Current.Test!.UniqueID))
             .AddDataProtection();
 
         // Act
@@ -39,7 +39,7 @@ public sealed class IDataProtectionBuilderExtensionsTests
 
         var xmlRepository = scopedProvier.GetRequiredService<IOptions<KeyManagementOptions>>().Value.XmlRepository;
 
-        Assert.IsType<EntityFrameworkCoreXmlRepository<InfrastructureContext>>(xmlRepository);
+        Assert.IsType<EntityFrameworkCoreXmlRepository<ApplicationContext>>(xmlRepository);
     }
     #endregion
 }

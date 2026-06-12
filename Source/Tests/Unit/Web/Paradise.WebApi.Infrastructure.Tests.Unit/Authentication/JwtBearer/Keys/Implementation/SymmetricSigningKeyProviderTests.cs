@@ -18,13 +18,13 @@ public sealed partial class SymmetricSigningKeyProviderTests
     /// has <see langword="null"/> secret value.
     /// </summary>
     [Fact]
-    public void Constructor_ThrowsOnInvalidCertificateName()
+    public void Constructor_ThrowsOnInvalidOptions()
     {
         // Arrange
         Test.Options.Secret = null;
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(Test.CreateProvider);
+        Assert.Throws<ArgumentNullException>(Test.CreateProvider);
     }
 
     /// <summary>

@@ -6,17 +6,19 @@ using Paradise.ApplicationLogic.Infrastructure.Communication;
 using Paradise.ApplicationLogic.Infrastructure.Communication.Email;
 using Paradise.ApplicationLogic.Infrastructure.Communication.Email.Implementation;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Events.Identity;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Extensions;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Seed;
-using Paradise.ApplicationLogic.Infrastructure.Services;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
+using Paradise.ApplicationLogic.Infrastructure.Services.MessageTemplates;
 using Paradise.ApplicationLogic.Options.Models.DataAccess.Seed.Providers;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.Common;
 using Paradise.DataAccess.Seed.Providers;
-using Paradise.Domain.Identity.Roles;
-using Paradise.Domain.Identity.Users;
-using Paradise.Tests.Miscellaneous;
+using Paradise.Domain.Base.Events;
+using Paradise.Primitives;
+using Paradise.Tests.Extensibility;
 using static System.Net.Mail.SmtpDeliveryMethod;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Extensions;
@@ -46,6 +48,18 @@ public sealed partial class IServiceCollectionExtensionsTests
         { EnvironmentNames.Production       },
         { EnvironmentNames.ProductionDocker }
     };
+
+    /// <summary>
+    /// Provides member data for <see cref="AddInfrastructure_AddsDomainEventsDispatching"/> method.
+    /// </summary>
+    public static TheoryData<string> AddInfrastructure_AddsDomainEventsDispatching_MemberData { get; }
+        = [.. EnvironmentNames.AllowedEnvironments];
+
+    /// <summary>
+    /// Provides member data for <see cref="AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy"/> method.
+    /// </summary>
+    public static TheoryData<string> AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy_MemberData { get; }
+        = [.. EnvironmentNames.AllowedEnvironments];
     #endregion
 
     #region Public methods
@@ -88,6 +102,18 @@ public sealed partial class IServiceCollectionExtensionsTests
 
         Assert.ServiceLifetime<IUserManager<User>>(provider, ServiceLifetime.Scoped);
         Assert.ServiceLifetime<IRoleManager<Role>>(provider, ServiceLifetime.Scoped);
+
+        Assert.ServiceLifetime<IRoleService>(provider, ServiceLifetime.Scoped);
+        Assert.ServiceLifetime<IUserService>(provider, ServiceLifetime.Scoped);
+        Assert.ServiceLifetime<IUserRefreshTokenService>(provider, ServiceLifetime.Scoped);
+
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<EmailAddressConfirmedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<EmailAddressResetCompletedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<EmailAddressResetRequestedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<UserRegisteredEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<PasswordResetCompletedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<PasswordResetRequestedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<TwoFactorAuthenticationOccurringEvent>>(provider, ServiceLifetime.Singleton);
     }
 
     /// <summary>
@@ -127,6 +153,69 @@ public sealed partial class IServiceCollectionExtensionsTests
 
         Assert.ServiceLifetime<IUserManager<User>>(provider, ServiceLifetime.Scoped);
         Assert.ServiceLifetime<IRoleManager<Role>>(provider, ServiceLifetime.Scoped);
+
+        Assert.ServiceLifetime<IRoleService>(provider, ServiceLifetime.Scoped);
+        Assert.ServiceLifetime<IUserService>(provider, ServiceLifetime.Scoped);
+        Assert.ServiceLifetime<IUserRefreshTokenService>(provider, ServiceLifetime.Scoped);
+
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<EmailAddressConfirmedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<EmailAddressResetCompletedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<EmailAddressResetRequestedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<UserRegisteredEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<PasswordResetCompletedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<PasswordResetRequestedEvent>>(provider, ServiceLifetime.Singleton);
+        Assert.ServiceLifetimeEnumerable<IDomainEventListener<TwoFactorAuthenticationOccurringEvent>>(provider, ServiceLifetime.Singleton);
+    }
+
+    /// <summary>
+    /// The <see cref="IServiceCollectionExtensions.AddInfrastructure"/> method should
+    /// register all configured domain event listeners.
+    /// </summary>
+    /// <param name="environmentName">
+    /// Current environment name.
+    /// </param>
+    [Theory, MemberData(nameof(AddInfrastructure_AddsDomainEventsDispatching_MemberData))]
+    public void AddInfrastructure_AddsDomainEventsDispatching(string environmentName)
+    {
+        // Arrange
+        var provider = Test.BuildInfrastructureServiceProvider(environmentName);
+
+        // Act
+        var options = provider.GetService<IOptions<DomainEventRetryOptions>>()?.Value;
+
+        // Assert
+        Assert.NotNull(options);
+
+        Assert.ServiceLifetimeEnumerable<IDomainEventDispatcher>(provider, ServiceLifetime.Singleton);
+    }
+
+    /// <summary>
+    /// The <see cref="IServiceCollectionExtensions.AddInfrastructure"/> method should
+    /// register all configured domain event listeners
+    /// and configure global domain event retry policy.
+    /// </summary>
+    /// <param name="environmentName">
+    /// Current environment name.
+    /// </param>
+    [Theory, MemberData(nameof(AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy_MemberData))]
+    public void AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy(string environmentName)
+    {
+        // Arrange
+        static void ConfigureOptions(DomainEventRetryOptions options)
+        {
+            options.BaseDelay = TimeSpan.FromSeconds(2);
+            options.MaxRetries = 10;
+            options.UseExponentialBackOff = false;
+        }
+
+        var expectedOptions = new DomainEventRetryOptions();
+        ConfigureOptions(expectedOptions);
+
+        var provider = Test.BuildInfrastructureServiceProvider(environmentName, ConfigureOptions);
+
+        // Act & Assert
+        Assert.ServiceLifetime<IOptions<DomainEventRetryOptions>>(provider, ServiceLifetime.Singleton,
+            options => Assert.Equivalent(expectedOptions, options.Value));
     }
 
     /// <summary>

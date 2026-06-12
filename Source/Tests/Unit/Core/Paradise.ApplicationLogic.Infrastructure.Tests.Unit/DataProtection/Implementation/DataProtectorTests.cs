@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection.Implementation;
-using Paradise.Tests.Miscellaneous.XunitSerialization;
+using Paradise.Tests.Serialization;
 using System.Text.Json;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.DataProtection.Implementation;

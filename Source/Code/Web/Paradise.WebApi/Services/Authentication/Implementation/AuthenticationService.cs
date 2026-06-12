@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection;
-using Paradise.ApplicationLogic.Services.Identity.Roles;
-using Paradise.ApplicationLogic.Services.Identity.Users;
-using Paradise.Common.Extensions;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Events.Identity;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 using Paradise.Domain.Base.Events;
-using Paradise.Domain.Events.Identity.Users;
 using Paradise.Localization.ExceptionHandling;
 using Paradise.Models;
-using Paradise.Models.Domain.Identity.Users;
+using Paradise.Models.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.Models.WebApi.Services.Authentication;
+using Paradise.Primitives.Extensions;
 using Paradise.WebApi.Extensions;
 using Paradise.WebApi.Infrastructure.Authentication.Caching;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer;
@@ -169,8 +168,7 @@ internal sealed class AuthenticationService(IOptions<AuthenticationOptions> auth
     /// <inheritdoc/>
     public async Task<Result<AccessTokenModel>> RenewTokenAsync(string oldAccessToken, CancellationToken cancellationToken = default)
     {
-        if (oldAccessToken.StartsWith(JwtBearerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
-            oldAccessToken = oldAccessToken[(JwtBearerDefaults.AuthenticationScheme.Length + 1)..];
+        RemoveAuthenticationSchemeFromToken(ref oldAccessToken);
 
         if (!jwtManager.TryParseToken(oldAccessToken, out var principal, false))
             return new(InvalidInput, InvalidToken);
@@ -195,8 +193,7 @@ internal sealed class AuthenticationService(IOptions<AuthenticationOptions> auth
     /// <inheritdoc/>
     public async Task<Result> LogoutAsync(string accessToken, CancellationToken cancellationToken = default)
     {
-        if (accessToken.StartsWith(JwtBearerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
-            accessToken = accessToken[(JwtBearerDefaults.AuthenticationScheme.Length + 1)..];
+        RemoveAuthenticationSchemeFromToken(ref accessToken);
 
         if (!jwtManager.TryParseToken(accessToken, out var principal, false))
             return new(InvalidInput, InvalidToken);
@@ -335,7 +332,7 @@ internal sealed class AuthenticationService(IOptions<AuthenticationOptions> auth
         }
         else
         {
-            var error = ExceptionMessages.GetMessageRequiredAtLeastOne(
+            var error = ExceptionMessagesProvider.GetMessageRequiredAtLeastOne(
                 nameof(LoginModel.EmailAddress),
                 nameof(LoginModel.PhoneNumber),
                 nameof(LoginModel.UserName));
@@ -576,6 +573,18 @@ internal sealed class AuthenticationService(IOptions<AuthenticationOptions> auth
         }
 
         return lookupResult.Value.Select(role => new UserClaimModel(roleClaimType, role.Name));
+    }
+
+    /// <summary>
+    /// Removes the authentication scheme prefix from the specified access token when present.
+    /// </summary>
+    /// <param name="accessToken">
+    /// The access token that may contain an authentication scheme prefix.
+    /// </param>
+    private static void RemoveAuthenticationSchemeFromToken(ref string accessToken)
+    {
+        if (accessToken.StartsWith(JwtBearerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
+            accessToken = accessToken[(JwtBearerDefaults.AuthenticationScheme.Length + 1)..];
     }
     #endregion
 }

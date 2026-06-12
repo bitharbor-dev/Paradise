@@ -1,1 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Code\Core\Paradise.ApplicationLogic\Paradise.ApplicationLogic.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Extensibility\Paradise.Tests.Extensibility.csproj" />
+	</ItemGroup>
+
+</Project>

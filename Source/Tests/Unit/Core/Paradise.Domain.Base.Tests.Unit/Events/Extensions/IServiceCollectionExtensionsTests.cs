@@ -3,8 +3,8 @@ using Microsoft.Extensions.Options;
 using Paradise.Domain.Base.Events;
 using Paradise.Domain.Base.Events.Extensions;
 using Paradise.Domain.Base.Events.Implementation;
-using Paradise.Tests.Miscellaneous;
-using Paradise.Tests.Miscellaneous.TestDoubles.Dummies.Core.Domain.Events;
+using Paradise.Tests.Doubles.Dummies.Core.Domain.Base.Events;
+using Paradise.Tests.Extensibility;
 
 namespace Paradise.Domain.Base.Tests.Unit.Events.Extensions;
 

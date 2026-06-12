@@ -1,11 +1,9 @@
 ﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
 using Paradise.ApplicationLogic.Extensions;
-using Paradise.Common;
-using Paradise.Common.Extensions;
+using Paradise.Primitives;
+using Paradise.Primitives.Extensions;
 using Paradise.WebApi.Extensions;
 using Paradise.WebApi.Infrastructure;
-using Paradise.WebApi.Infrastructure.Binders.Providers;
 using Paradise.WebApi.OpenApi.DocumentTransformers;
 using Paradise.WebApi.OpenApi.OperationTransformers;
 
@@ -16,21 +14,23 @@ namespace Paradise.WebApi.Startup.Steps.PreBuild;
 /// </summary>
 internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
 {
+    #region Constants
+    private const string PagesLocalizationResourcesPath = "Resources";
+    #endregion
+
     #region Public methods
     /// <inheritdoc/>
-    public Task ExecuteAsync(PreBuildContext context)
+    public ValueTask ExecuteAsync(PreBuildContext context)
     {
         var services = context.Builder.Services;
         var configuration = context.Builder.Configuration;
 
         RegisterCore(services, configuration, context.Builder.Environment);
-        RegisterExceptionHandler(services);
-        RegisterPagesAndControllers(services);
+        RegisterErrorHandling(services);
+        RegisterPages(services);
         RegisterOpenApi(services, configuration);
 
-        services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
-
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
     #endregion
 
@@ -54,9 +54,7 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
     {
         services.AddDomainEventsDispatchingService();
         services.AddAuthenticationAndAuthorization(configuration, environment.EnvironmentName);
-        services.AddAuthorizationResultHandler();
         services.AddApplicationLogic(configuration, environment.EnvironmentName);
-        services.AddDomainEvents();
         services.AddRequestLocalization(configuration);
 
         if (EnvironmentNames.IsProduction(environment.EnvironmentName))
@@ -64,32 +62,30 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
     }
 
     /// <summary>
-    /// Registers a global exception handler.
+    /// Registers error handling services.
     /// </summary>
     /// <param name="services">
     /// The <see cref="IServiceCollection"/> to add the services to.
     /// </param>
-    private static void RegisterExceptionHandler(IServiceCollection services)
-        => services.AddExceptionHandler<ExceptionHandler>();
+    private static void RegisterErrorHandling(IServiceCollection services)
+    {
+        services.AddExceptionHandler<ExceptionHandler>();
+        services.AddProblemDetails();
+        services.AddValidation();
+    }
 
     /// <summary>
-    /// Registers Razor Pages and controller configuration.
+    /// Registers Razor Pages and view localization.
     /// </summary>
     /// <param name="services">
     /// The <see cref="IServiceCollection"/> to add the services to.
     /// </param>
-    /// <remarks>
-    /// Configures controllers and prioritizes <see cref="CustomModelBinderProvider"/>
-    /// within the model binder provider collection.
-    /// </remarks>
-    private static void RegisterPagesAndControllers(IServiceCollection services)
+    private static void RegisterPages(IServiceCollection services)
     {
         services
             .AddRazorPages()
-            .AddViewLocalization(options => options.ResourcesPath = "Resources")
+            .AddViewLocalization(options => options.ResourcesPath = PagesLocalizationResourcesPath)
             .AddDataAnnotationsLocalization();
-
-        services.AddControllers(options => options.ModelBinderProviders.Insert(0, CustomModelBinderProvider.Instance));
     }
 
     /// <summary>

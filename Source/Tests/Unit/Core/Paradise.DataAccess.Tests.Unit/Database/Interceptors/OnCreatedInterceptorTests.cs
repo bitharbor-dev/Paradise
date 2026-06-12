@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Paradise.DataAccess.Database.Interceptors;
 using Paradise.DataAccess.Database.Interceptors.Base;
 using Paradise.Domain.Base;
-using Paradise.Tests.Miscellaneous.TestDoubles.Dummies.Core.Domain.Base;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.EntityFrameworkCore.ChangeTracking;
+using Paradise.Tests.Doubles.Dummies.Core.Domain.Base;
+using Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Paradise.DataAccess.Tests.Unit.Database.Interceptors;
 

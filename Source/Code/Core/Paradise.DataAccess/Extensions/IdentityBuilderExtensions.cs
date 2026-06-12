@@ -23,7 +23,7 @@ public static class IdentityBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        return builder.AddEntityFrameworkStores<DomainContext>();
+        return builder.AddEntityFrameworkStores<ApplicationContext>();
     }
     #endregion
 }

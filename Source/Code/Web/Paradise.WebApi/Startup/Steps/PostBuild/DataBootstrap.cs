@@ -10,7 +10,7 @@ internal sealed class DataBootstrap : IPostBuildStep
 {
     #region Public methods
     /// <inheritdoc/>
-    public Task ExecuteAsync(PostBuildContext context)
+    public ValueTask ExecuteAsync(PostBuildContext context)
         => SeedDatabaseAsync(context.App.Services, context.App.Lifetime.ApplicationStopping);
     #endregion
 
@@ -28,7 +28,7 @@ internal sealed class DataBootstrap : IPostBuildStep
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    private static async Task SeedDatabaseAsync(IServiceProvider provider, CancellationToken cancellationToken)
+    private static async ValueTask SeedDatabaseAsync(IServiceProvider provider, CancellationToken cancellationToken)
     {
         var scope = provider.CreateAsyncScope();
 
@@ -40,13 +40,13 @@ internal sealed class DataBootstrap : IPostBuildStep
             await seeder.EnsureStorageAvailableAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            await seeder.SeedRolesAsync(seedDataProvider.GetSeedRoles(), cancellationToken)
+            await seeder.SeedRolesAsync(seedDataProvider.InfrastructureData.Roles, cancellationToken)
                 .ConfigureAwait(false);
 
-            await seeder.SeedUsersAsync(seedDataProvider.GetSeedUsers(), cancellationToken)
+            await seeder.SeedUsersAsync(seedDataProvider.InfrastructureData.Users, cancellationToken)
                 .ConfigureAwait(false);
 
-            await seeder.SeedEmailTemplatesAsync(seedDataProvider.GetSeedEmailTemplates(), cancellationToken)
+            await seeder.SeedEmailTemplatesAsync(seedDataProvider.InfrastructureData.EmailTemplates, cancellationToken)
                 .ConfigureAwait(false);
         }
     }

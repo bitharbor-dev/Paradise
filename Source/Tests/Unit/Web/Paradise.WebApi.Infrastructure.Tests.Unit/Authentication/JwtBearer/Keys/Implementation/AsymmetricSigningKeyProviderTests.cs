@@ -18,13 +18,13 @@ public sealed partial class AsymmetricSigningKeyProviderTests
     /// has <see langword="null"/> private key value.
     /// </summary>
     [Fact]
-    public void Constructor_ThrowsOnInvalidCertificateName()
+    public void Constructor_ThrowsOnInvalidOptions()
     {
         // Arrange
         Test.Options.PrivateKey = null;
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(Test.CreateProvider);
+        Assert.Throws<ArgumentNullException>(Test.CreateProvider);
     }
 
     /// <summary>

@@ -1,8 +1,8 @@
 ﻿using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.Common.Extensions;
 using Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
+using Paradise.Primitives.Extensions;
 using System.Net.Mail;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Communication.Email.Implementation;
 

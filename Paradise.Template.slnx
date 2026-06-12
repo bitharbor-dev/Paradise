@@ -14,6 +14,12 @@
 
 	<Folder Name="/Source/Code/" />
 
+	<Folder Name="/Source/Code/Common/">
+		<Project Path="Source/Code/Common/Paradise.Localization/Paradise.Localization.csproj" />
+		<Project Path="Source/Code/Common/Paradise.Models/Paradise.Models.csproj" />
+		<Project Path="Source/Code/Common/Paradise.Primitives/Paradise.Primitives.csproj" />
+	</Folder>
+
 	<Folder Name="/Source/Code/Core/">
 		<Project Path="Source/Code/Core/Paradise.ApplicationLogic.DataConverters/Paradise.ApplicationLogic.DataConverters.csproj" />
 		<Project Path="Source/Code/Core/Paradise.ApplicationLogic.Infrastructure.Domain/Paradise.ApplicationLogic.Infrastructure.Domain.csproj" />
@@ -30,14 +36,9 @@
 		<Project Path="Source/Code/Intermediate/Paradise.WebApi.Client/Paradise.WebApi.Client.csproj" />
 	</Folder>
 
-	<Folder Name="/Source/Code/Shared/">
-		<Project Path="Source/Code/Shared/Paradise.Common/Paradise.Common.csproj" />
-		<Project Path="Source/Code/Shared/Paradise.Localization/Paradise.Localization.csproj" />
-		<Project Path="Source/Code/Shared/Paradise.Models/Paradise.Models.csproj" />
-	</Folder>
-
 	<Folder Name="/Source/Code/Web/">
 		<Project Path="Source/Code/Web/Paradise.Maintenance/Paradise.Maintenance.csproj" />
+		<Project Path="Source/Code/Web/Paradise.WebApi.Base/Paradise.WebApi.Base.csproj" />
 		<Project Path="Source/Code/Web/Paradise.WebApi.Infrastructure/Paradise.WebApi.Infrastructure.csproj" />
 		<Project Path="Source/Code/Web/Paradise.WebApi/Paradise.WebApi.csproj" />
 	</Folder>
@@ -50,10 +51,19 @@
 	</Folder>
 
 	<Folder Name="/Source/Tests/Supplemental/">
-		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Miscellaneous/Paradise.Tests.Miscellaneous.csproj" />
+		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Doubles/Paradise.Tests.Doubles.csproj" />
+		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Extensibility/Paradise.Tests.Extensibility.csproj" />
+		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Fixtures/Paradise.Tests.Fixtures.csproj" />
+		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Serialization/Paradise.Tests.Serialization.csproj" />
 	</Folder>
 
 	<Folder Name="/Source/Tests/Unit/" />
+
+	<Folder Name="/Source/Tests/Unit/Common/">
+		<Project Path="Source/Tests/Unit/Common/Paradise.Localization.Tests.Unit/Paradise.Localization.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Common/Paradise.Models.Tests.Unit/Paradise.Models.Tests.Unit.csproj" />
+		<Project Path="Source/Tests/Unit/Common/Paradise.Primitives.Tests.Unit/Paradise.Primitives.Tests.Unit.csproj" />
+	</Folder>
 
 	<Folder Name="/Source/Tests/Unit/Core/">
 		<Project Path="Source/Tests/Unit/Core/Paradise.ApplicationLogic.DataConverters.Tests.Unit/Paradise.ApplicationLogic.DataConverters.Tests.Unit.csproj" />
@@ -67,12 +77,8 @@
 		<Project Path="Source/Tests/Unit/Core/Paradise.Domain.Tests.Unit/Paradise.Domain.Tests.Unit.csproj" />
 	</Folder>
 
-	<Folder Name="/Source/Tests/Unit/Shared/">
-		<Project Path="Source/Tests/Unit/Shared/Paradise.Common.Tests.Unit/Paradise.Common.Tests.Unit.csproj" />
-		<Project Path="Source/Tests/Unit/Shared/Paradise.Models.Tests.Unit/Paradise.Models.Tests.Unit.csproj" />
-	</Folder>
-
 	<Folder Name="/Source/Tests/Unit/Web/">
+		<Project Path="Source/Tests/Unit/Web/Paradise.WebApi.Base.Tests.Unit/Paradise.WebApi.Base.Tests.Unit.csproj" />
 		<Project Path="Source/Tests/Unit/Web/Paradise.WebApi.Infrastructure.Tests.Unit/Paradise.WebApi.Infrastructure.Tests.Unit.csproj" />
 		<Project Path="Source/Tests/Unit/Web/Paradise.WebApi.Tests.Unit/Paradise.WebApi.Tests.Unit.csproj" />
 	</Folder>

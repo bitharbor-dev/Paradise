@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Paradise.Domain.Base.Events;
+﻿namespace Paradise.Domain.Base.Events;
 
 /// <summary>
 /// Represents the configuration options for retrying the processing
@@ -74,16 +72,17 @@ public sealed class DomainEventRetryOptions
     /// A <see cref="TimeSpan"/> representing the delay to wait before the next retry.
     /// Returns <see cref="TimeSpan.Zero"/> for the initial attempt (attempt 0).
     /// </returns>
-    [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Omitted for readability.")]
     private TimeSpan GetDelay(ushort attempt)
     {
         if (attempt is 0)
             return TimeSpan.Zero;
 
-        if (UseExponentialBackOff)
-            return BaseDelay * Math.Pow(2, attempt);
+        var delay = BaseDelay;
 
-        return BaseDelay;
+        if (UseExponentialBackOff)
+            delay *= Math.Pow(2, attempt);
+
+        return delay;
     }
     #endregion
 

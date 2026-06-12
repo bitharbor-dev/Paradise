@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Paradise.Common.Extensions;
+using Paradise.Primitives.Extensions;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -155,13 +155,13 @@ internal sealed class DomainEventDispatcher(ILogger<DomainEventDispatcher> logge
     /// listener implements <see cref="IOrderedDomainEventListener{TEvent}"/>,
     /// otherwise - <see cref="int.MaxValue"/>.
     /// </returns>
-    [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Omitted for readability.")]
     private static int GetListenerProcessingOrder<TEvent>(IDomainEventListener<TEvent> listener) where TEvent : IDomainEvent
     {
-        if (listener is IOrderedDomainEventListener<TEvent> orderedListener)
-            return orderedListener.ProcessingOrder;
+        var result = listener is IOrderedDomainEventListener<TEvent> orderedListener
+            ? orderedListener.ProcessingOrder
+            : int.MaxValue;
 
-        return int.MaxValue;
+        return result;
     }
 
     /// <summary>

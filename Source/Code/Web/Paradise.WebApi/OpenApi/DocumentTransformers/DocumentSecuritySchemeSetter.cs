@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
-using Paradise.Common.Extensions;
+using Paradise.Primitives.Extensions;
 
 namespace Paradise.WebApi.OpenApi.DocumentTransformers;
 

@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Data\JSON\ApplicationData.json" />
 		<None Remove="Data\JSON\DomainData.json" />
+		<None Remove="Data\JSON\InfrastructureData.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,16 +26,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Data\JSON\ApplicationData.json" CopyToOutputDirectory="Always" />
 		<Content Include="Data\JSON\DomainData.json" CopyToOutputDirectory="Always" />
+		<Content Include="Data\JSON\InfrastructureData.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Options" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\Shared\Paradise.Common\Paradise.Common.csproj" />
+		<ProjectReference Include="..\..\Common\Paradise.Primitives\Paradise.Primitives.csproj" />
 	</ItemGroup>
 
 </Project>

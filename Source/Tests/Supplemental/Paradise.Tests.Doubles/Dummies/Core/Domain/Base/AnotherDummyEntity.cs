@@ -1,0 +1,8 @@
+﻿using Paradise.Domain.Base;
+
+namespace Paradise.Tests.Doubles.Dummies.Core.Domain.Base;
+
+/// <summary>
+/// Dummy <see cref="Entity"/> implementation.
+/// </summary>
+public sealed class AnotherDummyEntity : Entity;

@@ -78,16 +78,12 @@ should only perform database availability check, but not create/amend database s
 
 A single database is being used to persist the application data.
 
-Two database contexts - `InfrastructureContext` and `DomainContext`, each of them tied to the database scheme: `infrastructure` and `domain` respectively.
-
 To create a new migration open the terminal in `DataAccess` project directory and run migration creation command with the following parameters:
 
-| Property name                    | Description                                                                       | Value                                                                                                                                |
-| -------------------------------: | :-------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------- |
-| `-p`                             | Relative path to the project folder of the target project.                        | `"Paradise.DataAccess.csproj"`                                                                                                       |
-| `-o`                             | The directory use to output the files.                                            | `"Database\Migrations\ApplicationLogic\Infrastructure\Domain"` or `"Database\Migrations\Domain"` (depending on the database context) |
-| `-c`                             | The `DbContext` class to use.                                                     | `"InfrastructureContext"` or `"DomainContext"`                                                                                       |
+| Property name                    | Description                                                | Value                                                                                                                                |
+| -------------------------------- | ---------------------------------------------------------- | --------------------------------- |
+| `-o`                             | The directory use to output the files.                     | `"Database\Migrations"`           |
 
 **Complete example of the command:**
 
-    dotnet ef migrations add InitialState -p "Paradise.DataAccess.csproj" -o "Database\Migrations\Domain" -c "DomainContext"
+    dotnet ef migrations add InitialState -o "Database\Migrations"

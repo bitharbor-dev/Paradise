@@ -1,0 +1,1 @@
+﻿[assembly: Trait("Type", "Unit")]

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
-using Paradise.Common.Extensions;
+using Paradise.Primitives.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text.Json;

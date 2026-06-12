@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Paradise.Common;
-using Paradise.Common.Web;
+using Paradise.Primitives;
+using Paradise.Primitives.Web;
 using Paradise.WebApi.Infrastructure.Authentication.Caching;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer;
 using Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys;
@@ -57,12 +57,12 @@ public sealed partial class IServiceCollectionExtensionsTests
         var signingKeyProvider = provider.GetService<IJwtSigningKeyProvider>();
 
         var optionsFactory = provider.GetRequiredService<IOptionsFactory<JwtBearerOptions>>();
-        var defaultJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.Default);
-        var secondaryJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.DisableTokenLifetimeValidation);
+        var defaultJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.DefaultScheme);
+        var secondaryJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.LifetimelessScheme);
 
         var schemeProvider = provider.GetRequiredService<IAuthenticationSchemeProvider>();
-        var defaultScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.Default);
-        var secondaryScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.DisableTokenLifetimeValidation);
+        var defaultScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.DefaultScheme);
+        var secondaryScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.LifetimelessScheme);
 
         var jwtManager = provider.GetService<IJwtManager>();
         var refreshTokenCache = provider.GetService<IRefreshTokenCache>();
@@ -100,12 +100,12 @@ public sealed partial class IServiceCollectionExtensionsTests
         var signingKeyProvider = provider.GetService<IJwtSigningKeyProvider>();
 
         var optionsFactory = provider.GetRequiredService<IOptionsFactory<JwtBearerOptions>>();
-        var defaultJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.Default);
-        var secondaryJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.DisableTokenLifetimeValidation);
+        var defaultJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.DefaultScheme);
+        var secondaryJwtBearerOptions = optionsFactory.Create(AuthenticationSchemeNames.LifetimelessScheme);
 
         var schemeProvider = provider.GetRequiredService<IAuthenticationSchemeProvider>();
-        var defaultScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.Default);
-        var secondaryScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.DisableTokenLifetimeValidation);
+        var defaultScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.DefaultScheme);
+        var secondaryScheme = await schemeProvider.GetSchemeAsync(AuthenticationSchemeNames.LifetimelessScheme);
 
         var jwtManager = provider.GetService<IJwtManager>();
         var refreshTokenCache = provider.GetService<IRefreshTokenCache>();

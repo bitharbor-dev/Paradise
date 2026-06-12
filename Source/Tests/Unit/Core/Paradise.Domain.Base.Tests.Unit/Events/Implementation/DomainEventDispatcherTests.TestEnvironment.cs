@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Options;
 using Paradise.Domain.Base.Events;
 using Paradise.Domain.Base.Events.Implementation;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.Domain.Events;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
-using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.Domain.Events;
-using Paradise.Tests.Miscellaneous.TestDoubles.Stubs.Core.Domain.Events;
+using Paradise.Tests.Doubles.Fakes.Core.Domain.Base.Events;
+using Paradise.Tests.Doubles.Fakes.Microsoft.Extensions.Logging;
+using Paradise.Tests.Doubles.Spies.Core.Domain.Base.Events;
+using Paradise.Tests.Doubles.Stubs.Core.Domain.Base.Events;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;
 
 namespace Paradise.Domain.Base.Tests.Unit.Events.Implementation;
@@ -177,7 +177,7 @@ public sealed partial class DomainEventDispatcherTests
                 {
                     var monitor = provider.GetRequiredService<IOptionsMonitor<DomainEventRetryOptions>>();
 
-                    return OptionsBuilder.Create(monitor.Get((string)key!));
+                    return OptionsBuilder.Create(monitor.Get((string)key));
                 });
             }
 

@@ -1,6 +1,5 @@
-﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
+﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic;
+using Paradise.DataAccess.Seed.Models.Domain;
 
 namespace Paradise.DataAccess.Seed.Providers;
 
@@ -9,32 +8,15 @@ namespace Paradise.DataAccess.Seed.Providers;
 /// </summary>
 public interface ISeedDataProvider
 {
-    #region Methods
+    #region Properties
     /// <summary>
-    /// Gets a users list to seed the database.
+    /// Contains domain seed data.
     /// </summary>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="SeedUserModel"/>
-    /// to seed the database.
-    /// </returns>
-    IEnumerable<SeedUserModel> GetSeedUsers();
+    DomainDataSeedModel DomainData { get; }
 
     /// <summary>
-    /// Gets a roles list to seed the database.
+    /// Contains infrastructure seed data.
     /// </summary>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="SeedRoleModel"/>
-    /// to seed the database.
-    /// </returns>
-    IEnumerable<SeedRoleModel> GetSeedRoles();
-
-    /// <summary>
-    /// Gets an email templates list to seed the database.
-    /// </summary>
-    /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="SeedEmailTemplateModel"/>
-    /// to seed the database.
-    /// </returns>
-    IEnumerable<SeedEmailTemplateModel> GetSeedEmailTemplates();
+    InfrastructureDataSeedModel InfrastructureData { get; }
     #endregion
 }

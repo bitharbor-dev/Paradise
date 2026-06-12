@@ -1,4 +1,4 @@
-﻿using Paradise.Common.Extensions;
+﻿using Paradise.Primitives.Extensions;
 
 namespace Paradise.ApplicationLogic.Options.Models.DataAccess.Seed.Providers;
 

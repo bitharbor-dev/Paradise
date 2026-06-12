@@ -50,9 +50,7 @@ internal sealed class DocumentPathsCamelCaseFormatter : IOpenApiDocumentTransfor
             var path = pair.Key;
             var item = pair.Value;
 
-            var segments = path
-                .Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
+            var segments = path.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             var decomposedPath = segments.Select(segment => string.Create(segment.Length, segment, LowercaseFirstCharacter));
             var camelCasePath = PathSeparator + string.Join(PathSeparator, decomposedPath);
 

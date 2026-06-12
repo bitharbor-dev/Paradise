@@ -3,10 +3,10 @@
     "ApiUrl": "https://localhost:5001"
   },
   "ConnectionStrings": {
-    //"DomainConnectionString": "Do not expose connection strings in the repository.",
-    //"InfrastructureConnectionString": "It is recommended to set them through the environment variables,
-    //                           here is how environment variable name should look like
-    //                           to be bound properly in the application - 'ConnectionStrings__DomainConnectionString'."
+    //"DatabaseConnectionString": "Do not expose connection strings in the repository.
+    //                             It is recommended to set them through the environment variables,
+    //                             here is how environment variable name should look like
+    //                             to be bound properly in the application - 'ConnectionStrings__DatabaseConnectionString'."
   },
   "SmtpOptions": {
     "Credentials": {

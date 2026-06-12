@@ -1,4 +1,4 @@
-﻿using Paradise.Common.Extensions;
+﻿using Paradise.Primitives.Extensions;
 using System.Security.Claims;
 
 namespace Paradise.WebApi.Extensions;
@@ -30,26 +30,6 @@ internal static class ClaimsPrincipalExtensions
         var guid = principal.FindFirstValue(type);
 
         return guid.IsNotNullOrWhiteSpace() ? Guid.Parse(guid) : Guid.Empty;
-    }
-
-    /// <summary>
-    /// Gets the list of claims with the given <paramref name="type"/>
-    /// from the input <paramref name="principal"/>.
-    /// </summary>
-    /// <param name="principal">
-    /// The input <see cref="ClaimsPrincipal"/> to get claims from.
-    /// </param>
-    /// <param name="type">
-    /// The type of claims to be returned.
-    /// </param>
-    /// <returns>
-    /// The list of claims with the given <paramref name="type"/>.
-    /// </returns>
-    public static IEnumerable<string> FindValues(this ClaimsPrincipal principal, string type)
-    {
-        ArgumentNullException.ThrowIfNull(principal);
-
-        return principal.FindAll(type).Select(claim => claim.Value);
     }
     #endregion
 }

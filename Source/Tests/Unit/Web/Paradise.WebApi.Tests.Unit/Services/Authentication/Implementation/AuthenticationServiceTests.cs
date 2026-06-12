@@ -1,7 +1,6 @@
-﻿using Paradise.ApplicationLogic.Services.Identity.Roles;
-using Paradise.ApplicationLogic.Services.Identity.Users;
+﻿using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 using Paradise.Models.WebApi.Services.Authentication;
-using Paradise.Tests.Miscellaneous;
+using Paradise.Tests.Extensibility;
 using Paradise.WebApi.Services.Authentication.Implementation;
 using System.Security.Claims;
 using static Paradise.Models.ErrorCode;
@@ -147,7 +146,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidEmailAddress, model.EmailAddress);
+        Assert.ContainsError(result, InvalidEmailAddress, model.EmailAddress);
     }
 
     /// <summary>
@@ -173,7 +172,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, UserNotFoundOrPasswordMismatch);
+        Assert.ContainsError(result, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -225,7 +224,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidPhoneNumber, model.PhoneNumber);
+        Assert.ContainsError(result, InvalidPhoneNumber, model.PhoneNumber);
     }
 
     /// <summary>
@@ -251,7 +250,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, UserNotFoundOrPasswordMismatch);
+        Assert.ContainsError(result, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -303,7 +302,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidUserName, model.UserName);
+        Assert.ContainsError(result, InvalidUserName, model.UserName);
     }
 
     /// <summary>
@@ -329,7 +328,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, UserNotFoundOrPasswordMismatch);
+        Assert.ContainsError(result, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -350,7 +349,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidModel);
+        Assert.ContainsError(result, InvalidModel);
     }
 
     /// <summary>
@@ -371,7 +370,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, PasswordMissing);
+        Assert.ContainsError(result, PasswordMissing);
     }
 
     /// <summary>
@@ -397,7 +396,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, UserNotFoundOrPasswordMismatch);
+        Assert.ContainsError(result, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -447,7 +446,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Prohibited, result.Status);
 
-        Assert.ContainsErrorCode(result, UserEmailAddressNotConfirmed);
+        Assert.ContainsError(result, UserEmailAddressNotConfirmed);
     }
 
     /// <summary>
@@ -468,7 +467,7 @@ public sealed partial class AuthenticationServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidModel);
+        Assert.ContainsError(result, InvalidModel);
     }
 
     /// <summary>
@@ -585,7 +584,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -608,7 +607,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Blocked, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -634,7 +633,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -658,7 +657,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, UserUnauthorized);
+        Assert.ContainsError(result, UserUnauthorized);
     }
 
     /// <summary>
@@ -682,7 +681,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsErrorCode(result, UserEmailAddressNotFound);
+        Assert.ContainsError(result, UserEmailAddressNotFound);
     }
 
     /// <summary>
@@ -789,7 +788,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -810,7 +809,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -854,7 +853,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -875,7 +874,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -896,7 +895,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -917,7 +916,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -938,7 +937,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsErrorCode(result, UserIdNotFound);
+        Assert.ContainsError(result, UserIdNotFound);
     }
 
     /// <summary>
@@ -978,7 +977,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -999,7 +998,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -1040,7 +1039,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -1079,7 +1078,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -1100,7 +1099,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -1139,7 +1138,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -1160,7 +1159,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, OutdatedToken);
+        Assert.ContainsError(result, OutdatedToken);
     }
 
     /// <summary>
@@ -1181,7 +1180,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
 
     /// <summary>
@@ -1202,7 +1201,7 @@ public sealed partial class AuthenticationServiceTests
         Assert.False(result.IsSuccess);
         Assert.Equal(Unauthorized, result.Status);
 
-        Assert.ContainsErrorCode(result, InvalidToken);
+        Assert.ContainsError(result, InvalidToken);
     }
     #endregion
 }

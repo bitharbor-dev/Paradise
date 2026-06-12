@@ -4,7 +4,7 @@
 /// Represents a cached refresh token entry used during
 /// fast refresh token lookups in authentication scenarios.
 /// </summary>
-public readonly struct RefreshTokenCacheEntry : IEquatable<RefreshTokenCacheEntry>
+public readonly record struct RefreshTokenCacheEntry
 {
     #region Constants
     /// <summary>
@@ -98,54 +98,5 @@ public readonly struct RefreshTokenCacheEntry : IEquatable<RefreshTokenCacheEntr
 
         return result;
     }
-
-    /// <inheritdoc/>
-    public bool Equals(RefreshTokenCacheEntry other)
-        => other.IsRevoked == IsRevoked
-        && other.ExpirationTimestamp == ExpirationTimestamp;
-
-    /// <inheritdoc/>
-    public override bool Equals(object? obj)
-        => obj is RefreshTokenCacheEntry entry && Equals(entry);
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-        => HashCode.Combine(IsRevoked, ExpirationTimestamp);
-    #endregion
-
-    #region Operators
-    /// <summary>
-    /// Compares the given <paramref name="left"/> and <paramref name="right"/>
-    /// objects for equality.
-    /// </summary>
-    /// <param name="left">
-    /// The first <see cref="RefreshTokenCacheEntry"/> to be compared.
-    /// </param>
-    /// <param name="right">
-    /// The second <see cref="RefreshTokenCacheEntry"/> to be compared.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if <paramref name="left"/> equals <paramref name="right"/>,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    public static bool operator ==(RefreshTokenCacheEntry left, RefreshTokenCacheEntry right)
-        => left.Equals(right);
-
-    /// <summary>
-    /// Compares the given <paramref name="left"/> and <paramref name="right"/>
-    /// objects for inequality.
-    /// </summary>
-    /// <param name="left">
-    /// The first <see cref="RefreshTokenCacheEntry"/> to be compared.
-    /// </param>
-    /// <param name="right">
-    /// The second <see cref="RefreshTokenCacheEntry"/> to be compared.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>,
-    /// otherwise - <see langword="false"/>.
-    /// </returns>
-    public static bool operator !=(RefreshTokenCacheEntry left, RefreshTokenCacheEntry right)
-        => !(left == right);
     #endregion
 }

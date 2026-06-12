@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.DataAccess.Database;
 using Paradise.DataAccess.Extensions;
-using Paradise.Domain.Identity.Roles;
-using Paradise.Domain.Identity.Users;
 using Identity = Microsoft.AspNetCore.Identity;
 
 namespace Paradise.DataAccess.Tests.Unit.Extensions;
@@ -23,11 +22,10 @@ public sealed class IdentityBuilderExtensionsTests
     public void AddDataAccessStores()
     {
         // Arrange
-        var services = new ServiceCollection();
+        var services = new ServiceCollection()
+            .AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase(TestContext.Current.Test!.UniqueID));
 
-        var builder = services
-            .AddDbContext<DomainContext>(options => options.UseInMemoryDatabase(TestContext.Current.Test!.UniqueID))
-            .AddIdentity<User, Role>();
+        var builder = new Identity.IdentityBuilder(typeof(User), typeof(Role), services);
 
         // Act
         builder.AddDataAccessStores();

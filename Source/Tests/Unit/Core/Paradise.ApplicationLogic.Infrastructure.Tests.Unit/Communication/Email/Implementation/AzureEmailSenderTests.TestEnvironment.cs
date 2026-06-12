@@ -1,7 +1,7 @@
 ﻿using Azure.Communication.Email;
 using Paradise.ApplicationLogic.Infrastructure.Communication.Email.Implementation;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Azure.Communication.Email;
+using Paradise.Tests.Doubles.Spies.Azure.Communication.Email;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Communication.Email.Implementation;

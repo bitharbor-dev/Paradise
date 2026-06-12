@@ -7,8 +7,8 @@ using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Emai
 using Paradise.DataAccess.Seed.Models.ApplicationLogic;
 using Paradise.DataAccess.Seed.Models.Domain;
 using Paradise.DataAccess.Seed.Providers.Implementation;
+using Paradise.Domain.Base.Events;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Extensions;
@@ -96,19 +96,21 @@ public sealed partial class IServiceCollectionExtensionsTests : IDisposable
         /// <param name="environmentName">
         /// Current environment name.
         /// </param>
+        /// <param name="configureDomainEventRetryOptions">
+        /// An action used to configure global domain event retry policy.
+        /// </param>
         /// <returns>
         /// A configured <see cref="IServiceProvider"/>.
         /// </returns>
-        [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance",
-            Justification = "Intentional encapsulation.")]
-        public IServiceProvider BuildInfrastructureServiceProvider(string environmentName)
+        public ServiceProvider BuildInfrastructureServiceProvider(string environmentName,
+                                                                  Action<DomainEventRetryOptions>? configureDomainEventRetryOptions = null)
         {
             PrepareTemporarySeedFiles();
 
             var configuration = BuildConfiguration();
 
             var services = new ServiceCollection()
-                .AddInfrastructure(configuration, environmentName);
+                .AddInfrastructure(configuration, environmentName, configureDomainEventRetryOptions);
 
             return services.BuildServiceProvider(new ServiceProviderOptions
             {
@@ -127,7 +129,7 @@ public sealed partial class IServiceCollectionExtensionsTests : IDisposable
         /// This method generates minimal test data containing a single email template, role, and user.
         /// The data is serialized to JSON and written to the temporary directory associated with
         /// <see cref="_seedDirectory"/> using the filenames defined in
-        /// <see cref="JsonSeedDataProvider.ApplicationDataFileName"/> and
+        /// <see cref="JsonSeedDataProvider.InfrastructureDataFileName"/> and
         /// <see cref="JsonSeedDataProvider.DomainDataFileName"/>.
         /// </remarks>
         private void PrepareTemporarySeedFiles()
@@ -135,8 +137,8 @@ public sealed partial class IServiceCollectionExtensionsTests : IDisposable
             _seedDirectory = Directory.CreateTempSubdirectory();
             Options.JsonSeedDataProviderOptions!.SeedDirectoryPath = _seedDirectory.FullName;
 
-            SerializeToFile(new ApplicationDataSeedModel([]), _seedDirectory.FullName, JsonSeedDataProvider.ApplicationDataFileName);
-            SerializeToFile(new DomainDataSeedModel([], []), _seedDirectory.FullName, JsonSeedDataProvider.DomainDataFileName);
+            SerializeToFile(new InfrastructureDataSeedModel([], [], []), _seedDirectory.FullName, JsonSeedDataProvider.InfrastructureDataFileName);
+            SerializeToFile(new DomainDataSeedModel(), _seedDirectory.FullName, JsonSeedDataProvider.DomainDataFileName);
         }
 
         /// <summary>

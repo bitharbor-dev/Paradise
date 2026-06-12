@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
-using Paradise.ApplicationLogic.Services.Identity.Users;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 
 namespace Paradise.Maintenance;
 

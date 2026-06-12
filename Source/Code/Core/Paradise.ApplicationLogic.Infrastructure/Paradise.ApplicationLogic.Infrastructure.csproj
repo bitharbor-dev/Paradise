@@ -2,7 +2,8 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
-		<InternalsVisibleTo Include="Paradise.Tests.Miscellaneous" />
+		<InternalsVisibleTo Include="Paradise.Tests.Doubles" />
+		<InternalsVisibleTo Include="Paradise.Tests.Fixtures" />
 	</ItemGroup>
 
 	<ItemGroup>

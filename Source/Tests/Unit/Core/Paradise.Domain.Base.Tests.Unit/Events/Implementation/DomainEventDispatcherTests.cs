@@ -1,6 +1,6 @@
 ﻿using Paradise.Domain.Base.Events;
 using Paradise.Domain.Base.Events.Implementation;
-using Paradise.Tests.Miscellaneous.TestDoubles.Spies.Core.Domain.Events;
+using Paradise.Tests.Doubles.Spies.Core.Domain.Base.Events;
 
 namespace Paradise.Domain.Base.Tests.Unit.Events.Implementation;
 
@@ -140,9 +140,6 @@ public sealed partial class DomainEventDispatcherTests
     /// The <see cref="DomainEventDispatcher.StartDispatchingAsync"/> method should
     /// stop dispatching the events when input cancellation token signals operation cancellation.
     /// </summary>
-    /// <remarks>
-    /// TODO: Split into multiple, more simple tests.
-    /// </remarks>
     /// <param name="isGracefulCancellation">
     /// Indicates whetter the cancellation should happen before
     /// looping over the queued events.

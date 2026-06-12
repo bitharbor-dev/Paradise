@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Time.Testing;
 using Paradise.DataAccess.Database.Interceptors.Base;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.EntityFrameworkCore;
-using Paradise.Tests.Miscellaneous.TestImplementations.Core.DataAccess.Database.Interceptors.Base;
-using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Base;
+using Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore;
+using Paradise.Tests.Fixtures.Core.DataAccess.Database.Interceptors;
+using Paradise.Tests.Fixtures.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.DataAccess.Tests.Unit.Database.Interceptors.Base;
@@ -43,7 +43,7 @@ public sealed partial class BaseSaveChangesInterceptorTests : IDisposable
 
         #region Fields
         private readonly FakeTimeProvider _timeProvider;
-        private readonly TestBaseSaveChangesInterceptor _target;
+        private readonly TestSaveChangesInterceptor _target;
         private readonly FakeDbContext _context;
         #endregion
 
@@ -107,10 +107,8 @@ public sealed partial class BaseSaveChangesInterceptorTests : IDisposable
         /// <returns>
         /// The <see cref="EntityEntry"/> representing the attached entity.
         /// </returns>
-        [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance",
-            Justification = "Intentional encapsulation.")]
         public EntityEntry CreateLinkedEntry()
-            => _context.Attach(new TestNamedEntity());
+            => _context.Attach((object)new TestNamedEntity());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContextEventData"/> class.
@@ -134,7 +132,7 @@ public sealed partial class BaseSaveChangesInterceptorTests : IDisposable
 
         #region Private methods
         /// <summary>
-        /// <see cref="TestBaseSaveChangesInterceptor.Intercepted"/> event handler.
+        /// <see cref="TestSaveChangesInterceptor.Intercepted"/> event handler.
         /// </summary>
         /// <param name="sender">
         /// The sender of the event.

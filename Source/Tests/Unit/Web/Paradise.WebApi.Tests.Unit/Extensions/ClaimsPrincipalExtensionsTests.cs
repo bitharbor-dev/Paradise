@@ -10,7 +10,6 @@ public sealed class ClaimsPrincipalExtensionsTests
 {
     #region Constants
     private const string IdClaimType = "UniqueIdentifier";
-    private const string RoleClaimType = "Role";
     #endregion
 
     #region Properties
@@ -118,64 +117,6 @@ public sealed class ClaimsPrincipalExtensionsTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(()
             => principal!.GetGuidClaim(IdClaimType));
-    }
-
-    /// <summary>
-    /// The <see cref="ClaimsPrincipalExtensions.FindValues"/> method should
-    /// return all claim values for given <see cref="Claim.Type"/>.
-    /// </summary>
-    [Fact]
-    public void FindValues()
-    {
-        // Arrange
-        var id = new Claim(IdClaimType, Guid.NewGuid().ToString());
-        var role1 = new Claim(RoleClaimType, Guid.NewGuid().ToString());
-        var role2 = new Claim(RoleClaimType, Guid.NewGuid().ToString());
-
-        var principal = CreatePrincipal(id, role1, role2);
-
-        // Act
-        var result = principal.FindValues(RoleClaimType);
-
-        // Assert
-        Assert.Equal(2, result.Count());
-        Assert.Contains(role1.Value, result);
-        Assert.Contains(role2.Value, result);
-    }
-
-    /// <summary>
-    /// The <see cref="ClaimsPrincipalExtensions.FindValues"/> method should
-    /// return empty collection when no claims of given type exist.
-    /// </summary>
-    [Fact]
-    public void FindValues_ReturnsEmptyOnClaimTypeMismatch()
-    {
-        // Arrange
-        var id = new Claim(IdClaimType, Guid.NewGuid().ToString());
-
-        var principal = CreatePrincipal(id);
-
-        // Act
-        var result = principal.FindValues(RoleClaimType);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    /// <summary>
-    /// The <see cref="ClaimsPrincipalExtensions.FindValues"/> method should
-    /// throw the <see cref="ArgumentNullException"/> if the input
-    /// <see cref="ClaimsPrincipal"/> is equal to <see langword="null"/>.
-    /// </summary>
-    [Fact]
-    public void FindValues_ThrowsOnNull()
-    {
-        // Arrange
-        var principal = null as ClaimsPrincipal;
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(()
-            => principal!.FindValues(IdClaimType));
     }
     #endregion
 

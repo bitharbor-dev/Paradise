@@ -43,6 +43,16 @@ public sealed partial class CommunicationClientTests
         { string.Empty      },
         { " "               }
     };
+
+    /// <summary>
+    /// Provides member data for <see cref="SendEmailAsync_ThrowsOnNonExistingEmailTemplate"/> method.
+    /// </summary>
+    public static TheoryData<CultureInfo?> SendEmailAsync_ThrowsOnNonExistingEmailTemplate_MemberData { get; } = new()
+    {
+        { null as CultureInfo           },
+        { CultureInfo.InvariantCulture  },
+        { new CultureInfo("en-US")      }
+    };
     #endregion
 
     #region Public methods
@@ -62,7 +72,7 @@ public sealed partial class CommunicationClientTests
         var exception = Assert.Throws<InvalidOperationException>(Test.CreateClient);
 
         // Assert
-        Assert.Equal(ExceptionMessages.GetMessageInvalidSmtpConfiguration(), exception.Message);
+        Assert.Equal(ExceptionMessagesProvider.GetMessageInvalidSmtpConfiguration(), exception.Message);
     }
 
     /// <summary>
@@ -85,7 +95,7 @@ public sealed partial class CommunicationClientTests
         var exception = Assert.Throws<InvalidOperationException>(Test.CreateClient);
 
         // Assert
-        Assert.Equal(ExceptionMessages.GetMessageInvalidSmtpConfiguration(), exception.Message);
+        Assert.Equal(ExceptionMessagesProvider.GetMessageInvalidSmtpConfiguration(), exception.Message);
     }
 
     /// <summary>
@@ -310,15 +320,18 @@ public sealed partial class CommunicationClientTests
     /// <see cref="EmailTemplate"/> required
     /// to send a message does not exist.
     /// </summary>
-    [Fact]
-    public async Task SendEmailAsync_ThrowsOnNonExistingEmailTemplate()
+    /// <param name="culture">
+    /// Email template culture.
+    /// </param>
+    [Theory, MemberData(nameof(SendEmailAsync_ThrowsOnNonExistingEmailTemplate_MemberData))]
+    public async Task SendEmailAsync_ThrowsOnNonExistingEmailTemplate(CultureInfo? culture)
     {
         // Arrange
         var client = Test.CreateClient();
 
         var request = new EmailSendRequestModel(new([TestEmail]),
                                                 string.Empty,
-                                                null,
+                                                culture,
                                                 DefaultArgs);
 
         // Act & Assert

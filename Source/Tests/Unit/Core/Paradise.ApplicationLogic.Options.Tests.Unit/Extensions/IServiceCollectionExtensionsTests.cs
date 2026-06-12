@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Paradise.ApplicationLogic.Options.Extensions;
-using Paradise.Tests.Miscellaneous;
+using Paradise.Tests.Extensibility;
+using Paradise.Tests.Fixtures.Common.Models;
 
 namespace Paradise.ApplicationLogic.Options.Tests.Unit.Extensions;
 
@@ -55,11 +56,11 @@ public sealed partial class IServiceCollectionExtensionsTests
 
         var configuration = Test.BuildConfiguration(configurationSectionPath);
         var provider = new ServiceCollection()
-            .AddOptions<TestOptions>(configuration, configurationSectionPath)
+            .AddOptions<TestModel>(configuration, configurationSectionPath)
             .BuildServiceProvider();
 
         // Act & Assert
-        Assert.ServiceLifetime<IOptions<TestOptions>>(provider, ServiceLifetime.Singleton,
+        Assert.ServiceLifetime<IOptions<TestModel>>(provider, ServiceLifetime.Singleton,
             options => Assert.Equivalent(Test.Options, options.Value));
     }
 
@@ -75,7 +76,7 @@ public sealed partial class IServiceCollectionExtensionsTests
         // Arrange
         var postConfigureInvoked = false;
 
-        void PostConfigure(TestOptions options, IServiceProvider provider)
+        void PostConfigure(TestModel options, IServiceProvider provider)
         {
             options.StringValue = string.Empty;
             options.IntegerValue = int.MaxValue;
@@ -85,11 +86,11 @@ public sealed partial class IServiceCollectionExtensionsTests
 
         var configuration = Test.BuildConfiguration();
         var provider = new ServiceCollection()
-            .AddOptions<TestOptions>(configuration, postConfigure: PostConfigure)
+            .AddOptions<TestModel>(configuration, postConfigure: PostConfigure)
             .BuildServiceProvider();
 
         // Act & Assert
-        Assert.ServiceLifetime<IOptions<TestOptions>>(provider, ServiceLifetime.Singleton, options =>
+        Assert.ServiceLifetime<IOptions<TestModel>>(provider, ServiceLifetime.Singleton, options =>
         {
             Assert.Equal(string.Empty, options.Value.StringValue);
             Assert.Equal(int.MaxValue, options.Value.IntegerValue);
@@ -112,12 +113,12 @@ public sealed partial class IServiceCollectionExtensionsTests
 
         var configuration = Test.BuildConfiguration();
         var provider = new ServiceCollection()
-            .AddOptions<TestOptions>(configuration, validateDataAnnotations: true)
+            .AddOptions<TestModel>(configuration, validateDataAnnotations: true)
             .BuildServiceProvider();
 
         // Act & Assert
         Assert.Throws<OptionsValidationException>(()
-            => provider.GetRequiredService<IOptions<TestOptions>>().Value);
+            => provider.GetRequiredService<IOptions<TestModel>>().Value);
     }
 
     /// <summary>
@@ -137,9 +138,9 @@ public sealed partial class IServiceCollectionExtensionsTests
         var host = new HostBuilder()
             .ConfigureServices(services =>
             {
-                services.AddOptions<TestOptions>(configuration,
-                                                 validateOnStartup: true,
-                                                 validateDataAnnotations: true);
+                services.AddOptions<TestModel>(configuration,
+                                               validateOnStartup: true,
+                                               validateDataAnnotations: true);
             }).Build();
 
         // Act & Assert
@@ -158,12 +159,12 @@ public sealed partial class IServiceCollectionExtensionsTests
         var stringValue = "Test";
 
         var provider = new ServiceCollection()
-            .AddOptions<TestOptions>(optionsName)
+            .AddOptions<TestModel>(optionsName)
             .Services
-            .PostConfigure<TestOptions>(optionsName, (options, _) => options.StringValue = stringValue)
+            .PostConfigure<TestModel>(optionsName, (options, _) => options.StringValue = stringValue)
             .BuildServiceProvider();
 
-        var factory = provider.GetRequiredService<IOptionsFactory<TestOptions>>();
+        var factory = provider.GetRequiredService<IOptionsFactory<TestModel>>();
 
         // Act
         var options = factory.Create(optionsName);
@@ -186,15 +187,15 @@ public sealed partial class IServiceCollectionExtensionsTests
         var stringValue2 = "Test2";
 
         var provider = new ServiceCollection()
-            .AddOptions<TestOptions>(optionsName1)
+            .AddOptions<TestModel>(optionsName1)
             .Services
-            .AddOptions<TestOptions>(optionsName2)
+            .AddOptions<TestModel>(optionsName2)
             .Services
-            .PostConfigure<TestOptions>(optionsName1, (options, _) => options.StringValue = stringValue1)
-            .PostConfigure<TestOptions>(optionsName2, (options, _) => options.StringValue = stringValue2)
+            .PostConfigure<TestModel>(optionsName1, (options, _) => options.StringValue = stringValue1)
+            .PostConfigure<TestModel>(optionsName2, (options, _) => options.StringValue = stringValue2)
             .BuildServiceProvider();
 
-        var factory = provider.GetRequiredService<IOptionsFactory<TestOptions>>();
+        var factory = provider.GetRequiredService<IOptionsFactory<TestModel>>();
 
         // Act
         var options1 = factory.Create(optionsName1);

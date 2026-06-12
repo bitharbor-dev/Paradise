@@ -9,23 +9,28 @@ using Paradise.ApplicationLogic.Infrastructure.Communication.Email;
 using Paradise.ApplicationLogic.Infrastructure.Communication.Email.Implementation;
 using Paradise.ApplicationLogic.Infrastructure.Communication.Implementation;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection.Implementation;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Events.Identity;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
+using Paradise.ApplicationLogic.Infrastructure.EventListeners.Domain.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Identity.Implementation;
 using Paradise.ApplicationLogic.Infrastructure.Seed;
 using Paradise.ApplicationLogic.Infrastructure.Seed.Implementation;
-using Paradise.ApplicationLogic.Infrastructure.Services;
-using Paradise.ApplicationLogic.Infrastructure.Services.Implementation;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity.Implementation;
+using Paradise.ApplicationLogic.Infrastructure.Services.MessageTemplates;
+using Paradise.ApplicationLogic.Infrastructure.Services.MessageTemplates.Implementation;
 using Paradise.ApplicationLogic.Options.Extensions;
 using Paradise.ApplicationLogic.Options.Models.DataAccess.Seed.Providers;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.Common.Extensions;
 using Paradise.DataAccess.Extensions;
 using Paradise.DataAccess.Seed.Providers;
 using Paradise.DataAccess.Seed.Providers.Implementation;
-using Paradise.Domain.Identity.Roles;
-using Paradise.Domain.Identity.Users;
-using static Paradise.Common.EnvironmentNames;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using Paradise.Domain.Base.Events;
+using Paradise.Domain.Base.Events.Extensions;
+using Paradise.Primitives.Extensions;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
+using static Paradise.Primitives.EnvironmentNames;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Extensions;
 
@@ -84,11 +89,16 @@ public static class IServiceCollectionExtensions
     /// <param name="environmentName">
     /// Current environment name.
     /// </param>
+    /// <param name="configureDomainEventRetryOptions">
+    /// An action used to configure global domain event retry policy.
+    /// </param>
     /// <returns>
     /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
     /// </returns>
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration,
-                                                       string environmentName)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+                                                       IConfiguration configuration,
+                                                       string environmentName,
+                                                       Action<DomainEventRetryOptions>? configureDomainEventRetryOptions = null)
     {
         return services
             .AddDataAccess(configuration)
@@ -96,6 +106,8 @@ public static class IServiceCollectionExtensions
             .AddDataProtector()
             .AddSeeding(configuration)
             .AddIdentityServices(configuration)
+            .AddDomainEvents(configureDomainEventRetryOptions)
+            .AddEventListeners()
             .AddLogging();
     }
     #endregion
@@ -265,7 +277,58 @@ public static class IServiceCollectionExtensions
         services.AddScoped<IUserManager<User>, Identity.Implementation.UserManager<User>>();
         services.AddScoped<IRoleManager<Role>, Identity.Implementation.RoleManager<Role>>();
 
-        return services;
+        return services
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<IUserRefreshTokenService, UserRefreshTokenService>()
+            .AddScoped<IUserService, UserService>();
+    }
+
+    /// <summary>
+    /// Registers the infrastructure for domain event handling by configuring both
+    /// the event dispatching mechanism and the registered event listeners.
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to.
+    /// </param>
+    /// <param name="configureOptions">
+    /// An action used to configure global domain event retry policy.
+    /// </param>
+    /// <returns>
+    /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
+    /// </returns>
+    private static IServiceCollection AddDomainEvents(this IServiceCollection services,
+                                                      Action<DomainEventRetryOptions>? configureOptions = null)
+    {
+        static void UseDefaultRetryOptions(DomainEventRetryOptions options)
+        {
+            options.MaxRetries = 3;
+            options.BaseDelay = TimeSpan.FromSeconds(2);
+            options.UseExponentialBackOff = true;
+        }
+
+        return services.AddDomainEventsDispatching(configureOptions ?? UseDefaultRetryOptions);
+    }
+
+    /// <summary>
+    /// Registers domain event listeners that react to the domain events.
+    /// </summary>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection"/> to add the services to.
+    /// </param>
+    /// <returns>
+    /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
+    /// </returns>
+    private static IServiceCollection AddEventListeners(this IServiceCollection services)
+    {
+        return services
+            .AddDomainEventListener<AssignDefaultUserRoles, EmailAddressConfirmedEvent>()
+            .AddDomainEventListener<SendEmailAddressChangedNotification, EmailAddressResetCompletedEvent>()
+            .AddDomainEventListener<SendEmailAddressChangeLink, EmailAddressResetRequestedEvent>()
+            .AddDomainEventListener<SendEmailAddressChangingNotification, EmailAddressResetRequestedEvent>()
+            .AddDomainEventListener<SendEmailAddressConfirmationLink, UserRegisteredEvent>()
+            .AddDomainEventListener<SendPasswordChangedNotification, PasswordResetCompletedEvent>()
+            .AddDomainEventListener<SendPasswordChangeLink, PasswordResetRequestedEvent>()
+            .AddDomainEventListener<SendTwoFactorAuthenticationCode, TwoFactorAuthenticationOccurringEvent>();
     }
 
     /// <summary>

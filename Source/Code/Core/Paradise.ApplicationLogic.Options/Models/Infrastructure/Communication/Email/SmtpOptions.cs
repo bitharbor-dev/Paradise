@@ -1,4 +1,4 @@
-﻿using Paradise.Common.Extensions;
+﻿using Paradise.Primitives.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;

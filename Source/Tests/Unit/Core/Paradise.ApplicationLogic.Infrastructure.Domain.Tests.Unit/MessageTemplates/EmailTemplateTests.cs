@@ -1,4 +1,5 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
+using System.Globalization;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit.MessageTemplates;
 
@@ -27,6 +28,16 @@ public sealed class EmailTemplateTests
         { "Test",                           null,       0   },
         { "Test with {arg}0",               "{arg}",    1   },
         { "Test with {arg}0 and {arg}1",    "{arg}",    2   }
+    };
+
+    /// <summary>
+    /// Provides member data for <see cref="GetFormattedSubject_ThrowsOnMissingPlaceholder"/> method.
+    /// </summary>
+    public static TheoryData<CultureInfo?> GetFormattedSubject_ThrowsOnMissingPlaceholder_MemberData { get; } = new()
+    {
+        { null as CultureInfo           },
+        { CultureInfo.InvariantCulture  },
+        { new CultureInfo("en-US")      }
     };
     #endregion
 
@@ -99,13 +110,16 @@ public sealed class EmailTemplateTests
     /// throw the <see cref="FormatException"/> if the
     /// <see cref="EmailTemplate.Subject"/> is missing a placeholder.
     /// </summary>
-    [Fact]
-    public void GetFormattedSubject_ThrowsOnMissingPlaceholder()
+    /// <param name="culture">
+    /// Template culture.
+    /// </param>
+    [Theory, MemberData(nameof(GetFormattedSubject_ThrowsOnMissingPlaceholder_MemberData))]
+    public void GetFormattedSubject_ThrowsOnMissingPlaceholder(CultureInfo? culture)
     {
         // Arrange
         var parameters = new[] { "{arg}" };
 
-        var entity = new EmailTemplate("TemplateName", null, "TemplateText", "Subject")
+        var entity = new EmailTemplate("TemplateName", culture, "TemplateText", "Subject")
         {
             SubjectPlaceholderName = "Test",
             SubjectPlaceholdersNumber = (ushort)parameters.Length

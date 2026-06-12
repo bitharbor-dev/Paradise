@@ -1,5 +1,5 @@
-﻿using Paradise.Common.Extensions;
-using Paradise.Localization.ExceptionHandling;
+﻿using Paradise.Localization.ExceptionHandling;
+using Paradise.Primitives.Extensions;
 using System.Security;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -92,7 +92,7 @@ public sealed partial class SeedEmailTemplateModel
         }
         else
         {
-            var message = ExceptionMessages.GetMessageMessageTemplateTemplateTextOrSourcePathIsRequired();
+            var message = ExceptionMessagesProvider.GetMessageMessageTemplateTemplateTextOrSourcePathIsRequired();
 
             throw new ArgumentException(message);
         }

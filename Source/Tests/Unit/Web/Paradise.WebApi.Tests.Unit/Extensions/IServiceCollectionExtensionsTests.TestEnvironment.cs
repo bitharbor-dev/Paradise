@@ -5,14 +5,13 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Infrastructure.DataProtection;
+using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 using Paradise.ApplicationLogic.Options.Models;
 using Paradise.ApplicationLogic.Options.Models.DataAccess.Seed.Providers;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.ApplicationLogic.Options.Models.Infrastructure.Services;
-using Paradise.ApplicationLogic.Services.Identity.Roles;
-using Paradise.ApplicationLogic.Services.Identity.Users;
+using Paradise.ApplicationLogic.Options.Models.Infrastructure.Services.MessageTemplates;
 using Paradise.Domain.Base.Events;
-using Paradise.Tests.Miscellaneous.Json.Converters;
+using Paradise.Tests.Extensibility.Json.Converters;
 using Paradise.WebApi.Extensions;
 using Paradise.WebApi.Infrastructure.Options;
 using System.Text.Encodings.Web;
@@ -66,8 +65,7 @@ public sealed partial class IServiceCollectionExtensionsTests
             },
             ConnectionStrings = new()
             {
-                ["DomainConnectionString"] = "",
-                ["InfrastructureConnectionString"] = ""
+                ["DatabaseConnectionString"] = ""
             },
             EmailTemplateOptions = new()
             {
@@ -146,19 +144,6 @@ public sealed partial class IServiceCollectionExtensionsTests
             _services.AddScoped(_ => (IUserRefreshTokenService)null!);
 
             _services.AddAuthenticationAndAuthorization(configuration, environmentName);
-            return _services.BuildServiceProvider(_serviceProviderOptions);
-        }
-
-        /// <summary>
-        /// Builds a service provider using the
-        /// <see cref="IServiceCollectionExtensions.AddAuthorizationResultHandler"/> registration method.
-        /// </summary>
-        /// <returns>
-        /// A configured <see cref="IServiceProvider"/>.
-        /// </returns>
-        public ServiceProvider BuilderAuthorizationResultHandlerServiceProvider()
-        {
-            _services.AddAuthorizationResultHandler();
             return _services.BuildServiceProvider(_serviceProviderOptions);
         }
 

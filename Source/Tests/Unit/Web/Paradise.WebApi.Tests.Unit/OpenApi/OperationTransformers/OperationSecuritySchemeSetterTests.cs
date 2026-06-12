@@ -14,7 +14,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
     /// <summary>
     /// The <see cref="OperationSecuritySchemeSetter.TransformAsync"/> method should
     /// add the security scheme reference to the target <see cref="OpenApiOperation"/>
-    /// if the related controller or action are not decorated with
+    /// if the related endpoint is not decorated with
     /// <see cref="AllowAnonymousAttribute"/>.
     /// </summary>
     [Fact]
@@ -22,7 +22,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
     {
         // Arrange
         var operation = new OpenApiOperation();
-        var context = Test.CreateContext(allowAnonymousOnMethod: false, allowAnonymousOnType: false);
+        var context = Test.CreateContext();
 
         var sampleScheme = Test.GetConfiguredSecurityScheme();
 
@@ -40,35 +40,15 @@ public sealed partial class OperationSecuritySchemeSetterTests
     /// <summary>
     /// The <see cref="OperationSecuritySchemeSetter.TransformAsync"/> method should
     /// not add the security scheme reference to the target <see cref="OpenApiOperation"/>
-    /// if the related controller is decorated with
+    /// if the related endpoint is decorated with
     /// <see cref="AllowAnonymousAttribute"/>.
     /// </summary>
     [Fact]
-    public async Task TransformAsync_SkipsOnAnonymousController()
+    public async Task TransformAsync_SkipsOnAnonymous()
     {
         // Arrange
         var operation = new OpenApiOperation();
-        var context = Test.CreateContext(allowAnonymousOnMethod: false, allowAnonymousOnType: true);
-
-        // Act
-        await Test.Target.TransformAsync(operation, context, Token);
-
-        // Assert
-        Assert.Null(operation.Security);
-    }
-
-    /// <summary>
-    /// The <see cref="OperationSecuritySchemeSetter.TransformAsync"/> method should
-    /// not add the security scheme reference to the target <see cref="OpenApiOperation"/>
-    /// if the related action is decorated with
-    /// <see cref="AllowAnonymousAttribute"/>.
-    /// </summary>
-    [Fact]
-    public async Task TransformAsync_SkipsOnAnonymousAction()
-    {
-        // Arrange
-        var operation = new OpenApiOperation();
-        var context = Test.CreateContext(allowAnonymousOnMethod: true, allowAnonymousOnType: false);
+        var context = Test.CreateContext(true);
 
         // Act
         await Test.Target.TransformAsync(operation, context, Token);

@@ -1,8 +1,7 @@
 ﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.DataAccess.Seed.Models.Domain;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
 using Paradise.DataAccess.Seed.Providers.Implementation;
 
 namespace Paradise.DataAccess.Seed.Tests.Unit.Providers.Implementation;
@@ -23,17 +22,17 @@ public sealed partial class JsonSeedDataProviderTests
         = new("TemplateName", null, "Subject", false, null, 0, null, 0, "TemplateText");
 
     private static readonly DomainDataSeedModel _domainSeedModel
-        = new(roles: [_seedRole], users: [_seedUser]);
+        = new();
 
-    private static readonly ApplicationDataSeedModel _applicationSeedModel
-        = new(emailTemplates: [_seedEmailTemplate]);
+    private static readonly InfrastructureDataSeedModel _applicationSeedModel
+        = new(emailTemplates: [_seedEmailTemplate], roles: [_seedRole], users: [_seedUser]);
     #endregion
 
     #region Properties
     /// <summary>
     /// Provides member data for <see cref="Constructor_ThrowsOnInvalidData"/> method.
     /// </summary>
-    public static TheoryData<ApplicationDataSeedModel?, DomainDataSeedModel?> Constructor_ThrowsOnInvalidData_MemberData { get; } = new()
+    public static TheoryData<InfrastructureDataSeedModel?, DomainDataSeedModel?> Constructor_ThrowsOnInvalidData_MemberData { get; } = new()
     {
         { null,                     _domainSeedModel    },
         { _applicationSeedModel,    null                }
@@ -47,13 +46,13 @@ public sealed partial class JsonSeedDataProviderTests
     /// seed data JSON file contains invalid JSON.
     /// </summary>
     /// <param name="applicationData">
-    /// A nullable <see cref="ApplicationDataSeedModel"/> instance (<see langword="null"/> is invalid).
+    /// A nullable <see cref="InfrastructureDataSeedModel"/> instance (<see langword="null"/> is invalid).
     /// </param>
     /// <param name="domainData">
     /// A nullable <see cref="DomainDataSeedModel"/> instance (<see langword="null"/> is invalid).
     /// </param>
     [Theory, MemberData(nameof(Constructor_ThrowsOnInvalidData_MemberData))]
-    public void Constructor_ThrowsOnInvalidData(ApplicationDataSeedModel? applicationData, DomainDataSeedModel? domainData)
+    public void Constructor_ThrowsOnInvalidData(InfrastructureDataSeedModel? applicationData, DomainDataSeedModel? domainData)
     {
         // Arrange
         Test.OverwriteApplicationData(applicationData);
@@ -65,57 +64,37 @@ public sealed partial class JsonSeedDataProviderTests
     }
 
     /// <summary>
-    /// The <see cref="JsonSeedDataProvider.GetSeedEmailTemplates"/> method should
-    /// return the <see cref="IEnumerable{T}"/> of <see cref="SeedEmailTemplateModel"/>
-    /// that represents the JSON data targeted by it's instance.
+    /// The <see cref="JsonSeedDataProvider.DomainData"/> property should
+    /// return the <see cref="DomainDataSeedModel"/> populated with the JSON data.
     /// </summary>
     [Fact]
-    public void GetSeedEmailTemplates()
+    public void DomainData()
     {
         // Arrange
         var provider = new JsonSeedDataProvider(Test.SeedDataDirectory.FullName);
 
         // Act
-        var seedEmailTemplates = provider.GetSeedEmailTemplates();
+        var data = provider.DomainData;
 
         // Assert
-        Assert.Equivalent(Test.PrepopulatedApplicationData?.EmailTemplates, seedEmailTemplates, true);
+        Assert.Equivalent(Test.PrepopulatedDomainData, data);
     }
 
     /// <summary>
-    /// The <see cref="JsonSeedDataProvider.GetSeedRoles"/> method should
-    /// return the <see cref="IEnumerable{T}"/> of <see cref="SeedRoleModel"/>
-    /// that represents the JSON data targeted by it's instance.
+    /// The <see cref="JsonSeedDataProvider.InfrastructureData"/> property should
+    /// return the <see cref="InfrastructureDataSeedModel"/> populated with the JSON data.
     /// </summary>
     [Fact]
-    public void GetSeedRoles()
+    public void InfrastructureData()
     {
         // Arrange
         var provider = new JsonSeedDataProvider(Test.SeedDataDirectory.FullName);
 
         // Act
-        var seedRoles = provider.GetSeedRoles();
-
-        //Assert
-        Assert.Equivalent(Test.PrepopulatedDomainData?.Roles, seedRoles, true);
-    }
-
-    /// <summary>
-    /// The <see cref="JsonSeedDataProvider.GetSeedUsers"/> method should
-    /// return the <see cref="IEnumerable{T}"/> of <see cref="SeedUserModel"/>
-    /// that represents the JSON data targeted by it's instance.
-    /// </summary>
-    [Fact]
-    public void GetSeedUsers()
-    {
-        // Arrange
-        var provider = new JsonSeedDataProvider(Test.SeedDataDirectory.FullName);
-
-        // Act
-        var seedUsers = provider.GetSeedUsers();
+        var data = provider.InfrastructureData;
 
         // Assert
-        Assert.Equivalent(Test.PrepopulatedDomainData?.Users, seedUsers, true);
+        Assert.Equivalent(Test.PrepopulatedInfrastructureData, data);
     }
     #endregion
 }

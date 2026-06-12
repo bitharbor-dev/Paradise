@@ -1,4 +1,5 @@
 ﻿using Paradise.Domain.Base.EqualityComparers;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Domain.Base;
 
@@ -25,6 +26,13 @@ public abstract class Entity : IEntity, IEquatable<Entity>
     /// <inheritdoc/>
     public virtual void OnCreated(DateTimeOffset utcNow)
     {
+        if (Id != Guid.Empty)
+        {
+            var message = new DomainStateError(GetType(), Id, GetMessageIdentityIsAlreadyAssigned());
+
+            throw new InvalidOperationException(message);
+        }
+
         Id = Guid.CreateVersion7(utcNow);
         Created = utcNow;
 

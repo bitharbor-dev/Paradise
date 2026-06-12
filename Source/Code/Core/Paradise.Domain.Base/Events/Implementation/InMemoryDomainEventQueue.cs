@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Threading.Channels;
+﻿using System.Threading.Channels;
 
 namespace Paradise.Domain.Base.Events.Implementation;
 
@@ -7,7 +6,6 @@ namespace Paradise.Domain.Base.Events.Implementation;
 /// Default in-memory implementation of <see cref="IDomainEventSink"/> and <see cref="IDomainEventSource"/>
 /// using <see cref="Channel{T}"/> of <see cref="IDomainEvent"/>.
 /// </summary>
-[SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "No better naming is available.")]
 internal sealed class InMemoryDomainEventQueue : IDomainEventSink, IDomainEventSource
 {
     #region Fields

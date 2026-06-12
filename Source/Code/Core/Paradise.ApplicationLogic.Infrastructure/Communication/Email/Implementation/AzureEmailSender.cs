@@ -2,9 +2,9 @@
 using Azure.Communication.Email;
 using Microsoft.Extensions.Options;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.Common.Extensions;
 using Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using Paradise.Primitives.Extensions;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Communication.Email.Implementation;
 

@@ -20,6 +20,6 @@ public static class IDataProtectionBuilderExtensions
     /// persist keys to a data access internal data-store.
     /// </returns>
     public static IDataProtectionBuilder PersistKeysToDataAccess(this IDataProtectionBuilder builder)
-        => builder.PersistKeysToDbContext<InfrastructureContext>();
+        => builder.PersistKeysToDbContext<ApplicationContext>();
     #endregion
 }

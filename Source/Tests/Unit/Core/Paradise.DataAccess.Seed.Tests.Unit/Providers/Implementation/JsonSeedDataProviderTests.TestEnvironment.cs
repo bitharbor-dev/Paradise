@@ -1,8 +1,7 @@
 ﻿using Paradise.DataAccess.Seed.Models.ApplicationLogic;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.DataAccess.Seed.Models.Domain;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
 using Paradise.DataAccess.Seed.Providers.Implementation;
 using System.Text.Json;
 
@@ -43,9 +42,9 @@ public sealed partial class JsonSeedDataProviderTests : IDisposable
 
         #region Properties
         /// <summary>
-        /// Prepopulated application data.
+        /// Prepopulated infrastructure data.
         /// </summary>
-        public ApplicationDataSeedModel? PrepopulatedApplicationData { get; private set; }
+        public InfrastructureDataSeedModel? PrepopulatedInfrastructureData { get; private set; }
 
         /// <summary>
         /// Prepopulated domain data.
@@ -68,13 +67,13 @@ public sealed partial class JsonSeedDataProviderTests : IDisposable
         /// with the given <paramref name="model"/>.
         /// </summary>
         /// <param name="model">
-        /// The new <see cref="ApplicationDataSeedModel"/>.
+        /// The new <see cref="InfrastructureDataSeedModel"/>.
         /// </param>
-        public void OverwriteApplicationData(ApplicationDataSeedModel? model)
+        public void OverwriteApplicationData(InfrastructureDataSeedModel? model)
         {
-            SerializeToFile(model, SeedDataDirectory.FullName, JsonSeedDataProvider.ApplicationDataFileName);
+            SerializeToFile(model, SeedDataDirectory.FullName, JsonSeedDataProvider.InfrastructureDataFileName);
 
-            PrepopulatedApplicationData = model;
+            PrepopulatedInfrastructureData = model;
         }
 
         /// <summary>
@@ -94,13 +93,13 @@ public sealed partial class JsonSeedDataProviderTests : IDisposable
 
         #region Private methods
         /// <summary>
-        /// Creates a default <see cref="ApplicationDataSeedModel"/> containing a single
+        /// Creates a default <see cref="InfrastructureDataSeedModel"/> containing a single
         /// <see cref="SeedEmailTemplateModel"/> used for testing.
         /// </summary>
         /// <returns>
-        /// A new instance of <see cref="ApplicationDataSeedModel"/> pre-populated with one email template.
+        /// A new instance of <see cref="InfrastructureDataSeedModel"/> pre-populated with one email template.
         /// </returns>
-        private static ApplicationDataSeedModel GetDefaultApplicationSeedModel()
+        private static InfrastructureDataSeedModel GetDefaultApplicationSeedModel()
         {
             var emailTemplate = new SeedEmailTemplateModel(
                 templateName: "TemplateName",
@@ -114,18 +113,6 @@ public sealed partial class JsonSeedDataProviderTests : IDisposable
                 templateText: "TemplateText",
                 templateTextSourcePath: null);
 
-            return new([emailTemplate]);
-        }
-
-        /// <summary>
-        /// Creates a default <see cref="DomainDataSeedModel"/> containing a single
-        /// <see cref="SeedRoleModel"/> and a single <see cref="SeedUserModel"/> used for testing.
-        /// </summary>
-        /// <returns>
-        /// A new instance of <see cref="DomainDataSeedModel"/> with one role and one user.
-        /// </returns>
-        private static DomainDataSeedModel GetDefaultDomainSeedModel()
-        {
             var role = new SeedRoleModel(
                 name: "Name",
                 isDefault: false);
@@ -137,8 +124,18 @@ public sealed partial class JsonSeedDataProviderTests : IDisposable
                 isEmailConfirmed: false,
                 roles: []);
 
-            return new DomainDataSeedModel([role], [user]);
+            return new([emailTemplate], [role], [user]);
         }
+
+        /// <summary>
+        /// Creates a default <see cref="DomainDataSeedModel"/> containing a single
+        /// <see cref="SeedRoleModel"/> and a single <see cref="SeedUserModel"/> used for testing.
+        /// </summary>
+        /// <returns>
+        /// A new instance of <see cref="DomainDataSeedModel"/> with one role and one user.
+        /// </returns>
+        private static DomainDataSeedModel GetDefaultDomainSeedModel()
+            => new();
 
         /// <summary>
         /// Creates temporary JSON seed data files for application and domain data,
@@ -148,15 +145,15 @@ public sealed partial class JsonSeedDataProviderTests : IDisposable
         /// This method generates minimal test data containing a single email template, role, and user.
         /// The data is serialized to JSON and written to the temporary directory associated with
         /// <see cref="SeedDataDirectory"/> using the filenames defined in
-        /// <see cref="JsonSeedDataProvider.ApplicationDataFileName"/> and
+        /// <see cref="JsonSeedDataProvider.InfrastructureDataFileName"/> and
         /// <see cref="JsonSeedDataProvider.DomainDataFileName"/>.
         /// </remarks>
         private void PrepareTemporarySeedFiles()
         {
-            PrepopulatedApplicationData = GetDefaultApplicationSeedModel();
+            PrepopulatedInfrastructureData = GetDefaultApplicationSeedModel();
             PrepopulatedDomainData = GetDefaultDomainSeedModel();
 
-            SerializeToFile(PrepopulatedApplicationData, SeedDataDirectory.FullName, JsonSeedDataProvider.ApplicationDataFileName);
+            SerializeToFile(PrepopulatedInfrastructureData, SeedDataDirectory.FullName, JsonSeedDataProvider.InfrastructureDataFileName);
             SerializeToFile(PrepopulatedDomainData, SeedDataDirectory.FullName, JsonSeedDataProvider.DomainDataFileName);
         }
 

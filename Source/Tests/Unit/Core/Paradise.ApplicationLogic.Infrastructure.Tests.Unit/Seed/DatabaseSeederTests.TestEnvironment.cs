@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Time.Testing;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Seed.Implementation;
-using Paradise.ApplicationLogic.Infrastructure.Services;
-using Paradise.Domain.Identity.Roles;
-using Paradise.Domain.Identity.Users;
+using Paradise.ApplicationLogic.Infrastructure.Services.MessageTemplates;
 using Paradise.Models;
 using Paradise.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infrastructure.Identity;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.ApplicationLogic.Infrastructure.Services;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Core.DataAccess;
-using Paradise.Tests.Miscellaneous.TestDoubles.Fakes.Microsoft.Extensions.Logging;
+using Paradise.Tests.Doubles.Fakes.Core.ApplicationLogic.Infrastructure.Identity;
+using Paradise.Tests.Doubles.Fakes.Core.ApplicationLogic.Infrastructure.Services.MessageTemplates;
+using Paradise.Tests.Doubles.Fakes.DataAccess;
+using Paradise.Tests.Doubles.Fakes.Microsoft.Extensions.Logging;
 using System.Globalization;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Seed;
@@ -39,8 +38,7 @@ public sealed partial class DatabaseSeederTests
     {
         #region Fields
         private readonly FakeLogger<DatabaseSeeder> _logger;
-        private readonly FakeDataSource _domainDataSource;
-        private readonly FakeDataSource _infrastructureDataSource;
+        private readonly FakeDataSource _dataSource;
         private readonly FakeRoleManager _roleManager;
         private readonly FakeUserManager _userManager;
         private readonly FakeEmailTemplateService _emailTemplateService;
@@ -58,19 +56,17 @@ public sealed partial class DatabaseSeederTests
 
             _logger = new();
 
-            _domainDataSource = new(timeProvider);
-            _infrastructureDataSource = new(timeProvider);
+            _dataSource = new(timeProvider);
 
-            _roleManager = new FakeRoleManager(_domainDataSource);
-            _userManager = new FakeUserManager(timeProvider, _domainDataSource, new IdentityOptions());
+            _roleManager = new FakeRoleManager(_dataSource);
+            _userManager = new FakeUserManager(timeProvider, _dataSource, new IdentityOptions());
 
-            _emailTemplateService = new FakeEmailTemplateService(_infrastructureDataSource);
+            _emailTemplateService = new FakeEmailTemplateService(_dataSource);
 
-            Target = new(_logger, _roleManager, _userManager, _domainDataSource, _infrastructureDataSource, _emailTemplateService);
+            Target = new(_logger, _roleManager, _userManager, _dataSource, _emailTemplateService);
 
             _logger.MessageLogged += OnMessageLogged;
-            _domainDataSource.PersistenceStoragePreparedAsync += OnDomainPersistenceStoragePreparedAsync;
-            _infrastructureDataSource.PersistenceStoragePreparedAsync += OnInfrastructurePersistenceStoragePreparedAsync;
+            _dataSource.PersistenceStoragePreparedAsync += OnDomainPersistenceStoragePreparedAsync;
         }
         #endregion
 
@@ -83,12 +79,7 @@ public sealed partial class DatabaseSeederTests
         /// <summary>
         /// Indicates whether the domain storage is prepared and ready to be used.
         /// </summary>
-        public bool DomainStoragePrepared { get; private set; }
-
-        /// <summary>
-        /// Indicates whether the infrastructure storage is prepared and ready to be used.
-        /// </summary>
-        public bool InfrastructureStoragePrepared { get; private set; }
+        public bool StoragePrepared { get; private set; }
         #endregion
 
         #region Public methods
@@ -110,8 +101,8 @@ public sealed partial class DatabaseSeederTests
                 NormalizedName = name
             };
 
-            _domainDataSource.Add(role);
-            _domainDataSource.SaveChanges();
+            _dataSource.Add(role);
+            _dataSource.SaveChanges();
         }
 
         /// <summary>
@@ -134,7 +125,7 @@ public sealed partial class DatabaseSeederTests
         /// </returns>
         public bool RoleExists(string roleName, bool isDefault = false)
         {
-            return _domainDataSource
+            return _dataSource
                 .GetQueryable<Role>()
                 .Any(role => role.Name == roleName
                           && role.IsDefault == isDefault);
@@ -158,8 +149,8 @@ public sealed partial class DatabaseSeederTests
                 NormalizedUserName = userName
             };
 
-            _domainDataSource.Add(user);
-            _domainDataSource.SaveChanges();
+            _dataSource.Add(user);
+            _dataSource.SaveChanges();
         }
 
         /// <summary>
@@ -181,7 +172,7 @@ public sealed partial class DatabaseSeederTests
         /// </returns>
         public bool UserExists(string emailAddress, string userName)
         {
-            return _domainDataSource
+            return _dataSource
                 .GetQueryable<User>()
                 .Any(user => user.Email == emailAddress
                           && user.UserName == userName);
@@ -211,8 +202,8 @@ public sealed partial class DatabaseSeederTests
 
             var template = new EmailTemplate(templateName, culture, templateText, subject);
 
-            _infrastructureDataSource.Add(template);
-            _infrastructureDataSource.SaveChanges();
+            _dataSource.Add(template);
+            _dataSource.SaveChanges();
         }
 
         /// <summary>
@@ -246,7 +237,7 @@ public sealed partial class DatabaseSeederTests
                 ? CultureInfo.GetCultureInfo(cultureId.Value)
                 : null;
 
-            return _infrastructureDataSource
+            return _dataSource
                 .GetQueryable<EmailTemplate>()
                 .Any(template => template.TemplateName == templateName
                               && template.Subject == subject
@@ -343,8 +334,7 @@ public sealed partial class DatabaseSeederTests
         public void Dispose()
         {
             _logger.MessageLogged -= OnMessageLogged;
-            _domainDataSource.PersistenceStoragePreparedAsync -= OnDomainPersistenceStoragePreparedAsync;
-            _infrastructureDataSource.PersistenceStoragePreparedAsync -= OnInfrastructurePersistenceStoragePreparedAsync;
+            _dataSource.PersistenceStoragePreparedAsync -= OnDomainPersistenceStoragePreparedAsync;
         }
         #endregion
 
@@ -374,19 +364,7 @@ public sealed partial class DatabaseSeederTests
         /// The <see cref="EventArgs"/> instance containing the event data.
         /// </param>
         private void OnDomainPersistenceStoragePreparedAsync(object? sender, EventArgs e)
-            => DomainStoragePrepared = true;
-
-        /// <summary>
-        /// The <see cref="FakeDataSource.PersistenceStoragePreparedAsync"/> event handler.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender of the event.
-        /// </param>
-        /// <param name="e">
-        /// The <see cref="EventArgs"/> instance containing the event data.
-        /// </param>
-        private void OnInfrastructurePersistenceStoragePreparedAsync(object? sender, EventArgs e)
-            => InfrastructureStoragePrepared = true;
+            => StoragePrepared = true;
         #endregion
     }
     #endregion

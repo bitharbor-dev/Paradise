@@ -1,8 +1,8 @@
-﻿using Paradise.Common.Extensions;
+﻿using Paradise.Primitives.Extensions;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.DataAccess.Repositories.Base.Extensions;
 

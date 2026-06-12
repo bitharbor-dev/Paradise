@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.ComponentModel.DataAnnotations;
+using Paradise.Tests.Fixtures.Common.Models;
 using System.Text.Json;
 
 namespace Paradise.ApplicationLogic.Options.Tests.Unit.Extensions;
@@ -24,7 +24,7 @@ public sealed partial class IServiceCollectionExtensionsTests
         /// An options instance used to build initial configuration,
         /// and to compare test resulting options instances against.
         /// </summary>
-        public TestOptions Options { get; } = new();
+        public TestModel Options { get; } = new();
         #endregion
 
         #region Public methods
@@ -42,8 +42,8 @@ public sealed partial class IServiceCollectionExtensionsTests
         public IConfiguration BuildConfiguration(string? configurationSectionPath = null)
         {
             var configurationKey = configurationSectionPath is null
-                ? nameof(TestOptions)
-                : $"{configurationSectionPath}:{nameof(TestOptions)}";
+                ? nameof(TestModel)
+                : $"{configurationSectionPath}:{nameof(TestModel)}";
 
             var configurationValues = new Dictionary<string, object>()
             {
@@ -59,30 +59,6 @@ public sealed partial class IServiceCollectionExtensionsTests
                 .AddJsonStream(configurationStream)
                 .Build();
         }
-        #endregion
-    }
-
-    /// <summary>
-    /// A test-helper class that eases writing and isolates test methods.
-    /// </summary>
-    private sealed class TestOptions
-    {
-        #region Properties
-        /// <summary>
-        /// Test string property.
-        /// </summary>
-        [Required]
-        public string? StringValue { get; set; }
-
-        /// <summary>
-        /// Test integer property.
-        /// </summary>
-        public int IntegerValue { get; set; }
-
-        /// <summary>
-        /// Test complex property.
-        /// </summary>
-        public TestOptions? Child { get; set; }
         #endregion
     }
     #endregion

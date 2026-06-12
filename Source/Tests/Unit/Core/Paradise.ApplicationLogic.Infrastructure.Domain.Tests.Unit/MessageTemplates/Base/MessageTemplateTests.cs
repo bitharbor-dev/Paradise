@@ -1,5 +1,6 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
-using Paradise.Tests.Miscellaneous.TestImplementations.Core.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
+using Paradise.Tests.Fixtures.Core.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
+using System.Globalization;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit.MessageTemplates.Base;
 
@@ -28,6 +29,16 @@ public sealed class MessageTemplateTests
         { "Test",                           null,       0   },
         { "Test with {arg}0",               "{arg}",    1   },
         { "Test with {arg}0 and {arg}1",    "{arg}",    2   }
+    };
+
+    /// <summary>
+    /// Provides member data for <see cref="GetFormattedText_ThrowsOnMissingPlaceholder"/> method.
+    /// </summary>
+    public static TheoryData<CultureInfo?> GetFormattedText_ThrowsOnMissingPlaceholder_MemberData { get; } = new()
+    {
+        { null as CultureInfo           },
+        { CultureInfo.InvariantCulture  },
+        { new CultureInfo("en-US")      }
     };
     #endregion
 
@@ -121,13 +132,16 @@ public sealed class MessageTemplateTests
     /// throw the <see cref="FormatException"/> if the
     /// <see cref="MessageTemplate.TemplateText"/> is missing a placeholder.
     /// </summary>
-    [Fact]
-    public void GetFormattedText_ThrowsOnMissingPlaceholder()
+    /// <param name="culture">
+    /// Template culture.
+    /// </param>
+    [Theory, MemberData(nameof(GetFormattedText_ThrowsOnMissingPlaceholder_MemberData))]
+    public void GetFormattedText_ThrowsOnMissingPlaceholder(CultureInfo? culture)
     {
         // Arrange
         var parameters = new[] { "{arg}" };
 
-        var entity = new TestMessageTemplate("TemplateName", null, "TemplateText")
+        var entity = new TestMessageTemplate("TemplateName", culture, "TemplateText")
         {
             PlaceholderName = "Test",
             PlaceholdersNumber = (ushort)parameters.Length

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Code\Common\Paradise.Models\Paradise.Models.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Fixtures\Paradise.Tests.Fixtures.csproj" />
+	</ItemGroup>
+
+</Project>

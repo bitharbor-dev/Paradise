@@ -1,13 +1,16 @@
-﻿using Paradise.Common.Extensions;
+﻿using Paradise.Primitives.Extensions;
 using System.Runtime.CompilerServices;
 using System.Text;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.Domain.Base;
 
 /// <summary>
 /// Represents a domain state error message formatting contract.
 /// </summary>
+/// <param name="entityType">
+/// Entity type.
+/// </param>
 /// <param name="value">
 /// Property value.
 /// </param>
@@ -17,8 +20,8 @@ namespace Paradise.Domain.Base;
 /// <param name="propertyName">
 /// Property name.
 /// </param>
-public sealed class DomainStateError<TEntity>(object? value, string? additionalInformation = null,
-                                              [CallerArgumentExpression(nameof(value))] string? propertyName = null)
+public sealed class DomainStateError(Type entityType, object? value, string? additionalInformation = null,
+                                     [CallerArgumentExpression(nameof(value))] string? propertyName = null)
 {
     #region Constants
     private const string NullValueRepresentation = "null";
@@ -28,7 +31,7 @@ public sealed class DomainStateError<TEntity>(object? value, string? additionalI
     /// <summary>
     /// Formatted error message.
     /// </summary>
-    public string Message { get; } = CreateMessage(typeof(TEntity), value, propertyName, additionalInformation);
+    public string Message { get; } = CreateMessage(entityType, value, propertyName, additionalInformation);
     #endregion
 
     #region Public methods
@@ -43,9 +46,9 @@ public sealed class DomainStateError<TEntity>(object? value, string? additionalI
     /// into a <see cref="string"/> by calling <see cref="ToString"/> method.
     /// </summary>
     /// <param name="message">
-    /// The <see cref="DomainStateError{TEntity}"/> to be converted into a <see cref="string"/>.
+    /// The <see cref="DomainStateError"/> to be converted into a <see cref="string"/>.
     /// </param>
-    public static implicit operator string?(DomainStateError<TEntity> message)
+    public static implicit operator string?(DomainStateError message)
         => message?.ToString();
     #endregion
 

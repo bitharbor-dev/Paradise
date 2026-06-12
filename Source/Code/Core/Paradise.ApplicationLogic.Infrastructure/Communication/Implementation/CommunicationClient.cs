@@ -2,12 +2,12 @@
 using Paradise.ApplicationLogic.Infrastructure.Communication.Email;
 using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.Email;
-using Paradise.Common.Extensions;
 using Paradise.DataAccess.Repositories.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
+using Paradise.Primitives.Extensions;
 using System.Globalization;
 using System.Text;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Communication.Implementation;
 

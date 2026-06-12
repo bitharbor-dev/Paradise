@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Paradise.ApplicationLogic.DataConverters.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.ApplicationLogic.DataConverters.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.ApplicationLogic.DataConverters.Domain.Identity.Roles;
-using Paradise.ApplicationLogic.DataConverters.Domain.Identity.Users;
+using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using Paradise.ApplicationLogic.Infrastructure.Extensions;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
-using Paradise.ApplicationLogic.Infrastructure.Services;
-using Paradise.Common.Extensions;
+using Paradise.ApplicationLogic.Infrastructure.Services.MessageTemplates;
+using Paradise.Primitives.Extensions;
 using Paradise.DataAccess;
-using Paradise.DataAccess.Repositories.Attributes;
+using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Roles;
-using Paradise.DataAccess.Seed.Models.Domain.Identity.Users;
-using Paradise.Domain.Identity.Roles;
-using Paradise.Domain.Identity.Users;
 using Paradise.Localization.ExceptionHandling;
 using Paradise.Models;
 using System.Globalization;
@@ -39,11 +35,8 @@ namespace Paradise.ApplicationLogic.Infrastructure.Seed.Implementation;
 /// <param name="userManager">
 /// User manager.
 /// </param>
-/// <param name="domainDataSource">
-/// Domain data source.
-/// </param>
-/// <param name="infrastructureDataSource">
-/// Infrastructure data source.
+/// <param name="dataSource">
+/// Data source.
 /// </param>
 /// <param name="emailTemplateService">
 /// Email template service.
@@ -51,20 +44,13 @@ namespace Paradise.ApplicationLogic.Infrastructure.Seed.Implementation;
 internal sealed class DatabaseSeeder(ILogger<DatabaseSeeder> logger,
                                      IRoleManager<Role> roleManager,
                                      IUserManager<User> userManager,
-                                     [DomainContextKey] IDataSource domainDataSource,
-                                     [InfrastructureContextKey] IDataSource infrastructureDataSource,
+                                     IDataSource dataSource,
                                      IEmailTemplateService emailTemplateService) : IDatabaseSeeder
 {
     #region Public methods
     /// <inheritdoc/>
-    public async Task EnsureStorageAvailableAsync(CancellationToken cancellationToken = default)
-    {
-        await infrastructureDataSource.PreparePersistenceStorageAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        await domainDataSource.PreparePersistenceStorageAsync(cancellationToken)
-            .ConfigureAwait(false);
-    }
+    public Task EnsureStorageAvailableAsync(CancellationToken cancellationToken = default)
+        => dataSource.PreparePersistenceStorageAsync(cancellationToken);
 
     /// <inheritdoc/>
     public async Task<ushort> SeedRolesAsync(IEnumerable<SeedRoleModel> seedRoles, CancellationToken cancellationToken = default)
@@ -207,7 +193,7 @@ internal sealed class DatabaseSeeder(ILogger<DatabaseSeeder> logger,
 
         if (model.Password.IsNullOrWhiteSpace())
         {
-            var message = ExceptionMessages.GetMessageInvalidSeedData();
+            var message = ExceptionMessagesProvider.GetMessageInvalidSeedData();
 
             throw new InvalidOperationException(message, new ArgumentException(nameof(model.Password)));
         }

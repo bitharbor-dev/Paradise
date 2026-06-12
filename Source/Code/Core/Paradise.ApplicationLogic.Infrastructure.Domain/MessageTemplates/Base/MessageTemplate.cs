@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using static Paradise.Localization.ExceptionHandling.ExceptionMessages;
+using static Paradise.Localization.ExceptionHandling.ExceptionMessagesProvider;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
 
@@ -82,7 +82,7 @@ public abstract class MessageTemplate(string templateName, CultureInfo? culture,
             {
                 var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                var message = new DomainStateError<MessageTemplate>(PlaceholdersNumber, additionalInformation);
+                var message = new DomainStateError(GetType(), PlaceholdersNumber, additionalInformation);
 
                 throw new InvalidOperationException(message);
             }
@@ -96,7 +96,7 @@ public abstract class MessageTemplate(string templateName, CultureInfo? culture,
                 var additionalInformation = GetMessageMessageTemplateInvalidPlaceholdersNumber(
                     PlaceholdersNumber, (ushort)placeholderOccurrences);
 
-                var message = new DomainStateError<MessageTemplate>(TemplateText, additionalInformation);
+                var message = new DomainStateError(GetType(), TemplateText, additionalInformation);
 
                 throw new InvalidOperationException(message);
             }
@@ -176,7 +176,7 @@ public abstract class MessageTemplate(string templateName, CultureInfo? culture,
             {
                 var additionalInformation = GetMessageMessageTemplateFormattableTextInInvalidState();
 
-                var message = new DomainStateError<MessageTemplate>(PlaceholdersNumber, additionalInformation);
+                var message = new DomainStateError(GetType(), PlaceholdersNumber, additionalInformation);
 
                 throw new InvalidOperationException(message);
             }

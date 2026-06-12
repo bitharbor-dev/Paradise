@@ -15,6 +15,6 @@ internal interface IPostBuildStep
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    Task ExecuteAsync(PostBuildContext context);
+    ValueTask ExecuteAsync(PostBuildContext context);
     #endregion
 }

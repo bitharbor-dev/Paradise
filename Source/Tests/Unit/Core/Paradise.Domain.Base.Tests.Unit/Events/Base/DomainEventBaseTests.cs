@@ -1,6 +1,6 @@
 ﻿using Paradise.Domain.Base.Events;
 using Paradise.Domain.Base.Events.Base;
-using Paradise.Tests.Miscellaneous.TestImplementations.Core.Domain.Events;
+using Paradise.Tests.Fixtures.Core.Domain.Base.Events;
 
 namespace Paradise.Domain.Base.Tests.Unit.Events.Base;
 

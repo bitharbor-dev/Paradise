@@ -1,15 +1,8 @@
 {
   "profiles": {
-    "Console": {
-      "commandLineArgs": "--port 7010",
+    "Paradise.Maintenance": {
+      "commandLineArgs": "--port 6000",
       "commandName": "Project"
-    },
-    "Container (Dockerfile)": {
-      "commandName": "Docker",
-      "containerRunArguments": "--init",
-      "httpPort": 32605,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "useSSL": false
     }
   }
 }
