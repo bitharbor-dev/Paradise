@@ -11,7 +11,7 @@ public sealed class OperationStatusExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="GetStatusCode"/> method.
+    /// Provides member data for the <see cref="GetStatusCode"/> method.
     /// </summary>
     public static TheoryData<OperationStatus, int> GetStatusCode_MemberData => new()
     {
@@ -27,7 +27,7 @@ public sealed class OperationStatusExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="GetOperationStatus"/> method.
+    /// Provides member data for the <see cref="GetOperationStatus"/> method.
     /// </summary>
     public static TheoryData<int, OperationStatus> GetOperationStatus_MemberData => new()
     {

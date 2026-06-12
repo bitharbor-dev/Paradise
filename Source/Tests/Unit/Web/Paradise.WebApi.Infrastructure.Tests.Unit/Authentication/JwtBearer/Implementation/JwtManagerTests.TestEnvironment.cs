@@ -22,7 +22,7 @@ public sealed partial class JwtManagerTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="JwtManagerTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="JwtManagerTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

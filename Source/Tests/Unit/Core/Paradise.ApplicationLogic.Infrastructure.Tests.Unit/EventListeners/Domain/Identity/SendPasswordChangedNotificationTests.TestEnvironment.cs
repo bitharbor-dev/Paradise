@@ -31,7 +31,7 @@ public sealed partial class SendPasswordChangedNotificationTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SendPasswordChangedNotificationTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SendPasswordChangedNotificationTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

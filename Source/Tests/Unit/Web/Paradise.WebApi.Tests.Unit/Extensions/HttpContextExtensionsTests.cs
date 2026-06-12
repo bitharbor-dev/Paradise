@@ -18,7 +18,7 @@ public sealed class HttpContextExtensionsTests
 
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="GetUserId_ReturnsEmptyOnInvalidClaimValue"/> method.
+    /// Provides member data for the <see cref="GetUserId_ReturnsEmptyOnInvalidClaimValue"/> method.
     /// </summary>
     public static TheoryData<string> GetUserId_ReturnsEmptyOnInvalidClaimValue_MemberData { get; } = new()
     {

@@ -10,7 +10,7 @@ public sealed partial class EnumExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="GetFormattedDisplayValue"/> method.
+    /// Provides member data for the <see cref="GetFormattedDisplayValue"/> method.
     /// </summary>
     public static TheoryData<TestErrorCode, string[], string> GetFormattedDisplayValue_MemberData { get; } = new()
     {

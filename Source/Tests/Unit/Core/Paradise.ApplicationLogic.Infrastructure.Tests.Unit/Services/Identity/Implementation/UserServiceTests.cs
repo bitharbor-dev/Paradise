@@ -17,7 +17,7 @@ public sealed partial class UserServiceTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="RegisterAsync_FailsOnInvalidEmailAddress"/> method.
+    /// Provides member data for the <see cref="RegisterAsync_FailsOnInvalidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string> RegisterAsync_FailsOnInvalidEmailAddress_MemberData { get; } = new()
     {
@@ -26,7 +26,7 @@ public sealed partial class UserServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="CheckPasswordAsync_FailsOnPasswordMismatch"/> method.
+    /// Provides member data for the <see cref="CheckPasswordAsync_FailsOnPasswordMismatch"/> method.
     /// </summary>
     public static TheoryData<bool> CheckPasswordAsync_FailsOnPasswordMismatch_MemberData { get; } = new()
     {
@@ -35,7 +35,7 @@ public sealed partial class UserServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="CreatePasswordResetRequestAsync_FailsOnInvalidEmailAddress"/> method.
+    /// Provides member data for the <see cref="CreatePasswordResetRequestAsync_FailsOnInvalidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string?> CreatePasswordResetRequestAsync_FailsOnInvalidEmailAddress_MemberData { get; } = new()
     {
@@ -45,7 +45,7 @@ public sealed partial class UserServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ResetPasswordAsync_FailsOnInvalidPassword"/> method.
+    /// Provides member data for the <see cref="ResetPasswordAsync_FailsOnInvalidPassword"/> method.
     /// </summary>
     public static TheoryData<string?> ResetPasswordAsync_FailsOnInvalidPassword_MemberData { get; } = new()
     {
@@ -55,7 +55,7 @@ public sealed partial class UserServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="CreateEmailAddressResetRequestAsync_FailsOnInvalidEmailAddress"/> method.
+    /// Provides member data for the <see cref="CreateEmailAddressResetRequestAsync_FailsOnInvalidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string?> CreateEmailAddressResetRequestAsync_FailsOnInvalidEmailAddress_MemberData { get; } = new()
     {
@@ -65,7 +65,7 @@ public sealed partial class UserServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ResetEmailAddressAsync_FailsOnInvalidEmailAddress"/> method.
+    /// Provides member data for the <see cref="ResetEmailAddressAsync_FailsOnInvalidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string?> ResetEmailAddressAsync_FailsOnInvalidEmailAddress_MemberData { get; } = new()
     {
@@ -75,7 +75,7 @@ public sealed partial class UserServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="UpdateAsync"/> method.
+    /// Provides member data for the <see cref="UpdateAsync"/> method.
     /// </summary>
     public static TheoryData<bool?> UpdateAsync_MemberData { get; } = new()
     {

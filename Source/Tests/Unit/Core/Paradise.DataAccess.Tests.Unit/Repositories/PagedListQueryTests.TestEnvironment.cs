@@ -22,7 +22,7 @@ public sealed partial class PagedListQueryTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="PagedListQueryTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="PagedListQueryTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

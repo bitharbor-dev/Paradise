@@ -9,7 +9,7 @@ public sealed class UserRefreshTokenModelTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="IsExpired"/> method.
+    /// Provides member data for the <see cref="IsExpired"/> method.
     /// </summary>
     public static TheoryData<double, bool> IsExpired_MemberData { get; } = new()
     {

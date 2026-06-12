@@ -31,7 +31,7 @@ public sealed partial class SendTwoFactorAuthenticationCodeTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SendTwoFactorAuthenticationCodeTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SendTwoFactorAuthenticationCodeTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

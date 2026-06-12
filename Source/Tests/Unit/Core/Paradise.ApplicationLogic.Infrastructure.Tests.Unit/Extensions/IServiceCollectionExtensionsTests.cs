@@ -30,7 +30,7 @@ public sealed partial class IServiceCollectionExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="AddInfrastructure_InDevelopmentEnvironment"/> method.
+    /// Provides member data for the <see cref="AddInfrastructure_InDevelopmentEnvironment"/> method.
     /// </summary>
     public static TheoryData<string> AddInfrastructure_InDevelopmentEnvironment_MemberData { get; } = new()
     {
@@ -39,7 +39,7 @@ public sealed partial class IServiceCollectionExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="AddInfrastructure_InNonDevelopmentEnvironment"/> method.
+    /// Provides member data for the <see cref="AddInfrastructure_InNonDevelopmentEnvironment"/> method.
     /// </summary>
     public static TheoryData<string> AddInfrastructure_InNonDevelopmentEnvironment_MemberData { get; } = new()
     {
@@ -50,13 +50,13 @@ public sealed partial class IServiceCollectionExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="AddInfrastructure_AddsDomainEventsDispatching"/> method.
+    /// Provides member data for the <see cref="AddInfrastructure_AddsDomainEventsDispatching"/> method.
     /// </summary>
     public static TheoryData<string> AddInfrastructure_AddsDomainEventsDispatching_MemberData { get; }
         = [.. EnvironmentNames.AllowedEnvironments];
 
     /// <summary>
-    /// Provides member data for <see cref="AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy"/> method.
+    /// Provides member data for the <see cref="AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy"/> method.
     /// </summary>
     public static TheoryData<string> AddInfrastructure_AddsDomainEventsDispatching_WithGlobalRetryPolicy_MemberData { get; }
         = [.. EnvironmentNames.AllowedEnvironments];

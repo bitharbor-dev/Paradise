@@ -12,7 +12,7 @@ public sealed partial class PagedListQueryTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="PageSkip"/> method.
+    /// Provides member data for the <see cref="PageSkip"/> method.
     /// </summary>
     public static TheoryData<int, int, int> PageSkip_MemberData { get; } = new()
     {
@@ -23,7 +23,7 @@ public sealed partial class PagedListQueryTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="Apply_AddsOrderingExpression"/> method.
+    /// Provides member data for the <see cref="Apply_AddsOrderingExpression"/> method.
     /// </summary>
     public static TheoryData<bool> Apply_AppendsOrderingExpression_MemberData { get; } = new()
     {

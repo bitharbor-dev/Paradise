@@ -10,7 +10,7 @@ public sealed partial class RequiredAtLeastOneAttributeTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="IsValid"/> method.
+    /// Provides member data for the <see cref="IsValid"/> method.
     /// </summary>
     public static TheoryData<bool, int?, string?, bool> IsValid_MemberData { get; } = new()
     {

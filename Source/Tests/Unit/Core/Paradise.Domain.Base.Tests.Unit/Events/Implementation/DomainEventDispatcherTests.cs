@@ -11,7 +11,7 @@ public sealed partial class DomainEventDispatcherTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="StartDispatchingAsync_ProcessesWithSingleListener"/> method.
+    /// Provides member data for the <see cref="StartDispatchingAsync_ProcessesWithSingleListener"/> method.
     /// </summary>
     public static TheoryData<ushort> StartDispatchingAsync_ProcessesWithSingleListener_MemberData { get; } = new()
     {
@@ -20,7 +20,7 @@ public sealed partial class DomainEventDispatcherTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="StartDispatchingAsync_StopsWhenCancelled"/> method.
+    /// Provides member data for the <see cref="StartDispatchingAsync_StopsWhenCancelled"/> method.
     /// </summary>
     public static TheoryData<bool, int, bool> StartDispatchingAsync_StopsWhenCancelled_MemberData { get; } = new()
     {

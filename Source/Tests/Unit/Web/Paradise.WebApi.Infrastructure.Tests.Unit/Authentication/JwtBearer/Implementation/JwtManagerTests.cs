@@ -11,7 +11,7 @@ public sealed partial class JwtManagerTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="TryParseToken_ReturnsFalseOnInvalidToken"/> method.
+    /// Provides member data for the <see cref="TryParseToken_ReturnsFalseOnInvalidToken"/> method.
     /// </summary>
     public static TheoryData<string?> TryParseToken_ReturnsFalseOnInvalidToken_MemberData { get; } = new()
     {

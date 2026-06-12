@@ -34,7 +34,7 @@ public sealed partial class SendPasswordChangeLinkTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SendPasswordChangeLinkTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SendPasswordChangeLinkTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

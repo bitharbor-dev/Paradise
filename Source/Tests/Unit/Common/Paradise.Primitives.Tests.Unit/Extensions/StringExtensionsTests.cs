@@ -10,7 +10,7 @@ public sealed class StringExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="IsNullOrWhiteSpace"/> method.
+    /// Provides member data for the <see cref="IsNullOrWhiteSpace"/> method.
     /// </summary>
     public static TheoryData<string?, bool> IsNullOrWhiteSpace_MemberData { get; } = new()
     {
@@ -21,7 +21,7 @@ public sealed class StringExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsNullOrWhiteSpace"/> method.
+    /// Provides member data for the <see cref="IsNullOrWhiteSpace"/> method.
     /// </summary>
     public static TheoryData<string?, bool> IsNotNullOrWhiteSpace_MemberData { get; } = new()
     {
@@ -32,7 +32,7 @@ public sealed class StringExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsValidEmailAddress"/> method.
+    /// Provides member data for the <see cref="IsValidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string, bool> IsValidEmailAddress_MemberData { get; } = new()
     {
@@ -45,7 +45,7 @@ public sealed class StringExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsValidPhoneNumber"/> method.
+    /// Provides member data for the <see cref="IsValidPhoneNumber"/> method.
     /// </summary>
     public static TheoryData<string, bool> IsValidPhoneNumber_MemberData { get; } = new()
     {
@@ -59,7 +59,7 @@ public sealed class StringExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsValidUserName"/> method.
+    /// Provides member data for the <see cref="IsValidUserName"/> method.
     /// </summary>
     public static TheoryData<string?, string?, bool> IsValidUserName_MemberData { get; } = new()
     {

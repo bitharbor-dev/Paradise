@@ -11,7 +11,7 @@ public sealed class MessageTemplateTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="GetFormattedText"/> method.
+    /// Provides member data for the <see cref="GetFormattedText"/> method.
     /// </summary>
     public static TheoryData<string, string?, ushort, string?[]> GetFormattedText_MemberData { get; } = new()
     {
@@ -22,7 +22,7 @@ public sealed class MessageTemplateTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ValidateState"/> method.
+    /// Provides member data for the <see cref="ValidateState"/> method.
     /// </summary>
     public static TheoryData<string, string?, ushort> ValidateState_MemberData { get; } = new()
     {
@@ -32,7 +32,7 @@ public sealed class MessageTemplateTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="GetFormattedText_ThrowsOnMissingPlaceholder"/> method.
+    /// Provides member data for the <see cref="GetFormattedText_ThrowsOnMissingPlaceholder"/> method.
     /// </summary>
     public static TheoryData<CultureInfo?> GetFormattedText_ThrowsOnMissingPlaceholder_MemberData { get; } = new()
     {

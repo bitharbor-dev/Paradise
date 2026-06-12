@@ -30,7 +30,7 @@ public sealed partial class AuthenticationServiceTests
 
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="LoginAsync_FailsOnMissingPassword"/> method.
+    /// Provides member data for the <see cref="LoginAsync_FailsOnMissingPassword"/> method.
     /// </summary>
     public static TheoryData<string?> LoginAsync_FailsOnMissingPassword_MemberData { get; } = new()
     {
@@ -40,7 +40,7 @@ public sealed partial class AuthenticationServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="LoginAsync_ReturnsTwoFactorToken"/> method.
+    /// Provides member data for the <see cref="LoginAsync_ReturnsTwoFactorToken"/> method.
     /// </summary>
     public static TheoryData<LoginModel> LoginAsync_ReturnsTwoFactorToken_MemberData { get; } = new()
     {
@@ -50,7 +50,7 @@ public sealed partial class AuthenticationServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ConfirmLoginAsync_FailsOnEmptyTwoFactorCode"/> method.
+    /// Provides member data for the <see cref="ConfirmLoginAsync_FailsOnEmptyTwoFactorCode"/> method.
     /// </summary>
     public static TheoryData<string?> ConfirmLoginAsync_FailsOnEmptyTwoFactorCode_MemberData { get; } = new()
     {
@@ -60,7 +60,7 @@ public sealed partial class AuthenticationServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="RenewTokenAsync_WithPersistedRefreshToken"/> method.
+    /// Provides member data for the <see cref="RenewTokenAsync_WithPersistedRefreshToken"/> method.
     /// </summary>
     public static TheoryData<string> RenewTokenAsync_WithPersistedRefreshToken_MemberData { get; } = new()
     {
@@ -69,7 +69,7 @@ public sealed partial class AuthenticationServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="RenewTokenAsync_WithCachedRefreshToken"/> method.
+    /// Provides member data for the <see cref="RenewTokenAsync_WithCachedRefreshToken"/> method.
     /// </summary>
     public static TheoryData<string> RenewTokenAsync_WithCachedRefreshToken_MemberData { get; } = new()
     {
@@ -78,7 +78,7 @@ public sealed partial class AuthenticationServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="LogoutAsync"/> method.
+    /// Provides member data for the <see cref="LogoutAsync"/> method.
     /// </summary>
     public static TheoryData<string> LogoutAsync_MemberData { get; } = new()
     {
@@ -87,7 +87,7 @@ public sealed partial class AuthenticationServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="TerminateSessionsAsync"/> method.
+    /// Provides member data for the <see cref="TerminateSessionsAsync"/> method.
     /// </summary>
     public static TheoryData<string> TerminateSessionsAsync_MemberData { get; } = new()
     {

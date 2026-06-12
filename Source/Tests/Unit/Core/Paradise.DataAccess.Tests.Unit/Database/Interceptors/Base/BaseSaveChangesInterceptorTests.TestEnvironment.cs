@@ -33,7 +33,7 @@ public sealed partial class BaseSaveChangesInterceptorTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="BaseSaveChangesInterceptorTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="BaseSaveChangesInterceptorTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

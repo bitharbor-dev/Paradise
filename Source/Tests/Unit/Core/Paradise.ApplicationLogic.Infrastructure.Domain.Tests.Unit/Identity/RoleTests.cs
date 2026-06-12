@@ -11,7 +11,7 @@ public sealed class RoleTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="ValidateState_ThrowsOnNullEmptyOrWhitespaceName"/> method.
+    /// Provides member data for the <see cref="ValidateState_ThrowsOnNullEmptyOrWhitespaceName"/> method.
     /// </summary>
     public static TheoryData<string?> ValidateState_ThrowsOnNullEmptyOrWhitespaceName_MemberData { get; } = new()
     {
@@ -21,7 +21,7 @@ public sealed class RoleTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="OperatorEquals_ReturnsFalseOnNull"/> method.
+    /// Provides member data for the <see cref="OperatorEquals_ReturnsFalseOnNull"/> method.
     /// </summary>
     public static TheoryData<string?, string?> OperatorEquals_ReturnsFalseOnNull_MemberData { get; } = new()
     {
@@ -30,7 +30,7 @@ public sealed class RoleTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="OperatorNotEquals_ReturnsTrueOnNullArgument"/> method.
+    /// Provides member data for the <see cref="OperatorNotEquals_ReturnsTrueOnNullArgument"/> method.
     /// </summary>
     public static TheoryData<string?, string?> OperatorNotEquals_ReturnsTrueOnNullArgument_MemberData { get; } = new()
     {

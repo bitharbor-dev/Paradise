@@ -29,7 +29,7 @@ public sealed partial class UserManagerTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="UserManagerTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="UserManagerTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

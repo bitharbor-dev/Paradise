@@ -15,7 +15,7 @@ public sealed partial class IConfigurationExtensionsTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="IConfigurationExtensionsTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="IConfigurationExtensionsTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

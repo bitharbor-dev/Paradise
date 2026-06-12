@@ -12,7 +12,7 @@ public sealed partial class DataProtectorTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="Protect"/> method.
+    /// Provides member data for the <see cref="Protect"/> method.
     /// </summary>
     public static TheoryData<ValueWrapper> Protect_MemberData { get; } = new()
     {
@@ -26,7 +26,7 @@ public sealed partial class DataProtectorTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="TryUnprotect_ReturnsFalse"/> method.
+    /// Provides member data for the <see cref="TryUnprotect_ReturnsFalse"/> method.
     /// </summary>
     public static TheoryData<string?> TryUnprotect_ReturnsFalse_MemberData { get; } = new()
     {
@@ -37,7 +37,7 @@ public sealed partial class DataProtectorTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="GenerateRandomDigitCode"/> method.
+    /// Provides member data for the <see cref="GenerateRandomDigitCode"/> method.
     /// </summary>
     public static TheoryData<ushort> GenerateRandomDigitCode_MemberData { get; } = new()
     {

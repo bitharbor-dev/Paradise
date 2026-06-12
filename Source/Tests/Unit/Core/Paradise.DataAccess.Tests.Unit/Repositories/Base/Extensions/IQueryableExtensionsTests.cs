@@ -10,7 +10,7 @@ public sealed class IQueryableExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="FilterBy_ReturnsOriginalOnNullOrEmptyValue"/> method.
+    /// Provides member data for the <see cref="FilterBy_ReturnsOriginalOnNullOrEmptyValue"/> method.
     /// </summary>
     public static TheoryData<string?> FilterBy_ReturnsOriginalOnNullOrEmptyValue_MemberData { get; } = new()
     {
@@ -20,7 +20,7 @@ public sealed class IQueryableExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="OrderByPropertyName_ReturnsOriginalOnNullOrEmptyName"/> method.
+    /// Provides member data for the <see cref="OrderByPropertyName_ReturnsOriginalOnNullOrEmptyName"/> method.
     /// </summary>
     public static TheoryData<string?> OrderByPropertyName_ReturnsOriginalOnNullOrEmptyName_MemberData { get; } = new()
     {

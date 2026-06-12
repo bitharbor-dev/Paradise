@@ -14,7 +14,7 @@ public sealed partial class RequiredAtLeastOneAttributeTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="RequiredAtLeastOneAttributeTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="RequiredAtLeastOneAttributeTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

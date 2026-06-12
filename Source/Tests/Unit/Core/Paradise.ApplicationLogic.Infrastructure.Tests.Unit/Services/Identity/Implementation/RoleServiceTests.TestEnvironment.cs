@@ -25,7 +25,7 @@ public sealed partial class RoleServiceTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="RoleServiceTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="RoleServiceTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

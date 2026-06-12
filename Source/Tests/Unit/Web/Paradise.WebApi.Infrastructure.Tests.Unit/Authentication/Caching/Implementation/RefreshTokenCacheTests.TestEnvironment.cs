@@ -26,7 +26,7 @@ public sealed partial class RefreshTokenCacheTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="RefreshTokenCacheTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="RefreshTokenCacheTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

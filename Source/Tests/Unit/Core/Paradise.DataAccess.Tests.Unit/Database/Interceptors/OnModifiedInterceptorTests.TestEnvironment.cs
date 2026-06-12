@@ -14,7 +14,7 @@ public sealed partial class OnModifiedInterceptorTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="OnModifiedInterceptorTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="OnModifiedInterceptorTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

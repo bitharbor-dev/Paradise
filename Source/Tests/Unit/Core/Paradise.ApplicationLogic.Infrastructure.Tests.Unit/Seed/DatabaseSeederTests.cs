@@ -18,7 +18,7 @@ public sealed partial class DatabaseSeederTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="SeedUsersAsync_FailsOnInvalidPassword"/> method.
+    /// Provides member data for the <see cref="SeedUsersAsync_FailsOnInvalidPassword"/> method.
     /// </summary>
     public static TheoryData<string?> SeedUsersAsync_FailsOnInvalidPassword_MemberData { get; } = new()
     {

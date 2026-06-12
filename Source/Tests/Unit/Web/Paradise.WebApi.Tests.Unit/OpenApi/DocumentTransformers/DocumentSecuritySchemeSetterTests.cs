@@ -10,7 +10,7 @@ public sealed partial class DocumentSecuritySchemeSetterTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="TransformAsync_ThrowsOnInvalidSchemeName"/> method.
+    /// Provides member data for the <see cref="TransformAsync_ThrowsOnInvalidSchemeName"/> method.
     /// </summary>
     public static TheoryData<string?> TransformAsync_ThrowsOnInvalidSchemeName_MemberData { get; } = new()
     {

@@ -51,7 +51,7 @@ public sealed partial class CommunicationClientTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="CommunicationClientTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="CommunicationClientTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

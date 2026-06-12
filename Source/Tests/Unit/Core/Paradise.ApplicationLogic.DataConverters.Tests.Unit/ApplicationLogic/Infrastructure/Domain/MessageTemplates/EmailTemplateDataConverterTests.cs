@@ -13,7 +13,7 @@ public sealed class EmailTemplateDataConverterTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="ToModel"/> method.
+    /// Provides member data for the <see cref="ToModel"/> method.
     /// </summary>
     public static TheoryData<CultureInfo?> ToModel_MemberData { get; } = new()
     {
@@ -22,7 +22,7 @@ public sealed class EmailTemplateDataConverterTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ToEntity"/> method.
+    /// Provides member data for the <see cref="ToEntity"/> method.
     /// </summary>
     public static TheoryData<int?> ToEntity_MemberData { get; } = new()
     {

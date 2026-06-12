@@ -12,7 +12,7 @@ public sealed class RefreshTokenCacheEntryTests
     public static DateTimeOffset UnixEpoch { get; } = DateTimeOffset.UnixEpoch;
 
     /// <summary>
-    /// Provides member data for <see cref="AsSpan"/> method.
+    /// Provides member data for the <see cref="AsSpan"/> method.
     /// </summary>
     public static TheoryData<bool> AsSpan_MemberData { get; } = new()
     {

@@ -15,7 +15,7 @@ public sealed class DomainEventRetryOptionsTests
     public CancellationToken Token { get; } = TestContext.Current.CancellationToken;
 
     /// <summary>
-    /// Provides member data for <see cref="DelayAsync_Exponential"/> method.
+    /// Provides member data for the <see cref="DelayAsync_Exponential"/> method.
     /// </summary>
     public static TheoryData<ushort, TimeSpan> DelayAsync_Exponential_MemberData { get; } = new()
     {
@@ -26,7 +26,7 @@ public sealed class DomainEventRetryOptionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="DelayAsync_NonExponential"/> method.
+    /// Provides member data for the <see cref="DelayAsync_NonExponential"/> method.
     /// </summary>
     public static TheoryData<ushort, TimeSpan> DelayAsync_NonExponential_MemberData { get; } = new()
     {

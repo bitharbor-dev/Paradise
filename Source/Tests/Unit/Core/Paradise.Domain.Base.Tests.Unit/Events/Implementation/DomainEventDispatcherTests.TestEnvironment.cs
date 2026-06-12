@@ -27,7 +27,7 @@ public sealed partial class DomainEventDispatcherTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="DomainEventDispatcherTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="DomainEventDispatcherTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

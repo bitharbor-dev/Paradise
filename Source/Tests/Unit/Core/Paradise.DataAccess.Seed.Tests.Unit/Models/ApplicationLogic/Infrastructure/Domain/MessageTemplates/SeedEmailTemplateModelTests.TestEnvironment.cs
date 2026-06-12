@@ -17,7 +17,7 @@ public sealed partial class SeedEmailTemplateModelTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SeedEmailTemplateModelTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SeedEmailTemplateModelTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

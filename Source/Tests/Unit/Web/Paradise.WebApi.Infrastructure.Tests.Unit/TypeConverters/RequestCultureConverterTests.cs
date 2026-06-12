@@ -16,7 +16,7 @@ public sealed class RequestCultureConverterTests
     public RequestCultureConverter Converter { get; } = new();
 
     /// <summary>
-    /// Provides member data for <see cref="ConvertFrom"/> method.
+    /// Provides member data for the <see cref="ConvertFrom"/> method.
     /// </summary>
     public static TheoryData<string, CultureInfo, CultureInfo> ConvertFrom_MemberData { get; } = new()
     {
@@ -26,7 +26,7 @@ public sealed class RequestCultureConverterTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ConvertTo"/> method.
+    /// Provides member data for the <see cref="ConvertTo"/> method.
     /// </summary>
     public static TheoryData<CultureInfo, CultureInfo?, string> ConvertTo_MemberData { get; } = new()
     {

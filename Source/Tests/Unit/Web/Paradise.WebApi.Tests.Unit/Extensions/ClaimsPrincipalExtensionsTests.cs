@@ -14,7 +14,7 @@ public sealed class ClaimsPrincipalExtensionsTests
 
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="GetGuidClaim_ReturnsEmptyOnEmptyValue"/> method.
+    /// Provides member data for the <see cref="GetGuidClaim_ReturnsEmptyOnEmptyValue"/> method.
     /// </summary>
     public static TheoryData<string> GetGuidClaim_ReturnsEmptyOnEmptyValue_MemberData { get; } = new()
     {

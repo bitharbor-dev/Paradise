@@ -39,7 +39,7 @@ public sealed partial class DefaultEmailSenderTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="DefaultEmailSenderTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="DefaultEmailSenderTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

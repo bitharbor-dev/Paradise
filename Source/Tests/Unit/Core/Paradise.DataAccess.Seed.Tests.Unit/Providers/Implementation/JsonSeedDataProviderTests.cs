@@ -30,7 +30,7 @@ public sealed partial class JsonSeedDataProviderTests
 
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="Constructor_ThrowsOnInvalidData"/> method.
+    /// Provides member data for the <see cref="Constructor_ThrowsOnInvalidData"/> method.
     /// </summary>
     public static TheoryData<InfrastructureDataSeedModel?, DomainDataSeedModel?> Constructor_ThrowsOnInvalidData_MemberData { get; } = new()
     {

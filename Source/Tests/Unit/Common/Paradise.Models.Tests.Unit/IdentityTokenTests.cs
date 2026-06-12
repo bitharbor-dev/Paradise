@@ -7,7 +7,7 @@ public sealed class IdentityTokenTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="Constructor_ThrowsOnInvalidEmailAddress"/> method.
+    /// Provides member data for the <see cref="Constructor_ThrowsOnInvalidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string> Constructor_ThrowsOnInvalidEmailAddress_MemberData { get; } = new()
     {
@@ -16,7 +16,7 @@ public sealed class IdentityTokenTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsExpired"/> method.
+    /// Provides member data for the <see cref="IsExpired"/> method.
     /// </summary>
     public static TheoryData<DateTimeOffset?, DateTimeOffset, bool> IsExpired_MemberData { get; } = new()
     {

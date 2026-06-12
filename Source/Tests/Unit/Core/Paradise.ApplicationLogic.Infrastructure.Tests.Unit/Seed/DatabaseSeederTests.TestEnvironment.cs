@@ -32,7 +32,7 @@ public sealed partial class DatabaseSeederTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="DatabaseSeederTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="DatabaseSeederTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

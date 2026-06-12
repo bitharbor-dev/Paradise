@@ -10,7 +10,7 @@ public sealed partial class DocumentPathsCamelCaseFormatterTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="TransformAsync"/> method.
+    /// Provides member data for the <see cref="TransformAsync"/> method.
     /// </summary>
     public static TheoryData<string, string> TransformAsync_MemberData { get; } = new()
     {

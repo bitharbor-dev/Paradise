@@ -7,7 +7,7 @@ public sealed class EnvironmentNamesTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="ThrowIfNotAllowedEnvironment_DoesNotThrow"/> method.
+    /// Provides member data for the <see cref="ThrowIfNotAllowedEnvironment_DoesNotThrow"/> method.
     /// </summary>
     public static TheoryData<string> ThrowIfNotAllowedEnvironment_DoesNotThrow_MemberData { get; } = new()
     {
@@ -20,7 +20,7 @@ public sealed class EnvironmentNamesTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsDevelopment_ReturnsTrue"/> method.
+    /// Provides member data for the <see cref="IsDevelopment_ReturnsTrue"/> method.
     /// </summary>
     public static TheoryData<string> IsDevelopment_ReturnsTrue_MemberData { get; } = new()
     {
@@ -29,7 +29,7 @@ public sealed class EnvironmentNamesTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsStaging_ReturnsTrue"/> method.
+    /// Provides member data for the <see cref="IsStaging_ReturnsTrue"/> method.
     /// </summary>
     public static TheoryData<string> IsStaging_ReturnsTrue_MemberData { get; } = new()
     {
@@ -38,7 +38,7 @@ public sealed class EnvironmentNamesTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="IsProduction_ReturnsTrue"/> method.
+    /// Provides member data for the <see cref="IsProduction_ReturnsTrue"/> method.
     /// </summary>
     public static TheoryData<string> IsProduction_ReturnsTrue_MemberData { get; } = new()
     {

@@ -9,7 +9,7 @@ public sealed class IJwtManagerTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="RemoveTokenPrefixIfExists"/> method.
+    /// Provides member data for the <see cref="RemoveTokenPrefixIfExists"/> method.
     /// </summary>
     public static TheoryData<string, string> RemoveTokenPrefixIfExists_MemberData { get; } = new()
     {
@@ -20,7 +20,7 @@ public sealed class IJwtManagerTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="RemoveTokenPrefixIfExists_ThrowsOnInvalidToken"/> method.
+    /// Provides member data for the <see cref="RemoveTokenPrefixIfExists_ThrowsOnInvalidToken"/> method.
     /// </summary>
     public static TheoryData<string?> RemoveTokenPrefixIfExists_ThrowsOnInvalidToken_MemberData { get; } = new()
     {

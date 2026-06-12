@@ -11,7 +11,7 @@ public sealed class ResultBaseExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="AsHttpResultAsync_ReturnsProblem"/> method.
+    /// Provides member data for the <see cref="AsHttpResultAsync_ReturnsProblem"/> method.
     /// </summary>
     public static TheoryData<OperationStatus> AsHttpResultAsync_ReturnsProblem_MemberData { get; } = new()
     {
@@ -24,7 +24,7 @@ public sealed class ResultBaseExtensionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="AsHttpResultAsyncGeneric_ReturnsProblem"/> method.
+    /// Provides member data for the <see cref="AsHttpResultAsyncGeneric_ReturnsProblem"/> method.
     /// </summary>
     public static TheoryData<OperationStatus> AsHttpResultAsyncGeneric_ReturnsProblem_MemberData { get; } = new()
     {

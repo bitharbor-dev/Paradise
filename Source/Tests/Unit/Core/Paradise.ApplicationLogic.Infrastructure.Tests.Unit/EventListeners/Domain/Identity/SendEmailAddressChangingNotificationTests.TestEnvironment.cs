@@ -31,7 +31,7 @@ public sealed partial class SendEmailAddressChangingNotificationTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SendEmailAddressChangingNotificationTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SendEmailAddressChangingNotificationTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

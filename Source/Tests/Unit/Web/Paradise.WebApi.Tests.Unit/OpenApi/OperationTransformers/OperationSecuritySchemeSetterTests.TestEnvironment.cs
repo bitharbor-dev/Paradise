@@ -24,7 +24,7 @@ public sealed partial class OperationSecuritySchemeSetterTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="OperationSecuritySchemeSetterTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="OperationSecuritySchemeSetterTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

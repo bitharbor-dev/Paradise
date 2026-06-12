@@ -25,7 +25,7 @@ public sealed partial class UserRefreshTokenServiceTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="UserRefreshTokenServiceTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="UserRefreshTokenServiceTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

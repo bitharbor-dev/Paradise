@@ -14,7 +14,7 @@ public sealed partial class CommunicationClientTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="SendEmailAsync"/> method.
+    /// Provides member data for the <see cref="SendEmailAsync"/> method.
     /// </summary>
     public static TheoryData<BaseEmailModel> SendEmailAsync_MemberData { get; } = new()
     {
@@ -25,7 +25,7 @@ public sealed partial class CommunicationClientTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="SendEmailAsync_ThrowsOnInvalidEmailAddressFormat"/> method.
+    /// Provides member data for the <see cref="SendEmailAsync_ThrowsOnInvalidEmailAddressFormat"/> method.
     /// </summary>
     public static TheoryData<BaseEmailModel> SendEmailAsync_ThrowsOnInvalidEmailAddressFormat_MemberData { get; } = new()
     {
@@ -35,7 +35,7 @@ public sealed partial class CommunicationClientTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="Constructor_ThrowsOnInvalidUsername"/> method.
+    /// Provides member data for the <see cref="Constructor_ThrowsOnInvalidUsername"/> method.
     /// </summary>
     public static TheoryData<string?> Constructor_ThrowsOnInvalidUsername_MemberData { get; } = new()
     {
@@ -45,7 +45,7 @@ public sealed partial class CommunicationClientTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="SendEmailAsync_ThrowsOnNonExistingEmailTemplate"/> method.
+    /// Provides member data for the <see cref="SendEmailAsync_ThrowsOnNonExistingEmailTemplate"/> method.
     /// </summary>
     public static TheoryData<CultureInfo?> SendEmailAsync_ThrowsOnNonExistingEmailTemplate_MemberData { get; } = new()
     {

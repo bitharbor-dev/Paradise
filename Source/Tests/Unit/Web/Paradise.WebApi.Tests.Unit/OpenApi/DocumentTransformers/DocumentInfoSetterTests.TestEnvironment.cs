@@ -22,7 +22,7 @@ public sealed partial class DocumentInfoSetterTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="DocumentInfoSetterTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="DocumentInfoSetterTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

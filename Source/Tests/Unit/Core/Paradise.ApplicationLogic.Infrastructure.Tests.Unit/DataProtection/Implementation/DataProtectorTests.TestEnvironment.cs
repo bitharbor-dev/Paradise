@@ -15,7 +15,7 @@ public sealed partial class DataProtectorTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="DataProtectorTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="DataProtectorTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

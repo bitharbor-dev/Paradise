@@ -16,7 +16,7 @@ public sealed partial class IServiceCollectionExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="AddApplicationLogic"/> method.
+    /// Provides member data for the <see cref="AddApplicationLogic"/> method.
     /// </summary>
     public static TheoryData<string> AddApplicationLogic_MemberData { get; } = [.. EnvironmentNames.AllowedEnvironments];
     #endregion

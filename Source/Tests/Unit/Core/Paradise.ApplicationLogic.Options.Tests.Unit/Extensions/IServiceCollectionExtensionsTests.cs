@@ -14,7 +14,7 @@ public sealed partial class IServiceCollectionExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="AddOptions"/> method.
+    /// Provides member data for the <see cref="AddOptions"/> method.
     /// </summary>
     public static TheoryData<string?, string?, int, string?> AddOptions_MemberData { get; } = new()
     {

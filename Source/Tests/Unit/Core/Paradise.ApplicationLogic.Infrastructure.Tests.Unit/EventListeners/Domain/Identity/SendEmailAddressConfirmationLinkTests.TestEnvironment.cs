@@ -34,7 +34,7 @@ public sealed partial class SendEmailAddressConfirmationLinkTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SendEmailAddressConfirmationLinkTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SendEmailAddressConfirmationLinkTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

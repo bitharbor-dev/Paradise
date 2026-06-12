@@ -25,7 +25,7 @@ public sealed class UserTests
     public static Guid RightId { get; } = Guid.Parse("0198610a-ac67-7bf0-8d08-676de1492236");
 
     /// <summary>
-    /// Provides member data for <see cref="ValidateState_ThrowsOnInvalidEmailAddress"/> method.
+    /// Provides member data for the <see cref="ValidateState_ThrowsOnInvalidEmailAddress"/> method.
     /// </summary>
     public static TheoryData<string?> ValidateState_ThrowsOnInvalidEmailAddress_MemberData { get; } = new()
     {
@@ -35,7 +35,7 @@ public sealed class UserTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ValidateState_ThrowsOnInvalidUserName"/> method.
+    /// Provides member data for the <see cref="ValidateState_ThrowsOnInvalidUserName"/> method.
     /// </summary>
     public static TheoryData<string?> ValidateState_ThrowsOnInvalidUserName_MemberData { get; } = new()
     {
@@ -45,7 +45,7 @@ public sealed class UserTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="OperatorEquals_ReturnsFalseOnNull"/> method.
+    /// Provides member data for the <see cref="OperatorEquals_ReturnsFalseOnNull"/> method.
     /// </summary>
     public static TheoryData<Guid?, Guid?> OperatorEquals_ReturnsFalseOnNull_MemberData { get; } = new()
     {
@@ -54,7 +54,7 @@ public sealed class UserTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="OperatorNotEquals_ReturnsTrueOnNullArgument"/> method.
+    /// Provides member data for the <see cref="OperatorNotEquals_ReturnsTrueOnNullArgument"/> method.
     /// </summary>
     public static TheoryData<Guid?, Guid?> OperatorNotEquals_ReturnsTrueOnNullArgument_MemberData { get; } = new()
     {

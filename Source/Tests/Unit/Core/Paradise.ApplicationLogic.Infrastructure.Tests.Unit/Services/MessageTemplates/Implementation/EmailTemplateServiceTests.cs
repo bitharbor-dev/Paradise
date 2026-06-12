@@ -12,7 +12,7 @@ public sealed partial class EmailTemplateServiceTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="CreateAsync_FailsOnMissingSubject"/> method.
+    /// Provides member data for the <see cref="CreateAsync_FailsOnMissingSubject"/> method.
     /// </summary>
     public static TheoryData<string?> CreateAsync_FailsOnMissingSubject_MemberData { get; } = new()
     {
@@ -22,7 +22,7 @@ public sealed partial class EmailTemplateServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="CreateAsync_FailsOnMissingTemplateName"/> method.
+    /// Provides member data for the <see cref="CreateAsync_FailsOnMissingTemplateName"/> method.
     /// </summary>
     public static TheoryData<string?> CreateAsync_FailsOnMissingTemplateName_MemberData { get; } = new()
     {
@@ -32,7 +32,7 @@ public sealed partial class EmailTemplateServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="CreateAsync_FailsOnMissingTemplateText"/> method.
+    /// Provides member data for the <see cref="CreateAsync_FailsOnMissingTemplateText"/> method.
     /// </summary>
     public static TheoryData<string?> CreateAsync_FailsOnMissingTemplateText_MemberData { get; } = new()
     {
@@ -42,7 +42,7 @@ public sealed partial class EmailTemplateServiceTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="CreateAsync_FailsOnDuplicateNameAndCulture"/> method.
+    /// Provides member data for the <see cref="CreateAsync_FailsOnDuplicateNameAndCulture"/> method.
     /// </summary>
     public static TheoryData<CultureInfo?> CreateAsync_FailsOnDuplicateNameAndCulture_MemberData { get; } = new()
     {

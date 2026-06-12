@@ -27,7 +27,7 @@ public sealed partial class AssignDefaultUserRolesTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="AssignDefaultUserRolesTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="AssignDefaultUserRolesTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

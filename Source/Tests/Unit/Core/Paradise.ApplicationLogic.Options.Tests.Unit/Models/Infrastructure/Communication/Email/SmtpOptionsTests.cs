@@ -9,7 +9,7 @@ public sealed class SmtpOptionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="SmtpOptions.InitializeLocalEmailStorage"/>.
+    /// Provides member data for the <see cref="SmtpOptions.InitializeLocalEmailStorage"/>.
     /// </summary>
     public static TheoryData<string, string> InitializeLocalEmailStorage_MemberData { get; } = new()
     {
@@ -20,7 +20,7 @@ public sealed class SmtpOptionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="SmtpOptions.InitializeLocalEmailStorage"/>
+    /// Provides member data for the <see cref="SmtpOptions.InitializeLocalEmailStorage"/>
     /// returning <see langword="null"/>.
     /// </summary>
     public static TheoryData<string?> InitializeLocalEmailStorage_ReturnsNull_MemberData { get; } = new()

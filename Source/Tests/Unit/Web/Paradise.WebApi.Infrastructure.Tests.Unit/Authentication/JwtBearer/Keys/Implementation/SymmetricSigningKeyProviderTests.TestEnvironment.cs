@@ -15,7 +15,7 @@ public sealed partial class SymmetricSigningKeyProviderTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="SymmetricSigningKeyProviderTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="SymmetricSigningKeyProviderTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

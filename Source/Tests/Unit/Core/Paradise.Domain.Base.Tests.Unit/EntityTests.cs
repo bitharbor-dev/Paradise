@@ -20,7 +20,7 @@ public sealed class EntityTests
     public static Guid RightId { get; } = Guid.Parse("0198610a-ac67-7bf0-8d08-676de1492236");
 
     /// <summary>
-    /// Provides member data for <see cref="OperatorEquals_ReturnsFalseOnNull"/> method.
+    /// Provides member data for the <see cref="OperatorEquals_ReturnsFalseOnNull"/> method.
     /// </summary>
     public static TheoryData<Guid?, Guid?> OperatorEquals_ReturnsFalseOnNull_MemberData { get; } = new()
     {
@@ -29,7 +29,7 @@ public sealed class EntityTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="OperatorNotEquals_ReturnsTrueOnNullArgument"/> method.
+    /// Provides member data for the <see cref="OperatorNotEquals_ReturnsTrueOnNullArgument"/> method.
     /// </summary>
     public static TheoryData<Guid?, Guid?> OperatorNotEquals_ReturnsTrueOnNullArgument_MemberData { get; } = new()
     {

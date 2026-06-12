@@ -15,7 +15,7 @@ public sealed partial class RoleServiceTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="CreateAsync_FailsOnInvalidName"/> method.
+    /// Provides member data for the <see cref="CreateAsync_FailsOnInvalidName"/> method.
     /// </summary>
     public static TheoryData<string?> CreateAsync_FailsOnInvalidName_MemberData { get; } = new()
     {

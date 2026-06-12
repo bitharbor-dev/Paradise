@@ -10,7 +10,7 @@ public sealed class EmailTemplateTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="GetFormattedSubject"/> method.
+    /// Provides member data for the <see cref="GetFormattedSubject"/> method.
     /// </summary>
     public static TheoryData<string, string?, ushort, string?[]> GetFormattedSubject_MemberData { get; } = new()
     {
@@ -21,7 +21,7 @@ public sealed class EmailTemplateTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ValidateState"/> method.
+    /// Provides member data for the <see cref="ValidateState"/> method.
     /// </summary>
     public static TheoryData<string, string?, ushort> ValidateState_MemberData { get; } = new()
     {
@@ -31,7 +31,7 @@ public sealed class EmailTemplateTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="GetFormattedSubject_ThrowsOnMissingPlaceholder"/> method.
+    /// Provides member data for the <see cref="GetFormattedSubject_ThrowsOnMissingPlaceholder"/> method.
     /// </summary>
     public static TheoryData<CultureInfo?> GetFormattedSubject_ThrowsOnMissingPlaceholder_MemberData { get; } = new()
     {

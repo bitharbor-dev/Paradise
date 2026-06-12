@@ -11,7 +11,7 @@ public sealed partial class AzureEmailSenderTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="SendAsync"/> method.
+    /// Provides member data for the <see cref="SendAsync"/> method.
     /// </summary>
     public static TheoryData<bool, string[]?, string[]?> SendAsync_MemberData { get; } = new()
     {
@@ -28,7 +28,7 @@ public sealed partial class AzureEmailSenderTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="SendAsync_ThrowsOnInvalidFromAddress"/> method.
+    /// Provides member data for the <see cref="SendAsync_ThrowsOnInvalidFromAddress"/> method.
     /// </summary>
     public static TheoryData<string?> SendAsync_ThrowsOnInvalidFromAddress_MemberData { get; } = new()
     {

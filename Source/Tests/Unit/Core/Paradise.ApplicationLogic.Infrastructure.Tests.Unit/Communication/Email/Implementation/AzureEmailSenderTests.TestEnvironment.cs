@@ -41,7 +41,7 @@ public sealed partial class AzureEmailSenderTests : IDisposable
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="AzureEmailSenderTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="AzureEmailSenderTests"/> class.
     /// </summary>
     private sealed class TestEnvironment : IDisposable
     {

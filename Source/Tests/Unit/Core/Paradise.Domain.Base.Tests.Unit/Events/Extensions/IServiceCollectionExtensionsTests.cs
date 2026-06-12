@@ -15,7 +15,7 @@ public sealed class IServiceCollectionExtensionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="AddDomainEventListener"/> method.
+    /// Provides member data for the <see cref="AddDomainEventListener"/> method.
     /// </summary>
     public static TheoryData<bool> AddDomainEventListener_MemberData { get; } = new()
     {

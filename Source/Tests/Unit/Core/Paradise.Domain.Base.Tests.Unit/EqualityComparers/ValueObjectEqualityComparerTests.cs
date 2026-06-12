@@ -26,7 +26,7 @@ public sealed class ValueObjectEqualityComparerTests
     public static Guid RightId { get; } = Guid.Parse("0198610a-ac67-7bf0-8d08-676de1492236");
 
     /// <summary>
-    /// Provides member data for <see cref="Equals_ReturnsFalseOnNull"/> method.
+    /// Provides member data for the <see cref="Equals_ReturnsFalseOnNull"/> method.
     /// </summary>
     public static TheoryData<Guid?, Guid?> Equals_ReturnsFalseOnNull_MemberData { get; } = new()
     {

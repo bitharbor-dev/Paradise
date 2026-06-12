@@ -9,7 +9,7 @@ public sealed class JsonSeedDataProviderOptionsTests
 {
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="ResolveSeedDirectoryPath"/> method.
+    /// Provides member data for the <see cref="ResolveSeedDirectoryPath"/> method.
     /// </summary>
     public static TheoryData<string, string> ResolveSeedDirectoryPath_MemberData { get; } = new()
     {
@@ -21,7 +21,7 @@ public sealed class JsonSeedDataProviderOptionsTests
     };
 
     /// <summary>
-    /// Provides member data for <see cref="ResolveSeedDirectoryPath"/> method.
+    /// Provides member data for the <see cref="ResolveSeedDirectoryPath"/> method.
     /// </summary>
     public static TheoryData<string?> ResolveSeedDirectoryPath_ReturnsNull_MemberData { get; } = new()
     {

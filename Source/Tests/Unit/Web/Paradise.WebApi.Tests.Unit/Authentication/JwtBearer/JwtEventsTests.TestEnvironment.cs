@@ -19,7 +19,7 @@ public sealed partial class JwtEventsTests
 
     #region Nested types
     /// <summary>
-    /// Provides setup and behavior check methods for the <see cref="JwtEventsTests"/> class.
+    /// Provides setup and behavior-check methods for the <see cref="JwtEventsTests"/> class.
     /// </summary>
     private sealed class TestEnvironment
     {

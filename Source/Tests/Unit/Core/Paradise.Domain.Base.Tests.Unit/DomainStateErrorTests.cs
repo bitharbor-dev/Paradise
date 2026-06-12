@@ -21,7 +21,7 @@ public sealed class DomainStateErrorTests
 
     #region Properties
     /// <summary>
-    /// Provides member data for <see cref="Message_ReturnsProperlyFormattedValue"/> method.
+    /// Provides member data for the <see cref="Message_ReturnsProperlyFormattedValue"/> method.
     /// </summary>
     public static TheoryData<string?, string?, string> Message_ReturnsProperlyFormattedValue_MemberData { get; } = new()
     {
