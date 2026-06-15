@@ -3,6 +3,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
 		<InternalsVisibleTo Include="Paradise.Tests.Doubles" />
+		<InternalsVisibleTo Include="Paradise.Tests.Extensibility" />
 		<InternalsVisibleTo Include="Paradise.Tests.Fixtures" />
 	</ItemGroup>
 

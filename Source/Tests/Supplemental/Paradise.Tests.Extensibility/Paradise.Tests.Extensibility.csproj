@@ -6,11 +6,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
 		<PackageReference Include="xunit.v3.assert" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Code\Common\Paradise.Models\Paradise.Models.csproj" />
+		<ProjectReference Include="..\Paradise.Tests.Doubles\Paradise.Tests.Doubles.csproj" />
 	</ItemGroup>
 
 </Project>

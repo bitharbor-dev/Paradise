@@ -2,7 +2,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\Code\Core\Paradise.Domain.Base\Paradise.Domain.Base.csproj" />
-		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Doubles\Paradise.Tests.Doubles.csproj" />
 		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Extensibility\Paradise.Tests.Extensibility.csproj" />
 	</ItemGroup>
 

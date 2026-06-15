@@ -3,7 +3,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\Code\Core\Paradise.ApplicationLogic.Options\Paradise.ApplicationLogic.Options.csproj" />
 		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Extensibility\Paradise.Tests.Extensibility.csproj" />
-		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Fixtures\Paradise.Tests.Fixtures.csproj" />
 	</ItemGroup>
 
 </Project>
