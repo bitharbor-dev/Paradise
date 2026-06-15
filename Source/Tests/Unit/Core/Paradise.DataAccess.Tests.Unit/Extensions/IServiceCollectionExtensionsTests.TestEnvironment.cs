@@ -31,7 +31,7 @@ public sealed partial class IServiceCollectionExtensionsTests
             {
                 ConnectionStrings = new
                 {
-                    DatabaseConnectionString = ""
+                    DatabaseConnectionString = string.Empty
                 }
             });
 

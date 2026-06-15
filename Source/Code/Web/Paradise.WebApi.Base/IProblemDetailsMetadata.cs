@@ -34,6 +34,6 @@ public interface IProblemDetailsMetadata
     /// other members of a problem type.
     /// </para>
     /// </summary>
-    IDictionary<string, object?> Extensions { get; set; }
+    IDictionary<string, object?> Extensions { get; }
     #endregion
 }

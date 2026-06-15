@@ -210,7 +210,7 @@ public sealed class UsersApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
             [IdentityTokenParameter] = identityToken
         });
 
-        return GetAsync(route, false, cancellationToken);
+        return PatchAsync(route, false, null, cancellationToken);
     }
 
     /// <summary>

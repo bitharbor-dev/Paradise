@@ -14,10 +14,10 @@ public sealed class StringExtensionsTests
     /// </summary>
     public static TheoryData<string?, bool> IsNullOrWhiteSpace_MemberData { get; } = new()
     {
-        { null,     true    },
-        { "",       true    },
-        { "    ",   true    },
-        { "test",   false   }
+        { null,         true    },
+        { string.Empty, true    },
+        { "    ",       true    },
+        { "test",       false   }
     };
 
     /// <summary>
@@ -25,10 +25,10 @@ public sealed class StringExtensionsTests
     /// </summary>
     public static TheoryData<string?, bool> IsNotNullOrWhiteSpace_MemberData { get; } = new()
     {
-        { null,     false   },
-        { "",       false   },
-        { "    ",   false   },
-        { "test",   true    }
+        { null,         false   },
+        { string.Empty, false   },
+        { "    ",       false   },
+        { "test",       true    }
     };
 
     /// <summary>
@@ -40,7 +40,7 @@ public sealed class StringExtensionsTests
         { "first.last@domain.co",   true    },
         { "invalid@",               false   },
         { "missing-at-symbol.com",  false   },
-        { "",                       false   },
+        { string.Empty,             false   },
         { " ",                      false   }
     };
 
@@ -54,7 +54,7 @@ public sealed class StringExtensionsTests
         { "+1 (123) 456-7890",  true    },
         { "123456",             true    },
         { "letters",            false   },
-        { "",                   false   },
+        { string.Empty,         false   },
         { " ",                  false   }
     };
 
@@ -66,10 +66,10 @@ public sealed class StringExtensionsTests
         { "test",       "abcdefghijklmnopqrstuvwxyz",                                       true    },
         { "Test123",    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",   true    },
         { "test!",      "abcdefghijklmnopqrstuvwxyz",                                       false   },
-        { "",           "abcdefghijklmnopqrstuvwxyz",                                       false   },
+        { string.Empty, "abcdefghijklmnopqrstuvwxyz",                                       false   },
         { null,         "abcdefghijklmnopqrstuvwxyz",                                       false   },
         { "test",       null,                                                               true    },
-        { "test",       "",                                                                 true    },
+        { "test",       string.Empty,                                                       true    },
         { "test",       "    ",                                                             true    }
     };
     #endregion

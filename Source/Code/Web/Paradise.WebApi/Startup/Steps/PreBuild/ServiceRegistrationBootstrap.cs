@@ -70,7 +70,16 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
     private static void RegisterErrorHandling(IServiceCollection services)
     {
         services.AddExceptionHandler<ExceptionHandler>();
-        services.AddProblemDetails();
+        services.AddExceptionHandler<BadHttpRequestExceptionHandler>();
+        services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                if (context.ProblemDetails is HttpValidationProblemDetails validationProblem)
+                    context.ProblemDetails = new ApplicationProblemDetails(validationProblem);
+            };
+        });
+
         services.AddValidation();
     }
 

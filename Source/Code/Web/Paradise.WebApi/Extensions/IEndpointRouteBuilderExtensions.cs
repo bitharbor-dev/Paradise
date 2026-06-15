@@ -256,8 +256,7 @@ internal static class IEndpointRouteBuilderExtensions
             .ProducesProblem(OperationStatus.Missing)
             .ProducesProblem(OperationStatus.Blocked);
 
-        // TODO: Change to PATCH.
-        group.MapGet(UserRoutes.ResetEmailAddress, UserHandlers.ResetEmailAddressAsync)
+        group.MapPatch(UserRoutes.ResetEmailAddress, UserHandlers.ResetEmailAddressAsync)
             .Produces(OperationStatus.Success)
             .ProducesProblem(OperationStatus.InvalidInput)
             .ProducesProblem(OperationStatus.Unauthorized)
