@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Time.Testing;
 using Paradise.DataAccess.Database.Interceptors.Base;
 using Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore;
-using Paradise.Tests.Fixtures.Core.DataAccess.Database.Interceptors;
-using Paradise.Tests.Fixtures.Core.Domain.Base;
+using Paradise.Tests.Surrogates.Core.DataAccess.Database.Interceptors;
+using Paradise.Tests.Surrogates.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.DataAccess.Tests.Unit.Database.Interceptors.Base;

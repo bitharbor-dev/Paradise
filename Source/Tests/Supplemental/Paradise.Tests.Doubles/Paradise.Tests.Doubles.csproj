@@ -16,7 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Code\Web\Paradise.WebApi\Paradise.WebApi.csproj" />
-		<ProjectReference Include="..\Paradise.Tests.Fixtures\Paradise.Tests.Fixtures.csproj" />
+		<ProjectReference Include="..\Paradise.Tests.Surrogates\Paradise.Tests.Surrogates.csproj" />
 	</ItemGroup>
 
 </Project>

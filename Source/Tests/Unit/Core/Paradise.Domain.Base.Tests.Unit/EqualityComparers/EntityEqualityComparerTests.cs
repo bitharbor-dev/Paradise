@@ -1,5 +1,5 @@
 ﻿using Paradise.Domain.Base.EqualityComparers;
-using Paradise.Tests.Fixtures.Core.Domain.Base;
+using Paradise.Tests.Surrogates.Core.Domain.Base;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Domain.Base.Tests.Unit.EqualityComparers;

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Paradise.DataAccess.Database;
 using Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore.Migrations;
-using Paradise.Tests.Fixtures.Core.Domain.Base;
+using Paradise.Tests.Surrogates.Core.Domain.Base;
 using System.Data.Common;
 
 namespace Paradise.DataAccess.Tests.Unit.Database;

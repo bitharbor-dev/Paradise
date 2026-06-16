@@ -5,7 +5,7 @@ using Paradise.ApplicationLogic.Infrastructure.EventListeners.Base;
 using Paradise.Models;
 using Paradise.Primitives.Web;
 using Paradise.Tests.Doubles.Fakes.Core.ApplicationLogic.Infrastructure.DataProtection;
-using Paradise.Tests.Fixtures.Core.ApplicationLogic.Infrastructure.EventListeners;
+using Paradise.Tests.Surrogates.Core.ApplicationLogic.Infrastructure.EventListeners;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.EventListeners.Base;
 

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Paradise.ApplicationLogic.Options.Extensions;
 using Paradise.Tests.Extensibility;
-using Paradise.Tests.Fixtures.Common.Models;
+using Paradise.Tests.Surrogates.Common.Models;
 
 namespace Paradise.ApplicationLogic.Options.Tests.Unit.Extensions;
 

@@ -1,5 +1,5 @@
 ﻿using Paradise.Models.Extensions;
-using Paradise.Tests.Fixtures.Common.Models;
+using Paradise.Tests.Surrogates.Common.Models;
 
 namespace Paradise.Models.Tests.Unit.Extensions;
 

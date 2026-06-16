@@ -2,7 +2,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\Code\Common\Paradise.Models\Paradise.Models.csproj" />
-		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Fixtures\Paradise.Tests.Fixtures.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Surrogates\Paradise.Tests.Surrogates.csproj" />
 	</ItemGroup>
 
 </Project>

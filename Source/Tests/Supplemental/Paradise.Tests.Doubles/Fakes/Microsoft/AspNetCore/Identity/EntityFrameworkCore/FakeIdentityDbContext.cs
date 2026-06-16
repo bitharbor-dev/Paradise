@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Paradise.Tests.Fixtures.Microsoft.AspNetCore.Identity;
+using Paradise.Tests.Surrogates.Microsoft.AspNetCore.Identity;
 
 namespace Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Paradise.DataAccess.Database;
-using Paradise.Tests.Fixtures.Core.Domain.Base;
+using Paradise.Tests.Surrogates.Core.Domain.Base;
 
 namespace Paradise.DataAccess.Tests.Unit.Database;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paradise.DataAccess.Repositories;
-using Paradise.Tests.Fixtures.Core.Domain.Base;
+using Paradise.Tests.Surrogates.Core.Domain.Base;
 using System.Linq.Expressions;
 
 namespace Paradise.DataAccess.Tests.Unit.Repositories;

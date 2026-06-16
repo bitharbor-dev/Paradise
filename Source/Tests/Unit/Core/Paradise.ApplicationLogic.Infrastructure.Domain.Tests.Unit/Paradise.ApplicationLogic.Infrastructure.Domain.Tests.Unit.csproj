@@ -2,8 +2,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\Code\Core\Paradise.ApplicationLogic.Infrastructure.Domain\Paradise.ApplicationLogic.Infrastructure.Domain.csproj" />
-		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Fixtures\Paradise.Tests.Fixtures.csproj" />
 		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Serialization\Paradise.Tests.Serialization.csproj" />
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Surrogates\Paradise.Tests.Surrogates.csproj" />
 	</ItemGroup>
 
 </Project>

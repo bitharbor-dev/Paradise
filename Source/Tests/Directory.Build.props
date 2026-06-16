@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<_ParentProps>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..\'))</_ParentProps>
 
-		<_ExcludedProjects>Paradise.Tests.Doubles;Paradise.Tests.Extensibility;Paradise.Tests.Fixtures;Paradise.Tests.Serialization</_ExcludedProjects>
+		<_ExcludedProjects>Paradise.Tests.Doubles;Paradise.Tests.Extensibility;Paradise.Tests.Serialization;Paradise.Tests.Surrogates</_ExcludedProjects>
 	</PropertyGroup>
 
 	<Import Project="$(_ParentProps)" Condition="Exists($(_ParentProps))" />

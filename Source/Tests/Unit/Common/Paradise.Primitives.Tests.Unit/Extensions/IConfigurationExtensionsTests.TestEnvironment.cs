@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Paradise.Tests.Fixtures.Common.Models;
+using Paradise.Tests.Surrogates.Common.Models;
 using System.Text.Json;
 
 namespace Paradise.Common.Tests.Unit.Extensions;

@@ -4,11 +4,11 @@ using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Identity;
 using Paradise.Tests.Doubles.Fakes.Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Paradise.Tests.Doubles.Fakes.Microsoft.Extensions.Logging;
-using Paradise.Tests.Fixtures.Microsoft.AspNetCore.Identity;
+using Paradise.Tests.Surrogates.Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
 using OptionsBuilder = Microsoft.Extensions.Options.Options;
 using UserManager = Paradise.ApplicationLogic.Infrastructure.Identity.Implementation.UserManager
-    <Paradise.Tests.Fixtures.Microsoft.AspNetCore.Identity.TestUser>;
+    <Paradise.Tests.Surrogates.Microsoft.AspNetCore.Identity.TestUser>;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Identity.Implementation;
 

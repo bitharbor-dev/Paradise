@@ -97,8 +97,8 @@
 	<Folder Name="/Source/Tests/Supplemental/">
 		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Doubles/Paradise.Tests.Doubles.csproj" />
 		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Extensibility/Paradise.Tests.Extensibility.csproj" />
-		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Fixtures/Paradise.Tests.Fixtures.csproj" />
 		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Serialization/Paradise.Tests.Serialization.csproj" />
+		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Surrogates/Paradise.Tests.Surrogates.csproj" />
 	</Folder>
 
 	<Folder Name="/Source/Tests/Unit/" />

@@ -1,6 +1,6 @@
 ﻿using static Paradise.Models.ErrorCode;
 using static Paradise.Models.OperationStatus;
-using TestResult = Paradise.Tests.Fixtures.Common.Models.TestResult;
+using TestResult = Paradise.Tests.Surrogates.Common.Models.TestResult;
 
 namespace Paradise.Models.Tests.Unit;
 

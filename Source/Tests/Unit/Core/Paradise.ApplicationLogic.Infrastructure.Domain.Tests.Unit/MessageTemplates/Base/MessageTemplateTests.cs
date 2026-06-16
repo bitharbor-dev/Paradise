@@ -1,5 +1,5 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Domain.MessageTemplates.Base;
-using Paradise.Tests.Fixtures.Core.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
+using Paradise.Tests.Surrogates.Core.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 using System.Globalization;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Domain.Tests.Unit.MessageTemplates.Base;

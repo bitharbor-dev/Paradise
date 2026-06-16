@@ -1,7 +1,7 @@
 ﻿using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Identity.Implementation;
 using Paradise.Tests.Doubles.Stubs.Microsoft.AspNetCore.Identity;
-using Paradise.Tests.Fixtures.Microsoft.AspNetCore.Identity;
+using Paradise.Tests.Surrogates.Microsoft.AspNetCore.Identity;
 using IdentityResult = Microsoft.AspNetCore.Identity.IdentityResult;
 
 namespace Paradise.ApplicationLogic.Infrastructure.Tests.Unit.Identity.Implementation;

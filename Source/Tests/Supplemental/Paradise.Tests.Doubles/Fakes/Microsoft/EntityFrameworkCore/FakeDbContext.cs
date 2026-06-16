@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paradise.Tests.Fixtures.Core.Domain.Base;
+using Paradise.Tests.Surrogates.Core.Domain.Base;
 
 namespace Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore;
 
