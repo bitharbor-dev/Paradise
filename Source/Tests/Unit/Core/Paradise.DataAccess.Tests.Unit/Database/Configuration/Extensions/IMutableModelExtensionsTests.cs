@@ -11,6 +11,7 @@ namespace Paradise.DataAccess.Tests.Unit.Database.Configuration.Extensions;
 /// <summary>
 /// <see cref="IMutableModelExtensions"/> test class.
 /// </summary>
+[SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
 public sealed class IMutableModelExtensionsTests
 {
     #region Public methods
@@ -20,7 +21,7 @@ public sealed class IMutableModelExtensionsTests
     /// <see cref="PropertySaveBehavior.Throw"/> and leave other properties
     /// after-save behavior unchanged.
     /// </summary>
-    [Fact, SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
+    [Fact]
     public void MarkColumnAsReadOnly()
     {
         // Arrange
@@ -51,7 +52,7 @@ public sealed class IMutableModelExtensionsTests
     /// disable value generation for matching properties across all entities
     /// when no base type filter is specified.
     /// </summary>
-    [Fact, SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
+    [Fact]
     public void DisableValueGenerationFor()
     {
         // Arrange
@@ -79,7 +80,7 @@ public sealed class IMutableModelExtensionsTests
     /// The <see cref="IMutableModelExtensions.DisableValueGenerationFor"/> method should
     /// disable value generation only for entities assignable to the specified base type.
     /// </summary>
-    [Fact, SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
+    [Fact]
     public void DisableValueGenerationFor_AppliesFilter()
     {
         // Arrange
@@ -117,7 +118,7 @@ public sealed class IMutableModelExtensionsTests
     /// The <see cref="IMutableModelExtensions.DisableValueGenerationFor"/> method should
     /// ignore entities that do not contain the specified property.
     /// </summary>
-    [Fact, SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
+    [Fact]
     public void DisableValueGenerationFor_IgnoresMissingProperties()
     {
         // Arrange
@@ -137,7 +138,7 @@ public sealed class IMutableModelExtensionsTests
     /// The <see cref="IMutableModelExtensions.SetSchemaFor"/> method should
     /// assign the specified schema to the target entity type.
     /// </summary>
-    [Fact, SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
+    [Fact]
     public void SetSchemaFor()
     {
         // Arrange
@@ -160,7 +161,7 @@ public sealed class IMutableModelExtensionsTests
     /// The <see cref="IMutableModelExtensions.SetSchemaFor"/> method should
     /// ignore missing entity types.
     /// </summary>
-    [Fact, SuppressMessage("Usage", "EF1001:Internal EF Core API usage.")]
+    [Fact]
     public void SetSchemaFor_IgnoresMissingEntityType()
     {
         // Arrange
