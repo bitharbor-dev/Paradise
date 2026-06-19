@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Paradise.Tests.Extensibility.Web.Hosting.Configuration.Base;
 
@@ -12,9 +13,12 @@ public interface IWebApplicationServicesConfiguration
     /// <summary>
     /// Configures services in the specified <see cref="IServiceCollection"/>.
     /// </summary>
+    /// <param name="context">
+    /// The <see cref="WebHostBuilderContext"/>.
+    /// </param>
     /// <param name="services">
     /// The service collection to configure.
     /// </param>
-    void ConfigureServices(IServiceCollection services);
+    void ConfigureServices(WebHostBuilderContext context, IServiceCollection services);
     #endregion
 }

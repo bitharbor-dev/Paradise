@@ -138,6 +138,8 @@ public sealed partial class ApplicationContextTests : IDisposable
                 .ReplaceService<IMigrator, FakeMigrator>()
                 .ReplaceService<IProviderConventionSetBuilder, FakeConventionSetBuilder>();
 
+            (builder as IDbContextOptionsBuilderInfrastructure).AddOrUpdateExtension(new EntityNormalizerOptionsExtension());
+
             if (useFakeModel)
                 builder.UseModel(BuildFakeModel());
 

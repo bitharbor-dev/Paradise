@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Diagnostics;
+using Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using System.Globalization;
 using System.Text;
 
@@ -19,7 +18,11 @@ namespace Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore.Metadata.Co
 /// determine the database provider name and
 /// perform the model finalizing.
 /// </param>
-internal class FakeModelFinalizingConvention(IDatabaseProvider databaseProvider) : IModelFinalizingConvention
+/// <param name="entityNormalizers">
+/// Entity normalizers.
+/// </param>
+internal class FakeModelFinalizingConvention(IDatabaseProvider databaseProvider, IEnumerable<IEntityNormalizer> entityNormalizers)
+    : IModelFinalizingConvention
 {
     #region Constants
     private const string SqliteProviderName = "Microsoft.EntityFrameworkCore.Sqlite";
@@ -46,38 +49,10 @@ internal class FakeModelFinalizingConvention(IDatabaseProvider databaseProvider)
         }
 
         foreach (var entity in modelBuilder.Metadata.GetEntityTypes())
-            NormalizeEntity(entity);
+        {
+            foreach (var normalizer in entityNormalizers)
+                normalizer.TryNormalize(entity);
+        }
     }
-    #endregion
-
-    #region Private methods
-    /// <summary>
-    /// Normalizes entity-level relational metadata.
-    /// </summary>
-    /// <param name="entity">
-    /// The <see cref="IConventionEntityType"/> which properties to normalize.
-    /// </param>
-    /// <remarks>
-    /// Add any entity-wide normalization to this method.
-    /// <para>
-    /// Add any property-wide normalization to the <see cref="NormalizeProperty"/> method.
-    /// </para>
-    /// </remarks>
-    private static void NormalizeEntity(IConventionEntityType entity)
-    {
-        foreach (var property in entity.GetProperties())
-            NormalizeProperty(property);
-    }
-
-    /// <summary>
-    /// Reads the property metadata and performs
-    /// database provider-specific normalization
-    /// to SQLite database provider for proper tests execution.
-    /// </summary>
-    /// <param name="property">
-    /// The <see cref="IConventionProperty"/> to normalize.
-    /// </param>
-    private static void NormalizeProperty(IConventionProperty property)
-        => Debug.WriteLine(property.Name);
     #endregion
 }

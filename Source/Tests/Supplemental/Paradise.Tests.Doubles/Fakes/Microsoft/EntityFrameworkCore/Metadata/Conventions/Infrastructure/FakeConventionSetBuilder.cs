@@ -19,9 +19,13 @@ namespace Paradise.Tests.Doubles.Fakes.Microsoft.EntityFrameworkCore.Metadata.Co
 /// <param name="databaseProvider">
 /// The database provider for this service.
 /// </param>
+/// <param name="entityNormalizers">
+/// Entity normalizers.
+/// </param>
 public sealed class FakeConventionSetBuilder(ProviderConventionSetBuilderDependencies dependencies,
                                              RelationalConventionSetBuilderDependencies relationalDependencies,
-                                             IDatabaseProvider databaseProvider)
+                                             IDatabaseProvider databaseProvider,
+                                             IEnumerable<IEntityNormalizer> entityNormalizers)
     : SqliteConventionSetBuilder(dependencies, relationalDependencies)
 {
     #region Public methods
@@ -30,7 +34,7 @@ public sealed class FakeConventionSetBuilder(ProviderConventionSetBuilderDepende
     {
         var set = base.CreateConventionSet();
 
-        set.ModelFinalizingConventions.Add(new FakeModelFinalizingConvention(databaseProvider));
+        set.ModelFinalizingConventions.Add(new FakeModelFinalizingConvention(databaseProvider, entityNormalizers));
 
         return set;
     }
