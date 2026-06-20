@@ -50,6 +50,12 @@
 		<File Path="Source/Tests/Directory.Build.Tests.targets" />
 	</Folder>
 
+	<Folder Name="/Source/Tests/Integration/" />
+
+	<Folder Name="/Source/Tests/Integration/Web/">
+		<Project Path="Source/Tests/Integration/Web/Paradise.WebApi.Tests.Integration/Paradise.WebApi.Tests.Integration.csproj" />
+	</Folder>
+
 	<Folder Name="/Source/Tests/Supplemental/">
 		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Doubles/Paradise.Tests.Doubles.csproj" />
 		<Project Path="Source/Tests/Supplemental/Paradise.Tests.Extensibility/Paradise.Tests.Extensibility.csproj" />

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Supplemental\Paradise.Tests.Extensibility\Paradise.Tests.Extensibility.csproj" />
+	</ItemGroup>
+
+</Project>
