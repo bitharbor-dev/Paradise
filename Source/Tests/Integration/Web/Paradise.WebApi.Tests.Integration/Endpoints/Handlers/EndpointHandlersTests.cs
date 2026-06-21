@@ -56,8 +56,13 @@ public abstract class EndpointHandlersTests : IDisposable, IAsyncDisposable
     /// using the specified service configurations.
     /// </summary>
     /// <remarks>
-    /// Should be invoked before the <see cref="Client"/> property is accessed.
-    /// Otherwise has no effect because the application factory has already been initialized.
+    /// Should be invoked before the <see cref="Client"/>
+    /// property is accessed or seeding methods called.
+    /// Otherwise has no effect because
+    /// the application factory has already been initialized.
+    /// <para>
+    /// This method is idempotent in the scope of each test method.
+    /// </para>
     /// </remarks>
     /// <param name="configurations">
     /// The service configurations applied to the application factory.

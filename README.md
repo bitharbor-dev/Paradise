@@ -60,19 +60,19 @@ Update connection strings and required settings before running.
 ### Database
 
 Migrations are executed automatically on startup. Data is seeded from the `Data` directory.
-If seed files change, existing records are updated accordingly instead of duplicated.
+If seed files change, on next startup - existing records are updated accordingly instead of duplicated.
 
 ### Project structure
 
 ```
 /Source
   /Code
+    /Common - shared application components.
     /Core - core application components. 
     /Intermediate - prebuilt .NET API client.
-    /Shared - shared application components.
     /Web - executable applications.
   /Tests
-    /Integration - integration tests (WIP).
+    /Integration - integration tests.
     /Supplemental - tests infrastructure and doubles.
     /Unit - unit tests.
 ```
