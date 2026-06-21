@@ -13,62 +13,72 @@ namespace Paradise.WebApi.Tests.Integration.Endpoints.Handlers;
 /// <summary>
 /// Base endpoints handlers test class.
 /// </summary>
-public abstract class EndpointHandlersTests : IDisposable, IAsyncDisposable
+public abstract class EndpointHandlersTests : IAsyncDisposable
 {
+    #region Constants
+    private const string ApplicationInitializedExceptionMessage =
+        "Configuration can no longer be changed because the application has already been initialized. " +
+        "Call 'ConfigureApplication' before accessing the 'Client' property or seeding methods.";
+    #endregion
+
     #region Fields
+    private bool _disposed;
+
     private SqliteConnection? _connection;
     private DefaultWebApplicationFactory? _application;
+    private HttpClient? _client;
+
+    private IEnumerable<IWebApplicationServicesConfiguration>? _configurations;
     #endregion
 
     #region Properties
     /// <summary>
     /// System under test.
     /// </summary>
-    /// <remarks>
-    /// Either uses the default application factory configuration,
-    /// or a configuration provided through <see cref="ConfigureApplication"/>.
-    /// </remarks>
-    public HttpClient Client
-    {
-        get
-        {
-            if (field is null)
-            {
-                InitializeDefaultApplication();
-
-                field = _application.CreateClient();
-            }
-
-            return field;
-        }
-    }
+    protected HttpClient Client
+        => GetOrCreateClient();
 
     /// <summary>
     /// A <see cref="CancellationToken"/> to observe
     /// while waiting for the task to complete.
     /// </summary>
-    public CancellationToken Token { get; } = TestContext.Current.CancellationToken;
+    protected CancellationToken Token { get; } = TestContext.Current.CancellationToken;
     #endregion
 
     #region Public methods
-    /// <summary>
-    /// Configures the <see cref="DefaultWebApplicationFactory"/>
-    /// using the specified service configurations.
-    /// </summary>
-    /// <remarks>
-    /// Should be invoked before the <see cref="Client"/>
-    /// property is accessed or seeding methods called.
-    /// Otherwise has no effect because
-    /// the application factory has already been initialized.
-    /// <para>
-    /// This method is idempotent in the scope of each test method.
-    /// </para>
-    /// </remarks>
-    /// <param name="configurations">
-    /// The service configurations applied to the application factory.
-    /// </param>
-    public void ConfigureApplication(params IWebApplicationServicesConfiguration[] configurations)
-        => _application ??= new(configurations);
+    /// <inheritdoc/>
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed)
+            return;
+
+        await DisposeAsyncCore()
+            .ConfigureAwait(false);
+
+        GC.SuppressFinalize(this);
+
+        _disposed = true;
+    }
+    #endregion
+
+    #region Protected methods
+    /// <inheritdoc cref="IAsyncDisposable.DisposeAsync"/>
+    protected virtual async ValueTask DisposeAsyncCore()
+    {
+        _client?.Dispose();
+
+        if (_application is not null)
+        {
+            await _application.DisposeAsync()
+                .ConfigureAwait(false);
+        }
+
+        if (_connection is not null)
+        {
+            await _connection.DisposeAsync()
+                .ConfigureAwait(false);
+        }
+    }
 
     /// <summary>
     /// Creates a new <see cref="Role"/> and persists it
@@ -84,9 +94,9 @@ public abstract class EndpointHandlersTests : IDisposable, IAsyncDisposable
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    public async Task AddRoleAsync(string name, bool isDefault)
+    protected async Task AddRoleAsync(string name, bool isDefault)
     {
-        InitializeDefaultApplication();
+        EnsureApplicationReady();
 
         var scope = _application.Services.CreateAsyncScope();
 
@@ -126,14 +136,14 @@ public abstract class EndpointHandlersTests : IDisposable, IAsyncDisposable
     /// <returns>
     /// A task that represents the asynchronous operation.
     /// </returns>
-    public async Task AddUserAsync(string userName,
+    protected async Task AddUserAsync(string userName,
                                    string emailAddress,
                                    string password,
                                    string? phoneNumber = null,
                                    bool isEmailAddressConfirmed = true,
                                    bool twoFactorEnabled = false)
     {
-        InitializeDefaultApplication();
+        EnsureApplicationReady();
 
         var scope = _application.Services.CreateAsyncScope();
 
@@ -153,38 +163,53 @@ public abstract class EndpointHandlersTests : IDisposable, IAsyncDisposable
         }
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
+    /// <summary>
+    /// Configures the <see cref="DefaultWebApplicationFactory"/>
+    /// using the specified service configurations.
+    /// </summary>
+    /// <remarks>
+    /// Should be invoked before the <see cref="Client"/>
+    /// property is accessed or seeding methods called.
+    /// Otherwise has no effect because
+    /// the application factory has already been initialized.
+    /// </remarks>
+    /// <param name="configurations">
+    /// The service configurations applied to the application factory.
+    /// </param>
+    protected void ConfigureApplication(params IEnumerable<IWebApplicationServicesConfiguration> configurations)
     {
-        _application?.Dispose();
+        ObjectDisposedException.ThrowIf(_disposed, this);
 
-        _connection?.Dispose();
-
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc/>
-    public async ValueTask DisposeAsync()
-    {
         if (_application is not null)
-        {
-            await _application.DisposeAsync()
-                .ConfigureAwait(false);
-        }
+            throw new InvalidOperationException(ApplicationInitializedExceptionMessage);
 
-        if (_connection is not null)
-        {
-            await _connection.DisposeAsync()
-                .ConfigureAwait(false);
-        }
-
-        GC.SuppressFinalize(this);
+        _configurations = configurations;
     }
     #endregion
 
     #region Private methods
     /// <summary>
-    /// Initializes the default <see cref="DefaultWebApplicationFactory"/>
+    /// Initializes the <see cref="_client"/> once and returns it to the caller.
+    /// </summary>
+    /// <returns>
+    /// Initialized <see cref="_client"/> instance.
+    /// </returns>
+    private HttpClient GetOrCreateClient()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if (_client is null)
+        {
+            EnsureApplicationReady();
+
+            _client = _application.CreateClient();
+        }
+
+        return _client;
+    }
+
+    /// <summary>
+    /// Initializes the <see cref="DefaultWebApplicationFactory"/>
     /// when an application has not already been configured.
     /// </summary>
     /// <remarks>
@@ -192,17 +217,24 @@ public abstract class EndpointHandlersTests : IDisposable, IAsyncDisposable
     /// together with the default application configurations.
     /// </remarks>
     [MemberNotNull(nameof(_application))]
-    private void InitializeDefaultApplication()
+    private void EnsureApplicationReady()
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
         if (_application is null)
         {
-            _connection ??= SqliteConnection.InitializeInMemoryConnection(TestContext.Current.Test!.UniqueID);
+            if (_configurations is null)
+            {
+                _connection ??= SqliteConnection.InitializeInMemoryConnection(TestContext.Current.Test!.UniqueID);
 
-            var dataSourceConfiguration = new DataSourceConfiguration(_connection);
-            var optionsConfiguration = new OptionsConfiguration();
-            var seedingConfiguration = new SeedingConfiguration();
+                var dataSourceConfiguration = new DataSourceConfiguration(_connection);
+                var optionsConfiguration = new OptionsConfiguration();
+                var seedingConfiguration = new SeedingConfiguration();
 
-            _application = new(dataSourceConfiguration, optionsConfiguration, seedingConfiguration);
+                _configurations = [dataSourceConfiguration, optionsConfiguration, seedingConfiguration];
+            }
+
+            _application = new(_configurations);
         }
     }
     #endregion

@@ -14,19 +14,9 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
 {
     #region Constants
     /// <summary>
-    /// <see cref="ResetUsersPendingDeletionAsync"/> schedule - every 24 hours.
+    /// NCRONTAB expression - at midnight every day.
     /// </summary>
-    private const string ResetUsersPendingDeletionSchedule = "0 0 0 * * *";
-
-    /// <summary>
-    /// <see cref="DeleteUnconfirmedUsersAsync"/> schedule - every 24 hours.
-    /// </summary>
-    private const string DeleteUnconfirmedUsersSchedule = "0 0 0 * * *";
-
-    /// <summary>
-    /// <see cref="DeleteExpiredRefreshTokensAsync"/> schedule - every 24 hours.
-    /// </summary>
-    private const string DeleteExpiredRefreshTokensSchedule = "0 0 0 * * *";
+    private const string Daily = "0 0 0 * * *";
     #endregion
 
     #region Public methods
@@ -44,8 +34,7 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
     /// A task that represents the asynchronous operation.
     /// </returns>
     [Function(nameof(ResetUsersPendingDeletionAsync))]
-    public async Task ResetUsersPendingDeletionAsync([TimerTrigger(ResetUsersPendingDeletionSchedule)] TimerInfo _,
-                                                     CancellationToken cancellationToken)
+    public async Task ResetUsersPendingDeletionAsync([TimerTrigger(Daily)] TimerInfo _, CancellationToken cancellationToken)
     {
         var scope = serviceProvider.CreateAsyncScope();
 
@@ -73,8 +62,7 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
     /// A task that represents the asynchronous operation.
     /// </returns>
     [Function(nameof(DeleteUnconfirmedUsersAsync))]
-    public async Task DeleteUnconfirmedUsersAsync([TimerTrigger(DeleteUnconfirmedUsersSchedule)] TimerInfo _,
-                                                  CancellationToken cancellationToken)
+    public async Task DeleteUnconfirmedUsersAsync([TimerTrigger(Daily)] TimerInfo _, CancellationToken cancellationToken)
     {
         var scope = serviceProvider.CreateAsyncScope();
 
@@ -101,8 +89,7 @@ internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
     /// A task that represents the asynchronous operation.
     /// </returns>
     [Function(nameof(DeleteExpiredRefreshTokensAsync))]
-    public async Task DeleteExpiredRefreshTokensAsync([TimerTrigger(DeleteExpiredRefreshTokensSchedule)] TimerInfo _,
-                                                      CancellationToken cancellationToken)
+    public async Task DeleteExpiredRefreshTokensAsync([TimerTrigger(Daily)] TimerInfo _, CancellationToken cancellationToken)
     {
         var scope = serviceProvider.CreateAsyncScope();
         await using (scope.ConfigureAwait(false))
