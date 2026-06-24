@@ -15,12 +15,6 @@ namespace Paradise.WebApi.Tests.Integration.Endpoints.Handlers;
 /// </summary>
 public abstract class EndpointHandlersTests : IAsyncDisposable
 {
-    #region Constants
-    private const string ApplicationInitializedExceptionMessage =
-        "Configuration can no longer be changed because the application has already been initialized. " +
-        "Call 'ConfigureApplication' before accessing the 'Client' property or seeding methods.";
-    #endregion
-
     #region Fields
     private bool _disposed;
 
@@ -137,11 +131,11 @@ public abstract class EndpointHandlersTests : IAsyncDisposable
     /// A task that represents the asynchronous operation.
     /// </returns>
     protected async Task AddUserAsync(string userName,
-                                   string emailAddress,
-                                   string password,
-                                   string? phoneNumber = null,
-                                   bool isEmailAddressConfirmed = true,
-                                   bool twoFactorEnabled = false)
+                                      string emailAddress,
+                                      string password,
+                                      string? phoneNumber = null,
+                                      bool isEmailAddressConfirmed = true,
+                                      bool twoFactorEnabled = false)
     {
         EnsureApplicationReady();
 
@@ -181,7 +175,7 @@ public abstract class EndpointHandlersTests : IAsyncDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
 
         if (_application is not null)
-            throw new InvalidOperationException(ApplicationInitializedExceptionMessage);
+            throw new InvalidOperationException();
 
         _configurations = configurations;
     }
@@ -225,13 +219,15 @@ public abstract class EndpointHandlersTests : IAsyncDisposable
         {
             if (_configurations is null)
             {
-                _connection ??= SqliteConnection.InitializeInMemoryConnection(TestContext.Current.Test!.UniqueID);
+                var databaseName = TestContext.Current.Test!.UniqueID;
+                _connection ??= SqliteConnection.InitializeInMemoryConnection(databaseName);
 
-                var dataSourceConfiguration = new DataSourceConfiguration(_connection);
-                var optionsConfiguration = new OptionsConfiguration();
-                var seedingConfiguration = new SeedingConfiguration();
-
-                _configurations = [dataSourceConfiguration, optionsConfiguration, seedingConfiguration];
+                _configurations =
+                [
+                    new DataSourceConfiguration(_connection),
+                    new OptionsConfiguration(),
+                    new SeedingConfiguration()
+                ];
             }
 
             _application = new(_configurations);
