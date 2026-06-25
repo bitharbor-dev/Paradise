@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Paradise.WebApi": {
+    "Console": {
       "applicationUrl": "http://localhost:5000",
       "commandName": "Project",
       "environmentVariables": {

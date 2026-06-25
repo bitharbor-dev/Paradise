@@ -2,6 +2,7 @@
 using Paradise.Models;
 using Paradise.WebApi.Base.Extensions;
 using Paradise.WebApi.Infrastructure;
+using System.Net.Mime;
 
 namespace Paradise.WebApi.Extensions;
 
@@ -32,7 +33,7 @@ internal static class RouteHandlerBuilderExtensions
     /// </returns>
     public static RouteHandlerBuilder Produces(
         this RouteHandlerBuilder builder, OperationStatus status, string? contentType = null, params string[] additionalContentTypes)
-        => builder.ProducesInternal(status, null, contentType, additionalContentTypes);
+        => builder.ProducesInternal(status, null, contentType ?? MediaTypeNames.Application.Json, additionalContentTypes);
 
     /// <summary>
     /// Adds an <see cref="IProducesResponseTypeMetadata"/> with a <see cref="ApplicationProblemDetails"/> type
@@ -52,7 +53,7 @@ internal static class RouteHandlerBuilderExtensions
     /// </returns>
     public static RouteHandlerBuilder ProducesProblem(
         this RouteHandlerBuilder builder, OperationStatus status, string? contentType = null)
-        => builder.ProducesInternal(status, typeof(ApplicationProblemDetails), contentType);
+        => builder.ProducesInternal(status, typeof(ApplicationProblemDetails), contentType ?? MediaTypeNames.Application.ProblemJson);
 
     /// <summary>
     /// Adds an <see cref="IProducesResponseTypeMetadata"/> to <see cref="EndpointBuilder.Metadata"/> for all endpoints
@@ -78,7 +79,7 @@ internal static class RouteHandlerBuilderExtensions
     /// </returns>
     public static RouteHandlerBuilder Produces<TValue>(
         this RouteHandlerBuilder builder, OperationStatus status, string? contentType = null, params string[] additionalContentTypes)
-        => builder.ProducesInternal(status, typeof(TValue), contentType, additionalContentTypes);
+        => builder.ProducesInternal(status, typeof(TValue), contentType ?? MediaTypeNames.Application.Json, additionalContentTypes);
     #endregion
 
     #region Private methods
