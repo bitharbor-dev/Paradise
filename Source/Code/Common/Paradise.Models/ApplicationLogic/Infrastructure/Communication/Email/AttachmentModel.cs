@@ -7,7 +7,7 @@ namespace Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
 /// Represents an email attachment.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="EmailAttachmentModel"/> class.
+/// Initializes a new instance of the <see cref="AttachmentModel"/> class.
 /// </remarks>
 /// <param name="data">
 /// Attachment content.
@@ -19,7 +19,7 @@ namespace Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
 /// Attachment MIME type.
 /// </param>
 [method: JsonConstructor]
-public sealed class EmailAttachmentModel(Stream data, string fileName, string mimeType)
+public sealed class AttachmentModel(Stream data, string fileName, string mimeType)
 {
     #region Properties
     /// <summary>

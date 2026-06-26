@@ -250,11 +250,11 @@ public static class AssertExtensions
         }
 
         /// <summary>
-        /// Verifies that the given <paramref name="result"/> contains
-        /// the specified <paramref name="code"/> in its errors collection.
+        /// Verifies that the given <paramref name="errors"/> collection contains
+        /// the specified <paramref name="code"/>.
         /// </summary>
-        /// <param name="result">
-        /// The <see cref="ResultBase"/> instance containing the error code.
+        /// <param name="errors">
+        /// The errors collection to look up the error code.
         /// </param>
         /// <param name="code">
         /// The <see cref="ErrorCode"/> value expected to be present.
@@ -262,20 +262,19 @@ public static class AssertExtensions
         /// <param name="descriptionSubString">
         /// The <see cref="string"/> value expected to be contained within expected error's description.
         /// </param>
-        public static void ContainsError(ResultBase result, ErrorCode code, string? descriptionSubString = null)
+        public static void ContainsError(IEnumerable<ApplicationError> errors, ErrorCode code, string? descriptionSubString = null)
         {
-            ArgumentNullException.ThrowIfNull(result);
+            ArgumentNullException.ThrowIfNull(errors);
 
-            var errors = result
-                .Errors
+            var filteredErrors = errors
                 .Where(error => error.Code == code)
                 .ToList();
 
-            if (errors.Count is 0)
+            if (filteredErrors.Count is 0)
             {
                 var details = "No matching error code was found in collection.";
                 var expected = $"Expected: \"{code}\"";
-                var actual = $"Actual:   \"{string.Join(", ", result.Errors.Select(error => error.Code))}\"";
+                var actual = $"Actual:   \"{string.Join(", ", errors.Select(error => error.Code))}\"";
 
                 var message = string.Join(Environment.NewLine, details, expected, actual);
                 Assert.Fail(message);
@@ -283,14 +282,14 @@ public static class AssertExtensions
 
             if (descriptionSubString is not null)
             {
-                var containsExpectedDescription = errors
+                var containsExpectedDescription = filteredErrors
                     .Any(error => error.Description.Contains(descriptionSubString, StringComparison.Ordinal));
 
                 if (!containsExpectedDescription)
                 {
                     var details = "None of the matched errors contains the specified description sub-string.";
                     var expected = $"Expected: \"{descriptionSubString}\"";
-                    var actual = $"Actual:   \"{string.Join(", ", errors.Select(error => error.Description))}\"";
+                    var actual = $"Actual:   \"{string.Join(", ", filteredErrors.Select(error => error.Description))}\"";
 
                     var message = string.Join(Environment.NewLine, details, expected, actual);
 

@@ -123,7 +123,7 @@ public sealed partial class CommunicationClientTests
                               subjectPlaceholderName: "{parameter}",
                               subjectPlaceholdersNumber: 1);
 
-        var request = new EmailSendRequestModel(model,
+        var request = new SendEmailRequestModel(model,
                                                 templateName,
                                                 culture,
                                                 DefaultArgs,
@@ -151,7 +151,7 @@ public sealed partial class CommunicationClientTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(new([]),
+        var request = new SendEmailRequestModel(new([]),
                                                 templateName,
                                                 culture,
                                                 DefaultArgs);
@@ -181,7 +181,7 @@ public sealed partial class CommunicationClientTests
         var templateName = "Test";
         var culture = CultureInfo.InvariantCulture;
 
-        var request = new EmailSendRequestModel(model,
+        var request = new SendEmailRequestModel(model,
                                                 templateName,
                                                 culture,
                                                 DefaultArgs);
@@ -212,7 +212,7 @@ public sealed partial class CommunicationClientTests
         Test.AddEmailTemplate(templateName: templateName,
                               culture: culture);
 
-        var request = new EmailSendRequestModel(new([TestEmail]),
+        var request = new SendEmailRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 DefaultArgs);
@@ -240,7 +240,7 @@ public sealed partial class CommunicationClientTests
         Test.AddEmailTemplate(templateName: templateName,
                               culture: culture);
 
-        var request = new EmailSendRequestModel(new([TestEmail]),
+        var request = new SendEmailRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 null,
@@ -272,7 +272,7 @@ public sealed partial class CommunicationClientTests
                               placeholderName: "{parameter}",
                               placeholdersNumber: 1);
 
-        var request = new EmailSendRequestModel(new([TestEmail]),
+        var request = new SendEmailRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 null);
@@ -303,7 +303,7 @@ public sealed partial class CommunicationClientTests
                               subjectPlaceholderName: "{parameter}",
                               subjectPlaceholdersNumber: 1);
 
-        var request = new EmailSendRequestModel(new([TestEmail]),
+        var request = new SendEmailRequestModel(new([TestEmail]),
                                                 templateName,
                                                 culture,
                                                 null,
@@ -329,7 +329,7 @@ public sealed partial class CommunicationClientTests
         // Arrange
         var client = Test.CreateClient();
 
-        var request = new EmailSendRequestModel(new([TestEmail]),
+        var request = new SendEmailRequestModel(new([TestEmail]),
                                                 string.Empty,
                                                 culture,
                                                 DefaultArgs);

@@ -57,8 +57,10 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
         services.AddApplicationLogic(configuration, environment.EnvironmentName);
         services.AddRequestLocalization(configuration);
 
+        var telemetryBuilder = services.AddOpenTelemetry();
+
         if (EnvironmentNames.IsProduction(environment.EnvironmentName))
-            services.AddOpenTelemetry().UseAzureMonitor(configuration.BindOptionalSection);
+            telemetryBuilder.UseAzureMonitor(configuration.BindOptionalSection);
     }
 
     /// <summary>
@@ -69,16 +71,15 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
     /// </param>
     private static void RegisterErrorHandling(IServiceCollection services)
     {
+        static void OverrideProblemDetailsType(ProblemDetailsContext context)
+        {
+            if (context.ProblemDetails is HttpValidationProblemDetails validationProblem)
+                context.ProblemDetails = new ApplicationProblemDetails(validationProblem);
+        }
+
         services.AddExceptionHandler<ExceptionHandler>();
         services.AddExceptionHandler<BadHttpRequestExceptionHandler>();
-        services.AddProblemDetails(options =>
-        {
-            options.CustomizeProblemDetails = context =>
-            {
-                if (context.ProblemDetails is HttpValidationProblemDetails validationProblem)
-                    context.ProblemDetails = new ApplicationProblemDetails(validationProblem);
-            };
-        });
+        services.AddProblemDetails(options => options.CustomizeProblemDetails = OverrideProblemDetailsType);
 
         services.AddValidation();
     }

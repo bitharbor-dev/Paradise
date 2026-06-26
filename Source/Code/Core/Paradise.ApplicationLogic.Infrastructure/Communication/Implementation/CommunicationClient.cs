@@ -70,7 +70,7 @@ internal sealed class CommunicationClient : ICommunicationClient
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task<EmailModel> SendEmailAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default)
+    public async Task<EmailModel> SendEmailAsync(SendEmailRequestModel request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -131,7 +131,7 @@ internal sealed class CommunicationClient : ICommunicationClient
     /// with the name and culture specified in the given <paramref name="request"/>.
     /// <para>
     /// If such <see cref="EmailTemplate"/> does not exist and
-    /// <see cref="EmailSendRequestModel.UseNullOrInvariantCultureAsFallback"/>
+    /// <see cref="SendEmailRequestModel.UseNullOrInvariantCultureAsFallback"/>
     /// is <see langword="true"/> - attempts to find another
     /// <see cref="EmailTemplate"/> with <see cref="CultureInfo.InvariantCulture"/>
     /// or <see langword="null"/> culture.
@@ -148,7 +148,7 @@ internal sealed class CommunicationClient : ICommunicationClient
     /// <returns>
     /// The <see cref="EmailTemplate"/> found.
     /// </returns>
-    private async Task<EmailTemplate> FindEmailTemplateAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default)
+    private async Task<EmailTemplate> FindEmailTemplateAsync(SendEmailRequestModel request, CancellationToken cancellationToken = default)
     {
         var templateName = request.TemplateName;
         var culture = request.Culture;
@@ -195,7 +195,7 @@ internal sealed class CommunicationClient : ICommunicationClient
     /// <returns>
     /// Prepared for sending <see cref="EmailModel"/> instance.
     /// </returns>
-    private EmailModel CreateMessage(EmailTemplate template, EmailSendRequestModel request)
+    private EmailModel CreateMessage(EmailTemplate template, SendEmailRequestModel request)
     {
         var body = template.GetFormattedText(request.BodyArgs ?? []);
         var subject = template.GetFormattedSubject(request.SubjectArgs ?? []);

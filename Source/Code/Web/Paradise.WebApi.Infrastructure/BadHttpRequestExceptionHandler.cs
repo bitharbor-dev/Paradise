@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Paradise.Models;
+using Paradise.Models.Extensions;
 
 namespace Paradise.WebApi.Infrastructure;
 
@@ -23,7 +25,10 @@ public sealed class BadHttpRequestExceptionHandler : IExceptionHandler
 
         httpContext.Response.StatusCode = badHttpRequestException.StatusCode;
 
-        var problemDetails = new ApplicationProblemDetails(httpContext.Response.StatusCode, []);
+        var errorCode = ErrorCode.InvalidModel;
+        var error = new ApplicationError(errorCode, errorCode.GetFormattedDisplayValue(exception.Message));
+
+        var problemDetails = new ApplicationProblemDetails(httpContext.Response.StatusCode, [error]);
         var problemDetailsService = httpContext.RequestServices.GetRequiredService<IProblemDetailsService>();
 
         return problemDetailsService.TryWriteAsync(new()

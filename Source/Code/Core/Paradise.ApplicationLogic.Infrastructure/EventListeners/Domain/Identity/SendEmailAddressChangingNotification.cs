@@ -37,7 +37,7 @@ internal sealed class SendEmailAddressChangingNotification(IServiceProvider serv
             var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
             var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-            var request = new EmailSendRequestModel(
+            var request = new SendEmailRequestModel(
                 basicData: new([domainEvent.CurrentEmailAddress]),
                 templateName: emailTemplateOptions.Value.EmailAddressChangingNotificationTemplateName,
                 culture: domainEvent.UserCulture,

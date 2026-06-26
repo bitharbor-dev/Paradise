@@ -60,7 +60,7 @@ internal sealed class SendEmailAddressChangeLink(IServiceProvider serviceProvide
                                                StaticRoutes.ResetEmailAddress,
                                                new() { ["culture"] = domainEvent.UserCulture.Name });
 
-            var request = new EmailSendRequestModel(
+            var request = new SendEmailRequestModel(
                 basicData: new([domainEvent.NewEmailAddress]),
                 templateName: emailTemplateOptions.Value.EmailAddressChangeLinkTemplateName,
                 culture: domainEvent.UserCulture,

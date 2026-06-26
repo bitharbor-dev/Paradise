@@ -134,7 +134,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, RoleIdNotFound);
+        Assert.ContainsError(result.Errors, RoleIdNotFound);
     }
 
     /// <summary>
@@ -179,7 +179,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -246,7 +246,7 @@ public sealed partial class RoleServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.False(Test.RoleExists(name));
-        Assert.ContainsError(result, InvalidRoleName);
+        Assert.ContainsError(result.Errors, InvalidRoleName);
     }
 
     /// <summary>
@@ -270,7 +270,7 @@ public sealed partial class RoleServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.True(Test.RoleExists(role.Name));
-        Assert.ContainsError(result, DuplicateRoleName);
+        Assert.ContainsError(result.Errors, DuplicateRoleName);
     }
 
     /// <summary>
@@ -300,7 +300,7 @@ public sealed partial class RoleServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.False(Test.RoleExists(model.Name));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -345,7 +345,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -370,7 +370,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, RoleIdNotFound);
+        Assert.ContainsError(result.Errors, RoleIdNotFound);
     }
 
     /// <summary>
@@ -403,7 +403,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Failure, result.Status);
 
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -448,7 +448,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, RoleIdNotFound);
+        Assert.ContainsError(result.Errors, RoleIdNotFound);
     }
 
     /// <summary>
@@ -478,7 +478,7 @@ public sealed partial class RoleServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.True(Test.RoleExists(role.Name));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -525,7 +525,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, RoleIdNotFound);
+        Assert.ContainsError(result.Errors, RoleIdNotFound);
     }
 
     /// <summary>
@@ -547,7 +547,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -578,7 +578,7 @@ public sealed partial class RoleServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.False(await Test.UserIsInRoleAsync(user, role));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -627,7 +627,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, RoleIdNotFound);
+        Assert.ContainsError(result.Errors, RoleIdNotFound);
     }
 
     /// <summary>
@@ -649,7 +649,7 @@ public sealed partial class RoleServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -681,7 +681,7 @@ public sealed partial class RoleServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.True(await Test.UserIsInRoleAsync(user, role));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
     #endregion
 }

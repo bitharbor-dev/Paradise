@@ -99,16 +99,16 @@ public static class IServiceCollectionExtensions
         {
             var optionsKey = typeof(TListener).AssemblyQualifiedName;
 
-            services.AddOptions();
+            services
+                .AddOptions()
+                .Configure(optionsKey, configureOptions)
+                .AddKeyedTransient(optionsKey, (provider, key) =>
+                {
+                    var monitor = provider.GetRequiredService<IOptionsMonitor<DomainEventRetryOptions>>();
+                    var options = monitor.Get((string)key!);
 
-            services.Configure(optionsKey, configureOptions);
-
-            services.AddKeyedTransient(optionsKey, (provider, key) =>
-            {
-                var monitor = provider.GetRequiredService<IOptionsMonitor<DomainEventRetryOptions>>();
-
-                return Options.Create(monitor.Get((string)key!));
-            });
+                    return Options.Create(options);
+                });
         }
 
         return services.AddSingleton<IDomainEventListener<TEvent>, TListener>();

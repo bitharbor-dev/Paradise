@@ -6,7 +6,7 @@ namespace Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
 /// Represents an email send request.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="EmailSendRequestModel"/> class.
+/// Initializes a new instance of the <see cref="SendEmailRequestModel"/> class.
 /// </remarks>
 /// <param name="basicData">
 /// Basic email information.
@@ -32,7 +32,7 @@ namespace Paradise.Models.ApplicationLogic.Infrastructure.Communication.Email;
 /// in case the template with the specified <see cref="Culture"/>
 /// does not exist.
 /// </param>
-public sealed class EmailSendRequestModel(BaseEmailModel basicData, string templateName, CultureInfo? culture,
+public sealed class SendEmailRequestModel(BaseEmailModel basicData, string templateName, CultureInfo? culture,
                                           IEnumerable<object?>? bodyArgs = null, IEnumerable<object?>? subjectArgs = null,
                                           bool useNullOrInvariantCultureAsFallback = true)
 {

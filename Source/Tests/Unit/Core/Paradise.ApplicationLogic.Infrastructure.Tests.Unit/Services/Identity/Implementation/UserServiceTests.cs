@@ -147,7 +147,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -188,7 +188,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserEmailAddressNotFound);
+        Assert.ContainsError(result.Errors, UserEmailAddressNotFound);
     }
 
     /// <summary>
@@ -229,7 +229,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserPhoneNumberNotFound);
+        Assert.ContainsError(result.Errors, UserPhoneNumberNotFound);
     }
 
     /// <summary>
@@ -270,7 +270,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserUserNameNotFound);
+        Assert.ContainsError(result.Errors, UserUserNameNotFound);
     }
 
     /// <summary>
@@ -314,7 +314,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -362,7 +362,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -392,7 +392,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.False(Test.EmailAddressExists(model.EmailAddress));
-        Assert.ContainsError(result, InvalidEmailAddress);
+        Assert.ContainsError(result.Errors, InvalidEmailAddress);
     }
 
     /// <summary>
@@ -422,7 +422,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.True(Test.EmailAddressExists(emailAddress));
-        Assert.ContainsError(result, DuplicateEmailAddress);
+        Assert.ContainsError(result.Errors, DuplicateEmailAddress);
     }
 
     /// <summary>
@@ -449,7 +449,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.False(Test.EmailAddressExists(model.EmailAddress));
-        Assert.ContainsError(result, DefaultError);
+        Assert.ContainsError(result.Errors, DefaultError);
     }
 
     /// <summary>
@@ -476,7 +476,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.False(Test.EmailAddressExists(model.EmailAddress));
-        Assert.ContainsError(result, PasswordNotMatchConfirmation);
+        Assert.ContainsError(result.Errors, PasswordNotMatchConfirmation);
     }
 
     /// <summary>
@@ -503,7 +503,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.False(Test.PhoneNumberExists(model.PhoneNumber));
-        Assert.ContainsError(result, InvalidPhoneNumber);
+        Assert.ContainsError(result.Errors, InvalidPhoneNumber);
     }
 
     /// <summary>
@@ -533,7 +533,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.True(Test.PhoneNumberExists(phoneNumber));
-        Assert.ContainsError(result, DuplicatePhoneNumber);
+        Assert.ContainsError(result.Errors, DuplicatePhoneNumber);
     }
 
     /// <summary>
@@ -562,7 +562,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.False(Test.UserNameExists(model.UserName));
-        Assert.ContainsError(result, InvalidUserName);
+        Assert.ContainsError(result.Errors, InvalidUserName);
     }
 
     /// <summary>
@@ -592,7 +592,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.True(Test.UserNameExists(userName));
-        Assert.ContainsError(result, DuplicateUserName);
+        Assert.ContainsError(result.Errors, DuplicateUserName);
     }
 
     /// <summary>
@@ -627,7 +627,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.False(Test.EmailAddressExists(model.EmailAddress));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -686,7 +686,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidToken);
+        Assert.ContainsError(result.Errors, InvalidToken);
     }
 
     /// <summary>
@@ -715,7 +715,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidToken);
+        Assert.ContainsError(result.Errors, InvalidToken);
     }
 
     /// <summary>
@@ -744,7 +744,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Blocked, result.Status);
 
-        Assert.ContainsError(result, OutdatedToken);
+        Assert.ContainsError(result.Errors, OutdatedToken);
     }
 
     /// <summary>
@@ -775,7 +775,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserEmailAddressNotFound);
+        Assert.ContainsError(result.Errors, UserEmailAddressNotFound);
     }
 
     /// <summary>
@@ -804,7 +804,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Blocked, result.Status);
 
-        Assert.ContainsError(result, UserEmailAddressAlreadyConfirmed);
+        Assert.ContainsError(result.Errors, UserEmailAddressAlreadyConfirmed);
     }
 
     /// <summary>
@@ -833,7 +833,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Blocked, result.Status);
 
-        Assert.ContainsError(result, OutdatedToken);
+        Assert.ContainsError(result.Errors, OutdatedToken);
     }
 
     /// <summary>
@@ -871,7 +871,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.False(Test.GetEmailConfirmed(user.Id));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -965,7 +965,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -989,7 +989,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Prohibited, result.Status);
 
-        Assert.ContainsError(result, UserLockedOut);
+        Assert.ContainsError(result.Errors, UserLockedOut);
     }
 
     /// <summary>
@@ -1022,7 +1022,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Unauthorized, result.Status);
 
         Assert.Equal(expectedAccessFailedCount, Test.GetAccessFailedCount(user.Id));
-        Assert.ContainsError(result, UserNotFoundOrPasswordMismatch);
+        Assert.ContainsError(result.Errors, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1056,7 +1056,7 @@ public sealed partial class UserServiceTests
 
         Assert.Equal(0, Test.GetAccessFailedCount(user.Id));
         Assert.Contains(Test.LoggedMessages, message => message.Message.Contains(error.Description, StringComparison.Ordinal));
-        Assert.ContainsError(result, UserNotFoundOrPasswordMismatch);
+        Assert.ContainsError(result.Errors, UserNotFoundOrPasswordMismatch);
     }
 
     /// <summary>
@@ -1119,7 +1119,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -1142,7 +1142,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidEmailAddress);
+        Assert.ContainsError(result.Errors, InvalidEmailAddress);
     }
 
     /// <summary>
@@ -1200,7 +1200,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -1240,7 +1240,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.Equal(password, Test.GetPassword(user.Id));
-        Assert.ContainsError(result, PasswordMissing);
+        Assert.ContainsError(result.Errors, PasswordMissing);
     }
 
     /// <summary>
@@ -1278,7 +1278,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.Equal(password, Test.GetPassword(user.Id));
-        Assert.ContainsError(result, InvalidToken);
+        Assert.ContainsError(result.Errors, InvalidToken);
     }
 
     /// <summary>
@@ -1316,7 +1316,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.Equal(password, Test.GetPassword(user.Id));
-        Assert.ContainsError(result, OutdatedToken);
+        Assert.ContainsError(result.Errors, OutdatedToken);
     }
 
     /// <summary>
@@ -1354,7 +1354,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.Equal(password, Test.GetPassword(user.Id));
-        Assert.ContainsError(result, PasswordNotMatchConfirmation);
+        Assert.ContainsError(result.Errors, PasswordNotMatchConfirmation);
     }
 
     /// <summary>
@@ -1386,7 +1386,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserEmailAddressNotFound);
+        Assert.ContainsError(result.Errors, UserEmailAddressNotFound);
     }
 
     /// <summary>
@@ -1432,7 +1432,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.Equal(password, Test.GetPassword(user.Id));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -1480,7 +1480,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -1507,7 +1507,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidEmailAddress);
+        Assert.ContainsError(result.Errors, InvalidEmailAddress);
     }
 
     /// <summary>
@@ -1533,7 +1533,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, EmailAddressNotMatchConfirmation);
+        Assert.ContainsError(result.Errors, EmailAddressNotMatchConfirmation);
     }
 
     /// <summary>
@@ -1560,7 +1560,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Blocked, result.Status);
 
-        Assert.ContainsError(result, DuplicateEmailAddress);
+        Assert.ContainsError(result.Errors, DuplicateEmailAddress);
     }
 
     /// <summary>
@@ -1588,7 +1588,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -1654,7 +1654,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.Equal(oldEmailAddress, Test.GetEmailAddress(user.Id));
-        Assert.ContainsError(result, InvalidToken);
+        Assert.ContainsError(result.Errors, InvalidToken);
     }
 
     /// <summary>
@@ -1687,7 +1687,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.Equal(oldEmailAddress, Test.GetEmailAddress(user.Id));
-        Assert.ContainsError(result, OutdatedToken);
+        Assert.ContainsError(result.Errors, OutdatedToken);
     }
 
     /// <summary>
@@ -1722,7 +1722,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.Equal(oldEmailAddress, Test.GetEmailAddress(user.Id));
-        Assert.ContainsError(result, InvalidToken);
+        Assert.ContainsError(result.Errors, InvalidToken);
     }
 
     /// <summary>
@@ -1756,7 +1756,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.Equal(oldEmailAddress, Test.GetEmailAddress(user.Id));
-        Assert.ContainsError(result, DuplicateEmailAddress);
+        Assert.ContainsError(result.Errors, DuplicateEmailAddress);
     }
 
     /// <summary>
@@ -1790,7 +1790,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserEmailAddressNotFound);
+        Assert.ContainsError(result.Errors, UserEmailAddressNotFound);
     }
 
     /// <summary>
@@ -1831,7 +1831,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.Equal(oldEmailAddress, Test.GetEmailAddress(user.Id));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -1889,7 +1889,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(InvalidInput, result.Status);
 
-        Assert.ContainsError(result, InvalidModel);
+        Assert.ContainsError(result.Errors, InvalidModel);
     }
 
     /// <summary>
@@ -1917,7 +1917,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -1949,7 +1949,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(InvalidInput, result.Status);
 
         Assert.Equal(oldUserName, Test.GetUserName(user.Id));
-        Assert.ContainsError(result, InvalidUserName);
+        Assert.ContainsError(result.Errors, InvalidUserName);
     }
 
     /// <summary>
@@ -1982,7 +1982,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.Equal(oldUserName, Test.GetUserName(user.Id));
-        Assert.ContainsError(result, DuplicateUserName);
+        Assert.ContainsError(result.Errors, DuplicateUserName);
     }
 
     /// <summary>
@@ -2021,7 +2021,7 @@ public sealed partial class UserServiceTests
         Assert.Null(result.Value);
         Assert.Equal(Failure, result.Status);
 
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>
@@ -2066,7 +2066,7 @@ public sealed partial class UserServiceTests
         // Assert
         Assert.Equal(Missing, result.Status);
 
-        Assert.ContainsError(result, UserIdNotFound);
+        Assert.ContainsError(result.Errors, UserIdNotFound);
     }
 
     /// <summary>
@@ -2087,7 +2087,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.True(Test.IdExists(user.Id));
-        Assert.ContainsError(result, UserNotPendingDeletion);
+        Assert.ContainsError(result.Errors, UserNotPendingDeletion);
     }
 
     /// <summary>
@@ -2115,7 +2115,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.Null(Test.GetDeletionRequestSubmitted(user.Id));
-        Assert.ContainsError(result, UserDeletionRequestExpired);
+        Assert.ContainsError(result.Errors, UserDeletionRequestExpired);
     }
 
     /// <summary>
@@ -2152,7 +2152,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Blocked, result.Status);
 
         Assert.Contains(Test.LoggedMessages, message => message.Message.Contains(error.Description, StringComparison.Ordinal));
-        Assert.ContainsError(result, UserDeletionRequestExpired);
+        Assert.ContainsError(result.Errors, UserDeletionRequestExpired);
     }
 
     /// <summary>
@@ -2187,7 +2187,7 @@ public sealed partial class UserServiceTests
         Assert.Equal(Failure, result.Status);
 
         Assert.True(Test.IdExists(user.Id));
-        Assert.ContainsError(result, DefaultError, error.Description);
+        Assert.ContainsError(result.Errors, DefaultError, error.Description);
     }
 
     /// <summary>

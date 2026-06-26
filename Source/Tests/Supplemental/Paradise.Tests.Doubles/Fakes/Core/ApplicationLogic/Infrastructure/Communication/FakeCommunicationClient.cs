@@ -34,7 +34,7 @@ internal sealed class FakeCommunicationClient(TimeProvider timeProvider,
 
     #region Public methods
     /// <inheritdoc/>
-    public async Task<EmailModel> SendEmailAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default)
+    public async Task<EmailModel> SendEmailAsync(SendEmailRequestModel request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 

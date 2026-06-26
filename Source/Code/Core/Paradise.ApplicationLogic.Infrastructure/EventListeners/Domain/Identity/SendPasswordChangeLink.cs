@@ -54,7 +54,7 @@ internal sealed class SendPasswordChangeLink(IServiceProvider serviceProvider)
                                                StaticRoutes.ResetPassword,
                                                new() { ["culture"] = domainEvent.UserCulture.Name });
 
-            var request = new EmailSendRequestModel(
+            var request = new SendEmailRequestModel(
                 basicData: new([domainEvent.EmailAddress]),
                 templateName: emailTemplateOptions.Value.PasswordChangeLinkTemplateName,
                 culture: domainEvent.UserCulture,

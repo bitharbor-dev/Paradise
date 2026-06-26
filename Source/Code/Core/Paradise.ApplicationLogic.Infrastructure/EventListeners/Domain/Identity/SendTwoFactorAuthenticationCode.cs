@@ -33,7 +33,7 @@ internal sealed class SendTwoFactorAuthenticationCode(IServiceProvider servicePr
             var emailTemplateOptions = scope.ServiceProvider.GetRequiredService<IOptions<EmailTemplateOptions>>();
             var communicationClient = scope.ServiceProvider.GetRequiredService<ICommunicationClient>();
 
-            var request = new EmailSendRequestModel(
+            var request = new SendEmailRequestModel(
                 basicData: new([domainEvent.EmailAddress]),
                 templateName: emailTemplateOptions.Value.TwoFactorVerificationTemplateName,
                 culture: domainEvent.UserCulture,

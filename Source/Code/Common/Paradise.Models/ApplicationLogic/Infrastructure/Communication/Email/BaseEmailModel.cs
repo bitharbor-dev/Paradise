@@ -35,6 +35,6 @@ public class BaseEmailModel(IEnumerable<string> to)
     /// <summary>
     /// Attachments.
     /// </summary>
-    public IEnumerable<EmailAttachmentModel>? Attachments { get; set; }
+    public IEnumerable<AttachmentModel>? Attachments { get; set; }
     #endregion
 }

@@ -21,6 +21,6 @@ public interface ICommunicationClient
     /// <returns>
     /// An <see cref="EmailModel"/> containing information about the message sent.
     /// </returns>
-    Task<EmailModel> SendEmailAsync(EmailSendRequestModel request, CancellationToken cancellationToken = default);
+    Task<EmailModel> SendEmailAsync(SendEmailRequestModel request, CancellationToken cancellationToken = default);
     #endregion
 }

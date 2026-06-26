@@ -54,7 +54,7 @@ internal sealed class SendEmailAddressConfirmationLink(IServiceProvider serviceP
                                                StaticRoutes.ConfirmEmailAddress,
                                                new() { ["culture"] = domainEvent.UserCulture.Name });
 
-            var request = new EmailSendRequestModel(
+            var request = new SendEmailRequestModel(
                 basicData: new([domainEvent.EmailAddress]),
                 templateName: emailTemplateOptions.Value.EmailAddressConfirmationLinkTemplateName,
                 culture: domainEvent.UserCulture,
