@@ -5,8 +5,21 @@ namespace Paradise.Tests.Doubles.Spies.Core.Domain.Base.Events;
 /// <summary>
 /// Spy <see cref="IDomainEventDispatcher"/> implementation.
 /// </summary>
-public sealed class SpyDomainEventDispatcher : IDomainEventDispatcher
+/// <remarks>
+/// Initializes a new instance of the <see cref="SpyDomainEventDispatcher"/> class.
+/// </remarks>
+/// <param name="eventSource">
+/// The <see cref="IDomainEvent"/> source.
+/// </param>
+public sealed class SpyDomainEventDispatcher(IDomainEventSource eventSource) : IDomainEventDispatcher
 {
+    #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SpyDomainEventDispatcher"/> class.
+    /// </summary>
+    public SpyDomainEventDispatcher() : this(null!) { }
+    #endregion
+
     #region Properties
     /// <summary>
     /// Indicates whether the <see cref="StartDispatchingAsync"/> method was invoked.
@@ -21,11 +34,23 @@ public sealed class SpyDomainEventDispatcher : IDomainEventDispatcher
 
     #region Public methods
     /// <inheritdoc/>
-    public Task StartDispatchingAsync(CancellationToken cancellationToken = default)
+    public async Task StartDispatchingAsync(CancellationToken cancellationToken = default)
     {
         StartDispatchingAsyncInvoked = true;
         ReceivedToken = cancellationToken;
-        return Task.CompletedTask;
+
+        if (eventSource is not null)
+        {
+            await foreach (var domainEvent in eventSource.PullAsync(cancellationToken).ConfigureAwait(false))
+                DomainEventPulled?.Invoke(this, new(domainEvent));
+        }
     }
+    #endregion
+
+    #region Events
+    /// <summary>
+    /// Occurs when a domain event is pulled from an internal event source.
+    /// </summary>
+    public event EventHandler<DomainEventPulledEventArgs>? DomainEventPulled;
     #endregion
 }

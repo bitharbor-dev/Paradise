@@ -19,6 +19,7 @@ public sealed class BadHttpRequestExceptionHandler : IExceptionHandler
             return ValueTask.FromResult(false);
 
         ArgumentNullException.ThrowIfNull(httpContext);
+        ArgumentNullException.ThrowIfNull(exception);
 
         if (httpContext.Response.HasStarted)
             return ValueTask.FromResult(false);

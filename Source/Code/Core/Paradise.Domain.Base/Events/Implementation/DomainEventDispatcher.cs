@@ -47,7 +47,7 @@ internal sealed class DomainEventDispatcher(ILogger<DomainEventDispatcher> logge
 
             if (_processes.TryAdd(id, listenerTask))
             {
-                _ = listenerTask.ContinueWith(__ =>
+                _ = listenerTask.ContinueWith(delegate
                 {
                     _processes.TryRemove(id, out _);
                 }, TaskScheduler.Default);

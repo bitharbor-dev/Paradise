@@ -21,10 +21,11 @@ builder.Configuration
     .AddJsonFile($"options.{environmentName}.json", true, true)
     .AddUserSecrets(Assembly.GetExecutingAssembly(), true, true);
 
+var telemetryBuilder = builder.Services.AddOpenTelemetry();
+
 if (EnvironmentNames.IsProduction(environmentName))
 {
-    builder.Services
-        .AddOpenTelemetry()
+    telemetryBuilder
         .UseFunctionsWorkerDefaults()
         .UseAzureMonitorExporter(builder.Configuration.BindOptionalSection);
 }
