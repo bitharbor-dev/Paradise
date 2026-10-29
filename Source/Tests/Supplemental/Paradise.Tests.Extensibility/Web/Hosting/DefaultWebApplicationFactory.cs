@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Time.Testing;
 using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.Domain.Base.Events;
@@ -10,6 +13,8 @@ using Paradise.Models.WebApi.Services.Authentication;
 using Paradise.Tests.Doubles.Spies.Core.Domain.Base.Events;
 using Paradise.Tests.Extensibility.Web.Hosting.Configuration;
 using Paradise.Tests.Extensibility.Web.Hosting.Configuration.Base;
+using Paradise.WebApi.Infrastructure.Authentication.JwtBearer;
+using Paradise.WebApi.Infrastructure.Options;
 using Paradise.WebApi.Services.Authentication;
 
 namespace Paradise.Tests.Extensibility.Web.Hosting;
@@ -34,6 +39,8 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
 
     private readonly Lock _receivedEventsLock = new();
     private readonly List<IDomainEvent> _receivedEvents = [];
+
+    private readonly FakeTimeProvider _timeProvider = new(DateTimeOffset.UnixEpoch);
     #endregion
 
     #region Properties
@@ -50,6 +57,25 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
             lock (_receivedEventsLock)
                 return [.. _receivedEvents];
         }
+    }
+
+    /// <summary>
+    /// An accessor to the <see cref="WebApi.Infrastructure.Options.AuthenticationOptions"/> instance
+    /// used by the application.
+    /// </summary>
+    public AuthenticationOptions AuthenticationOptions
+        => Services.GetRequiredService<IOptions<AuthenticationOptions>>().Value;
+
+    /// <summary>
+    /// Gets or sets the current UTC time.
+    /// </summary>
+    /// <remarks>
+    /// Used by the application only if no configuration overrides were specified.
+    /// </remarks>
+    public DateTimeOffset UtcNow
+    {
+        get => _timeProvider.GetUtcNow();
+        set => _timeProvider.SetUtcNow(value);
     }
     #endregion
 
@@ -101,8 +127,10 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
 
             var role = new Role(name, isDefault);
 
-            await roleManager.CreateAsync(role)
+            var creationResult = await roleManager.CreateAsync(role)
                 .ConfigureAwait(false);
+
+            ThrowIfFailed(creationResult, $"Failed to create role '{name}'");
         }
     }
 
@@ -154,8 +182,10 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
                 TwoFactorEnabled = twoFactorEnabled
             };
 
-            await userManager.CreateAsync(user, password)
+            var creationResult = await userManager.CreateAsync(user, password)
                 .ConfigureAwait(false);
+
+            ThrowIfFailed(creationResult, $"Failed to create user '{userName}'");
         }
     }
 
@@ -206,6 +236,64 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
             }
 
             return loginResult.Value;
+        }
+    }
+
+    /// <summary>
+    /// Deletes the <see cref="User"/> with the specified <paramref name="userName"/>
+    /// using the configured <see cref="IUserManager{TUser}"/>
+    /// bypassing (partially or completely) the business rules.
+    /// </summary>
+    /// <param name="userName">
+    /// User's user-name.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// </returns>
+    public async Task DeleteUserAsync(string userName)
+    {
+        ThrowIfDisposed();
+
+        var scope = Services.CreateAsyncScope();
+
+        await using (scope.ConfigureAwait(false))
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<IUserManager<User>>();
+
+            var user = await userManager.FindByNameAsync(userName)
+                .ConfigureAwait(false)
+                ?? throw new InvalidOperationException($"User '{userName}' does not exist.");
+
+            var deletionResult = await userManager.DeleteAsync(user)
+                .ConfigureAwait(false);
+
+            ThrowIfFailed(deletionResult, $"Failed to delete user '{userName}'");
+        }
+    }
+
+    /// <summary>
+    /// Issues a validly signed access token bound to the given <paramref name="refreshTokenId"/>
+    /// using the configured <see cref="IJwtManager"/>
+    /// bypassing (partially or completely) the business rules.
+    /// </summary>
+    /// <param name="refreshTokenId">
+    /// The Id of the refresh token to bind the access token with.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the issued access token.
+    /// </returns>
+    public async Task<string> IssueAccessTokenAsync(Guid refreshTokenId)
+    {
+        ThrowIfDisposed();
+
+        var scope = Services.CreateAsyncScope();
+
+        await using (scope.ConfigureAwait(false))
+        {
+            var jwtManager = scope.ServiceProvider.GetRequiredService<IJwtManager>();
+
+            return jwtManager.IssueToken([], refreshTokenId, out _);
         }
     }
 
@@ -344,6 +432,8 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
         _domainEventsConfiguration = new();
         _domainEventsConfiguration.DomainEventPulled += OnDomainEventPulled;
 
+        yield return new TimeConfiguration(_timeProvider);
+        yield return new CachingConfiguration(_timeProvider);
         yield return new DataSourceConfiguration(_connection);
         yield return new OptionsConfiguration(out var emailTemplateOptions);
         yield return new SeedingConfiguration(emailTemplateOptions);
@@ -419,6 +509,29 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
     {
         lock (_receivedEventsLock)
             _receivedEvents.Add(e.DomainEvent);
+    }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> if the given <paramref name="result"/>
+    /// indicates an unsuccessful operation.
+    /// </summary>
+    /// <param name="result">
+    /// The <see cref="IdentityResult"/> to be checked.
+    /// </param>
+    /// <param name="message">
+    /// The exception message, to be followed by the operation errors.
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// The given <paramref name="result"/> indicates an unsuccessful operation.
+    /// </exception>
+    private static void ThrowIfFailed(IdentityResult result, string message)
+    {
+        if (result.Succeeded)
+            return;
+
+        var errors = string.Join(", ", result.Errors.Select(error => error.Description));
+
+        throw new InvalidOperationException($"{message}: {errors}.");
     }
 
     /// <summary>

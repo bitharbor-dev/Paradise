@@ -19,7 +19,7 @@ namespace Paradise.DataAccess.Database.Interceptors;
 /// <param name="timeProvider">
 /// Time provider.
 /// </param>
-internal sealed class OnModifiedInterceptor(TimeProvider timeProvider) : BaseSaveChangesInterceptor(timeProvider), ISingletonInterceptor
+internal sealed class OnModifiedInterceptor(TimeProvider timeProvider) : BaseSaveChangesInterceptor(timeProvider)
 {
     #region Properties
     /// <inheritdoc/>

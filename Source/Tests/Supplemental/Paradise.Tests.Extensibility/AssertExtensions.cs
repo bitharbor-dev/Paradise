@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Paradise.Models;
+using Paradise.Tests.Surrogates.Web.WebApi.Base;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Net.Http.Json;
 using Xunit;
 using Lifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime;
 
@@ -296,6 +299,115 @@ public static class AssertExtensions
                     Assert.Fail(message);
                 }
             }
+        }
+
+        /// <summary>
+        /// Verifies that the given <paramref name="response"/> is a problem details response
+        /// with the specified <paramref name="statusCode"/>, containing the specified <paramref name="code"/>.
+        /// </summary>
+        /// <param name="response">
+        /// The <see cref="HttpResponseMessage"/> to be checked.
+        /// </param>
+        /// <param name="statusCode">
+        /// The expected <see cref="HttpStatusCode"/>.
+        /// </param>
+        /// <param name="code">
+        /// The <see cref="ErrorCode"/> value expected to be present.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A <see cref="CancellationToken"/> to observe
+        /// while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        public static Task ProblemAsync(HttpResponseMessage response, HttpStatusCode statusCode, ErrorCode code,
+                                        CancellationToken cancellationToken = default)
+            => Assert.ProblemAsync(response, statusCode, [code], cancellationToken);
+
+        /// <summary>
+        /// Verifies that the given <paramref name="response"/> is a problem details response
+        /// with the specified <paramref name="statusCode"/>, containing each of the specified <paramref name="codes"/>.
+        /// </summary>
+        /// <param name="response">
+        /// The <see cref="HttpResponseMessage"/> to be checked.
+        /// </param>
+        /// <param name="statusCode">
+        /// The expected <see cref="HttpStatusCode"/>.
+        /// </param>
+        /// <param name="codes">
+        /// The <see cref="ErrorCode"/> values expected to be present.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A <see cref="CancellationToken"/> to observe
+        /// while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        public static async Task ProblemAsync(HttpResponseMessage response, HttpStatusCode statusCode, IEnumerable<ErrorCode> codes,
+                                              CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(codes);
+
+            var problemDetails = await Assert.BodyAsync<TestProblemDetailsMetadata>(response, statusCode, cancellationToken)
+                .ConfigureAwait(false);
+
+            foreach (var code in codes)
+                Assert.ContainsError(problemDetails.Errors, code);
+        }
+
+        /// <summary>
+        /// Verifies that the given <paramref name="response"/> has the specified <paramref name="statusCode"/>
+        /// and its body can be deserialized into an instance of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type to deserialize the response body into.
+        /// </typeparam>
+        /// <param name="response">
+        /// The <see cref="HttpResponseMessage"/> to be checked.
+        /// </param>
+        /// <param name="statusCode">
+        /// The expected <see cref="HttpStatusCode"/>.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A <see cref="CancellationToken"/> to observe
+        /// while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the deserialized response body.
+        /// </returns>
+        public static async Task<T> BodyAsync<T>(HttpResponseMessage response, HttpStatusCode statusCode,
+                                                 CancellationToken cancellationToken = default)
+        {
+            // The status code is checked first, since unexpected responses
+            // may not contain a body that can be deserialized.
+            Assert.StatusCode(response, statusCode);
+
+            var body = await response.Content.ReadFromJsonAsync<T>(cancellationToken)
+                .ConfigureAwait(false);
+
+            Assert.NotNull(body);
+
+            return body;
+        }
+
+        /// <summary>
+        /// Verifies that the given <paramref name="response"/>
+        /// has the specified <paramref name="statusCode"/>.
+        /// </summary>
+        /// <param name="response">
+        /// The <see cref="HttpResponseMessage"/> to be checked.
+        /// </param>
+        /// <param name="statusCode">
+        /// The expected <see cref="HttpStatusCode"/>.
+        /// </param>
+        public static void StatusCode(HttpResponseMessage response, HttpStatusCode statusCode)
+        {
+            ArgumentNullException.ThrowIfNull(response);
+
+            Assert.Equal(statusCode, response.StatusCode);
         }
         #endregion
     }
