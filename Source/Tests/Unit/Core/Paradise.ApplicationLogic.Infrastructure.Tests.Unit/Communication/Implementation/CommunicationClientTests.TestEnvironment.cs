@@ -145,13 +145,13 @@ public sealed partial class CommunicationClientTests : IDisposable
         /// Email subject.
         /// </param>
         /// <param name="placeholderName">
-        /// Placeholder name to be replaced with values during a message formatting.
+        /// Placeholder name to be replaced with values during the message formatting.
         /// </param>
         /// <param name="placeholdersNumber">
         /// The number of placeholders to be replaced with values during the message formatting.
         /// </param>
         /// <param name="subjectPlaceholderName">
-        /// Subject placeholder name to be replaced with values during a message formatting.
+        /// Subject placeholder name to be replaced with values during the message formatting.
         /// </param>
         /// <param name="subjectPlaceholdersNumber">
         /// The number of subject placeholders to be replaced with values during the message formatting.

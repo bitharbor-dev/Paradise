@@ -10,7 +10,7 @@ namespace Paradise.DataAccess.Repositories.Base.Implementation;
 /// Entity type.
 /// </typeparam>
 /// <remarks>
-/// Initializes a new instance of <see cref="ReadOnlyRepository{TEntity}"/> class
+/// Initializes a new instance of the <see cref="ReadOnlyRepository{TEntity}"/> class
 /// with the specified data source.
 /// </remarks>
 /// <param name="source">

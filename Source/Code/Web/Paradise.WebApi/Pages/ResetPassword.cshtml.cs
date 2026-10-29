@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
 using System.ComponentModel.DataAnnotations;

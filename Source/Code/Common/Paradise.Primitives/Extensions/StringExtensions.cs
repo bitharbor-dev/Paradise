@@ -78,7 +78,7 @@ public static class StringExtensions
     /// The user-name to be checked.
     /// </param>
     /// <param name="allowedCharacters">
-    /// The list of characters allowed in the user name, used to
+    /// The list of characters allowed in the user-name, used to
     /// validate <paramref name="userName"/>.
     /// </param>
     /// <returns>

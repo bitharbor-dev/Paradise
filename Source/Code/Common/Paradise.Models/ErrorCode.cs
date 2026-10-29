@@ -35,7 +35,7 @@ public enum ErrorCode
     [Display(ResourceType = typeof(EM), Name = nameof(EM.DuplicateUserName))]
     DuplicateUserName,
     /// <summary>
-    /// Email address '{0}' is invalid.
+    /// The email address '{0}' is invalid.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidEmailAddress))]
     InvalidEmailAddress,
@@ -45,12 +45,12 @@ public enum ErrorCode
     [Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidModel))]
     InvalidModel,
     /// <summary>
-    /// Phone number '{0}' is invalid.
+    /// The phone number '{0}' is invalid.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidPhoneNumber))]
     InvalidPhoneNumber,
     /// <summary>
-    /// Role name '{0}' is invalid.
+    /// The role name '{0}' is invalid.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidRoleName))]
     InvalidRoleName,
@@ -60,7 +60,7 @@ public enum ErrorCode
     [Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidToken))]
     InvalidToken,
     /// <summary>
-    /// User-name '{0}' is invalid.
+    /// The user-name '{0}' is invalid.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.InvalidUserName))]
     InvalidUserName,
@@ -125,7 +125,7 @@ public enum ErrorCode
     [Display(ResourceType = typeof(EM), Name = nameof(EM.UserEmailAddressAlreadyConfirmed))]
     UserEmailAddressAlreadyConfirmed,
     /// <summary>
-    /// Email address '{0}' is not confirmed.
+    /// The email address '{0}' is not confirmed.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.UserEmailAddressNotConfirmed))]
     UserEmailAddressNotConfirmed,
@@ -140,7 +140,7 @@ public enum ErrorCode
     [Display(ResourceType = typeof(EM), Name = nameof(EM.UserIdNotFound))]
     UserIdNotFound,
     /// <summary>
-    /// User is locked out.
+    /// The user is locked out.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.UserLockedOut))]
     UserLockedOut,

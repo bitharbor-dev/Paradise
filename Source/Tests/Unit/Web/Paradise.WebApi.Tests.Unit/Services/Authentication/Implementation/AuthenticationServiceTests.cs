@@ -256,7 +256,7 @@ public sealed partial class AuthenticationServiceTests
     /// <summary>
     /// The <see cref="AuthenticationService.LoginAsync"/> method should
     /// return an access token when user successfully
-    /// logs in with their username.
+    /// logs in with their user-name.
     /// </summary>
     [Fact]
     public async Task LoginAsync_WithUserName()
@@ -284,7 +284,7 @@ public sealed partial class AuthenticationServiceTests
     /// <summary>
     /// The <see cref="AuthenticationService.LoginAsync"/> method should
     /// fail to return an access token if the input
-    /// username is invalid.
+    /// user-name is invalid.
     /// </summary>
     [Fact]
     public async Task LoginAsync_WithUserName_FailsOnInvalidUserName()
@@ -308,7 +308,7 @@ public sealed partial class AuthenticationServiceTests
     /// <summary>
     /// The <see cref="AuthenticationService.LoginAsync"/> method should
     /// fail to return an access token when no user
-    /// with the specified user name exists.
+    /// with the specified user-name exists.
     /// </summary>
     [Fact]
     public async Task LoginAsync_WithUserName_FailsOnNonExistingUser()
@@ -453,7 +453,7 @@ public sealed partial class AuthenticationServiceTests
     /// The <see cref="AuthenticationService.LoginAsync"/> method should
     /// fail to return an access token if the input
     /// <see cref="LoginModel"/> does not have its email address,
-    /// phone number or user name values set.
+    /// phone number or user-name values set.
     /// </summary>
     [Fact]
     public async Task LoginAsync_FailsOnIncompleteLoginModel()

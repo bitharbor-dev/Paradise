@@ -80,10 +80,10 @@ public sealed partial class CommunicationClientTests
     /// throw the <see cref="InvalidOperationException"/> if the input
     /// <see cref="SmtpOptions"/> instance
     /// has <see langword="null"/>, <see cref="string.Empty"/> or whitespace-only
-    /// username value in <see cref="SmtpOptions.Credentials"/>.
+    /// user-name value in <see cref="SmtpOptions.Credentials"/>.
     /// </summary>
     /// <param name="userName">
-    /// The user name associated with the credentials.
+    /// The user-name associated with the credentials.
     /// </param>
     [Theory, MemberData(nameof(Constructor_ThrowsOnInvalidUsername_MemberData))]
     public void Constructor_ThrowsOnInvalidUsername(string? userName)

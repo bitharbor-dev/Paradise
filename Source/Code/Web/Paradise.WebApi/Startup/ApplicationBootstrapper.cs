@@ -4,7 +4,7 @@
 /// Orchestrates application bootstrapping by executing pre-build and post-build steps.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of <see cref="ApplicationBootstrapper"/>.
+/// Initializes a new instance of the <see cref="ApplicationBootstrapper"/> class.
 /// </remarks>
 /// <param name="preBuildSteps">
 /// Pre-build steps to execute.

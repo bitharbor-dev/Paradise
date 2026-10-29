@@ -255,7 +255,7 @@ public sealed partial class UserServiceTests : IDisposable
         /// exists in the persistence storage.
         /// </summary>
         /// <param name="userName">
-        /// The user name for this user.
+        /// The user-name for this user.
         /// </param>
         /// <returns>
         /// <see langword="true"/> if the user exists,
@@ -359,13 +359,13 @@ public sealed partial class UserServiceTests : IDisposable
             => _userManager.Users.Single(user => user.Id == id).TwoFactorEnabled;
 
         /// <summary>
-        /// Gets the username of the user with the given <paramref name="id"/>.
+        /// Gets the user-name of the user with the given <paramref name="id"/>.
         /// </summary>
         /// <param name="id">
         /// Target user Id.
         /// </param>
         /// <returns>
-        /// The username of the user with the given <paramref name="id"/>.
+        /// The user-name of the user with the given <paramref name="id"/>.
         /// </returns>
         public string? GetUserName(Guid id)
             => _userManager.Users.Single(user => user.Id == id).UserName;

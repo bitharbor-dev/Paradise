@@ -1,4 +1,4 @@
-using Paradise.WebApi.Startup;
+﻿using Paradise.WebApi.Startup;
 using Paradise.WebApi.Startup.Steps.PostBuild;
 using Paradise.WebApi.Startup.Steps.PreBuild;
 

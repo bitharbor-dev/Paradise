@@ -232,7 +232,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
 
         /// <summary>
         /// Configures the test environment to simulate
-        /// successful user name and password login flow.
+        /// successful user-name and password login flow.
         /// </summary>
         /// <param name="user">
         /// The expected authenticated user returned by the user service.
@@ -259,10 +259,10 @@ public sealed partial class AuthenticationServiceTests : IDisposable
 
         /// <summary>
         /// Configures the test environment to simulate
-        /// a login attempt where the user is not found by user name.
+        /// a login attempt where the user is not found by user-name.
         /// </summary>
         /// <param name="userName">
-        /// The user name used for the login attempt.
+        /// The user-name used for the login attempt.
         /// </param>
         public void SetupLoginFailureByMissingUserName(out string userName)
         {
