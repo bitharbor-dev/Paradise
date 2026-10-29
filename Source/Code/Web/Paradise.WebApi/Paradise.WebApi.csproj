@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<UserSecretsId>Paradise.WebApi</UserSecretsId>
@@ -7,6 +7,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
 		<InternalsVisibleTo Include="Paradise.Tests.Doubles" />
+		<InternalsVisibleTo Include="Paradise.Tests.Extensibility" />
 	</ItemGroup>
 
 	<ItemGroup>

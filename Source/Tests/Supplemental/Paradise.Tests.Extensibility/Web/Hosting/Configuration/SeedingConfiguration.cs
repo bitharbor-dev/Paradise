@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Paradise.ApplicationLogic.Options.Models.Infrastructure.Services.MessageTemplates;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.DataAccess.Seed.Models.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
@@ -17,12 +19,23 @@ namespace Paradise.Tests.Extensibility.Web.Hosting.Configuration;
 /// </summary>
 public sealed class SeedingConfiguration : IWebApplicationServicesConfiguration
 {
+    #region Fields
+    private readonly EmailTemplateOptions _emailTemplateOptions;
+    #endregion
+
     #region Constructors
     /// <summary>
     /// Initializes a new instance of the <see cref="SeedingConfiguration"/> class.
     /// </summary>
-    public SeedingConfiguration()
+    /// <param name="emailTemplateOptions">
+    /// The accessor used to access the <see cref="EmailTemplateOptions"/>.
+    /// </param>
+    public SeedingConfiguration(IOptions<EmailTemplateOptions> emailTemplateOptions)
     {
+        ArgumentNullException.ThrowIfNull(emailTemplateOptions);
+
+        _emailTemplateOptions = emailTemplateOptions.Value;
+
         DomainData = new();
 
         var emailTemplates = GetSeedEmailTemplates();
@@ -66,28 +79,28 @@ public sealed class SeedingConfiguration : IWebApplicationServicesConfiguration
         yield return new(RoleNames.Administrator, false);
     }
 
-    private static IEnumerable<SeedEmailTemplateModel> GetSeedEmailTemplates()
+    private IEnumerable<SeedEmailTemplateModel> GetSeedEmailTemplates()
     {
-        yield return new("EmailAddressChangedNotification", null, "Email address changed", true, "{parameter}",
-                         2, "{subjectParameter}", 0, "Parameter 1: {parameter}0; Parameter 2: {parameter}1");
+        yield return new(_emailTemplateOptions.EmailAddressChangedNotificationTemplateName, null, "Email address changed",
+                         true, "{parameter}", 2, "{subjectParameter}", 0, "Parameter 1: {parameter}0; Parameter 2: {parameter}1");
 
-        yield return new("EmailAddressChangeLink", null, "Email address reset", true, "{parameter}",
-                         2, "{subjectParameter}", 0, "Parameter 1: {parameter}0; Parameter 2: {parameter}1");
+        yield return new(_emailTemplateOptions.EmailAddressChangeLinkTemplateName, null, "Email address reset",
+                         true, "{parameter}", 2, "{subjectParameter}", 0, "Parameter 1: {parameter}0; Parameter 2: {parameter}1");
 
-        yield return new("EmailAddressChangingNotification", null, "Email address is about to be changed", true, "{parameter}",
-                         2, "{subjectParameter}", 0, "Parameter 1: {parameter}0; Parameter 2: {parameter}1");
+        yield return new(_emailTemplateOptions.EmailAddressChangingNotificationTemplateName, null, "Email address is about to be changed",
+                         true, "{parameter}", 2, "{subjectParameter}", 0, "Parameter 1: {parameter}0; Parameter 2: {parameter}1");
 
-        yield return new("EmailAddressConfirmationLink", null, "Email address confirmation", true, "{parameter}",
-                         1, "{subjectParameter}", 0, "Parameter 1: {parameter}0");
+        yield return new(_emailTemplateOptions.EmailAddressConfirmationLinkTemplateName, null, "Email address confirmation",
+                         true, "{parameter}", 1, "{subjectParameter}", 0, "Parameter 1: {parameter}0");
 
-        yield return new("PasswordChangedNotification", null, "Password changed", true, "{parameter}",
-                         0, "{subjectParameter}", 0, "Password changed");
+        yield return new(_emailTemplateOptions.PasswordChangedNotificationTemplateName, null, "Password changed",
+                         true, "{parameter}", 0, "{subjectParameter}", 0, "Password changed");
 
-        yield return new("PasswordChangeLink", null, "Password reset", true, "{parameter}",
-                         1, "{subjectParameter}", 0, "Parameter 1: {parameter}0");
+        yield return new(_emailTemplateOptions.PasswordChangeLinkTemplateName, null, "Password reset",
+                         true, "{parameter}", 1, "{subjectParameter}", 0, "Parameter 1: {parameter}0");
 
-        yield return new("TwoFactorVerification", null, "New login confirmation", true, "{parameter}",
-                         1, "{subjectParameter}", 0, "Parameter 1: {parameter}0");
+        yield return new(_emailTemplateOptions.TwoFactorVerificationTemplateName, null, "New login confirmation",
+                         true, "{parameter}", 1, "{subjectParameter}", 0, "Parameter 1: {parameter}0");
     }
     #endregion
 }

@@ -6,19 +6,24 @@ using Microsoft.Extensions.Hosting;
 using Paradise.ApplicationLogic.Infrastructure.Domain.Identity;
 using Paradise.ApplicationLogic.Infrastructure.Identity;
 using Paradise.Domain.Base.Events;
+using Paradise.Models.WebApi.Services.Authentication;
 using Paradise.Tests.Doubles.Spies.Core.Domain.Base.Events;
 using Paradise.Tests.Extensibility.Web.Hosting.Configuration;
 using Paradise.Tests.Extensibility.Web.Hosting.Configuration.Base;
+using Paradise.WebApi.Services.Authentication;
 
 namespace Paradise.Tests.Extensibility.Web.Hosting;
 
 /// <summary>
 /// Default <see cref="WebApplicationFactory{TEntryPoint}"/> implementation which
-/// provides standardized way configure in-memory application instance.
+/// provides a standardized way to configure an in-memory application instance.
 /// </summary>
 public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program>
 {
     #region Fields
+    private static readonly TimeSpan _eventTimeout = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan _eventPollingInterval = TimeSpan.FromMilliseconds(10);
+
     private bool _disposed;
     private bool _hostStarted;
 
@@ -27,18 +32,25 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
     private SqliteConnection? _connection;
     private DomainEventsConfiguration? _domainEventsConfiguration;
 
+    private readonly Lock _receivedEventsLock = new();
     private readonly List<IDomainEvent> _receivedEvents = [];
     #endregion
 
     #region Properties
     /// <summary>
-    /// The list of received domain events.
+    /// The snapshot of received domain events.
     /// </summary>
     /// <remarks>
     /// Populated only if no configuration overrides were specified.
     /// </remarks>
     public IReadOnlyList<IDomainEvent> ReceivedEvents
-        => _receivedEvents;
+    {
+        get
+        {
+            lock (_receivedEventsLock)
+                return [.. _receivedEvents];
+        }
+    }
     #endregion
 
     #region Public methods
@@ -147,6 +159,107 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
         }
     }
 
+    /// <summary>
+    /// Logs in the <see cref="User"/> with the specified <paramref name="userName"/>
+    /// using the configured <see cref="IAuthenticationService"/>, bypassing the HTTP pipeline.
+    /// </summary>
+    /// <param name="userName">
+    /// User's user-name.
+    /// </param>
+    /// <param name="password">
+    /// User's password.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the access token, or the two-factor
+    /// identity token when two-factor authentication is enabled for the user.
+    /// </returns>
+    public async Task<AccessTokenModel> AuthenticateUserAsync(string userName,
+                                                              string password,
+                                                              CancellationToken cancellationToken = default)
+    {
+        ThrowIfDisposed();
+
+        var scope = Services.CreateAsyncScope();
+
+        await using (scope.ConfigureAwait(false))
+        {
+            var authenticationService = scope.ServiceProvider.GetRequiredService<IAuthenticationService>();
+
+            var model = new LoginModel(password)
+            {
+                UserName = userName
+            };
+
+            var loginResult = await authenticationService.LoginAsync(model, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (!loginResult.IsSuccess || loginResult.Value is null)
+            {
+                var errors = string.Join(", ", loginResult.Errors);
+
+                throw new InvalidOperationException($"Failed to log in '{userName}': {loginResult.Status} ({errors}).");
+            }
+
+            return loginResult.Value;
+        }
+    }
+
+    /// <summary>
+    /// Waits until a domain event of type <typeparamref name="T"/> is received.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The domain event type.
+    /// </typeparam>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the first received domain event of type <typeparamref name="T"/>.
+    /// </returns>
+    /// <exception cref="TimeoutException">
+    /// No domain event of type <typeparamref name="T"/> was received in time.
+    /// </exception>
+    public Task<T> WaitForEventAsync<T>(CancellationToken cancellationToken = default)
+        where T : IDomainEvent
+        => WaitForEventAsyncCore<T>(predicate: null, cancellationToken);
+
+    /// <summary>
+    /// Waits until a domain event of type <typeparamref name="T"/>
+    /// matching the given <paramref name="predicate"/> is received.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The domain event type.
+    /// </typeparam>
+    /// <param name="predicate">
+    /// A function to test each received domain event for a condition.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the first received domain event of type <typeparamref name="T"/>
+    /// matching the given <paramref name="predicate"/>.
+    /// </returns>
+    /// <exception cref="TimeoutException">
+    /// No matching domain event of type <typeparamref name="T"/> was received in time.
+    /// </exception>
+    public Task<T> WaitForEventAsync<T>(Func<T, bool> predicate, CancellationToken cancellationToken = default)
+        where T : IDomainEvent
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return WaitForEventAsyncCore(predicate, cancellationToken);
+    }
+
     /// <inheritdoc/>
     public override async ValueTask DisposeAsync()
     {
@@ -218,7 +331,7 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
     #region Private methods
     /// <summary>
     /// Returns the set of default configuration overrides, which enables end-to-end
-    /// integration testing, by replacing external dependencies with an in-memory alternatives.
+    /// integration testing, by replacing external dependencies with in-memory alternatives.
     /// </summary>
     /// <returns>
     /// An <see cref="IEnumerable{T}"/> of <see cref="IWebApplicationServicesConfiguration"/>
@@ -232,10 +345,65 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
         _domainEventsConfiguration.DomainEventPulled += OnDomainEventPulled;
 
         yield return new DataSourceConfiguration(_connection);
-        yield return new OptionsConfiguration();
-        yield return new SeedingConfiguration();
+        yield return new OptionsConfiguration(out var emailTemplateOptions);
+        yield return new SeedingConfiguration(emailTemplateOptions);
         yield return new CommunicationConfiguration();
         yield return _domainEventsConfiguration;
+    }
+
+    /// <summary>
+    /// Waits until a domain event of type <typeparamref name="T"/>
+    /// matching the given <paramref name="predicate"/> is received.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The domain event type.
+    /// </typeparam>
+    /// <param name="predicate">
+    /// A function to test each received domain event for a condition,
+    /// or <see langword="null"/> to accept any domain event of type <typeparamref name="T"/>.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe
+    /// while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the first received matching domain event of type <typeparamref name="T"/>.
+    /// </returns>
+    /// <exception cref="TimeoutException">
+    /// No matching domain event of type <typeparamref name="T"/> was received in time.
+    /// </exception>
+    private async Task<T> WaitForEventAsyncCore<T>(Func<T, bool>? predicate, CancellationToken cancellationToken)
+        where T : IDomainEvent
+    {
+        ThrowIfDisposed();
+
+        using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutSource.CancelAfter(_eventTimeout);
+
+        try
+        {
+            while (true)
+            {
+                lock (_receivedEventsLock)
+                {
+                    // Events are received from the dispatcher's thread,
+                    // so the list is re-checked on each iteration.
+                    foreach (var domainEvent in _receivedEvents.OfType<T>())
+                    {
+                        if (predicate is null || predicate(domainEvent))
+                            return domainEvent;
+                    }
+                }
+
+                await Task.Delay(_eventPollingInterval, timeoutSource.Token)
+                    .ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new TimeoutException($"No matching '{typeof(T).Name}' was received within {_eventTimeout}.");
+        }
     }
 
     /// <summary>
@@ -248,7 +416,10 @@ public sealed class DefaultWebApplicationFactory : WebApplicationFactory<Program
     /// The <see cref="DomainEventPulledEventArgs"/> instance containing the event data.
     /// </param>
     private void OnDomainEventPulled(object? sender, DomainEventPulledEventArgs e)
-        => _receivedEvents.Add(e.DomainEvent);
+    {
+        lock (_receivedEventsLock)
+            _receivedEvents.Add(e.DomainEvent);
+    }
 
     /// <summary>
     /// Throws an <see cref="ObjectDisposedException"/> if this instance has been disposed.
