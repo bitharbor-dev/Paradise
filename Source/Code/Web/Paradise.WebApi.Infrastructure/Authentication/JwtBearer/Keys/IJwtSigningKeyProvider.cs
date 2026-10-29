@@ -16,7 +16,7 @@ internal interface IJwtSigningKeyProvider
 
     #region Methods
     /// <summary>
-    /// Gets the key to sign a JWTs.
+    /// Gets the key to sign JWTs.
     /// </summary>
     /// <returns>
     /// The <see cref="SecurityKey"/> to be used

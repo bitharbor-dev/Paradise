@@ -105,7 +105,7 @@ public static class IServiceCollectionExtensions
     /// The <see cref="IServiceCollection"/> to add the services to.
     /// </param>
     /// <param name="configuration">
-    /// The <see cref="IConfiguration"/> for retrieving singing key provider options.
+    /// The <see cref="IConfiguration"/> for retrieving signing key provider options.
     /// </param>
     /// <param name="environmentName">
     /// Current environment name.

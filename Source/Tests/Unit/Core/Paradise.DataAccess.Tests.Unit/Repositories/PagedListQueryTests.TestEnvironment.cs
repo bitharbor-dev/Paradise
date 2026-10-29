@@ -68,7 +68,7 @@ public sealed partial class PagedListQueryTests : IDisposable
         /// <paramref name="methodName"/> collected during <see cref="Queryable"/> modifications.
         /// </summary>
         /// <param name="methodName">
-        /// The name of the method calls to look up for.
+        /// The name of the method calls to look for.
         /// </param>
         /// <returns>
         /// The list of <see cref="MethodCallExpression"/> with the given <paramref name="methodName"/>.

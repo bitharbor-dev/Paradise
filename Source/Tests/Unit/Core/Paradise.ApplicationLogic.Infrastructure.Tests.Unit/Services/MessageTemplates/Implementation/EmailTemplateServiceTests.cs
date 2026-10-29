@@ -179,7 +179,7 @@ public sealed partial class EmailTemplateServiceTests
     /// The <see cref="EmailTemplateService.CreateAsync"/> method should
     /// fail to create a new email template if the
     /// input <see cref="EmailTemplateCreationModel"/> specifies the
-    /// template name and culture which are already in use by existing template.
+    /// template name and culture which are already in use by an existing template.
     /// </summary>
     /// <param name="culture">
     /// Template culture.

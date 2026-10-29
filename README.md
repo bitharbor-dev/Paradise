@@ -23,7 +23,7 @@ It also provides a full set of unit tests, giving 90%+ code coverage.
 
 ## Architecture
 
-The project follows a hybrid architecture combining best of:
+The project follows a hybrid architecture combining the best of:
 
 - Domain-Driven Design (DDD)
 - Clean Architecture principles

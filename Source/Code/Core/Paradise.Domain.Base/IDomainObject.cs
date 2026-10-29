@@ -26,7 +26,7 @@ public interface IDomainObject
     /// <summary>
     /// Validates current object's state.
     /// <para>
-    /// Should throw a <see cref="InvalidOperationException"/>
+    /// Should throw an <see cref="InvalidOperationException"/>
     /// in case of state validation errors.
     /// </para>
     /// </summary>

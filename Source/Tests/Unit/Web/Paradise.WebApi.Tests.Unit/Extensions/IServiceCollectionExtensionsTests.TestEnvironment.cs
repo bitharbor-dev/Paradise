@@ -278,7 +278,7 @@ public sealed partial class IServiceCollectionExtensionsTests
         public object? SymmetricSigningKeyProviderOptions { get; set; }
 
         /// <summary>
-        /// Configurable Azure KeyVault signing key provider options instance.
+        /// Configurable asymmetric signing key provider options instance.
         /// </summary>
         public object? AsymmetricSigningKeyProviderOptions { get; set; }
         #endregion

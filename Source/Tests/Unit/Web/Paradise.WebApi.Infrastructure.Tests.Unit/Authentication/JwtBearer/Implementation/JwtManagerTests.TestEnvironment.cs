@@ -37,7 +37,7 @@ public sealed partial class JwtManagerTests
         public TestEnvironment()
         {
             // 'JwtSecurityTokenHandler' internally normalizes DateTimeOffset.MinValue
-            // to DateTimeOffset.UnixEpoch, when creating JWTs. To comply this behavior
+            // to DateTimeOffset.UnixEpoch, when creating JWTs. To comply with this behavior
             // the initial 'UtcNow' value must be also set to DateTimeOffset.UnixEpoch.
             _timeProvider = new(DateTimeOffset.UnixEpoch);
 
@@ -83,13 +83,13 @@ public sealed partial class JwtManagerTests
 
         /// <summary>
         /// An accessor to the <see cref="AuthenticationOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public AuthenticationOptions AuthOptions { get; }
 
         /// <summary>
         /// An accessor to the <see cref="JwtBearerOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public JwtBearerOptions JwtOptions { get; }
 

@@ -255,7 +255,7 @@ public sealed partial class CommunicationClientTests
     /// The <see cref="CommunicationClient.SendEmailAsync"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="EmailTemplate"/> being used
-    /// has more body placeholders than was provided.
+    /// has more body placeholders than were provided.
     /// </summary>
     [Fact]
     public async Task SendEmailAsync_ThrowsOnMissingBodyPlaceholder()
@@ -286,7 +286,7 @@ public sealed partial class CommunicationClientTests
     /// The <see cref="CommunicationClient.SendEmailAsync"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="EmailTemplate"/> being used
-    /// has more subject placeholders than was provided.
+    /// has more subject placeholders than were provided.
     /// </summary>
     [Fact]
     public async Task SendEmailAsync_ThrowsOnMissingSubjectPlaceholder()

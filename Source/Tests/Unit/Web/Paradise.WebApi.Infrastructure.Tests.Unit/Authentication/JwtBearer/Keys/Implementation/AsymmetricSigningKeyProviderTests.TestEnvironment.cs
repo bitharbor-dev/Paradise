@@ -22,7 +22,7 @@ public sealed partial class AsymmetricSigningKeyProviderTests
         #region Properties
         /// <summary>
         /// An accessor to the <see cref="AsymmetricSigningKeyProviderOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public AsymmetricSigningKeyProviderOptions Options { get; } = new()
         {

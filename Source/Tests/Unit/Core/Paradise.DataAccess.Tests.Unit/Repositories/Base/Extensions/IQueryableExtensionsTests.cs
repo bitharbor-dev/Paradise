@@ -262,7 +262,7 @@ public sealed class IQueryableExtensionsTests
     /// <summary>
     /// The <see cref="IQueryableExtensions.FilterBy"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the input
-    /// filtering properties list contains one or more property which
+    /// filtering properties list contains one or more properties which
     /// cannot be found on the queryable item type.
     /// </summary>
     [Fact]

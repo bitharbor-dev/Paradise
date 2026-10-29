@@ -35,7 +35,7 @@ internal sealed class DocumentPathsCamelCaseFormatter : IOpenApiDocumentTransfor
     /// Formats all paths to the camel case in the given <paramref name="document"/>.
     /// </summary>
     /// <param name="document">
-    /// The <see cref="OpenApiDocument"/>, which paths to be formatted.
+    /// The <see cref="OpenApiDocument"/> whose paths are to be formatted.
     /// </param>
     private static void FormatPathsToCamelCase(OpenApiDocument document)
     {

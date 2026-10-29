@@ -12,7 +12,7 @@ public static class IConfigurationExtensions
     /// <summary>
     /// Attempts to bind the given object <paramref name="instance"/>
     /// to configuration values by matching property names against configuration keys in the configuration section
-    /// with the name of the <paramref name="instance"/> type name.
+    /// with the name of the <paramref name="instance"/> type.
     /// <para>
     /// Fails on a non-existing configuration section.
     /// </para>
@@ -39,7 +39,7 @@ public static class IConfigurationExtensions
     /// <summary>
     /// Attempts to bind the given object <paramref name="instance"/>
     /// to configuration values by matching property names against configuration keys in the configuration section
-    /// with the name of the <paramref name="instance"/> type name.
+    /// with the name of the <paramref name="instance"/> type.
     /// <para>
     /// Skips a non-existing configuration section.
     /// </para>

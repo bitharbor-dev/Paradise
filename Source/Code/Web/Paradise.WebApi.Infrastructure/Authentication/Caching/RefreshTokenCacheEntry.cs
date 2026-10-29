@@ -53,8 +53,8 @@ public readonly record struct RefreshTokenCacheEntry
     /// <summary>
     /// Refresh token expiration timestamp in ticks.
     /// <para>
-    /// This value indicating the token expiration itself,
-    /// not it's cached representation.
+    /// This value indicates the token expiration itself,
+    /// not its cached representation.
     /// </para>
     /// </summary>
     public long ExpirationTimestamp { get; }

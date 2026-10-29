@@ -41,7 +41,7 @@ public sealed class DomainEventsConfiguration : IWebApplicationServicesConfigura
     /// <see cref="SpyDomainEventDispatcher.DomainEventPulled"/> event handler.
     /// </summary>
     /// <remarks>
-    /// Event forwarding via <see langword="add"/> and <see langword="remove"/> are not
+    /// Event forwarding via <see langword="add"/> and <see langword="remove"/> is not
     /// available since subscriptions may occur when the internal
     /// <see cref="_eventDispatcher"/> is still equal to <see langword="null"/>.
     /// </remarks>

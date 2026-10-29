@@ -128,10 +128,10 @@ public static class ExceptionMessagesProvider
     /// </returns>
     public static string GetMessageInvalidEmailAddress(string email)
     {
-        var messageFromat = InvalidEmailAddress;
+        var messageFormat = InvalidEmailAddress;
 
         return string.Format(Culture,
-                             messageFromat,
+                             messageFormat,
                              email);
     }
 

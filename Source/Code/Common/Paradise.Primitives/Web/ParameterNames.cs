@@ -7,17 +7,17 @@ public static class ParameterNames
 {
     #region Constants
     /// <summary>
-    /// General ID parameter name.
+    /// General Id parameter name.
     /// </summary>
     public const string IdParameter = "id";
 
     /// <summary>
-    /// User ID parameter name.
+    /// User Id parameter name.
     /// </summary>
     public const string UserIdParameter = "userId";
 
     /// <summary>
-    /// Role ID parameter name.
+    /// Role Id parameter name.
     /// </summary>
     public const string RoleIdParameter = "roleId";
 

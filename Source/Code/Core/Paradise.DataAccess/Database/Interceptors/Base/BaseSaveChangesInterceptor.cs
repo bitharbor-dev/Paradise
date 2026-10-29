@@ -28,7 +28,7 @@ public abstract class BaseSaveChangesInterceptor : SaveChangesInterceptor
 
     #region Properties
     /// <summary>
-    /// Entity entry filter to be applied on the tacked entries collection
+    /// Entity entry filter to be applied on the tracked entries collection
     /// before state interception.
     /// </summary>
     public virtual Func<EntityEntry, bool>? EntityFilter { get; }

@@ -100,7 +100,7 @@ public sealed partial class OnModifiedInterceptorTests
     /// <summary>
     /// The <see cref="OnModifiedInterceptor.EntityFilter"/> property should
     /// return <see langword="true"/> upon property invocation with the
-    /// <see cref="EntityEntry"/> object passed in, with it's entity of type
+    /// <see cref="EntityEntry"/> object passed in, with its entity of type
     /// <see cref="IDomainObject"/> and state equal to <see cref="EntityState.Modified"/>.
     /// </summary>
     [Fact]
@@ -119,7 +119,7 @@ public sealed partial class OnModifiedInterceptorTests
     /// <summary>
     /// The <see cref="OnModifiedInterceptor.EntityFilter"/> property should
     /// return <see langword="false"/> upon property invocation with the
-    /// <see cref="EntityEntry"/> object passed in, with it's entity of type not equal
+    /// <see cref="EntityEntry"/> object passed in, with its entity of type not equal
     /// <see cref="IDomainObject"/> and state equal to <see cref="EntityState.Modified"/>.
     /// </summary>
     [Fact]
@@ -138,7 +138,7 @@ public sealed partial class OnModifiedInterceptorTests
     /// <summary>
     /// The <see cref="OnModifiedInterceptor.EntityFilter"/> property should
     /// return <see langword="false"/> upon property invocation with the
-    /// <see cref="EntityEntry"/> object passed in, with it's entity of type
+    /// <see cref="EntityEntry"/> object passed in, with its entity of type
     /// <see cref="IDomainObject"/> and state not equal to <see cref="EntityState.Modified"/>.
     /// </summary>
     [Fact]

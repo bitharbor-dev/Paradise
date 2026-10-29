@@ -32,7 +32,7 @@ public sealed partial class IServiceCollectionExtensionsTests
     /// to the corresponding configuration section.
     /// </summary>
     /// <param name="configurationSectionPath">
-    /// A semicolon ':' delimited string representing
+    /// A colon ':' delimited string representing
     /// the sections path to the target options section.
     /// </param>
     /// <param name="stringValue">
@@ -149,7 +149,7 @@ public sealed partial class IServiceCollectionExtensionsTests
 
     /// <summary>
     /// The <see cref="IServiceCollectionExtensions.PostConfigure{TOptions}"/> method should
-    /// setup the post-configure action with the configured options instance and service provider.
+    /// set up the post-configure action with the configured options instance and service provider.
     /// </summary>
     [Fact]
     public void PostConfigure()
@@ -175,7 +175,7 @@ public sealed partial class IServiceCollectionExtensionsTests
 
     /// <summary>
     /// The <see cref="IServiceCollectionExtensions.PostConfigure{TOptions}"/> method should
-    /// only setup the post-configure action for the options with the specified name.
+    /// only set up the post-configure action for the options with the specified name.
     /// </summary>
     [Fact]
     public void PostConfigure_SkipsNonEqualName()

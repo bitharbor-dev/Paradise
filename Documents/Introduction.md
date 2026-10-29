@@ -40,7 +40,7 @@ Here is the list of these files:
 - options.Staging.json
 
 The values are picked from the file, which `options.[environment_name].json` matches the current environment name.  
-It is the same mechanism as being used with the `appsettings.json` files by default.
+It is the same mechanism as the one used with the `appsettings.json` files by default.
 
 **Each file has a section called `SmtpOptions`, for the application to be able to run - this section must contain valid values.**
 
@@ -80,9 +80,9 @@ A single database is being used to persist the application data.
 
 To create a new migration open the terminal in `DataAccess` project directory and run migration creation command with the following parameters:
 
-| Property name                    | Description                                                | Value                                                                                                                                |
-| -------------------------------- | ---------------------------------------------------------- | --------------------------------- |
-| `-o`                             | The directory use to output the files.                     | `"Database\Migrations"`           |
+| Property name                    | Description                                                 | Value                             |
+| -------------------------------- | ----------------------------------------------------------- | --------------------------------- |
+| `-o`                             | The directory used to output the files.                     | `"Database\Migrations"`           |
 
 **Complete example of the command:**
 

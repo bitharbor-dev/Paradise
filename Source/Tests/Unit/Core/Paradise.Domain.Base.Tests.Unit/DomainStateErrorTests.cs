@@ -72,7 +72,7 @@ public sealed class DomainStateErrorTests
     /// <summary>
     /// The <see cref="DomainStateError"/> message property should
     /// return the properly formatted value, containing the type of the entity
-    /// whish is in invalid state, the name of the entity's property which is invalid,
+    /// which is in an invalid state, the name of the entity's property which is invalid,
     /// value of that property and additional information (if provided).
     /// </summary>
     /// <param name="input">

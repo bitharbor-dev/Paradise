@@ -33,7 +33,7 @@ public sealed partial class IServiceCollectionExtensionsTests
         /// the current <see cref="Options"/> instance.
         /// </summary>
         /// <param name="configurationSectionPath">
-        /// A semicolon ':' delimited string representing
+        /// A colon ':' delimited string representing
         /// the sections path to the target options section.
         /// </param>
         /// <returns>

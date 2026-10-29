@@ -49,7 +49,7 @@ public sealed class ResultBaseTests
 
     /// <summary>
     /// The <see cref="ResultBase(OperationStatus, ErrorCode, object[])"/> constructor should
-    /// initialize a non empty result with the specified status
+    /// initialize a non-empty result with the specified status
     /// containing one <see cref="ApplicationError"/> generated
     /// from the specified <see cref="ErrorCode"/>.
     /// </summary>
@@ -73,7 +73,7 @@ public sealed class ResultBaseTests
 
     /// <summary>
     /// The <see cref="ResultBase(OperationStatus, ErrorCode, object[])"/> constructor should
-    /// initialize a non empty result with the specified status
+    /// initialize a non-empty result with the specified status
     /// containing the provided list of errors.
     /// </summary>
     [Fact]

@@ -76,7 +76,7 @@ internal static class RoleHandlers
     }
 
     /// <summary>
-    /// Gets the list of application roles, which belongs
+    /// Gets the list of application roles, which belong
     /// to the user with the given <paramref name="id"/>.
     /// </summary>
     /// <param name="service">

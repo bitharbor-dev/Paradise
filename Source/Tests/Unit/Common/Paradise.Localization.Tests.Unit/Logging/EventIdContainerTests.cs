@@ -11,7 +11,7 @@ public sealed class EventIdContainerTests
     #region Public methods
     /// <summary>
     /// The <see cref="EventIdContainer.AddedSeedItem"/> property should
-    /// return the <see cref="LoggedEvent"/> with the event ID set to <c>52000</c>
+    /// return the <see cref="LoggedEvent"/> with the event Id set to <c>52000</c>
     /// and logging level <see cref="LogLevel.Information"/>.
     /// </summary>
     [Fact]
@@ -31,7 +31,7 @@ public sealed class EventIdContainerTests
 
     /// <summary>
     /// The <see cref="EventIdContainer.DatabaseSeedFailure"/> property should
-    /// return the <see cref="LoggedEvent"/> with the event ID set to <c>55001</c>
+    /// return the <see cref="LoggedEvent"/> with the event Id set to <c>55001</c>
     /// and logging level <see cref="LogLevel.Critical"/>.
     /// </summary>
     [Fact]
@@ -51,7 +51,7 @@ public sealed class EventIdContainerTests
 
     /// <summary>
     /// The <see cref="EventIdContainer.IdentityFailure"/> property should
-    /// return the <see cref="LoggedEvent"/> with the event ID set to <c>55002</c>
+    /// return the <see cref="LoggedEvent"/> with the event Id set to <c>55002</c>
     /// and logging level <see cref="LogLevel.Critical"/>.
     /// </summary>
     [Fact]
@@ -71,7 +71,7 @@ public sealed class EventIdContainerTests
 
     /// <summary>
     /// The <see cref="EventIdContainer.UnhandledExceptionOccurred"/> property should
-    /// return the <see cref="LoggedEvent"/> with the event ID set to <c>55000</c>
+    /// return the <see cref="LoggedEvent"/> with the event Id set to <c>55000</c>
     /// and logging level <see cref="LogLevel.Critical"/>.
     /// </summary>
     [Fact]
@@ -91,7 +91,7 @@ public sealed class EventIdContainerTests
 
     /// <summary>
     /// The <see cref="EventIdContainer.UpdatedSeedItem"/> property should
-    /// return the <see cref="LoggedEvent"/> with the event ID set to <c>52001</c>
+    /// return the <see cref="LoggedEvent"/> with the event Id set to <c>52001</c>
     /// and logging level <see cref="LogLevel.Information"/>.
     /// </summary>
     [Fact]

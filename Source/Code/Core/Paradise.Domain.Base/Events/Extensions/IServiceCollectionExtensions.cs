@@ -23,7 +23,7 @@ public static class IServiceCollectionExtensions
     /// Registers a singleton implementation of <see cref="IDomainEventDispatcher"/>.
     /// </item>
     /// <item>
-    /// Registers a singleton implementations of
+    /// Registers singleton implementations of
     /// <see cref="IDomainEventSink"/> and <see cref="IDomainEventSource"/>.
     /// </item>
     /// <item>

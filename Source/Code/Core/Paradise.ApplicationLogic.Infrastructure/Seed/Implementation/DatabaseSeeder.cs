@@ -262,7 +262,7 @@ internal sealed class DatabaseSeeder(ILogger<DatabaseSeeder> logger,
     /// <paramref name="model"/>.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="SeedEmailTemplateModel"/> which data to be used to
+    /// The <see cref="SeedEmailTemplateModel"/> whose data is used to
     /// update the email template.
     /// </param>
     /// <param name="cancellationToken">
@@ -293,7 +293,7 @@ internal sealed class DatabaseSeeder(ILogger<DatabaseSeeder> logger,
             // Status "Success" means that changes
             // were applied to the template.
             // If no changes were applied -
-            // status equals to "Received".
+            // status equals "Received".
             if (result.Status is Success)
                 logger.LogUpdatedSeedItem<EmailTemplate>(model.TemplateName);
 
@@ -335,7 +335,7 @@ internal sealed class DatabaseSeeder(ILogger<DatabaseSeeder> logger,
     /// the application default roles into a single sequence.
     /// </summary>
     /// <param name="model">
-    /// The <see cref="SeedUserModel"/> which roles to be merged.
+    /// The <see cref="SeedUserModel"/> whose roles are to be merged.
     /// </param>
     /// <returns>
     /// The sequence of the given <paramref name="model"/> roles

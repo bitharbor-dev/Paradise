@@ -168,7 +168,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var roles = GetUserRoles();
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetUserRefreshTokenServiceCreateAsync(new(refreshToken, Success));
             SetUserServiceGetUserClaimsAsync(new(claims, Success));
             SetRoleServiceGetUserRolesAsync(new(roles, Success));
@@ -209,7 +209,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var roles = GetUserRoles();
 
             SetUserServiceGetByPhoneNumberAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetUserRefreshTokenServiceCreateAsync(new(refreshToken, Success));
             SetUserServiceGetUserClaimsAsync(new(claims, Success));
             SetRoleServiceGetUserRolesAsync(new(roles, Success));
@@ -250,7 +250,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var roles = GetUserRoles();
 
             SetUserServiceGetByUserNameAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetUserRefreshTokenServiceCreateAsync(new(refreshToken, Success));
             SetUserServiceGetUserClaimsAsync(new(claims, Success));
             SetRoleServiceGetUserRolesAsync(new(roles, Success));
@@ -290,7 +290,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var user = GetUser(emailAddress: emailAddress);
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Unauthorized, UserNotFoundOrPasswordMismatch));
+            SetUserServiceCheckPasswordAsync(new(Unauthorized, UserNotFoundOrPasswordMismatch));
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
                                isTwoFactorEnabled: true);
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetDataProtectorGenerateRandomDigitCode(DefaultRandomDigitCode);
             SetDataProtectorProtect(twoFactorToken);
         }
@@ -335,7 +335,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var user = GetUser(emailAddress: emailAddress, isEmailAddressConfirmed: false);
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var user = GetUser(emailAddress: emailAddress);
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetUserRefreshTokenServiceCreateAsync(new(null, Failure));
         }
 
@@ -371,7 +371,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var refreshToken = GetUserRefreshToken(user.Id);
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetUserRefreshTokenServiceCreateAsync(new(refreshToken, Success));
             SetUserServiceGetUserClaimsAsync(new(null, Failure));
         }
@@ -392,7 +392,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
             var claims = GetUserClaims(user.Id);
 
             SetUserServiceGetByEmailAddressAsync(new(user, Success));
-            SetUserSerivceCheckPasswordAsync(new(Success));
+            SetUserServiceCheckPasswordAsync(new(Success));
             SetUserRefreshTokenServiceCreateAsync(new(refreshToken, Success));
             SetUserServiceGetUserClaimsAsync(new(claims, Success));
             SetRoleServiceGetUserRolesAsync(new(null, Failure));
@@ -1215,7 +1215,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
         /// <param name="result">
         /// <see cref="IUserService.CheckPasswordAsync"/> result.
         /// </param>
-        private void SetUserSerivceCheckPasswordAsync(Result result)
+        private void SetUserServiceCheckPasswordAsync(Result result)
             => _userService.CheckPasswordAsyncResult = () => Task.FromResult(result);
 
         /// <summary>
@@ -1241,7 +1241,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
         /// <summary>
         /// Intercepts the internal <see cref="IUserRefreshTokenService.DeactivateAsync"/>
         /// method call and makes it set the <see cref="LogoutContext.DatabaseCleared"/>
-        /// vale to <see langword="true"/> for proper logout activities tracking.
+        /// value to <see langword="true"/> for proper logout activities tracking.
         /// </summary>
         /// <param name="context">
         /// <see cref="LogoutContext"/> instance used to share logout activities state.
@@ -1261,7 +1261,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
         /// <summary>
         /// Intercepts the internal <see cref="IUserRefreshTokenService.DeactivateAllAsync"/>
         /// method call and makes it set the <see cref="LogoutContext.DatabaseCleared"/>
-        /// vale to <see langword="true"/> for proper logout activities tracking.
+        /// value to <see langword="true"/> for proper logout activities tracking.
         /// </summary>
         /// <param name="context">
         /// <see cref="LogoutContext"/> instance used to share logout activities state.
@@ -1373,7 +1373,7 @@ public sealed partial class AuthenticationServiceTests : IDisposable
         /// <summary>
         /// Intercepts the internal <see cref="IRefreshTokenCache.RevokeAsync"/>
         /// method call and makes it set the <see cref="LogoutContext.CacheCleared"/>
-        /// vale to <see langword="true"/> for proper logout activities tracking.
+        /// value to <see langword="true"/> for proper logout activities tracking.
         /// </summary>
         /// <param name="context">
         /// <see cref="LogoutContext"/> instance used to share logout activities state.

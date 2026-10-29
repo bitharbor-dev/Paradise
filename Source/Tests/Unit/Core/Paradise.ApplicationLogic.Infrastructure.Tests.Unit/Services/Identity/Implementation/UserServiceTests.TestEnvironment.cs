@@ -117,13 +117,13 @@ public sealed partial class UserServiceTests : IDisposable
 
         /// <summary>
         /// An accessor to the <see cref="Microsoft.AspNetCore.Identity.IdentityOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public IdentityOptions IdentityOptions { get; }
 
         /// <summary>
         /// An accessor to the <see cref="Options.Models.ApplicationOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public ApplicationOptions ApplicationOptions
             => _applicationOptions.Value;
@@ -345,14 +345,14 @@ public sealed partial class UserServiceTests : IDisposable
             => _userManager.Users.Single(user => user.Id == id).DeletionRequestSubmitted;
 
         /// <summary>
-        /// Gets the flag indicating if two factor authentication is enabled
+        /// Gets the flag indicating if two-factor authentication is enabled
         /// for the user with the given <paramref name="id"/>.
         /// </summary>
         /// <param name="id">
         /// Target user Id.
         /// </param>
         /// <returns>
-        /// The flag indicating if two factor authentication is enabled
+        /// The flag indicating if two-factor authentication is enabled
         /// for the user with the given <paramref name="id"/>.
         /// </returns>
         public bool GetTwoFactorEnabled(Guid id)

@@ -13,7 +13,7 @@ internal interface IEmailSender
     /// </summary>
     /// <param name="model">
     /// The <see cref="EmailModel"/>
-    /// which data to be used to send an email message.
+    /// whose data is used to send an email message.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe

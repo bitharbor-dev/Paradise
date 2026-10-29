@@ -54,7 +54,7 @@ public interface IUserRefreshTokenService
     /// The Id of the user who owns the refresh token.
     /// </param>
     /// <param name="id">
-    /// The Id of the refresh token deactivate.
+    /// The Id of the refresh token to deactivate.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe

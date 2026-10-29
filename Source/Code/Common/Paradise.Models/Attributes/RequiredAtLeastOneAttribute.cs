@@ -60,7 +60,7 @@ public sealed class RequiredAtLeastOneAttribute(bool restrictEmptyOrWhitespaceSt
     /// The value to be checked.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the given equals <see langword="null"/>
+    /// <see langword="true"/> if the given value equals <see langword="null"/>
     /// or <see cref="string.Empty"/>, otherwise - <see langword="false"/>.
     /// </returns>
     private bool IsValueNullOrEmptyString(object? value)
@@ -80,7 +80,7 @@ public sealed class RequiredAtLeastOneAttribute(bool restrictEmptyOrWhitespaceSt
     /// </param>
     /// <returns>
     /// The values of the <paramref name="object"/> properties
-    /// which names match the given <paramref name="properties"/>.
+    /// whose names match the given <paramref name="properties"/>.
     /// </returns>
     private static IEnumerable<object?> GetPropertyValues(object @object, IEnumerable<string> properties)
     {

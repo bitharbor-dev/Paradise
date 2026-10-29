@@ -144,7 +144,7 @@
     <comment>Pass the user-name that is in use as an argument.</comment>
   </data>
 	<data name="EmailAddressNotMatchConfirmation" xml:space="preserve">
-    <value>The email address '{0}' does not match it's confirmation - '{1}'.</value>
+    <value>The email address '{0}' does not match its confirmation - '{1}'.</value>
     <comment>Pass the email address as the first argument and its confirmation value as the second argument.</comment>
   </data>
 	<data name="InvalidEmailAddress" xml:space="preserve">
@@ -196,7 +196,7 @@
     <value>Missing password.</value>
   </data>
 	<data name="PasswordNotMatchConfirmation" xml:space="preserve">
-    <value>The password value does not match it's confirmation value.</value>
+    <value>The password value does not match its confirmation value.</value>
   </data>
 	<data name="RoleIdNotFound" xml:space="preserve">
     <value>Role with ID '{0}' does not exist.</value>

@@ -33,10 +33,10 @@ public sealed class IdentityBuilderExtensionsTests
 
         // Assert
         using var scope = provider.CreateScope();
-        var scopedProvier = scope.ServiceProvider;
+        var scopedProvider = scope.ServiceProvider;
 
-        Assert.NotNull(scopedProvier.GetService<Identity.IUserStore<User>>());
-        Assert.NotNull(scopedProvier.GetService<Identity.IRoleStore<Role>>());
+        Assert.NotNull(scopedProvider.GetService<Identity.IUserStore<User>>());
+        Assert.NotNull(scopedProvider.GetService<Identity.IRoleStore<Role>>());
     }
 
     /// <summary>

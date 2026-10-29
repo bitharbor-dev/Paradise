@@ -93,7 +93,7 @@ public sealed partial class CommunicationClientTests : IDisposable
         #region Properties
         /// <summary>
         /// An accessor to the <see cref="SmtpOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public SmtpOptions Options { get; }
 

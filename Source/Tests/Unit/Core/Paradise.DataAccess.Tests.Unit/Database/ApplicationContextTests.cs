@@ -47,7 +47,7 @@ public sealed partial class ApplicationContextTests
     /// <summary>
     /// The <see cref="ApplicationContext.GetQueryable"/> method should
     /// return the <see cref="IQueryable{T}"/> instance representing
-    /// the queryable set of the entities which type was passed as generic parameter.
+    /// the queryable set of the entities whose type was passed as generic parameter.
     /// </summary>
     [Fact]
     public void GetQueryable()

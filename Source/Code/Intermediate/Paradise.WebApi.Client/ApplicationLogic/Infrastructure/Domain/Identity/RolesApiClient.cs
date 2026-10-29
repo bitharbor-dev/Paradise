@@ -9,7 +9,7 @@ using static Paradise.Primitives.Web.RoleRoutes;
 namespace Paradise.WebApi.Client.ApplicationLogic.Infrastructure.Domain.Identity;
 
 /// <summary>
-/// Contains all web API requests to the RolesController.
+/// Contains all web API requests to the roles endpoints.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="RolesApiClient"/> class.
@@ -97,7 +97,7 @@ public sealed class RolesApiClient(IOptionsMonitor<JsonSerializerOptions> jsonSe
     }
 
     /// <summary>
-    /// Gets the list of application roles, which belongs
+    /// Gets the list of application roles, which belong
     /// to the user with the given <paramref name="userId"/>,
     /// or the current user if no value was provided.
     /// </summary>

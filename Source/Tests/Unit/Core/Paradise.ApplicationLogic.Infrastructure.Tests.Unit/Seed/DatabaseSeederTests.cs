@@ -31,7 +31,7 @@ public sealed partial class DatabaseSeederTests
     #region Public methods
     /// <summary>
     /// The <see cref="DatabaseSeeder.EnsureStorageAvailableAsync"/> method should
-    /// setup the persistence storage so it will become available for further operations.
+    /// set up the persistence storage so it will become available for further operations.
     /// </summary>
     [Fact]
     public async Task EnsureStorageAvailableAsync()

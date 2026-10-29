@@ -105,7 +105,7 @@ public sealed partial class SendEmailAddressConfirmationLinkTests
 
         /// <summary>
         /// An accessor to the <see cref="Options.Models.ApplicationOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public ApplicationOptions ApplicationOptions { get; }
 

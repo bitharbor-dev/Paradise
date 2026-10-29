@@ -145,7 +145,7 @@ public sealed class EmailTemplate(string templateName, CultureInfo? culture, str
     }
 
     /// <summary>
-    /// Preforms the partial update of the current <see cref="EmailTemplate"/> instance
+    /// Performs the partial update of the current <see cref="EmailTemplate"/> instance
     /// using the 'not-null' data from the input parameters.
     /// </summary>
     /// <param name="isBodyHtml">

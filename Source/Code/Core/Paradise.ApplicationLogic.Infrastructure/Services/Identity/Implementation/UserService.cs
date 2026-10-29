@@ -208,7 +208,7 @@ internal sealed class UserService(ILogger<UserService> logger,
         if (user is null)
             return new(Missing, UserIdNotFound, id);
 
-        // Step 1: Check if the used is locked out.
+        // Step 1: Check if the user is locked out.
         var userLockedOut = await userManager
             .IsLockedOutAsync(user)
             .ConfigureAwait(false);
@@ -359,12 +359,12 @@ internal sealed class UserService(ILogger<UserService> logger,
         if (user is null)
             return new(Missing, UserIdNotFound, id);
 
-        var chageEmailAddressToken = await userManager.GenerateChangeEmailTokenAsync(user, model.EmailAddress)
+        var changeEmailAddressToken = await userManager.GenerateChangeEmailTokenAsync(user, model.EmailAddress)
             .ConfigureAwait(false);
 
         var resetRequestedEvent = new EmailAddressResetRequestedEvent(timeProvider.GetUtcNow(),
                                                                       user.UserName,
-                                                                      chageEmailAddressToken,
+                                                                      changeEmailAddressToken,
                                                                       user.Email,
                                                                       model.EmailAddress,
                                                                       CultureInfo.CurrentCulture);
@@ -459,12 +459,12 @@ internal sealed class UserService(ILogger<UserService> logger,
             user.UserName = model.UserName;
         }
 
-        var upadteResult = await userManager.UpdateAsync(user)
+        var updateResult = await userManager.UpdateAsync(user)
             .ConfigureAwait(false);
 
-        return upadteResult.Succeeded
+        return updateResult.Succeeded
             ? new(user.ToModel(), Success)
-            : upadteResult.GetResult<UserModel>();
+            : updateResult.GetResult<UserModel>();
     }
 
     /// <inheritdoc/>
@@ -569,7 +569,7 @@ internal sealed class UserService(ILogger<UserService> logger,
     /// </summary>
     /// <param name="model">
     /// The <see cref="UserRegistrationModel"/>
-    /// which data to be used to register a new user.
+    /// whose data is used to register a new user.
     /// </param>
     /// <returns>
     /// A <see cref="Result"/> instance containing errors data if any occurs.

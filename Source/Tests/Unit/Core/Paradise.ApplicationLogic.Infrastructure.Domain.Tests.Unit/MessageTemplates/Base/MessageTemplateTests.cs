@@ -66,7 +66,7 @@ public sealed class MessageTemplateTests
 
     /// <summary>
     /// The <see cref="MessageTemplate.GetFormattedText"/> method should
-    /// return a well formatted email subject if the
+    /// return a well-formatted email subject if the
     /// number of placeholders in <see cref="MessageTemplate.TemplateText"/> is
     /// equal to <see cref="MessageTemplate.PlaceholdersNumber"/> and
     /// the number of input values matches it as well.
@@ -156,7 +156,7 @@ public sealed class MessageTemplateTests
     /// The <see cref="MessageTemplate.GetFormattedText"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="MessageTemplate.PlaceholderName"/> is <see langword="null"/>,
-    /// <see cref="MessageTemplate.PlaceholdersNumber"/> equals to 0,
+    /// <see cref="MessageTemplate.PlaceholdersNumber"/> equals 0,
     /// but input parameters number is not equal to 0.
     /// </summary>
     [Fact]
@@ -180,7 +180,7 @@ public sealed class MessageTemplateTests
     /// The <see cref="MessageTemplate.GetFormattedText"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="MessageTemplate.PlaceholderName"/> is <see langword="null"/> and
-    /// <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal to 0.
+    /// <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal 0.
     /// </summary>
     [Fact]
     public void GetFormattedText_ThrowsOnNullPlaceholderNameWithNonZeroPlaceholdersNumber()
@@ -203,7 +203,7 @@ public sealed class MessageTemplateTests
     /// The <see cref="MessageTemplate.ValidateState"/> method should
     /// not throw any exception for the <see cref="MessageTemplate"/> instance
     /// which <see cref="MessageTemplate.PlaceholderName"/> is not <see langword="null"/>
-    /// and <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal to 0.
+    /// and <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal 0.
     /// </summary>
     /// <param name="templateText">
     /// Template text.
@@ -233,7 +233,7 @@ public sealed class MessageTemplateTests
     /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="MessageTemplate"/> instance
     /// which <see cref="MessageTemplate.PlaceholderName"/> is <see langword="null"/>
-    /// but <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal to 0.
+    /// but <see cref="MessageTemplate.PlaceholdersNumber"/> does not equal 0.
     /// </summary>
     [Fact]
     public void ValidateState_ThrowsOnInvalidTemplateTextPlaceholders()

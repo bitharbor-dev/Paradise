@@ -102,14 +102,14 @@ public sealed partial class DomainEventDispatcherTests
 
     /// <summary>
     /// The <see cref="DomainEventDispatcher.StartDispatchingAsync"/> method should
-    /// retry to invoke a listener on a particular event after previous attempt failed.
+    /// retry to invoke a listener on a particular event after a previous attempt failed.
     /// </summary>
     [Fact]
     public async Task StartDispatchingAsync_RetriesAfterFailure()
     {
         // Arrange
         ushort retries = 3;
-        var totalProcessings = retries + 1;
+        var totalProcessingCount = retries + 1;
 
         Test.AddPrimaryDomainEventListener(configureOptions: options =>
         {
@@ -133,7 +133,7 @@ public sealed partial class DomainEventDispatcherTests
         await dispatcher.WaitForCompletionAsync();
 
         // Assert
-        Assert.Equal(totalProcessings, domainEvent.Invocations);
+        Assert.Equal(totalProcessingCount, domainEvent.Invocations);
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public sealed partial class DomainEventDispatcherTests
     /// stop dispatching the events when input cancellation token signals operation cancellation.
     /// </summary>
     /// <param name="isGracefulCancellation">
-    /// Indicates whetter the cancellation should happen before
+    /// Indicates whether the cancellation should happen before
     /// looping over the queued events.
     /// </param>
     /// <param name="expectedInvocations">

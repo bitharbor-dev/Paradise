@@ -95,7 +95,7 @@ public sealed class ResultBaseExtensionsTests
 
     /// <summary>
     /// The <see cref="ResultBaseExtensions.AsHttpResultAsync"/> method should
-    /// return a <see cref="ProblemHttpResult"/> for a request resulted in an error.
+    /// return a <see cref="ProblemHttpResult"/> for a request that resulted in an error.
     /// </summary>
     [Theory, MemberData(nameof(AsHttpResultAsync_ReturnsProblem_MemberData))]
     public async Task AsHttpResultAsync_ReturnsProblem(OperationStatus status)
@@ -201,7 +201,7 @@ public sealed class ResultBaseExtensionsTests
 
     /// <summary>
     /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}"/> method should
-    /// return a <see cref="ProblemHttpResult"/> for a request resulted in an error.
+    /// return a <see cref="ProblemHttpResult"/> for a request that resulted in an error.
     /// </summary>
     [Theory, MemberData(nameof(AsHttpResultAsyncGeneric_ReturnsProblem_MemberData))]
     public async Task AsHttpResultAsyncGeneric_ReturnsProblem(OperationStatus status)

@@ -154,10 +154,10 @@
     <value>Invalid SMTP configuration.</value>
   </data>
   <data name="MessageTemplateFormattableTextIsInvalid" xml:space="preserve">
-    <value>Message template formattable text property is invalid. Text placeholder is 'null', but the text placeholders' number is greater than 0, which makes it impossible to perform text formatting.</value>
+    <value>Message template formattable text property is invalid. Text placeholder is 'null', but the number of text placeholders is greater than 0, which makes it impossible to perform text formatting.</value>
   </data>
   <data name="MessageTemplateInvalidParametersNumber" xml:space="preserve">
-    <value>Invalid parameters number.</value>
+    <value>Invalid number of parameters.</value>
   </data>
   <data name="MessageTemplateInvalidPlaceholdersNumber" xml:space="preserve">
     <value>Message template formattable text property does not contain the specified number of placeholders. Expected: {0}, but was: {1}.</value>

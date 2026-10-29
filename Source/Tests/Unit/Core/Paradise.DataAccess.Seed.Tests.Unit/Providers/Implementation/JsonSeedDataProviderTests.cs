@@ -7,7 +7,7 @@ using Paradise.DataAccess.Seed.Providers.Implementation;
 namespace Paradise.DataAccess.Seed.Tests.Unit.Providers.Implementation;
 
 /// <summary>
-/// <see cref="JsonSeedDataProvider"/> test class..
+/// <see cref="JsonSeedDataProvider"/> test class.
 /// </summary>
 public sealed partial class JsonSeedDataProviderTests
 {

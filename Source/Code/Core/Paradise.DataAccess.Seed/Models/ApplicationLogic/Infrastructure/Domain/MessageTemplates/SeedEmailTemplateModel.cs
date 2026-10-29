@@ -181,12 +181,12 @@ public sealed partial class SeedEmailTemplateModel
 
     #region Private methods
     /// <summary>
-    /// Reads the HTML file by it's <paramref name="relativeHtmlPath"/>
-    /// and returns it's minified content.
+    /// Reads the HTML file by its <paramref name="relativeHtmlPath"/>
+    /// and returns its minified content.
     /// </summary>
     /// <param name="relativeHtmlPath">
     /// Relative HTML file path.
-    /// Would be perpended by <see cref="AppContext.BaseDirectory"/>.
+    /// Would be prepended by <see cref="AppContext.BaseDirectory"/>.
     /// </param>
     /// <returns>
     /// Minified HTML string.
@@ -220,7 +220,7 @@ public sealed partial class SeedEmailTemplateModel
     /// </exception>
     private static string GetMinifiedHtml(string relativeHtmlPath)
     {
-        // Since the app can be ran on different OS,
+        // Since the app can be run on different OS,
         // we need to replace all directory separator occurrences, whatever they are,
         // with the default ones for the current environment.
         var preparedPath = relativeHtmlPath.SanitizePathSeparators();

@@ -22,7 +22,7 @@ public sealed class User : IdentityUser<Guid>, IEntity, IEquatable<User>
     /// User-name.
     /// </param>
     /// <remarks>
-    /// User lock out is enabled by default.
+    /// User lockout is enabled by default.
     /// </remarks>
     public User(string email, string userName) : base(userName)
         => Email = email;

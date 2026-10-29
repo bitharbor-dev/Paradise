@@ -112,11 +112,11 @@ public sealed class PagedListQuery<TEntity> where TEntity : class, IDomainObject
 
     #region Internal methods
     /// <summary>
-    /// Applies current query parameters the given <paramref name="queryable"/>.
+    /// Applies current query parameters to the given <paramref name="queryable"/>.
     /// </summary>
     /// <param name="queryable">
     /// A <see cref="IQueryable{T}"/> of <typeparamref name="TEntity"/>
-    /// to winch the query parameters to be applied.
+    /// to which the query parameters to be applied.
     /// </param>
     internal void Apply(ref IQueryable<TEntity> queryable)
     {

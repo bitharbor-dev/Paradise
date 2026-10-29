@@ -39,7 +39,7 @@ public sealed class BadHttpRequestExceptionHandlerTests
 
     /// <summary>
     /// An accessor to the <see cref="IProblemDetailsService"/> instance
-    /// used by the test target or it's dependencies.
+    /// used by the test target or its dependencies.
     /// </summary>
     public FakeProblemDetailsService ProblemDetailsService { get; }
 

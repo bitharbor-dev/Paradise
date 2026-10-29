@@ -8,7 +8,7 @@ using static Paradise.Primitives.Web.AuthenticationRoutes;
 namespace Paradise.WebApi.Client.ApplicationLogic.Infrastructure;
 
 /// <summary>
-/// Contains all web API requests to the EmailTemplatesController.
+/// Contains all web API requests to the authentication endpoints.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="AuthenticationApiClient"/> class.

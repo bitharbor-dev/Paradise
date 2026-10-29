@@ -7,7 +7,7 @@ public interface IDomainEventSink
 {
     #region Methods
     /// <summary>
-    /// Pushes a <see cref="IDomainEvent"/> for later processing.
+    /// Pushes an <see cref="IDomainEvent"/> for later processing.
     /// </summary>
     /// <param name="domainEvent">
     /// The <see cref="IDomainEvent"/> to push.

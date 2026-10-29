@@ -191,7 +191,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -237,7 +237,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -270,7 +270,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -310,7 +310,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedList"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -355,7 +355,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -401,7 +401,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -434,7 +434,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>
@@ -474,7 +474,7 @@ public abstract class ReadOnlyRepositoryTests<TRepository, TEntity>
     /// <summary>
     /// The <see cref="ReadOnlyRepository{TEntity}.GetPagedListAsync"/> method should
     /// return the <see cref="PagedListQueryResult{TEntity}"/>
-    /// containing the total number of entities which satisfies
+    /// containing the total number of entities which satisfy
     /// conditions given in the input <see cref="PagedListQuery{TEntity}"/>
     /// and the list of entities representing a particular "page".
     /// </summary>

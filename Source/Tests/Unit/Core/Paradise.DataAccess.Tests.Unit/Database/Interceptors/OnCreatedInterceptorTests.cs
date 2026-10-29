@@ -100,7 +100,7 @@ public sealed partial class OnCreatedInterceptorTests
     /// <summary>
     /// The <see cref="OnCreatedInterceptor.EntityFilter"/> property should
     /// return <see langword="true"/> upon property invocation with the
-    /// <see cref="EntityEntry"/> object passed in, with it's entity type equal to
+    /// <see cref="EntityEntry"/> object passed in, with its entity type equal to
     /// <see cref="IDomainObject"/> and state equal to <see cref="EntityState.Added"/>.
     /// </summary>
     [Fact]
@@ -119,7 +119,7 @@ public sealed partial class OnCreatedInterceptorTests
     /// <summary>
     /// The <see cref="OnCreatedInterceptor.EntityFilter"/> property should
     /// return <see langword="false"/> upon property invocation with the
-    /// <see cref="EntityEntry"/> object passed in, with it's entity type not equal to
+    /// <see cref="EntityEntry"/> object passed in, with its entity type not equal to
     /// <see cref="IDomainObject"/> and state equal to <see cref="EntityState.Added"/>.
     /// </summary>
     [Fact]
@@ -138,7 +138,7 @@ public sealed partial class OnCreatedInterceptorTests
     /// <summary>
     /// The <see cref="OnCreatedInterceptor.EntityFilter"/> property should
     /// return <see langword="false"/> upon property invocation with the
-    /// <see cref="EntityEntry"/> object passed in, with it's entity type equal to
+    /// <see cref="EntityEntry"/> object passed in, with its entity type equal to
     /// <see cref="IDomainObject"/> and state not equal to <see cref="EntityState.Added"/>.
     /// </summary>
     [Fact]

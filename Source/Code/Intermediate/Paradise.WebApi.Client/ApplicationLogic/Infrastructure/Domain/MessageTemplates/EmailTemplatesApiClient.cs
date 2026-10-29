@@ -9,7 +9,7 @@ using static Paradise.Primitives.Web.ParameterNames;
 namespace Paradise.WebApi.Client.ApplicationLogic.Infrastructure.Domain.MessageTemplates;
 
 /// <summary>
-/// Contains all web API requests to the EmailTemplatesController.
+/// Contains all web API requests to the email templates endpoints.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="EmailTemplatesApiClient"/> class.

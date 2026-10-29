@@ -4,7 +4,7 @@ using EM = Paradise.Localization.ErrorHandling.ErrorMessages;
 namespace Paradise.Models;
 
 /// <summary>
-/// Contains error codes which describes all kinds of errors within the application
+/// Contains error codes which describe all kinds of errors within the application
 /// and provides access to the localized error descriptions.
 /// </summary>
 public enum ErrorCode
@@ -100,12 +100,12 @@ public enum ErrorCode
     [Display(ResourceType = typeof(EM), Name = nameof(EM.PasswordMissing))]
     PasswordMissing,
     /// <summary>
-    /// The password value does not match it's confirmation value.
+    /// The password value does not match its confirmation value.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.PasswordNotMatchConfirmation))]
     PasswordNotMatchConfirmation,
     /// <summary>
-    /// The email address '{0}' does not match it's confirmation - '{1}'.
+    /// The email address '{0}' does not match its confirmation - '{1}'.
     /// </summary>
     [Display(ResourceType = typeof(EM), Name = nameof(EM.EmailAddressNotMatchConfirmation))]
     EmailAddressNotMatchConfirmation,

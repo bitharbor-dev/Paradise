@@ -112,7 +112,7 @@ public sealed partial class UserRefreshTokenServiceTests
     /// The <see cref="UserRefreshTokenService.DeactivateAsync"/> method should
     /// fail to deactivate a refresh token
     /// when no refresh token with the specified Id exists
-    /// in the scope of the user with the specified user Id..
+    /// in the scope of the user with the specified user Id.
     [Fact]
     public async Task DeactivateAsync_FailsOnNonExistingToken()
     {

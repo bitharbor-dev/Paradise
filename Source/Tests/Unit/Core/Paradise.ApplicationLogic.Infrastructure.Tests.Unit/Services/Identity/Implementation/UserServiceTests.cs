@@ -455,7 +455,7 @@ public sealed partial class UserServiceTests
     /// <summary>
     /// The <see cref="UserService.RegisterAsync"/> method should
     /// fail to create a new user if the input
-    /// password does not match it's confirmation value.
+    /// password does not match its confirmation value.
     /// </summary>
     [Fact]
     public async Task RegisterAsync_FailsOnInvalidPasswordConfirmation()
@@ -1322,7 +1322,7 @@ public sealed partial class UserServiceTests
     /// <summary>
     /// The <see cref="UserService.ResetPasswordAsync"/> method should
     /// fail to reset the user's password if the input
-    /// password does not match it's confirmation value.
+    /// password does not match its confirmation value.
     /// </summary>
     [Fact]
     public async Task ResetPasswordAsync_FailsOnInvalidPasswordConfirmation()
@@ -1513,7 +1513,7 @@ public sealed partial class UserServiceTests
     /// <summary>
     /// The <see cref="UserService.CreateEmailAddressResetRequestAsync"/> method should
     /// fail to create an email address reset request if the input
-    /// email address does not match it's confirmation value.
+    /// email address does not match its confirmation value.
     /// </summary>
     [Fact]
     public async Task CreateEmailAddressResetRequestAsync_FailsOnInvalidEmailAddressConfirmation()
@@ -2072,7 +2072,7 @@ public sealed partial class UserServiceTests
     /// <summary>
     /// The <see cref="UserService.DeleteAsync"/> method should
     /// fail to delete a user
-    /// when the specified user does not pending deletion.
+    /// when the specified user is not pending deletion.
     /// </summary>
     [Fact]
     public async Task DeleteAsync_FailsOnUserNotPendingDeletion()

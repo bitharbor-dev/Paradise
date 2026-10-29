@@ -12,12 +12,12 @@ public enum TestErrorCode
     /// </summary>
     DefaultMember,
     /// <summary>
-    /// A member with it's display value set to a plain string.
+    /// A member with its display value set to a plain string.
     /// </summary>
     [Display(Name = "Test")]
     DisplayValueWithoutParametersMember,
     /// <summary>
-    /// A member with it's display value set to a format string.
+    /// A member with its display value set to a format string.
     /// </summary>
     [Display(Name = "Test {0}")]
     DisplayValueWithParametersMember

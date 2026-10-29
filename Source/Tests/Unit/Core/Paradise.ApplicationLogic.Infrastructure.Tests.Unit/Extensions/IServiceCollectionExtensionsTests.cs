@@ -221,7 +221,7 @@ public sealed partial class IServiceCollectionExtensionsTests
     /// <summary>
     /// The <see cref="IServiceCollectionExtensions.AddInfrastructure"/> method should
     /// configure the DI container to invoke the <see cref="ISmtpClient"/> factory which will
-    /// setup the resulting instance to send emails over the network.
+    /// set up the resulting instance to send emails over the network.
     /// </summary>
     [Fact]
     public void AddInfrastructure_SmtpClientFactory_ConfiguresNetworkSending()
@@ -243,7 +243,7 @@ public sealed partial class IServiceCollectionExtensionsTests
     /// <summary>
     /// The <see cref="IServiceCollectionExtensions.AddInfrastructure"/> method should
     /// configure the DI container to invoke the <see cref="ISmtpClient"/> factory which will
-    /// setup the resulting instance to store emails locally instead of sending over the network.
+    /// set up the resulting instance to store emails locally instead of sending over the network.
     /// </summary>
     [Fact]
     public void AddInfrastructure_SmtpClientFactory_ConfiguresLocalEmailStorage()

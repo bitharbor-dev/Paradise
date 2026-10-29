@@ -26,7 +26,7 @@ public sealed class SmtpOptions
     public NetworkCredential? Credentials { get; set; }
 
     /// <summary>
-    /// Specify whether the <see cref="SmtpClient"/>
+    /// Specifies whether the <see cref="SmtpClient"/>
     /// uses Secure Sockets Layer (SSL)
     /// to encrypt the connection.
     /// </summary>

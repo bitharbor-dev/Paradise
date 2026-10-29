@@ -39,7 +39,7 @@ public sealed class TestIdentityTokenEventListener(IServiceProvider serviceProvi
     /// for tests execution.
     /// </summary>
     /// <param name="identityToken">
-    /// The <see cref="IdentityToken"/> to protect and place withing the link.
+    /// The <see cref="IdentityToken"/> to protect and place within the link.
     /// </param>
     /// <param name="baseUrl">
     /// Base <see cref="Uri"/>.

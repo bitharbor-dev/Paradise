@@ -46,7 +46,7 @@ internal static class IQueryableExtensions
     /// </param>
     /// <returns>
     /// An <see cref="IQueryable{T}"/> that contains elements from the input sequence
-    /// whose properties with the given <paramref name="propertyNames"/> contains the given <paramref name="value"/>.
+    /// whose properties with the given <paramref name="propertyNames"/> contain the given <paramref name="value"/>.
     /// <para>
     /// Only <see cref="string"/> properties are supported. Filtering is case insensitive.
     /// </para>

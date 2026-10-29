@@ -42,9 +42,9 @@ internal sealed class AsymmetricSigningKeyProvider : IJwtSigningKeyProvider
         using var rsa = RSA.Create();
         rsa.ImportRSAPrivateKey(privateKey, out _);
 
-        var paramters = rsa.ExportParameters(true);
+        var parameters = rsa.ExportParameters(true);
 
-        _key = new(paramters)
+        _key = new(parameters)
         {
             KeyId = _options.KeyId
         };

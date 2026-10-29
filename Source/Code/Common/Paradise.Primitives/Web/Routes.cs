@@ -3,7 +3,7 @@
 namespace Paradise.Primitives.Web;
 
 /// <summary>
-/// Authentication API endpoints routs.
+/// Authentication API endpoints routes.
 /// </summary>
 public static class AuthenticationRoutes
 {

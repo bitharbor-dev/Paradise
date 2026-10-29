@@ -9,7 +9,7 @@ using static Paradise.Primitives.Web.UserRoutes;
 namespace Paradise.WebApi.Client.ApplicationLogic.Infrastructure.Domain.Identity;
 
 /// <summary>
-/// Contains all web API requests to the UsersController.
+/// Contains all web API requests to the users endpoints.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="UsersApiClient"/> class.

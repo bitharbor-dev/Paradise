@@ -35,9 +35,9 @@ public sealed class IDataProtectionBuilderExtensionsTests
 
         // Assert
         using var scope = provider.CreateScope();
-        var scopedProvier = scope.ServiceProvider;
+        var scopedProvider = scope.ServiceProvider;
 
-        var xmlRepository = scopedProvier.GetRequiredService<IOptions<KeyManagementOptions>>().Value.XmlRepository;
+        var xmlRepository = scopedProvider.GetRequiredService<IOptions<KeyManagementOptions>>().Value.XmlRepository;
 
         Assert.IsType<EntityFrameworkCoreXmlRepository<ApplicationContext>>(xmlRepository);
     }

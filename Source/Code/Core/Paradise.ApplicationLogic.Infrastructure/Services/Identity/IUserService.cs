@@ -153,7 +153,7 @@ public interface IUserService
     /// </summary>
     /// <remarks>
     /// This action also modifies the user's lockout state
-    /// depending on successful on unsuccessful password checks,
+    /// depending on successful or unsuccessful password checks,
     /// if lockout is enabled for the user.
     /// </remarks>
     /// <param name="id">

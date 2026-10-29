@@ -52,7 +52,7 @@
 	<PropertyGroup>
 		<BaseIntermediateOutputPath>$(SolutionDir)Build\.obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
 		<BaseOutputPath>$(SolutionDir)Build\.bin\$(MSBuildProjectName)</BaseOutputPath>
-		<PublishDir>$(SolutionDir)Build\.publish\$(MSBuildProjectName)\$(Configuration)\$(TargetPaltform)</PublishDir>
+		<PublishDir>$(SolutionDir)Build\.publish\$(MSBuildProjectName)\$(Configuration)\$(TargetPlatform)</PublishDir>
 	</PropertyGroup>
 
 </Project>

@@ -17,7 +17,7 @@ public sealed class UserRefreshTokensRepositoryTests()
     #region Public methods
     /// <summary>
     /// The <see cref="UserRefreshTokensRepository.GetUserTokensAsync"/> method should
-    /// return the list of refresh tokens which belong to user with the specified Id.
+    /// return the list of refresh tokens which belong to the user with the specified Id.
     /// </summary>
     [Fact]
     public async Task GetUserTokensAsync()

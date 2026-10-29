@@ -27,7 +27,7 @@ public sealed class IServiceCollectionExtensionsTests
     #region Public methods
     /// <summary>
     /// The <see cref="IServiceCollectionExtensions.AddDomainEventsDispatching"/> method should
-    /// register all domain event dispatching related service into DI container.
+    /// register all domain event dispatching related services into DI container.
     /// </summary>
     [Fact]
     public void AddDomainEventsDispatching()

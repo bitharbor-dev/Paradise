@@ -22,7 +22,7 @@ public sealed partial class SymmetricSigningKeyProviderTests
         #region Properties
         /// <summary>
         /// An accessor to the <see cref="SymmetricSigningKeyProviderOptions"/> instance
-        /// used by the test target or it's dependencies.
+        /// used by the test target or its dependencies.
         /// </summary>
         public SymmetricSigningKeyProviderOptions Options { get; } = new()
         {

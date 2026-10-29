@@ -27,7 +27,7 @@ public sealed class ClaimsPrincipalExtensionsTests
     /// <summary>
     /// The <see cref="ClaimsPrincipalExtensions.GetGuidClaim"/> method should
     /// return <see cref="Guid"/> value if
-    /// a claim with the specified type exists and it's value is a valid UUID string.
+    /// a claim with the specified type exists and its value is a valid UUID string.
     /// </summary>
     [Fact]
     public void GetGuidClaim()
@@ -66,7 +66,7 @@ public sealed class ClaimsPrincipalExtensionsTests
     /// <summary>
     /// The <see cref="ClaimsPrincipalExtensions.GetGuidClaim"/> method should
     /// return <see cref="Guid.Empty"/> if
-    /// a claim with the specified type exists and it's value
+    /// a claim with the specified type exists and its value
     /// is equal to <see cref="string.Empty"/> or whitespace-only.
     /// </summary>
     [Theory, MemberData(nameof(GetGuidClaim_ReturnsEmptyOnEmptyValue_MemberData))]

@@ -44,7 +44,7 @@ public sealed class EmailTemplateTests
     #region Public methods
     /// <summary>
     /// The <see cref="EmailTemplate.GetFormattedSubject"/> method should
-    /// return a well formatted email subject if the
+    /// return a well-formatted email subject if the
     /// number of placeholders in <see cref="EmailTemplate.Subject"/> is
     /// equal to <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> and
     /// the number of input values matches it as well.
@@ -56,7 +56,7 @@ public sealed class EmailTemplateTests
     /// Subject placeholder name to be replaced with values during the message formatting.
     /// </param>
     /// <param name="subjectPlaceholdersNumber">
-    /// The number subject of placeholders to be replaced with values during the message formatting.
+    /// The number of subject placeholders to be replaced with values during the message formatting.
     /// </param>
     /// <param name="parameters">
     /// <see cref="EmailTemplate.Subject"/> formatting values.
@@ -134,7 +134,7 @@ public sealed class EmailTemplateTests
     /// The <see cref="EmailTemplate.GetFormattedSubject"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="EmailTemplate.SubjectPlaceholderName"/> is <see langword="null"/>,
-    /// <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> equals to 0,
+    /// <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> equals 0,
     /// but input parameters number is not equal to 0.
     /// </summary>
     [Fact]
@@ -158,7 +158,7 @@ public sealed class EmailTemplateTests
     /// The <see cref="EmailTemplate.GetFormattedSubject"/> method should
     /// throw the <see cref="InvalidOperationException"/> if the
     /// <see cref="EmailTemplate.SubjectPlaceholderName"/> is <see langword="null"/> and
-    /// <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal to 0.
+    /// <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal 0.
     /// </summary>
     [Fact]
     public void GetFormattedSubject_ThrowsOnNullSubjectPlaceholderNameWithNonZeroPlaceholdersNumber()
@@ -214,7 +214,7 @@ public sealed class EmailTemplateTests
 
     /// <summary>
     /// The <see cref="EmailTemplate.Update"/> method should
-    /// return <see langword="true"/> the input
+    /// return <see langword="true"/> if the input
     /// parameters were different from current object's
     /// corresponding property values and they were updated.
     /// </summary>
@@ -264,7 +264,7 @@ public sealed class EmailTemplateTests
     /// The <see cref="EmailTemplate.ValidateState"/> method should
     /// not throw any exception for the <see cref="EmailTemplate"/> instance
     /// which <see cref="EmailTemplate.SubjectPlaceholderName"/> is not <see langword="null"/>
-    /// and <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal to 0.
+    /// and <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal 0.
     /// </summary>
     /// <param name="subject">
     /// Email subject.
@@ -294,7 +294,7 @@ public sealed class EmailTemplateTests
     /// throw the <see cref="InvalidOperationException"/> for the
     /// <see cref="EmailTemplate"/> instance
     /// which <see cref="EmailTemplate.SubjectPlaceholderName"/> is <see langword="null"/>
-    /// but <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal to 0.
+    /// but <see cref="EmailTemplate.SubjectPlaceholdersNumber"/> does not equal 0.
     /// </summary>
     [Fact]
     public void ValidateState_ThrowsOnInvalidSubjectPlaceholders()

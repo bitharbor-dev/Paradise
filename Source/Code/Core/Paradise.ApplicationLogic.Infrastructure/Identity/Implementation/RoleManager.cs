@@ -19,7 +19,7 @@ namespace Paradise.ApplicationLogic.Infrastructure.Identity.Implementation;
 /// The normalizer to use when normalizing role names to keys.
 /// </param>
 /// <param name="errors">
-/// The <see cref="IdentityErrorDescriber"/> used to provider error messages.
+/// The <see cref="IdentityErrorDescriber"/> used to provide error messages.
 /// </param>
 /// <param name="logger">
 /// The logger used to log messages, warnings and errors.

@@ -51,7 +51,7 @@ public sealed partial class DataProtectorTests
     #region Public methods
     /// <summary>
     /// The <see cref="DataProtector.Protect"/> method should
-    /// transform the input of any type by serializing it into json and
+    /// transform the input of any type by serializing it into JSON and
     /// running the string protection algorithm.
     /// </summary>
     /// <param name="wrapper">
@@ -119,7 +119,7 @@ public sealed partial class DataProtectorTests
 
     /// <summary>
     /// The <see cref="DataProtector.GenerateRandomDigitCode"/> method should
-    /// transform the input of any type by serializing it into json and
+    /// transform the input of any type by serializing it into JSON and
     /// running the string protection algorithm.
     /// </summary>
     /// <param name="length">

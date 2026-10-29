@@ -104,7 +104,7 @@ internal interface IAuthenticationService
         string accessToken, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Checks if the <paramref name="principal"/>s session is expired or revoked.
+    /// Checks if the <paramref name="principal"/>'s session is expired or revoked.
     /// </summary>
     /// <param name="principal">
     /// The <see cref="ClaimsPrincipal"/> to check.

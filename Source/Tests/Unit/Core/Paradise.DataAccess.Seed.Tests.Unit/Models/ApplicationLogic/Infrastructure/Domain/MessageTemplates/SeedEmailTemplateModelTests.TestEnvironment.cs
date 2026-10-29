@@ -48,7 +48,7 @@ public sealed partial class SeedEmailTemplateModelTests : IDisposable
         /// The full path of the temporary file that was created.
         /// </returns>
         /// <remarks>
-        /// The file name is derived from the current test's unique ID.
+        /// The file name is derived from the current test's unique Id.
         /// </remarks>
         public string WriteTemporaryFile(string content)
         {

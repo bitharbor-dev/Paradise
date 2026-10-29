@@ -35,7 +35,7 @@ namespace Paradise.ApplicationLogic.Infrastructure.Identity.Implementation;
 /// when generating index keys for users.
 /// </param>
 /// <param name="errors">
-/// The <see cref="IdentityErrorDescriber"/> used to provider error
+/// The <see cref="IdentityErrorDescriber"/> used to provide error
 /// messages.
 /// </param>
 /// <param name="services">

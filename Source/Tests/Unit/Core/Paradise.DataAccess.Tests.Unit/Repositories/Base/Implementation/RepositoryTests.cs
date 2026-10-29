@@ -305,7 +305,7 @@ public abstract class RepositoryTests<TRepository, TEntity> : ReadOnlyRepository
 
     /// <summary>
     /// The <see cref="Repository{TEntity}.RemoveRange"/> method should
-    /// mark the <typeparamref name="TEntity"/> instances which satisfies the specified condition as removed
+    /// mark the <typeparamref name="TEntity"/> instances which satisfy the specified condition as removed
     /// and discard them from persistence storage upon saving changes.
     /// </summary>
     [Fact]

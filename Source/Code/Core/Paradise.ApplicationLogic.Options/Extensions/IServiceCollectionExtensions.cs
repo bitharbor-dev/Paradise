@@ -27,7 +27,7 @@ public static class IServiceCollectionExtensions
     /// <typeparamref name="TOptions"/> configuration section.
     /// </param>
     /// <param name="configurationSectionPath">
-    /// A semicolon ':' delimited string representing
+    /// A colon ':' delimited string representing
     /// the sections path to the target options section.
     /// </param>
     /// <param name="postConfigure">

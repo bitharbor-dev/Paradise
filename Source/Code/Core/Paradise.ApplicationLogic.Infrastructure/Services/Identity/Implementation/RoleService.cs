@@ -205,7 +205,7 @@ internal sealed class RoleService(IRoleManager<Role> roleManager, IUserManager<U
     /// Gets the <see cref="Role"/> with the given <paramref name="name"/>.
     /// </summary>
     /// <param name="name">
-    /// The Name of the <see cref="Role"/> to be found.
+    /// The name of the <see cref="Role"/> to be found.
     /// </param>
     /// <param name="cancellationToken">
     /// A <see cref="CancellationToken"/> to observe
@@ -267,7 +267,7 @@ internal sealed class RoleService(IRoleManager<Role> roleManager, IUserManager<U
     /// </param>
     /// <returns>
     /// An <see cref="IEnumerable{T}"/> of <see cref="Role"/>,
-    /// which belongs to the given <paramref name="user"/>.
+    /// which belong to the given <paramref name="user"/>.
     /// </returns>
     private async Task<IEnumerable<Role>> GetUserRolesInternalAsync(User user, CancellationToken cancellationToken = default)
     {

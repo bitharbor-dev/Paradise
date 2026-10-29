@@ -133,7 +133,7 @@ public sealed class UserTests
     }
 
     /// <summary>
-    /// The <see cref="User.CancelDeletionRequest"/> should
+    /// The <see cref="User.CancelDeletionRequest"/> method should
     /// set the <see cref="User.DeletionRequestSubmitted"/> back to <see langword="null"/>.
     /// </summary>
     [Fact]

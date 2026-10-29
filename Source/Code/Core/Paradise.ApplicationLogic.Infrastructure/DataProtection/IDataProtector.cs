@@ -15,7 +15,7 @@ public interface IDataProtector
     /// Value type.
     /// </typeparam>
     /// <param name="value">
-    /// The <typeparamref name="T"/> to encrypted.
+    /// The <typeparamref name="T"/> to encrypt.
     /// </param>
     /// <returns>
     /// Encrypted token that contains the given <paramref name="value"/>.
@@ -42,14 +42,14 @@ public interface IDataProtector
 
     /// <summary>
     /// Generates a <see cref="string"/> containing
-    /// the random digital code with the length of <paramref name="length"/>.
+    /// the random digit code with the length of <paramref name="length"/>.
     /// </summary>
     /// <param name="length">
     /// Code length.
     /// </param>
     /// <returns>
     /// A <see cref="string"/> containing
-    /// the random digital code with the length of <paramref name="length"/>.
+    /// the random digit code with the length of <paramref name="length"/>.
     /// </returns>
     string GenerateRandomDigitCode(ushort length);
     #endregion

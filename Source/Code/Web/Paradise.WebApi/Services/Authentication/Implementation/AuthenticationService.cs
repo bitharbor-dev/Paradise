@@ -544,7 +544,7 @@ internal sealed class AuthenticationService(IOptions<AuthenticationOptions> auth
     }
 
     /// <summary>
-    /// Gets the list of claims which contains
+    /// Gets the list of claims which contain
     /// roles data of the user with the given <paramref name="userId"/>.
     /// </summary>
     /// <param name="userId">

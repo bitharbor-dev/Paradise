@@ -250,10 +250,10 @@ public sealed partial class RoleServiceTests
     }
 
     /// <summary>
-    /// The<see cref = "RoleService.CreateAsync" /> method should
+    /// The <see cref="RoleService.CreateAsync"/> method should
     /// fail to create a role if the
-    /// input<see cref = "RoleCreationModel" /> specifies the
-    /// role name which is already in use by existing role.
+    /// input <see cref="RoleCreationModel"/> specifies the
+    /// role name which is already in use by an existing role.
     /// </summary>
     [Fact]
     public async Task CreateAsync_FailsOnDuplicateName()
@@ -656,7 +656,7 @@ public sealed partial class RoleServiceTests
     /// The <see cref="RoleService.UnassignAsync"/> method should
     /// fail to unassign a role if the
     /// inner <see cref="IUserManager{TUser}"/> instance reports error
-    /// upon unassigning role to the user.
+    /// upon unassigning role from the user.
     /// </summary>
     [Fact]
     public async Task UnassignAsync_FailsOnDependencyFailure()
