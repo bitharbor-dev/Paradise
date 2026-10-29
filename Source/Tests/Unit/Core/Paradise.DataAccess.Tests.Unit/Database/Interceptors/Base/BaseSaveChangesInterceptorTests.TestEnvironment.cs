@@ -39,9 +39,7 @@ public sealed partial class BaseSaveChangesInterceptorTests : IDisposable
     {
         #region Fields
         private readonly IList<EntityEntry> _interceptedEntries = [];
-        #endregion
 
-        #region Fields
         private readonly FakeTimeProvider _timeProvider;
         private readonly TestSaveChangesInterceptor _target;
         private readonly FakeDbContext _context;

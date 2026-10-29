@@ -115,6 +115,10 @@ public sealed partial class CommunicationClientTests : IDisposable
         #endregion
 
         #region Public methods
+        /// <inheritdoc/>
+        public void Dispose()
+            => _emailSender.MailSent -= OnMailSent;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommunicationClient"/> class.
         /// </summary>
@@ -172,12 +176,6 @@ public sealed partial class CommunicationClientTests : IDisposable
             _dataSource.Add(template);
             _dataSource.SaveChanges();
         }
-        #endregion
-
-        #region Public methods
-        /// <inheritdoc/>
-        public void Dispose()
-            => _emailSender.MailSent -= OnMailSent;
         #endregion
 
         #region Private methods

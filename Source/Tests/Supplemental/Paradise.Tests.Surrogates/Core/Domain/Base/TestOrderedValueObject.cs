@@ -23,9 +23,7 @@ public sealed class TestOrderedValueObject : ValueObject
     /// </param>
     public void SetId(Guid id)
         => Id = id;
-    #endregion
 
-    #region Public methods
     /// <inheritdoc/>
     public override IEnumerable<object?> GetEqualityComponents()
     {

@@ -15,7 +15,7 @@
 internal sealed class ApplicationBootstrapper(IEnumerable<IPreBuildStep> preBuildSteps,
                                               IEnumerable<IPostBuildStep> postBuildSteps)
 {
-    #region Public Methods
+    #region Public methods
     /// <summary>
     /// Builds and configures the <see cref="WebApplication"/> by executing all bootstrap steps.
     /// </summary>

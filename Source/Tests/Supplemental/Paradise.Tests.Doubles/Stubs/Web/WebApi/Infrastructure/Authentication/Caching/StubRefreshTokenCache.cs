@@ -7,7 +7,7 @@ namespace Paradise.Tests.Doubles.Stubs.Web.WebApi.Infrastructure.Authentication.
 /// </summary>
 public sealed class StubRefreshTokenCache : IRefreshTokenCache
 {
-    #region Public methods
+    #region Properties
     /// <summary>
     /// <see cref="GetAsync"/> result.
     /// </summary>

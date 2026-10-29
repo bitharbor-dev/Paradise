@@ -34,7 +34,7 @@ internal sealed class ServiceRegistrationBootstrap : IPreBuildStep
     }
     #endregion
 
-    #region Private Methods
+    #region Private methods
     /// <summary>
     /// Registers core services including domain logic, authentication, authorization,
     /// localization, and environment-specific integrations.

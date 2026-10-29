@@ -14,16 +14,16 @@ public sealed class FakeLookupProtectorKeyRing : ILookupProtectorKeyRing
     };
     #endregion
 
-    #region Properties
-    /// <inheritdoc/>
-    public string CurrentKeyId
-        => _keys.LastOrDefault().Key ?? string.Empty;
-    #endregion
-
     #region Indexes
     /// <inheritdoc/>
     public string this[string keyId]
         => _keys[keyId];
+    #endregion
+
+    #region Properties
+    /// <inheritdoc/>
+    public string CurrentKeyId
+        => _keys.LastOrDefault().Key ?? string.Empty;
     #endregion
 
     #region Public methods

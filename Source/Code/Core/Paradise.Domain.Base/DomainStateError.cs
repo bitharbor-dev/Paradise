@@ -40,18 +40,6 @@ public sealed class DomainStateError(Type entityType, object? value, string? add
         => Message;
     #endregion
 
-    #region Operators
-    /// <summary>
-    /// Implicitly converts the given <paramref name="message"/>
-    /// into a <see cref="string"/> by calling <see cref="ToString"/> method.
-    /// </summary>
-    /// <param name="message">
-    /// The <see cref="DomainStateError"/> to be converted into a <see cref="string"/>.
-    /// </param>
-    public static implicit operator string?(DomainStateError message)
-        => message?.ToString();
-    #endregion
-
     #region Private methods
     /// <summary>
     /// Creates error message based on the input arguments.
@@ -90,5 +78,17 @@ public sealed class DomainStateError(Type entityType, object? value, string? add
 
         return messageBuilder.ToString();
     }
+    #endregion
+
+    #region Operators
+    /// <summary>
+    /// Implicitly converts the given <paramref name="message"/>
+    /// into a <see cref="string"/> by calling <see cref="ToString"/> method.
+    /// </summary>
+    /// <param name="message">
+    /// The <see cref="DomainStateError"/> to be converted into a <see cref="string"/>.
+    /// </param>
+    public static implicit operator string?(DomainStateError message)
+        => message?.ToString();
     #endregion
 }

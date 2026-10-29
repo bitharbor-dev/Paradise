@@ -7,6 +7,13 @@ namespace Paradise.WebApi.Infrastructure.Authentication.JwtBearer.Keys;
 /// </summary>
 internal interface IJwtSigningKeyProvider
 {
+    #region Properties
+    /// <summary>
+    /// The signature algorithm to apply.
+    /// </summary>
+    string JwtAlgorithm { get; }
+    #endregion
+
     #region Methods
     /// <summary>
     /// Gets the key to sign a JWTs.
@@ -16,12 +23,5 @@ internal interface IJwtSigningKeyProvider
     /// during JWTs creation or verification.
     /// </returns>
     SecurityKey GetSigningKey();
-    #endregion
-
-    #region Properties
-    /// <summary>
-    /// The signature algorithm to apply.
-    /// </summary>
-    string JwtAlgorithm { get; }
     #endregion
 }
