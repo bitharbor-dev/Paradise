@@ -65,7 +65,7 @@ public sealed partial class DomainEventDispatcherTests
         /// </para>
         /// </param>
         /// <param name="processAsyncOverride">
-        /// An overriding delegate for <see cref="IDomainEventListener{TEvent}.ProcessAsync(TEvent, CancellationToken)"/> method.
+        /// An overriding delegate for <see cref="IDomainEventListener{TEvent}.ProcessAsync"/> method.
         /// </param>
         /// <param name="processingOrder">
         /// Defines the processing order of this event listener.
@@ -98,7 +98,7 @@ public sealed partial class DomainEventDispatcherTests
         /// </para>
         /// </param>
         /// <param name="processAsyncOverride">
-        /// An overriding delegate for <see cref="IDomainEventListener{TEvent}.ProcessAsync(TEvent, CancellationToken)"/> method.
+        /// An overriding delegate for <see cref="IDomainEventListener{TEvent}.ProcessAsync"/> method.
         /// </param>
         /// <param name="processingOrder">
         /// Defines the processing order of this event listener.
@@ -155,7 +155,7 @@ public sealed partial class DomainEventDispatcherTests
         /// </para>
         /// </param>
         /// <param name="processAsyncOverride">
-        /// An overriding delegate for <see cref="IDomainEventListener{TEvent}.ProcessAsync(TEvent, CancellationToken)"/> method.
+        /// An overriding delegate for <see cref="IDomainEventListener{TEvent}.ProcessAsync"/> method.
         /// </param>
         /// <param name="processingOrder">
         /// Defines the processing order of this event listener.
@@ -165,6 +165,13 @@ public sealed partial class DomainEventDispatcherTests
                                                        int? processingOrder = null)
             where TListener : class, IDomainEventListener<SpyDomainEvent>, new()
         {
+            static IOptions<DomainEventRetryOptions> GetKeyedOptions(IServiceProvider provider, object? key)
+            {
+                var monitor = provider.GetRequiredService<IOptionsMonitor<DomainEventRetryOptions>>();
+
+                return OptionsBuilder.Create(monitor.Get(key?.ToString()));
+            }
+
             if (configureOptions is not null)
             {
                 var optionsKey = typeof(TListener).AssemblyQualifiedName;
@@ -173,12 +180,7 @@ public sealed partial class DomainEventDispatcherTests
 
                 _services.Configure(optionsKey, configureOptions);
 
-                _services.AddKeyedTransient(optionsKey, (provider, key) =>
-                {
-                    var monitor = provider.GetRequiredService<IOptionsMonitor<DomainEventRetryOptions>>();
-
-                    return OptionsBuilder.Create(monitor.Get((string)key));
-                });
+                _services.AddKeyedTransient(optionsKey, GetKeyedOptions);
             }
 
             _services.AddSingleton<IDomainEventListener<SpyDomainEvent>>(_ =>

@@ -42,63 +42,63 @@ public interface IUserManager<TUser> where TUser : class
     /// <inheritdoc cref="UserManager{TUser}.CreateAsync(TUser, string)"/>
     Task<IdentityResult> CreateAsync(TUser user, string password);
 
-    /// <inheritdoc cref="UserManager{TUser}.UpdateAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.UpdateAsync"/>
     Task<IdentityResult> UpdateAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.DeleteAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.DeleteAsync"/>
     Task<IdentityResult> DeleteAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.GetClaimsAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.GetClaimsAsync"/>
     Task<IList<Claim>> GetClaimsAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.GetRolesAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.GetRolesAsync"/>
     Task<IList<string>> GetRolesAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.AddToRoleAsync(TUser, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.AddToRoleAsync"/>
     Task<IdentityResult> AddToRoleAsync(TUser user, string role);
 
-    /// <inheritdoc cref="UserManager{TUser}.AddToRolesAsync(TUser, IEnumerable{string})"/>
+    /// <inheritdoc cref="UserManager{TUser}.AddToRolesAsync"/>
     Task<IdentityResult> AddToRolesAsync(TUser user, IEnumerable<string> roles);
 
-    /// <inheritdoc cref="UserManager{TUser}.RemoveFromRoleAsync(TUser, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.RemoveFromRoleAsync"/>
     Task<IdentityResult> RemoveFromRoleAsync(TUser user, string role);
 
-    /// <inheritdoc cref="UserManager{TUser}.IsLockedOutAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.IsLockedOutAsync"/>
     Task<bool> IsLockedOutAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.CheckPasswordAsync(TUser, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.CheckPasswordAsync"/>
     Task<bool> CheckPasswordAsync(TUser user, string password);
 
-    /// <inheritdoc cref="UserManager{TUser}.AccessFailedAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.AccessFailedAsync"/>
     Task<IdentityResult> AccessFailedAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.NormalizeEmail(string?)"/>
+    /// <inheritdoc cref="UserManager{TUser}.NormalizeEmail"/>
     [return: NotNullIfNotNull(nameof(email))]
     string? NormalizeEmail(string? email);
 
-    /// <inheritdoc cref="UserManager{TUser}.NormalizeName(string?)"/>
+    /// <inheritdoc cref="UserManager{TUser}.NormalizeName"/>
     [return: NotNullIfNotNull(nameof(name))]
     string? NormalizeName(string? name);
 
-    /// <inheritdoc cref="UserManager{TUser}.GenerateEmailConfirmationTokenAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.GenerateEmailConfirmationTokenAsync"/>
     Task<string> GenerateEmailConfirmationTokenAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.ConfirmEmailAsync(TUser, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.ConfirmEmailAsync"/>
     Task<IdentityResult> ConfirmEmailAsync(TUser user, string token);
 
-    /// <inheritdoc cref="UserManager{TUser}.GenerateChangeEmailTokenAsync(TUser, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.GenerateChangeEmailTokenAsync"/>
     Task<string> GenerateChangeEmailTokenAsync(TUser user, string newEmail);
 
-    /// <inheritdoc cref="UserManager{TUser}.ChangeEmailAsync(TUser, string, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.ChangeEmailAsync"/>
     Task<IdentityResult> ChangeEmailAsync(TUser user, string newEmail, string token);
 
-    /// <inheritdoc cref="UserManager{TUser}.GeneratePasswordResetTokenAsync(TUser)"/>
+    /// <inheritdoc cref="UserManager{TUser}.GeneratePasswordResetTokenAsync"/>
     Task<string> GeneratePasswordResetTokenAsync(TUser user);
 
-    /// <inheritdoc cref="UserManager{TUser}.ResetPasswordAsync(TUser, string, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.ResetPasswordAsync"/>
     Task<IdentityResult> ResetPasswordAsync(TUser user, string token, string newPassword);
 
-    /// <inheritdoc cref="UserManager{TUser}.ValidatePasswordAsync(TUser, string)"/>
+    /// <inheritdoc cref="UserManager{TUser}.ValidatePasswordAsync"/>
     Task<IdentityResult> ValidatePasswordAsync(TUser user, string? password);
     #endregion
 }

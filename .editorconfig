@@ -2,7 +2,7 @@
 root = true
 
 [*]
-guidelines = 120 dashed, 140
+rulers = 120, 140
 
 # C# files
 [*.cs]

@@ -11,6 +11,14 @@ namespace Paradise.ApplicationLogic.Options.Models.Infrastructure.Communication.
 /// </summary>
 public sealed class SmtpOptions
 {
+    #region Constants
+    /// <summary>
+    /// A placeholder to be used to dynamically access the
+    /// application base directory while using local email storage.
+    /// </summary>
+    public const string ApplicationRootPlaceholder = "{ApplicationRoot}";
+    #endregion
+
     #region Properties
     /// <summary>
     /// Gets or sets the credentials used to authenticate the sender.
@@ -55,26 +63,20 @@ public sealed class SmtpOptions
     /// </returns>
     public string? InitializeLocalEmailStorage()
     {
-        const string ApplicationRootPlaceholder = "{ApplicationRoot}";
-
         if (LocalEmailStorage.IsNullOrWhiteSpace())
             return null;
-
-        string? path;
 
         if (LocalEmailStorage.StartsWith(ApplicationRootPlaceholder, StringComparison.Ordinal))
         {
             var remainder = LocalEmailStorage[ApplicationRootPlaceholder.Length..]
                 .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-            path = Path.Combine(AppContext.BaseDirectory, remainder);
+            return Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, remainder)).FullName;
         }
         else
         {
-            path = LocalEmailStorage;
+            return Directory.CreateDirectory(LocalEmailStorage).FullName;
         }
-
-        return Directory.CreateDirectory(path).FullName;
     }
     #endregion
 }

@@ -39,7 +39,7 @@ public sealed class ResultBaseExtensionsTests
 
     #region Public methods
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync(Task{Result})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync"/> method should
     /// return an <see cref="Ok"/> result for a successful operation.
     /// </summary>
     [Fact]
@@ -56,7 +56,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync(Task{Result})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync"/> method should
     /// return a <see cref="Created"/> result for a created operation.
     /// </summary>
     [Fact]
@@ -75,7 +75,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync(Task{Result})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync"/> method should
     /// return an <see cref="Accepted"/> result for an accepted operation.
     /// </summary>
     [Fact]
@@ -94,7 +94,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync(Task{Result})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync"/> method should
     /// return a <see cref="ProblemHttpResult"/> for a request resulted in an error.
     /// </summary>
     [Theory, MemberData(nameof(AsHttpResultAsync_ReturnsProblem_MemberData))]
@@ -120,7 +120,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync(Task{Result})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync"/> method should
     /// throw the <see cref="ArgumentNullException"/> if the input
     /// <see cref="Task{T}"/> is equal to <see langword="null"/>.
     /// </summary>
@@ -136,7 +136,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}(Task{Result{T}})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}"/> method should
     /// return an <see cref="Ok{TValue}"/> result for a successful operation.
     /// </summary>
     [Fact]
@@ -157,7 +157,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}(Task{Result{T}})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}"/> method should
     /// return a <see cref="Created{TValue}"/> result for a created operation.
     /// </summary>
     [Fact]
@@ -179,7 +179,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}(Task{Result{T}})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}"/> method should
     /// return an <see cref="Accepted{TValue}"/> result for an accepted operation.
     /// </summary>
     [Fact]
@@ -200,7 +200,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}(Task{Result{T}})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}"/> method should
     /// return a <see cref="ProblemHttpResult"/> for a request resulted in an error.
     /// </summary>
     [Theory, MemberData(nameof(AsHttpResultAsyncGeneric_ReturnsProblem_MemberData))]
@@ -226,7 +226,7 @@ public sealed class ResultBaseExtensionsTests
     }
 
     /// <summary>
-    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}(Task{Result{T}})"/> method should
+    /// The <see cref="ResultBaseExtensions.AsHttpResultAsync{T}"/> method should
     /// throw the <see cref="ArgumentNullException"/> if the input
     /// <see cref="Task{T}"/> is equal to <see langword="null"/>.
     /// </summary>

@@ -14,16 +14,16 @@ public interface IRoleManager<TRole>
     #endregion
 
     #region Methods
-    /// <inheritdoc cref="RoleManager{TRole}.CreateAsync(TRole)"/>
+    /// <inheritdoc cref="RoleManager{TRole}.CreateAsync"/>
     Task<IdentityResult> CreateAsync(TRole role);
 
-    /// <inheritdoc cref="RoleManager{TRole}.UpdateAsync(TRole)"/>
+    /// <inheritdoc cref="RoleManager{TRole}.UpdateAsync"/>
     Task<IdentityResult> UpdateAsync(TRole role);
 
-    /// <inheritdoc cref="RoleManager{TRole}.DeleteAsync(TRole)"/>
+    /// <inheritdoc cref="RoleManager{TRole}.DeleteAsync"/>
     Task<IdentityResult> DeleteAsync(TRole role);
 
-    /// <inheritdoc cref="RoleManager{TRole}.NormalizeKey(string?)"/>
+    /// <inheritdoc cref="RoleManager{TRole}.NormalizeKey"/>
     [return: NotNullIfNotNull(nameof(key))]
     string? NormalizeKey(string? key);
     #endregion

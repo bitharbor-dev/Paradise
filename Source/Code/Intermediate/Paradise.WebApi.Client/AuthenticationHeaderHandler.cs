@@ -1,4 +1,6 @@
-﻿namespace Paradise.WebApi.Client;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Paradise.WebApi.Client;
 
 /// <summary>
 /// Attaches the access token to the HTTP request.
@@ -9,6 +11,7 @@
 /// <param name="provider">
 /// Authentication header value provider.
 /// </param>
+[SuppressMessage("Microsoft.Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Instantiated via DI.")]
 internal sealed class AuthenticationHeaderHandler(IAuthenticationHeaderProvider provider) : DelegatingHandler
 {
     #region Properties

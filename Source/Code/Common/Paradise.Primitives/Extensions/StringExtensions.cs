@@ -9,7 +9,7 @@ namespace Paradise.Primitives.Extensions;
 public static class StringExtensions
 {
     #region Public methods
-    /// <inheritdoc cref="string.IsNullOrWhiteSpace(string?)"/>
+    /// <inheritdoc cref="string.IsNullOrWhiteSpace"/>
     public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? value)
         => string.IsNullOrWhiteSpace(value);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Paradise.ApplicationLogic.Infrastructure.Services.Identity;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Paradise.Maintenance;
 
@@ -10,6 +11,7 @@ namespace Paradise.Maintenance;
 /// <param name="serviceProvider">
 /// The <see cref="IServiceProvider"/> to resolve methods dependencies.
 /// </param>
+[SuppressMessage("Microsoft.Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Azure Functions container class.")]
 internal sealed class FunctionsContainer(IServiceProvider serviceProvider)
 {
     #region Constants
